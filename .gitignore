@@ -1,3 +1,11 @@
+# visual studio user file
+x64/
+*.user
+*.suo
+*.csproj
+*.DotSettings
+*.recipe
+
 # Prerequisites
 *.d
 
