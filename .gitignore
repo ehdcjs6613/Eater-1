@@ -1,6 +1,7 @@
 # visual studio user file
 x64/
 *.user
+*.vs
 *.suo
 *.csproj
 *.DotSettings
