@@ -6,13 +6,14 @@
 #endif
 
 #include <string>
+#include <windows.h>
 class GameObject;
 class Scene;
 
 
 extern "C"
 {
-	EATER_ENGINEDLL void StartEngine();		//GameEngine 시작
+	EATER_ENGINEDLL void StartEngine(HWND _g_hWnd);		//GameEngine 시작
 	EATER_ENGINEDLL void EndEngine();		//GameEngine 종료
 	EATER_ENGINEDLL void UpdateEngine();	//GameEngine 업데이트
 

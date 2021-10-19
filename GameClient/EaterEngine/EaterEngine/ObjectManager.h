@@ -3,9 +3,11 @@
 #include <map>
 #include <vector>
 #include <queue>
+#include <windows.h>
 
 #include <functional>
 #include "Delegate.h"
+#include "SharedData.h"
 
 #ifdef ENGINE_INTERFACE
 #define EATER_ENGINEDLL __declspec(dllexport)
@@ -16,6 +18,7 @@
 
 class GameObject;
 class Component;
+class DH3DEngine;
 
 class ObjectManager
 {
@@ -26,6 +29,9 @@ public:
 	EATER_ENGINEDLL void PushCreateObject(GameObject* obj);
 	//삭제할 오브젝트를 넣어줌(이함수를 실행시킬단계에서 오브젝트를 삭제하지않음 삭제는 가장 마지막에)
 	EATER_ENGINEDLL void PushDeleteObject(GameObject* obj);
+
+	/// 초기화 단계
+	EATER_ENGINEDLL void Initialize(HWND _g_hWnd);
 
 
 	/// <summary>
@@ -52,6 +58,19 @@ public:
 	void ClearFunctionList();
 	//싱글톤 클래스
 	EATER_ENGINEDLL static ObjectManager* GM();
+	
+
+	/// 테스트용 엔진
+private:
+	DH3DEngine* pTest_Engine;
+	OneFrameData* pTest_OFD;
+	SharedRenderData* pTest_SRD;
+	DHParser::Mesh* pTest_Mesh;
+
+	void TestAddVerTex(float _x, float _y, float _z,
+		float N_x, float N_y, float N_z);
+
+	void TestAddIndex(UINT _index);
 private:
 	static ObjectManager* instance;
 	ObjectManager();
