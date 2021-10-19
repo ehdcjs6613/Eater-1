@@ -13,11 +13,14 @@ DebugManager*	gDebugManger;
 ObjectManager*	gObjectManager;
 
 //엔진 생성
-EATER_ENGINEDLL void StartEngine()
+EATER_ENGINEDLL void StartEngine(HWND _g_hWnd)
 {
 	//스크린 매니저 생성
 	gSceneManager	= new SceneManager();
 	DebugManager::GM()->init();
+
+	// 엔진 초기화
+	ObjectManager::GM()->Initialize(_g_hWnd);
 }
 
 //엔진 종료

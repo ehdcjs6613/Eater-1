@@ -3,6 +3,10 @@
 #include "DebugManager.h"
 #include "ObjectManager.h"
 
+/// 임시 엔진 추가.
+#include "DH3DEngine.h"
+
+
 ObjectManager* ObjectManager::instance = nullptr;
 ObjectManager* ObjectManager::GM()
 {
@@ -16,14 +20,136 @@ ObjectManager* ObjectManager::GM()
 
 ObjectManager::ObjectManager()
 {
+	pTest_Engine = new DH3DEngine();
 
+	pTest_OFD = new OneFrameData;
+	pTest_OFD->View_Matrix = DirectX::SimpleMath::Matrix
+	(
+		0.993068516, -0.0513942279, -0.105705619, 0.f,
+		1.49011612e-08, 0.899335980, -0.437258303, 0.f,
+		0.117537417, 0.434227467, 0.893102169, 0.00000000,
+		-0.991111338, -0.756038189, 2.71574593, 1.f
+	);
+	pTest_OFD->Projection_Matrix = DirectX::SimpleMath::Matrix
+	(
+		1.35799503, 0.f, 0.f, 0.f,
+		0.f, 2.41421342, 0.f, 0.f,
+		0.f, 0.f, 1.00000012, 1.f,
+		0.f, 0.f, -0.000100000012, 0.f
+	);
+	// 테스트용 카메라 위치
+	pTest_OFD->World_Eye_Position = DirectX::SimpleMath::Vector3(10.f, 8.f, -10.f);
+	pTest_OFD->Main_Position = DirectX::SimpleMath::Vector3(0.f, 0.f, 0.f);
 
+	pTest_SRD = new SharedRenderData;
+
+	pTest_Mesh = new DHParser::Mesh;
+
+	pTest_Mesh->Texture_Key = 0;
+	pTest_Mesh->Vcount = 24;
+	pTest_Mesh->Tcount = 12;
+	pTest_Mesh->Local_TM = DirectX::SimpleMath::Matrix
+	(
+		-1, 0.f, 0.f, 0.f,
+		0.f, 0.f, 1.f, 0.f,
+		0.f, 1.f, 0.f, 0.f,
+		0.f, 0.f, 0.f, 1.f
+	);
+	pTest_Mesh->World_TM = pTest_Mesh->Local_TM;
+
+	/// 테스트용 박스 그리기
+	// Vertex
+	TestAddVerTex(1.f, 1.f, 1.f, 0.f, 1.f, 0.f);	// 0
+	TestAddVerTex(-1.f, 1.f, 1.f, 0.f, 1.f, 0.f);
+	TestAddVerTex(-1.f, 1.f, -1.f, 0.f, 1.f, 0.f);
+	TestAddVerTex(1.f, 1.f, -1.f, 0.f, 1.f, 0.f);
+	TestAddVerTex(1.f, 1.f, -1.f, 0.f, 0.f, -1.f);
+	TestAddVerTex(1.f, 1.f, -1.f, 0.f, 0.f, -1.f);
+	TestAddVerTex(-1.f, 1.f, -1.f, 0.f, 0.f, -1.f);
+	TestAddVerTex(-1.f, -1.f, -1.f, 0.f, 0.f, 1.f);
+	TestAddVerTex(1.f, 1.f, -1.f, -1.f, 0.f, 0.f);
+	TestAddVerTex(-1.f, 1.f, -1.f, 1.f, 0.f, 0.f);
+	TestAddVerTex(-1.f, 1.f, 1.f, -1.f, 1.f, 0.f);	// 10
+
+	TestAddVerTex(-1.f, -1.f, 1.f, -1.f, 0.f, 0.f);
+	TestAddVerTex(-1.f, -1.f, 1.f, 0.f, -1.f, 0.f);
+	TestAddVerTex(1.f, -1.f, 1.f, 0.f, -1.f, 0.f);
+	TestAddVerTex(1.f, -1.f, -1.f, 0.f, -1.f, 0.f);
+	TestAddVerTex(-1.f, -1.f, -1.f, 0.f, -1.f, 0.f);
+	TestAddVerTex(1.f, -1.f, 1.f, 1.f, 0.f, 0.f);
+	TestAddVerTex(1.f, 1.f, 1.f, 1.f, 0.f, 0.f);
+	TestAddVerTex(1.f, 1.f, -1.f, 1.f, 0.f, 0.f);
+	TestAddVerTex(1.f, -1.f, -1.f, 1.f, 0.f, 0.f);
+	TestAddVerTex(-1.f, -1.f, -1.f, 0.f, 0.f, 1.f); // 20
+
+	TestAddVerTex(-1.f, 1.f, 1.f, 0.f, 0.f, 1.f);
+	TestAddVerTex(1.f, 1.f, 1.f, 0.f, 0.f, 1.f);
+	TestAddVerTex(1.f, -1.f, 1.f, 0.f, 0.f, 1.f);
+
+	//Index
+	TestAddIndex(0);	// 0
+	TestAddIndex(2);
+	TestAddIndex(1);
+	TestAddIndex(2);
+	TestAddIndex(0);
+	TestAddIndex(3);
+	TestAddIndex(4);
+	TestAddIndex(6);
+	TestAddIndex(5);
+	TestAddIndex(6);
+	TestAddIndex(4);	// 10
+
+	TestAddIndex(7);
+	TestAddIndex(8);
+	TestAddIndex(10);
+	TestAddIndex(9);
+	TestAddIndex(10);
+	TestAddIndex(8);
+	TestAddIndex(11);
+	TestAddIndex(12);
+	TestAddIndex(14);
+	TestAddIndex(13);	// 20
+
+	TestAddIndex(14);
+	TestAddIndex(12);
+	TestAddIndex(15);
+	TestAddIndex(16);
+	TestAddIndex(18);
+	TestAddIndex(17);
+	TestAddIndex(18);
+	TestAddIndex(16);
+	TestAddIndex(19);
+	TestAddIndex(20);	// 30
+
+	TestAddIndex(22);
+	TestAddIndex(21);
+	TestAddIndex(22);
+	TestAddIndex(20);
+	TestAddIndex(23);
+
+	pTest_SRD->Render_Mesh_List = new std::vector<DHParser::Mesh>;
+	pTest_SRD->Render_Mesh_List->push_back(*pTest_Mesh);
 }
 
 ObjectManager::~ObjectManager()
 {
+	delete pTest_Engine;
+}
 
 
+void ObjectManager::TestAddVerTex(float _x, float _y, float _z,
+	float N_x, float N_y, float N_z)
+{
+	DHParser::Vertex m_TestVertex;
+	m_TestVertex.Pos = DirectX::SimpleMath::Vector3(_x, _y, _z);
+	m_TestVertex.Normal = DirectX::SimpleMath::Vector3(N_x, N_y, N_z);
+
+	pTest_Mesh->Optimize_Vertex.push_back(m_TestVertex);
+}
+
+void ObjectManager::TestAddIndex(UINT _index)
+{
+	pTest_Mesh->Optimize_Index.push_back(_index);
 }
 
 void ObjectManager::PushCreateObject(GameObject* obj)
@@ -62,6 +188,13 @@ void ObjectManager::PushDeleteObject(GameObject* obj)
 	}
 }
 
+void ObjectManager::Initialize(HWND _g_hWnd)
+{
+	// 엔진 초기화 ( hWnd 필요. )
+	pTest_Engine->Initialize(_g_hWnd, 1920, 1080);
+	pTest_Engine->SetDebug(true);
+}
+
 void ObjectManager::PushStartUpdate(Component* mComponent)
 {
 	//컨퍼넌트들의 업데이트 함수만 모아놓은 리스트에 들어온 컨퍼넌트 업데이트 함수를 넣어줌
@@ -91,6 +224,7 @@ void ObjectManager::PushAwake(Component* mComponent)
 
 void ObjectManager::PlayUpdate()
 {
+
 	DebugManager::GM()->Print("////////////Update////////////\n");
 
 	//가장 먼저실행되는 StartUpdate 함수 리스트
@@ -106,11 +240,20 @@ void ObjectManager::PlayUpdate()
 	FinalUpdate.Play();
 
 	///랜더링
+	/*
+		2021/10/19 06:50 - CDH
+		
+		< 변경사항 >
+			1. 엔진 데모 붙이기.
+			
+	*/
+	pTest_Engine->BeginDraw();
 
+	pTest_Engine->TextDraw({ (int)(1920 - 350), 10 }, 500, 0, 1, 0, 1, 30, L"카메라 모드 변경 : C");
 
+	pTest_Engine->RenderDraw(pTest_OFD, pTest_SRD);
 
-
-
+	pTest_Engine->EndDraw();
 
 	///삭제
 	DeleteObject();

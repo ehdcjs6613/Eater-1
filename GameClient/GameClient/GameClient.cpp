@@ -37,7 +37,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 
 	// 애플리케이션 초기화를 수행합니다:
 	HWND hWnd = CreateWindowW(L"PROJECT1", L"EngineTestClient", WS_OVERLAPPEDWINDOW,
-		0, 0, Width / 2, Height / 2, nullptr, nullptr, hInstance, nullptr);
+		0, 0, 1920, 1080, nullptr, nullptr, hInstance, nullptr);
 
 	if (!hWnd)
 	{
@@ -49,7 +49,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	MSG msg;
 
 	GameManager* GM = new GameManager();
-	GM->Start();
+	GM->Start(hWnd);
 
 
 	while (true)
