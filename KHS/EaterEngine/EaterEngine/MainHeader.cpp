@@ -8,6 +8,7 @@
 #include "Transfrom.h"
 #include "ObjectManager.h"
 #include "ResourceManager.h"
+//#include "DH3DEngineHeader.h"
 
 
 SceneManager*	gSceneManager;
@@ -16,11 +17,12 @@ ObjectManager*	gObjectManager;
 //FBXParser*		gParser;
 
 //엔진 생성
-EATER_ENGINEDLL void StartEngine()
+EATER_ENGINEDLL void StartEngine(HWND _ghwnd)
 {
 	//스크린 매니저 생성
 	gSceneManager	= new SceneManager();
 	DebugManager::GM()->init();
+	ObjectManager::GM()->init(_ghwnd);
 }
 
 //엔진 종료

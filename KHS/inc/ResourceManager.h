@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-class FBXParser;
+//class FBXParser;
 class ResourceManager
 {
 public:
@@ -14,5 +14,5 @@ public:
 	//¸ðµ¨ ·Îµå
 	void LoadMesh(std::string Name,bool LoadAnime);
 private:
-	FBXParser* EATER_Parser;
+	//FBXParser* EATER_Parser;
 };

@@ -6,6 +6,7 @@
 #endif
 
 #include <string>
+#include "windows.h"
 class SceneManager;
 class GameObject;
 class Scene;
@@ -13,7 +14,7 @@ class Scene;
 
 extern "C"
 {
-	EATER_ENGINEDLL void StartEngine();		//GameEngine 시작
+	EATER_ENGINEDLL void StartEngine(HWND _ghwnd);		//GameEngine 시작
 	EATER_ENGINEDLL void EndEngine();		//GameEngine 종료
 	EATER_ENGINEDLL void UpdateEngine();	//GameEngine 업데이트
 

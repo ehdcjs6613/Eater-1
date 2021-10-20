@@ -6,6 +6,9 @@
 
 #include <functional>
 #include "Delegate_Map.h"
+#include "windows.h"
+#include "../SharedData.h"
+
 
 #ifdef ENGINE_INTERFACE
 #define EATER_ENGINEDLL __declspec(dllexport)
@@ -13,6 +16,8 @@
 #define EATER_ENGINEDLL __declspec(dllimport)
 #endif
 
+
+class DH3DEngine;
 
 class GameObject;
 class Component;
@@ -51,7 +56,7 @@ public:
 	//업데이트 함수 리스트를 실행시킴
 	void PlayUpdate();
 	void PlayStart();
-
+	void init(HWND hwnd);
 
 	//업데이트와 랜더링 함수리스트를 모두 삭제함
 	void ClearFunctionList();
@@ -60,6 +65,16 @@ public:
 private:
 	static ObjectManager* instance;
 	ObjectManager();
+
+	DH3DEngine* pTest_Engine;
+	OneFrameData* pTest_OFD;
+	SharedRenderData* pTest_SRD;
+	DHParser::Mesh* pTest_Mesh;
+
+	void TestAddVerTex(float _x, float _y, float _z,
+		float N_x, float N_y, float N_z);
+
+	void TestAddIndex(UINT _index);
 
 
 	std::vector<GameObject*> ObjectList;

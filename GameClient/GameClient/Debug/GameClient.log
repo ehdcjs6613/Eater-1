@@ -1,0 +1,8 @@
+﻿  AI.cpp
+  intro.cpp
+C:\Users\KGIT20\Documents\GitHub\Eater-1\GameClient\GameClient\intro.cpp(2,10): warning C4067: 전처리기 지시문 다음에 예기치 않은 토큰이 있습니다. 줄 바꿈 문자가 필요합니다.
+  코드를 생성하고 있습니다...
+  GameClient.cpp
+  GameManager.cpp
+  코드를 생성하고 있습니다...
+LINK : fatal error LNK1104: 'DirectXTKd.lib' 파일을 열 수 없습니다.

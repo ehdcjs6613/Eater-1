@@ -1,9 +1,9 @@
 #include "ResourceManager.h"
-#include "KHParser.h"
+//#include "KHParser.h"
 
 ResourceManager::ResourceManager()
 {
-	EATER_Parser = nullptr;
+	//EATER_Parser = nullptr;
 }
 
 ResourceManager::~ResourceManager()
@@ -13,8 +13,8 @@ ResourceManager::~ResourceManager()
 
 void ResourceManager::init()
 {
-	EATER_Parser = new FBXParser();
-	EATER_Parser->Initalize();
+	//EATER_Parser = new FBXParser();
+	//EATER_Parser->Initalize();
 }
 
 void ResourceManager::LoadMesh(std::string Name, bool LoadAnime)

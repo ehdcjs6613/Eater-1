@@ -1,0 +1,16 @@
+﻿  Component.cpp
+  DebugManager.cpp
+  Delegate.cpp
+  dllmain.cpp
+  GameObject.cpp
+C:\Users\KGIT20\Documents\GitHub\Eater-1\GameClient\EaterEngine\EaterEngine\ObjectManager.h(10,10): fatal error C1083: 포함 파일을 열 수 없습니다. 'SharedData.h': No such file or directory
+  MainHeader.cpp
+C:\Users\KGIT20\Documents\GitHub\Eater-1\GameClient\EaterEngine\EaterEngine\ObjectManager.h(10,10): fatal error C1083: 포함 파일을 열 수 없습니다. 'SharedData.h': No such file or directory
+  MeshFilter.cpp
+  ObjectManager.cpp
+C:\Users\KGIT20\Documents\GitHub\Eater-1\GameClient\EaterEngine\EaterEngine\ObjectManager.h(10,10): fatal error C1083: 포함 파일을 열 수 없습니다. 'SharedData.h': No such file or directory
+  Scene.cpp
+  SceneManager.cpp
+C:\Users\KGIT20\Documents\GitHub\Eater-1\GameClient\EaterEngine\EaterEngine\ObjectManager.h(10,10): fatal error C1083: 포함 파일을 열 수 없습니다. 'SharedData.h': No such file or directory
+  Transfrom.cpp
+  코드를 생성하고 있습니다...

@@ -1,4 +1,5 @@
 #pragma once
+#include "windows.h"
 class GameManager
 {
 public:
@@ -6,7 +7,7 @@ public:
 	~GameManager();
 
 
-	void Start();
+	void Start(HWND _g_hWnd);
 	void Update();
 private:
 };

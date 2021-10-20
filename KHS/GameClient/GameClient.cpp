@@ -49,7 +49,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	MSG msg;
 
 	GameManager* GM = new GameManager();
-	GM->Start();
+	GM->Start(hWnd);
 
 
 	while (true)
