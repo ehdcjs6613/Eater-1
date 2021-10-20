@@ -7,7 +7,7 @@
 
 #include <functional>
 #include "Delegate.h"
-#include "SharedData.h"
+#include "../SharedData.h"
 
 #ifdef ENGINE_INTERFACE
 #define EATER_ENGINEDLL __declspec(dllexport)
