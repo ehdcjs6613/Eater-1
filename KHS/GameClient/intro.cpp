@@ -4,6 +4,7 @@
 #include "GameObject.h"
 #include "MeshFilter.h"
 #include "Transfrom.h"
+
 #include "AI.h"
 
 void intro::Awake()
@@ -11,6 +12,8 @@ void intro::Awake()
 	//불러오는 매쉬의 경로 파악
 	LoadMeshPath("../FBXFile/");
 	LoadMesh("Table");
+	
+	//GetMesh("Table");
 
 
 	GameObject* obj = Instance();

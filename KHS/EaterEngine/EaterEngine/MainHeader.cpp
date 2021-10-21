@@ -9,6 +9,8 @@
 #include "Transfrom.h"
 #include "ObjectManager.h"
 #include "LoadManager.h"
+#include "KHParser.h"
+
 
 
 SceneManager*	gSceneManager;
@@ -78,14 +80,19 @@ EATER_ENGINEDLL Scene* CreateScene(std::string name)
 	return  gSceneManager->CreateScene(name);
 }
 
-EATER_ENGINEDLL void LoadMesh(std::string mMeshName, bool LoadAnime)
+EATER_ENGINEDLL void LoadMesh(std::string mMeshName, bool Scale,bool LoadAnime)
 {
-	gLoadManager->LoadMesh(mMeshName, true);
+	gLoadManager->LoadMesh(mMeshName, Scale,LoadAnime);
 }
 
 EATER_ENGINEDLL void LoadMeshPath(std::string mPath)
 {
 	gLoadManager->LoadMeshPath(mPath);
+}
+
+EATER_ENGINEDLL FBXModel* GetMesh(std::string mMeshName)
+{
+	return nullptr;
 }
 
 
