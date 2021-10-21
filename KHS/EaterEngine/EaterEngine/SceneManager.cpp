@@ -17,7 +17,6 @@ Scene* SceneManager::CreateScene(std::string name)
 {
 	Scene* temp = new Scene();
 	temp->Name = name;
-	//temp->PushFunction(mAwake, mStart, mUpdate, mEnd);
 	SceneList.insert({ name,temp });
 	return temp;
 }

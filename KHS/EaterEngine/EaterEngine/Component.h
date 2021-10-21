@@ -1,6 +1,9 @@
 #pragma once
 /// <summary>
 /// 컨퍼넌트들의 최상위 클래스
+/// 이클래스를 상속하고 만든 컨퍼넌트들은
+/// 나중에 게임오브젝트를 만들고 AddComponent를 할떄 오버라이딩을 했는지 안했는지 검사 후
+/// 업데이트 함수 포인터 리스트에 넣어줌
 /// </summary>
 
 #ifdef ENGINE_INTERFACE
@@ -27,8 +30,11 @@ public:
 	//마지막 업데이트
 	virtual void EndUpdate() {};
 
-
+	
+	//현재 이컨퍼넌트의 어떤함수가 오버라이딩되어있는지 확인하기위해
 	unsigned int FUNCTION_MASK = 0x00000000;
+	//클래스의 타입 GetComponent에서 쓸떄 사용
+	size_t ComponentType;
 public:
 	EATER_ENGINEDLL void SetObject(GameObject* obj);
 private:

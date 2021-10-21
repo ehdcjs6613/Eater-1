@@ -1,16 +1,20 @@
 #pragma once
 
 /// <summary>
-/// 매쉬,텍스쳐,등등 그리기위해서 필요한것들을 로드
+/// 매쉬,텍스쳐,프리팹,등등 그리기위해서 필요한것들을 로드
+/// 
+/// 
+/// 테스트용으로 동혁이꺼 랜더링 엔진이 붙어있음
 /// </summary>
-
-
 
 
 #include <string>
 #include <map>
+
+
 class FBXParser;
 class FBXModel;
+class DH3DEngine;
 class LoadManager
 {
 public:
@@ -31,7 +35,6 @@ public:
 	void LoadMesh(std::string Name, bool Scale = true,bool LoadAnime = false);
 	//프리펩 로드
 	void LoadPrefap(std::string Name);
-
 public:
 	///경로
 	//매쉬 경로 설정
@@ -45,7 +48,7 @@ private:
 	std::string TexturePath;
 public:
 	///Delete
-	//리스트에서 매쉬정보를 삭제(메모리 낭비를 막기위해,매쉬가 너무많아서 메모리가 부족할때)
+	//리스트에서 매쉬정보를 삭제(매쉬가 너무많아서 메모리가 부족할때)
 	void DeleteMesh(std::string mMeshName);
 	//모든 매쉬정보를 삭제
 	void DeleteMeshAll();

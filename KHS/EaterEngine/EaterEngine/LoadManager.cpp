@@ -1,5 +1,6 @@
 #include "LoadManager.h"
 #include "DebugManager.h"
+#include "DH3DEngine.h"
 #include "KHParser.h"
 
 LoadManager::LoadManager()
@@ -85,3 +86,5 @@ void LoadManager::DeleteMeshAll()
 {
 	MeshList.clear();
 }
+
+

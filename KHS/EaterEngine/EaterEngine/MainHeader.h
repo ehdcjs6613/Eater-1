@@ -7,6 +7,8 @@
 
 #include <string>
 #include <windows.h>
+
+class MeshFilter;
 class GameObject;
 class Scene;
 class FBXModel;
@@ -29,10 +31,6 @@ extern "C"
 
 
 	EATER_ENGINEDLL void LoadMesh(std::string mMeshName, bool Scale = true,bool LoadAnime = false);	//매쉬 로드
-	EATER_ENGINEDLL void LoadMeshPath(std::string mPath);	//매쉬 로드 경로
-
-	//매쉬를 가져옴
-	EATER_ENGINEDLL	FBXModel* GetMesh(std::string mMeshName);
-
-	
+	EATER_ENGINEDLL void LoadMeshPath(std::string mPath);											//매쉬 로드 경로
+	EATER_ENGINEDLL void GetMeshFilter(std::string mMeshName,MeshFilter* Filter);
 }

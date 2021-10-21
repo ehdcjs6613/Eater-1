@@ -19,6 +19,7 @@
 class GameObject;
 class Component;
 class DH3DEngine;
+class MeshFilter;
 
 class ObjectManager
 {
@@ -63,18 +64,6 @@ public:
 	//싱글톤 클래스
 	EATER_ENGINEDLL static ObjectManager* GM();
 	
-
-	/// 테스트용 엔진
-private:
-	DH3DEngine* pTest_Engine;
-	OneFrameData* pTest_OFD;
-	SharedRenderData* pTest_SRD;
-	DHParser::Mesh* pTest_Mesh;
-
-	void TestAddVerTex(float _x, float _y, float _z,
-		float N_x, float N_y, float N_z);
-
-	void TestAddIndex(UINT _index);
 private:
 	static ObjectManager* instance;
 	ObjectManager();
@@ -97,6 +86,9 @@ private:
 	Delegate_Map<Component> StartUpdate;		//가장먼저 시작되는 업데이트
 	Delegate_Map<Component> Update;				//디폴트  중간단계의 시작되는 업데이트
 	Delegate_Map<Component> EndUpdate;			//가장 마지막에 실행되는 업데이트
+
+
+	std::vector<MeshFilter*> MeshfilterList;
 
 
 	/// <summary>

@@ -28,3 +28,4 @@ void Transfrom::Update()
 	DebugManager::GM()->Print("Transfrom Update 함수 실행 \n");
 }
 
+

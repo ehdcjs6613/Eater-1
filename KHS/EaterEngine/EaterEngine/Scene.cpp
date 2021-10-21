@@ -7,8 +7,6 @@ Scene::Scene()
 Scene::~Scene()
 {
 
-
-
 }
 
 void Scene::PushFunction(void(*mAwake)(), void(*mStart)(), void(*mUpdate)(), void(*mEnd)())

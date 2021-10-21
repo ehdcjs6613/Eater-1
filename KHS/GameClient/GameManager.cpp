@@ -21,6 +21,8 @@ void GameManager::Start(HWND _g_hWnd)
 	CreateScene("Intro")->AddFunction<intro>();
 	CreateScene("InGame")->AddFunction<intro>();
 
+	
+
 	ChoiceScene("Intro");
 	StartScene();
 }

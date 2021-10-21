@@ -41,10 +41,9 @@ GameObject* GameObject::GetChild(int Number)
 	return nullptr;
 }
 
-Component* GameObject::GetDeleteComponent()
+Component* GameObject::GetDeleteComponent(int i)
 {
-	Component* temp =  ComponentList.front();
-	ComponentList.pop();
+	Component* temp = ComponentList[i];
 	return temp;
 }
 

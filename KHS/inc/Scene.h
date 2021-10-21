@@ -24,6 +24,7 @@ public:
 	EATER_ENGINEDLL void PushFunction(void(*mAwake)(), void(*mStart)(), void(*mUpdate)(), void(*mEnd)());
 
 
+	
 	template<typename T>
 	EATER_ENGINEDLL void AddFunction();
 

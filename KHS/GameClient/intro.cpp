@@ -13,18 +13,16 @@ void intro::Awake()
 	LoadMeshPath("../FBXFile/");
 	LoadMesh("Table");
 	
-	//GetMesh("Table");
-
-
-	GameObject* obj = Instance();
-	obj->AddComponent<Transfrom>();
-	obj->AddComponent<MeshFilter>();
+	
 }
 
 void intro::Start()
 {
-
-
+	GameObject* obj = Instance();
+	obj->AddComponent<Transfrom>();
+	obj->AddComponent<MeshFilter>();
+	MeshFilter* temp = obj->GetComponent<MeshFilter>();
+	GetMeshFilter("Table", temp);
 }
 
 void intro::Update()
