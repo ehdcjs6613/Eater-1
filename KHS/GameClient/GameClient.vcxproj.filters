@@ -22,6 +22,12 @@
     <Filter Include="소스 파일\Scene">
       <UniqueIdentifier>{f4fe76d3-6edb-4d2a-ad68-d5564f8f0dcc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Component\AI">
+      <UniqueIdentifier>{b6bf3055-15fd-4fdc-befd-c0a403936bdd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Component\Keyinput">
+      <UniqueIdentifier>{e7082ad1-e513-4d75-a040-3b1a44d10385}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -43,7 +49,10 @@
       <Filter>소스 파일\Scene</Filter>
     </ClInclude>
     <ClInclude Include="AI.h">
-      <Filter>소스 파일\Component</Filter>
+      <Filter>소스 파일\Component\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyInput.h">
+      <Filter>소스 파일\Component\Keyinput</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -57,7 +66,10 @@
       <Filter>소스 파일\Scene</Filter>
     </ClCompile>
     <ClCompile Include="AI.cpp">
-      <Filter>소스 파일\Component</Filter>
+      <Filter>소스 파일\Component\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="KeyInput.cpp">
+      <Filter>소스 파일\Component\Keyinput</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

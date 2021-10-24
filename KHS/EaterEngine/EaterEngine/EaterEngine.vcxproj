@@ -180,34 +180,39 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)lib"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentHeader.h" />
     <ClInclude Include="DebugManager.h" />
     <ClInclude Include="Delegate.h" />
+    <ClInclude Include="EngineData.h" />
     <ClInclude Include="EnumClass.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="hsKey.h" />
     <ClInclude Include="MainHeader.h" />
     <ClInclude Include="MeshFilter.h" />
     <ClInclude Include="ObjectManager.h" />
     <ClInclude Include="LoadManager.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneManager.h" />
-    <ClInclude Include="Transfrom.h" />
+    <ClInclude Include="Transform.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="DebugManager.cpp" />
     <ClCompile Include="Delegate.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="hsKey.cpp" />
     <ClCompile Include="MainHeader.cpp" />
     <ClCompile Include="MeshFilter.cpp" />
     <ClCompile Include="ObjectManager.cpp" />
     <ClCompile Include="LoadManager.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneManager.cpp" />
-    <ClCompile Include="Transfrom.cpp" />
+    <ClCompile Include="Transform.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
