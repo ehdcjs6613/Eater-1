@@ -2,10 +2,17 @@
 #include "GameObject.h"
 #include "DebugManager.h"
 #include "ObjectManager.h"
+#include "LoadManager.h"
+#include "EngineData.h"
+#include "Camera.h"
+#include "hsKey.h"
+#include "MeshFilter.h"
+#include "KHParser.h"
 
 /// 임시 엔진 추가.
 #include "DH3DEngine.h"
-
+extern LoadManager* gLoadManager;
+extern hsKey* gKeyinput;
 
 ObjectManager* ObjectManager::instance = nullptr;
 ObjectManager* ObjectManager::GM()
@@ -20,7 +27,15 @@ ObjectManager* ObjectManager::GM()
 
 ObjectManager::ObjectManager()
 {
-	
+	Global = new GlobalData();
+
+	//테스트용 데이터 초기화
+	MeshFilterData = nullptr;
+
+	pTest_Engine = nullptr;
+	pTest_OFD = nullptr;
+	pTest_SRD = nullptr;
+	pTest_Mesh = nullptr;
 }
 
 ObjectManager::~ObjectManager()
@@ -28,6 +43,56 @@ ObjectManager::~ObjectManager()
 	
 }
 
+void ObjectManager::Test()
+{
+	//// 테스트용 카메라 위치
+	pTest_OFD = new OneFrameData;
+	pTest_OFD->World_Eye_Position = DirectX::SimpleMath::Vector3(10.f, 8.f, -10.f);
+	pTest_OFD->Main_Position = DirectX::SimpleMath::Vector3(0.f, 0.f, 0.f);
+
+
+	pTest_SRD = new SharedRenderData;
+	pTest_Mesh = new DHParser::Mesh;
+	pTest_Mesh->Texture_Key = 0;
+	pTest_Mesh->Vcount = MeshFilterData->m_MeshList[0]->m_Final_Vertex.size();
+	pTest_Mesh->Tcount = MeshFilterData->m_MeshList[0]->m_MeshFace.size();
+	pTest_Mesh->Local_TM = MeshFilterData->m_MeshList[0]->m_WorldTM;
+	pTest_Mesh->World_TM = pTest_Mesh->Local_TM;
+
+	////버텍스 정보 넘겨주기
+	for (int i = 0; i < pTest_Mesh->Vcount; i++)
+	{
+		float x = MeshFilterData->m_MeshList[0]->m_Final_Vertex[i]->m_Pos.x;
+		float y = MeshFilterData->m_MeshList[0]->m_Final_Vertex[i]->m_Pos.y;
+		float z = MeshFilterData->m_MeshList[0]->m_Final_Vertex[i]->m_Pos.z;
+	
+		float N_x = MeshFilterData->m_MeshList[0]->m_Final_Vertex[i]->m_Normal.x;
+		float N_y = MeshFilterData->m_MeshList[0]->m_Final_Vertex[i]->m_Normal.y;
+		float N_z = MeshFilterData->m_MeshList[0]->m_Final_Vertex[i]->m_Normal.z;
+	
+	
+		DHParser::Vertex m_TestVertex;
+		m_TestVertex.Pos = DirectX::SimpleMath::Vector3(x, y, z);
+		m_TestVertex.Normal = DirectX::SimpleMath::Vector3(N_x, N_y, N_z);
+	
+		pTest_Mesh->Optimize_Vertex.push_back(m_TestVertex);
+	}
+	
+	//인덱스 정보 넘겨주기
+	for (int j = 0; j < MeshFilterData->m_MeshList[0]->m_MeshFace.size(); j++)
+	{
+		int x = MeshFilterData->m_MeshList[0]->m_MeshFace[j]->m_VertexIndex[0];
+		int y =MeshFilterData->m_MeshList[0]->m_MeshFace[j]->m_VertexIndex[2];
+		int z =MeshFilterData->m_MeshList[0]->m_MeshFace[j]->m_VertexIndex[1];
+	
+		pTest_Mesh->Optimize_Index.push_back(x);
+		pTest_Mesh->Optimize_Index.push_back(y);
+		pTest_Mesh->Optimize_Index.push_back(z);
+	}
+
+	pTest_SRD->Render_Mesh_List = new std::vector<DHParser::Mesh>;
+	pTest_SRD->Render_Mesh_List->push_back(*pTest_Mesh);
+}
 
 void ObjectManager::PushCreateObject(GameObject* obj)
 {
@@ -45,6 +110,11 @@ void ObjectManager::PushCreateObject(GameObject* obj)
 
 	//빈곳이없다면 그냥 넣어줌
 	ObjectList.push_back(obj);
+}
+
+EATER_ENGINEDLL void ObjectManager::PushMainCamObject(GameObject* obj)
+{
+	MainCam = obj->GetComponent<Camera>();
 }
 
 void ObjectManager::PushDeleteObject(GameObject* obj)
@@ -75,6 +145,13 @@ void ObjectManager::AllDeleteObject()
 	StartUpdate.Clear();
 	Update.Clear();
 	EndUpdate.Clear();
+}
+
+EATER_ENGINEDLL void ObjectManager::CreateEngine(HWND _g_hWnd)
+{
+	pTest_Engine = new DH3DEngine();
+	pTest_Engine->Initialize(_g_hWnd, 1920, 1080);
+	pTest_Engine->SetDebug(true);
 }
 
 void ObjectManager::PushStartUpdate(Component* mComponent)
@@ -108,28 +185,55 @@ void ObjectManager::PlayUpdate()
 {
 
 	DebugManager::GM()->Print("////////////Update////////////\n");
-
-	//가장 먼저실행되는 StartUpdate 함수 리스트
-	DebugManager::GM()->Print("->StartUpdate 실행 \n");
+	gKeyinput->KeyUpDate();
+	
+	///가장 먼저실행되는 StartUpdate 함수 리스트(각 컨퍼넌트들의 초기화작업을 해줄때)
+	DebugManager::GM()->Print("->StartUpdate			실행 \n");
 	StartUpdate.Play();
 
-	//중간 단계에 실행되는 Update 함수 리스트
-	DebugManager::GM()->Print("->DefaultUpdate 실행\n");
+	///이동행렬 실행되는 Update 함수 리스트
+	DebugManager::GM()->Print("->TransformUpdate		실행\n");
+	TransformUpdate.Play();
+
+	///물리 충돌관련 Update 함수 리스트 (물리관련 컨퍼넌트들을 업데이트)
+	DebugManager::GM()->Print("->PhysicsUpdate			실행\n");
+	PhysicsUpdate.Play();
+
+	///중간 단계에 실행되는 Update 함수 리스트 (클라이언트쪽에서 만든 컨퍼넌트들이 업데이트될곳)
+	DebugManager::GM()->Print("->DefaultUpdate			실행\n");
 	Update.Play();
 
-	//가장 마지막에 실행되는 Update 함수 리스트
-	DebugManager::GM()->Print("->FinalUpdate 실행\n");
+	///가장 마지막에 실행되는 Update 함수 리스트
+	DebugManager::GM()->Print("->FinalUpdate			실행\n");
 	EndUpdate.Play();
+
+
+
+	///업데이트 작업끝 그래픽엔진으로 넘겨줄 데이터 정리
+	pTest_OFD->View_Matrix			= MainCam->GetView();
+	pTest_OFD->Projection_Matrix	= MainCam->GetProj();
+
+
+	AllMeshData = MeshFilter::GetMeshData();
+	int size = (*AllMeshData).size();
+
+	//for (int i = 0; i < size; i++)
+	//{
+	//	pTest_OFD->
+	//}
+
+	
+
 
 	///랜더링 작업을 여기서?
 	
+	pTest_Engine->BeginDraw();
 	
-
-
-
-
-
-
+	pTest_Engine->TextDraw({ (int)(1920 - 350), 10 }, 500, 0, 1, 0, 1, 30, L"카메라 모드 변경 : C");
+	
+	pTest_Engine->RenderDraw(pTest_OFD, pTest_SRD);
+	
+	pTest_Engine->EndDraw();
 
 
 	///삭제
@@ -144,6 +248,10 @@ void ObjectManager::PlayStart()
 	AwakeFunction.Play();
 	DebugManager::GM()->Print("->Start 실행 \n");
 	StartFunction.Play();
+
+
+	MeshFilterData = gLoadManager->GetMesh("Table");
+	Test();
 }
 
 void ObjectManager::ClearFunctionList()
@@ -174,6 +282,7 @@ void ObjectManager::DeleteObject()
 
 void ObjectManager::DeleteComponent(Component* cpt)
 {
+	//업데이트 함수포인터에 넣었던 것들 삭제
 	if (cpt->FUNCTION_MASK & AWAKE)
 	{
 		AwakeFunction.Pop(cpt);
@@ -199,7 +308,7 @@ void ObjectManager::DeleteComponent(Component* cpt)
 		EndUpdate.Pop(cpt);
 	}
 
-	///이쪽에서 랜더링 함수포인터에 넣었던 것을 삭제시키면 될듯
+	
 
 
 

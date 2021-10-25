@@ -4,6 +4,7 @@
 #include <vector>
 #include "ObjectManager.h"
 #include "Component.h"
+#include "EngineData.h"
 class Component;
 #ifdef ENGINE_INTERFACE
 #define EATER_ENGINEDLL __declspec(dllexport)
@@ -26,7 +27,7 @@ class Component;
 
 class MeshFilter;
 class ObjectManager;
-class Transfrom;
+class Transform;
 class GameObject
 {
 public:
@@ -44,9 +45,9 @@ public:
 	//삭제할 컨퍼넌트를 가져옴
 	Component* GetDeleteComponent(int i);
 
-
 	//오브젝트의 컨퍼넌트 갯수를 가져옴
 	int GetComponentCount();
+
 public:
 	//컨퍼넌트를 추가 시킨다
 	template<typename T>

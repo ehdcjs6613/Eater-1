@@ -1,6 +1,8 @@
 #include "SceneManager.h"
 #include "ObjectManager.h"
 #include "Scene.h"
+
+SceneManager* SceneManager::Instance = nullptr;
 SceneManager::SceneManager()
 {
 	NowScene = nullptr;
@@ -12,15 +14,10 @@ SceneManager::~SceneManager()
 }
 
 
-
-Scene* SceneManager::CreateScene(std::string name)
+void SceneManager::SetName(std::string Name)
 {
-	Scene* temp = new Scene();
-	temp->Name = name;
-	SceneList.insert({ name,temp });
-	return temp;
+	SceneName = Name;
 }
-
 
 void SceneManager::LoadScene(std::string SceneName)
 {
@@ -61,3 +58,14 @@ void SceneManager::SceneUpdate()
 	NowScene->Update();
 	///삭제여부?
 }
+
+SceneManager* SceneManager::GM()
+{
+	if (Instance == nullptr)
+	{
+		Instance = new SceneManager;
+	}
+
+	return Instance;
+}
+

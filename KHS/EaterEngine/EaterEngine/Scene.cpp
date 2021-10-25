@@ -9,7 +9,7 @@ Scene::~Scene()
 
 }
 
-void Scene::PushFunction(void(*mAwake)(), void(*mStart)(), void(*mUpdate)(), void(*mEnd)())
+void Scene::AddFunction(std::function<void()> mAwake, std::function<void()> mStart, std::function<void()> mUpdate, std::function<void()> mEnd)
 {
 	AwakeFunction = mAwake;
 	StartFunction = mStart;

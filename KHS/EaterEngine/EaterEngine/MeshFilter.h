@@ -7,13 +7,16 @@
 #endif
 
 #include <string>
+#include <vector>
 #include "Component.h"
-#include "../SharedData.h"
+
 
 /// <summary>
-/// 각각의 매쉬정보를 파서에서 받아오고 저장해두는 컨퍼넌트
-/// 현재는 테스트용이다 다시만들어야 할수도있음
+/// 매쉬정보를 파서에서 받아오고 저장해두는 컨퍼넌트
 /// </summary>
+
+struct MeshData;
+class Transform;
 class FBXModel;
 class DH3DEngine;
 class MeshFilter : public Component
@@ -22,25 +25,26 @@ public:
 	EATER_ENGINEDLL MeshFilter();
 	virtual ~MeshFilter();
 
-	// Component을(를) 통해 상속됨
-	virtual void Awake() override;
-
 	virtual void Start() override;
 
-	virtual void Update() override;
+	virtual void EndUpdate() override;
 
-
-	static HWND hWnd;
 	EATER_ENGINEDLL void SetMeshName(std::string mMeshName);
-	EATER_ENGINEDLL void SetBuffer(FBXModel* Model);
+
+
+	static std::vector<MeshData*>* GetMeshData();
 private:
+	//매쉬 로드여부
+	bool isLoad;
+
 	std::string MeshName;
 	FBXModel* MeshFilterData;
 
 
-	DH3DEngine* pTest_Engine;
-	OneFrameData* pTest_OFD;
-	SharedRenderData* pTest_SRD;
-	DHParser::Mesh* pTest_Mesh;
+	Transform* transform;
+	MeshData* Meshtemp;
+
+
+	static std::vector<MeshData*> MeshList;
 };
 
