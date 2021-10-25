@@ -20,13 +20,13 @@ public:
 	EATER_ENGINEDLL Scene();
 	EATER_ENGINEDLL virtual ~Scene();
 
-	void AddFunction
-	(
-		std::function<void()> mAwake,
-		std::function<void()> mStart,
-		std::function<void()> mUpdate,
-		std::function<void()> mEnd
-	);
+	//스크린을 넣어주면 
+	EATER_ENGINEDLL void PushFunction(void(*mAwake)(), void(*mStart)(), void(*mUpdate)(), void(*mEnd)());
+
+
+	
+	template<typename T>
+	EATER_ENGINEDLL void AddFunction();
 
 	virtual void Awake();
 	virtual void Start();
@@ -35,13 +35,23 @@ public:
 
 
 	std::string Name;
+private:
 	std::function<void()> AwakeFunction;
 	std::function<void()> StartFunction;
 	std::function<void()> UpdateFunction;
 	std::function<void()> EndFunction;
-private:
 
 	Scene* LinkScene;
 };
 
+template<typename T>
+inline void Scene::AddFunction()
+{
+	T* temp = new T();
+
+	AwakeFunction = std::bind(&T::Awake, temp);
+	StartFunction = std::bind(&T::Start, temp);
+	UpdateFunction = std::bind(&T::Update, temp);
+	EndFunction = std::bind(&T::End, temp);
+}
 

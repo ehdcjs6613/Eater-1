@@ -38,10 +38,9 @@ public:
 public:
 	EATER_ENGINEDLL void SetObject(GameObject* obj);
 private:
-
-protected:
 	//이컨퍼넌트를 가지고 있는 게임오브젝트
 	GameObject* gameobject;
+protected:
 };
 
 

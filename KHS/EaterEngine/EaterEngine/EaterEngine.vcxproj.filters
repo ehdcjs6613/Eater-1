@@ -55,15 +55,6 @@
     <Filter Include="소스 파일\Manager\LoadManager">
       <UniqueIdentifier>{931b4d5c-1b99-4484-b48b-b556ea25b14b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Component\Camera">
-      <UniqueIdentifier>{2dd6ee96-a450-48a0-b4e7-8f934ff7a1be}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Data">
-      <UniqueIdentifier>{5dcb3e99-0855-4943-8b83-e3afc16f9656}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\KeyInput">
-      <UniqueIdentifier>{a08a0ee9-85c4-4e41-a474-0c2f36fbe5a6}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -83,6 +74,9 @@
     </ClInclude>
     <ClInclude Include="SceneManager.h">
       <Filter>소스 파일\Manager\SceneManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Transfrom.h">
+      <Filter>소스 파일\Component\Transfrom</Filter>
     </ClInclude>
     <ClInclude Include="DebugManager.h">
       <Filter>소스 파일\Manager\DebugManager</Filter>
@@ -105,18 +99,6 @@
     <ClInclude Include="LoadManager.h">
       <Filter>소스 파일\Manager\LoadManager</Filter>
     </ClInclude>
-    <ClInclude Include="Transform.h">
-      <Filter>소스 파일\Component\Transfrom</Filter>
-    </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>소스 파일\Component\Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="EngineData.h">
-      <Filter>소스 파일\Data</Filter>
-    </ClInclude>
-    <ClInclude Include="hsKey.h">
-      <Filter>소스 파일\KeyInput</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -137,6 +119,9 @@
     <ClCompile Include="SceneManager.cpp">
       <Filter>소스 파일\Manager\SceneManager</Filter>
     </ClCompile>
+    <ClCompile Include="Transfrom.cpp">
+      <Filter>소스 파일\Component\Transfrom</Filter>
+    </ClCompile>
     <ClCompile Include="DebugManager.cpp">
       <Filter>소스 파일\Manager\DebugManager</Filter>
     </ClCompile>
@@ -151,15 +136,6 @@
     </ClCompile>
     <ClCompile Include="LoadManager.cpp">
       <Filter>소스 파일\Manager\LoadManager</Filter>
-    </ClCompile>
-    <ClCompile Include="Transform.cpp">
-      <Filter>소스 파일\Component\Transfrom</Filter>
-    </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>소스 파일\Component\Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="hsKey.cpp">
-      <Filter>소스 파일\KeyInput</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
