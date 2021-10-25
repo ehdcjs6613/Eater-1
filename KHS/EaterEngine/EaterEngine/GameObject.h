@@ -4,6 +4,7 @@
 #include <vector>
 #include "ObjectManager.h"
 #include "Component.h"
+#include "EngineData.h"
 class Component;
 #ifdef ENGINE_INTERFACE
 #define EATER_ENGINEDLL __declspec(dllexport)
@@ -26,7 +27,7 @@ class Component;
 
 class MeshFilter;
 class ObjectManager;
-class Transfrom;
+class Transform;
 class GameObject
 {
 public:
@@ -42,11 +43,11 @@ public:
 	EATER_ENGINEDLL GameObject* GetChild(int Number);		//자식객체를 가져옴
 
 	//삭제할 컨퍼넌트를 가져옴
-	Component* GetDeleteComponent();
-
+	Component* GetDeleteComponent(int i);
 
 	//오브젝트의 컨퍼넌트 갯수를 가져옴
 	int GetComponentCount();
+
 public:
 	//컨퍼넌트를 추가 시킨다
 	template<typename T>
@@ -69,7 +70,7 @@ protected:
 private:
 
 	//컨퍼넌트 리스트
-	std::queue<Component*> ComponentList;
+	std::vector<Component*> ComponentList;
 	//자식객체 리스트
 	//std::vector<GameObject*> ChildList;
 
@@ -78,12 +79,19 @@ private:
 template<typename T>
 inline void GameObject::AddComponent(typename std::enable_if<std::is_base_of<Component, T>::value, bool>::type t)
 {
+	//이함수는 무조건 Component를 상속받은 클래스만 들어올수있다
+	//그래서 Component 안에 함수만 사용함
+
 	T* ConponentBox = new T();
 	//생성한 컨퍼넌트를 리스트에 넣는다
-	ComponentList.push(ConponentBox);
+	ComponentList.push_back(ConponentBox);
 	ConponentBox->SetObject(this);
+	
+	//나중에 이타입으로 찾아서 가져올수있도록 타입 설정
+	ConponentBox->ComponentType = typeid(T).hash_code();
 
-	///오버라이딩 확인 여부
+
+	///오버라이딩 확인 각각에맞는 함수포인터 리스트에 넣는다 
 	//Awake
 	if (&Component::Awake != &T::Awake)
 	{
@@ -123,7 +131,24 @@ inline void GameObject::AddComponent(typename std::enable_if<std::is_base_of<Com
 template<typename T>
 inline T* GameObject::GetComponent(typename std::enable_if<std::is_base_of<Component, T>::value, bool>::type t)
 {
-	return NULL;
+	//우진이의 코드를 보고 변경
+	//문제점...만약 한개의 오브젝트에 같은 컨퍼넌트 두개가 들어와있다면 어떻게 찾을것인가...
+
+	int count = ComponentList.size();
+	for (int i = 0; i < count; i++)
+	{
+		//현재 컨퍼넌트와 찾고자하는 컨퍼넌트의 타입 비교
+		if (ComponentList[i]->ComponentType == typeid(T).hash_code())
+		{
+			//찾은 컨퍼넌트를 타입변환
+			T* temp = dynamic_cast<T*>(ComponentList[i]);
+			return temp;
+		}
+	}
+
+
+	//만약 찾지못했다면 에러코드를 내보내주면될듯..
+	return nullptr;
 }
 
 template<typename T>
