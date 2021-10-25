@@ -9,18 +9,23 @@ struct GlobalData
 	DirectX::XMMATRIX mProj;
 };
 
+
 struct FBXModel;
 //한개의 매쉬에 존재하는 데이터
 struct MeshData
 {
 	//파싱한 데이터
 	FBXModel* FBXData;
-
 	//World
 	DirectX::XMMATRIX mWorld;
-
-	//위치값 (랜더링쪽에서 정렬할때 편하려고)
+	//Mesh 위치값
 	DirectX::XMFLOAT3 Pos;
+
+
+	//인덱스 버퍼
+	void* IB;
+	//버텍스 버퍼
+	void* VB;
 };
 
 

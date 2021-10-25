@@ -51,8 +51,10 @@ public:
 	/// 업데이트 단계
 	/// </summary>
 	EATER_ENGINEDLL void PushStartUpdate(Component* obj);
-	EATER_ENGINEDLL void PushUpdate(Component* obj);
+	EATER_ENGINEDLL void PushTransformUpdate(Component* obj);
+	EATER_ENGINEDLL void PushPhysicsUpdate(Component* obj);
 	EATER_ENGINEDLL void PushEndUpdate(Component* obj);
+	EATER_ENGINEDLL void PushUpdate(Component* obj);
 
 
 
@@ -83,8 +85,8 @@ private:
 	std::string MeshName;
 	FBXModel* MeshFilterData;
 
-
 	DH3DEngine* pTest_Engine;
+
 	OneFrameData* pTest_OFD;
 	SharedRenderData* pTest_SRD;
 	DHParser::Mesh* pTest_Mesh;

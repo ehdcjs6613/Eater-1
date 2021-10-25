@@ -13,11 +13,13 @@ class Component;
 #endif
 
 
-#define AWAKE			0x00000001
-#define START			0x00000010
-#define START_UPDATE	0x00000100
-#define UPDATE			0x00001000
-#define END_UPDATE		0x00010000
+#define AWAKE				0x00000001
+#define START				0x00000010
+#define START_UPDATE		0x00000100
+#define Transform_UPDATE	0x00001000
+#define Physics_UPDATE		0x00010000
+#define UPDATE				0x00100000
+#define END_UPDATE			0x01000000
 
 
 
@@ -33,6 +35,11 @@ class GameObject
 public:
 	GameObject();
 	~GameObject();
+public:
+	std::string Name;			//이름
+	int			Tag;			//테그
+	bool		IsDelete;		//삭제 여부
+	bool		IsActive;		//기능 중지여부
 
 	EATER_ENGINEDLL void SetActive(bool active);	//모든 컨퍼넌트 기능중지 여부
 	EATER_ENGINEDLL void Delete();					//오브젝트를 삭제함
@@ -48,6 +55,8 @@ public:
 	//오브젝트의 컨퍼넌트 갯수를 가져옴
 	int GetComponentCount();
 
+	//그래픽엔진쪽으로 넘겨줄 매쉬한개의 정보
+	MeshData* OneMeshData;
 public:
 	//컨퍼넌트를 추가 시킨다
 	template<typename T>
@@ -60,20 +69,13 @@ public:
 	//자식객체에서 찾고자하는 컨퍼넌트가있다면 그오브젝트에 컨퍼넌트를 가져옴
 	template<typename T>
 	T* GetChildComponent(typename std::enable_if<std::is_base_of<Component, T>::value, bool>::type t = std::is_base_of<Component, T>::value);
-public:
-	std::string Name;			//이름
-	int			Tag;			//테그
-	bool		IsDelete;		//삭제 여부
-protected:
-	bool IsActive;				//기능 중지여부
-	unsigned int FunctionMask;	//어떤 함수포인터에 넣었는지 여부
 private:
-
 	//컨퍼넌트 리스트
 	std::vector<Component*> ComponentList;
 	//자식객체 리스트
 	//std::vector<GameObject*> ChildList;
 
+	unsigned int FunctionMask;	//어떤 함수포인터에 넣었는지 여부
 };
 
 template<typename T>
@@ -92,35 +94,48 @@ inline void GameObject::AddComponent(typename std::enable_if<std::is_base_of<Com
 
 
 	///오버라이딩 확인 각각에맞는 함수포인터 리스트에 넣는다 
-	//Awake
+	///Awake
 	if (&Component::Awake != &T::Awake)
 	{
 		ObjectManager::GM()->PushAwake(ConponentBox);
 		ConponentBox->FUNCTION_MASK |= AWAKE;
 	}
 
-	//Start
+	///Start
 	if (&Component::Start != &T::Start)
 	{
 		ObjectManager::GM()->PushStart(ConponentBox);
 		ConponentBox->FUNCTION_MASK |= START;
 	}
 
-	//StartUpdate
+	///StartUpdate
 	if (&Component::StartUpdate != &T::StartUpdate)
 	{
 		ObjectManager::GM()->PushStartUpdate(ConponentBox);
 		ConponentBox->FUNCTION_MASK |= START_UPDATE;
 	}
+	///TransformUpdate
+	if (&Component::TransformUpdate != &T::TransformUpdate)
+	{
+		ObjectManager::GM()->PushTransformUpdate(ConponentBox);
+		ConponentBox->FUNCTION_MASK |= Transform_UPDATE;
+	}
 
-	//DefaultUpdate
+	///PhysicsUpdate
+	if (&Component::PhysicsUpdate != &T::PhysicsUpdate)
+	{
+		ObjectManager::GM()->PushPhysicsUpdate(ConponentBox);
+		ConponentBox->FUNCTION_MASK |= Physics_UPDATE;
+	}
+
+	///DefaultUpdate
 	if (&Component::Update != &T::Update)
 	{
 		ObjectManager::GM()->PushUpdate(ConponentBox);
 		ConponentBox->FUNCTION_MASK |= UPDATE;
 	}
 
-	//EndUpdate
+	///EndUpdate
 	if (&Component::EndUpdate != &T::EndUpdate)
 	{
 		ObjectManager::GM()->PushEndUpdate(ConponentBox);
@@ -145,7 +160,6 @@ inline T* GameObject::GetComponent(typename std::enable_if<std::is_base_of<Compo
 			return temp;
 		}
 	}
-
 
 	//만약 찾지못했다면 에러코드를 내보내주면될듯..
 	return nullptr;

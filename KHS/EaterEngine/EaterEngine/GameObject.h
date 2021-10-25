@@ -13,11 +13,13 @@ class Component;
 #endif
 
 
-#define AWAKE			0x00000001
-#define START			0x00000010
-#define START_UPDATE	0x00000100
-#define UPDATE			0x00001000
-#define END_UPDATE		0x00010000
+#define AWAKE				0x00000001
+#define START				0x00000010
+#define START_UPDATE		0x00000100
+#define Transform_UPDATE	0x00001000
+#define Physics_UPDATE		0x00010000
+#define UPDATE				0x00100000
+#define END_UPDATE			0x01000000
 
 
 
@@ -47,7 +49,8 @@ public:
 
 	//오브젝트의 컨퍼넌트 갯수를 가져옴
 	int GetComponentCount();
-
+	
+	MeshData* OneMeshData;
 public:
 	//컨퍼넌트를 추가 시킨다
 	template<typename T>
@@ -111,6 +114,18 @@ inline void GameObject::AddComponent(typename std::enable_if<std::is_base_of<Com
 	{
 		ObjectManager::GM()->PushStartUpdate(ConponentBox);
 		ConponentBox->FUNCTION_MASK |= START_UPDATE;
+	}
+
+	if (&Component::TransformUpdate != &T::TransformUpdate)
+	{
+		ObjectManager::GM()->PushTransformUpdate(ConponentBox);
+		ConponentBox->FUNCTION_MASK |= Transform_UPDATE;
+	}
+
+	if (&Component::TransformUpdate != &T::TransformUpdate)
+	{
+		ObjectManager::GM()->PushPhysicsUpdate(ConponentBox);
+		ConponentBox->FUNCTION_MASK |= Physics_UPDATE;
 	}
 
 	//DefaultUpdate

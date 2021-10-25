@@ -18,7 +18,7 @@ public:
 	//생성될때 한번
 	void Awake();
 	//가장먼저 실행되는 업데이트
-	void StartUpdate();
+	void TransformUpdate();
 
 
 public:

@@ -160,6 +160,16 @@ void ObjectManager::PushStartUpdate(Component* mComponent)
 	StartUpdate.Push(mComponent, std::bind(&Component::StartUpdate, mComponent));
 }
 
+void ObjectManager::PushTransformUpdate(Component* obj)
+{
+	TransformUpdate.Push(obj, std::bind(&Component::TransformUpdate, obj));
+}
+
+void ObjectManager::PushPhysicsUpdate(Component* obj)
+{
+	PhysicsUpdate.Push(obj, std::bind(&Component::PhysicsUpdate, obj));
+}
+
 void ObjectManager::PushUpdate(Component* mComponent)
 {
 	Update.Push(mComponent, std::bind(&Component::Update, mComponent));
@@ -296,6 +306,16 @@ void ObjectManager::DeleteComponent(Component* cpt)
 	if (cpt->FUNCTION_MASK & START_UPDATE)
 	{
 		StartUpdate.Pop(cpt);
+	}
+
+	if (cpt->FUNCTION_MASK & Transform_UPDATE)
+	{
+		TransformUpdate.Pop(cpt);
+	}
+
+	if (cpt->FUNCTION_MASK & Physics_UPDATE)
+	{
+		PhysicsUpdate.Pop(cpt);
 	}
 
 	if (cpt->FUNCTION_MASK & UPDATE)

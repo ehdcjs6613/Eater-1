@@ -51,8 +51,10 @@ public:
 	/// 업데이트 단계
 	/// </summary>
 	EATER_ENGINEDLL void PushStartUpdate(Component* obj);
-	EATER_ENGINEDLL void PushUpdate(Component* obj);
+	EATER_ENGINEDLL void PushTransformUpdate(Component* obj);
+	EATER_ENGINEDLL void PushPhysicsUpdate(Component* obj);
 	EATER_ENGINEDLL void PushEndUpdate(Component* obj);
+	EATER_ENGINEDLL void PushUpdate(Component* obj);
 
 
 

@@ -25,6 +25,10 @@ public:
 	virtual void Start() {};
 	//처음
 	virtual void StartUpdate() {};
+	//행렬 업데이트
+	virtual void TransformUpdate() {};
+	//물리 업데이트
+	virtual void PhysicsUpdate() {};
 	//일반 업데이트
 	virtual void Update() {};
 	//마지막 업데이트
