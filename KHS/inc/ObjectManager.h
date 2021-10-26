@@ -85,8 +85,8 @@ private:
 	std::string MeshName;
 	FBXModel* MeshFilterData;
 
-
 	DH3DEngine* pTest_Engine;
+
 	OneFrameData* pTest_OFD;
 	SharedRenderData* pTest_SRD;
 	DHParser::Mesh* pTest_Mesh;

@@ -19,6 +19,8 @@ public:
 	virtual ~MeshFilter();
 
 	virtual void Start() override;
+public:
+	//메쉬의 이름을 넣으면 데이터 로드
 	EATER_ENGINEDLL void SetMeshName(std::string mMeshName);
 private:
 	//매쉬 로드여부

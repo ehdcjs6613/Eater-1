@@ -18,6 +18,7 @@ ObjectManager* gObjectManager;
 LoadManager* gLoadManager;
 hsKey*		gKeyinput;
 HWND		gHwnd;
+
 //엔진 생성
 EATER_ENGINEDLL void StartEngine(HWND _g_hWnd)
 {
@@ -51,7 +52,7 @@ EATER_ENGINEDLL void UpdateEngine()
 }
 
 //게임 오브젝트 생성
-EATER_ENGINEDLL GameObject* Instance()
+EATER_ENGINEDLL GameObject* Instance(std::string ObjName)
 {
 	GameObject* temp = new GameObject();
 	ObjectManager::GM()->PushCreateObject(temp);
@@ -136,6 +137,11 @@ EATER_ENGINEDLL bool GetKeyUp(byte number)
 EATER_ENGINEDLL bool GetKey(byte number)
 {
 	return gKeyinput->GetKey(number);
+}
+
+EATER_ENGINEDLL bool GetTogle(byte number)
+{
+	return gKeyinput->GetKeyToggle(number);
 }
 
 EATER_ENGINEDLL float GetMousePosX()

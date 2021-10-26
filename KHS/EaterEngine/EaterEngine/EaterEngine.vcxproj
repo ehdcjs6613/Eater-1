@@ -189,11 +189,13 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)lib"</Command>
     <ClInclude Include="EnumClass.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="GraphicsEngine.h" />
     <ClInclude Include="hsKey.h" />
     <ClInclude Include="MainHeader.h" />
     <ClInclude Include="MeshFilter.h" />
     <ClInclude Include="ObjectManager.h" />
     <ClInclude Include="LoadManager.h" />
+    <ClInclude Include="ResourcesData.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Transform.h" />
@@ -205,6 +207,7 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)lib"</Command>
     <ClCompile Include="Delegate.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="GraphicsEngine.cpp" />
     <ClCompile Include="hsKey.cpp" />
     <ClCompile Include="MainHeader.cpp" />
     <ClCompile Include="MeshFilter.cpp" />

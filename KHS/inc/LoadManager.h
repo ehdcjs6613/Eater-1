@@ -53,9 +53,21 @@ public:
 	//모든 매쉬정보를 삭제
 	void DeleteMeshAll();
 private:
+	//인덱스 버퍼 
+	//버텍스 버퍼
+	 
+	//메터리얼
+	 
+	//텍스쳐
+	
+	//애니메이션
+	//
+
+
+
 	///리스트
-	//매쉬
 	std::map<std::string,FBXModel*> MeshList;
+
 	//쉐이더 
 	//텍스쳐
 

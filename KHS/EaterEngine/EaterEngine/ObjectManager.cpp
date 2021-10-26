@@ -224,8 +224,9 @@ void ObjectManager::PlayUpdate()
 	pTest_OFD->Projection_Matrix	= MainCam->GetProj();
 
 
-	AllMeshData = MeshFilter::GetMeshData();
-	int size = (*AllMeshData).size();
+
+	//AllMeshData = MeshFilter::GetMeshData();
+	//int size = (*AllMeshData).size();
 
 	//for (int i = 0; i < size; i++)
 	//{

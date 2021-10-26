@@ -20,7 +20,7 @@ void MeshFilter::Start()
 {
 	if (isLoad == true)
 	{
-		gameobject->OneMeshData->FBXData = gLoadManager->GetMesh(MeshName);
+		//gameobject->OneMeshData->FBXData = gLoadManager->GetMesh(MeshName);
 	}
 }
 

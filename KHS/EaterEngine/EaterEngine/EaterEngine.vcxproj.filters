@@ -67,6 +67,9 @@
     <Filter Include="소스 파일\Manager\CameraManager">
       <UniqueIdentifier>{a4cefd49-d148-47a2-8470-4b1425e3d9d5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\GraphicsEngine">
+      <UniqueIdentifier>{f98c4bfe-4af1-41ea-aebe-e9f347549f2c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -120,6 +123,12 @@
     <ClInclude Include="hsKey.h">
       <Filter>소스 파일\KeyInput</Filter>
     </ClInclude>
+    <ClInclude Include="ResourcesData.h">
+      <Filter>소스 파일\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsEngine.h">
+      <Filter>소스 파일\GraphicsEngine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -163,6 +172,9 @@
     </ClCompile>
     <ClCompile Include="hsKey.cpp">
       <Filter>소스 파일\KeyInput</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsEngine.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

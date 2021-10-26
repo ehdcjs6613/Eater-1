@@ -30,6 +30,7 @@ public:
 
 	//뷰행렬과 프로젝션 행렬을 곱한값을 가져온다
 	DirectX::XMMATRIX GetView_Proj();
+	
 private:
 	Transform* tranform;
 

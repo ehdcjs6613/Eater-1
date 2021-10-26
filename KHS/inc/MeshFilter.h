@@ -7,18 +7,11 @@
 #endif
 
 #include <string>
-#include <vector>
 #include "Component.h"
-
-
 /// <summary>
 /// 매쉬정보를 파서에서 받아오고 저장해두는 컨퍼넌트
 /// </summary>
 
-struct MeshData;
-class Transform;
-class FBXModel;
-class DH3DEngine;
 class MeshFilter : public Component
 {
 public:
@@ -26,25 +19,12 @@ public:
 	virtual ~MeshFilter();
 
 	virtual void Start() override;
-
-	virtual void EndUpdate() override;
-
+public:
+	//메쉬의 이름을 넣으면 데이터 로드
 	EATER_ENGINEDLL void SetMeshName(std::string mMeshName);
-
-
-	static std::vector<MeshData*>* GetMeshData();
 private:
 	//매쉬 로드여부
 	bool isLoad;
-
 	std::string MeshName;
-	FBXModel* MeshFilterData;
-
-
-	Transform* transform;
-	MeshData* Meshtemp;
-
-
-	static std::vector<MeshData*> MeshList;
 };
 

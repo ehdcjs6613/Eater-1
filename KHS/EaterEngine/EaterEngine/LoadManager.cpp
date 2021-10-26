@@ -2,6 +2,7 @@
 #include "DebugManager.h"
 #include "DH3DEngine.h"
 #include "KHParser.h"
+#include "EngineData.h"
 
 LoadManager::LoadManager()
 {
@@ -43,12 +44,17 @@ void LoadManager::LoadMesh( std::string Name, bool Scale, bool LoadAnime)
 	std::string temp = ".fbx";
 	std::string FullName = MeshPath + Name + temp;
 
+	//규황이 파서를 통해서 매쉬를 로드
 	DebugManager::GM()->Print(FullName.c_str());
 	EATER_Parser->LoadScene(FullName.c_str(), Scale, LoadAnime);
-
-	//모델리스트에 넣는다
 	FBXModel* box = EATER_Parser->GetModel();
-	MeshList.insert({ Name,box });
+
+	//나의 구조체맞게 값을 복사한다
+	ChangeData(box);
+
+
+
+		
 }
 
 void LoadManager::LoadPrefap(std::string Name)
@@ -85,6 +91,27 @@ void LoadManager::DeleteMesh(std::string mMeshName)
 void LoadManager::DeleteMeshAll()
 {
 	MeshList.clear();
+}
+
+void LoadManager::ChangeData(FBXModel* mData)
+{
+	///로드한 데이터 EaterEngine 데이터 타입에 맞게 변경
+	
+	//지금은 동혁이 엔진을 참조하여 만들것
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
 
 
