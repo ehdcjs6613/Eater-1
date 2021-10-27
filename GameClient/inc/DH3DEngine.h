@@ -104,7 +104,7 @@ private:
 	ID3D11DepthStencilState* NormalDSS = nullptr;
 
 	/// TextÃâ·Â
-	D2DSupport* m_D2DSupport = nullptr;
+	D2DSupport* m_pD2DSupport = nullptr;
 
 	/// Axis, Grid
 	AxisGrid* m_AxisGrid = nullptr;

@@ -8,6 +8,13 @@
 #include "D2DSupportDefine.h"
 #include "D2DSupportHeader.h"
 
+#ifdef ENGINE_INTERFACE
+#define EATER_ENGINEDLL __declspec(dllexport)
+#else
+#define EATER_ENGINEDLL __declspec(dllimport)
+#endif
+
+
 class D2DSupport
 {
 private:

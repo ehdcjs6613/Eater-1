@@ -8,6 +8,13 @@
 #include "D2DSupportDefine.h"
 #include "D2DSupportHeader.h"
 
+#ifdef ENGINE_INTERFACE
+#define EATER_ENGINEDLL __declspec(dllexport)
+#else
+#define EATER_ENGINEDLL __declspec(dllimport)
+#endif
+
+
 class D2DSupport
 {
 private:
@@ -68,7 +75,7 @@ public:
 	void LoadLoadingImage(ATL::CString _Image_Path);
 	void DrawLoadingImage();
 
-	void LoadBitMap(ATL::CString _Image_Name ,ATL::CString _File_Path);
+	EATER_ENGINEDLL void LoadBitMap(ATL::CString _Image_Name ,ATL::CString _File_Path);
 
 	void thDrawBitmap(ATL::CString _Image_Name, POINTF _Position, float _Alpha, float _Scale_X = 1.f, float _Scale_Y = 1.f, float _Angle = 0.f);
 

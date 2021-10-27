@@ -2,12 +2,18 @@
 /// <summary>
 /// 컨퍼넌트들의 최상위 클래스
 /// </summary>
+/// 
+
+
+#include <atlstr.h>
 
 #ifdef ENGINE_INTERFACE
 #define EATER_ENGINEDLL __declspec(dllexport)
 #else
 #define EATER_ENGINEDLL __declspec(dllimport)
 #endif
+
+
 
 #include "EnumClass.h"
 class GameObject;
