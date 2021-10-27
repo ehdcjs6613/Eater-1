@@ -19,10 +19,13 @@
 class GameObject;
 class Component;
 class DH3DEngine;
+class GameTimer;
 
 class ObjectManager
 {
 public:
+	GameTimer* m_pTimer;
+
 	~ObjectManager();
 
 	//생성한 오브젝트를 넣어줌

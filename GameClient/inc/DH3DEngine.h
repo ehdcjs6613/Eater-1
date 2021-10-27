@@ -7,6 +7,7 @@
 class D2DSupport;
 class AxisGrid;
 class SkyBox;
+class GameTimer;
 
 class DH3DEngine
 {
@@ -44,7 +45,7 @@ public:
 	void BeginDraw();
 
 	/// 엔진 Update ( Dtime 기반 )
-	void Update(float DTime);
+	void Update(GameTimer*);
 
 	/// 엔진 Draw
 	void RenderDraw(OneFrameData* _OFD, SharedRenderData* _SRD);

@@ -1,4 +1,5 @@
 
+#include "GameTimer.h"
 #include "DH3DEngine.h"
 #include "SkyBox.h"
 #include "D2DSupport.h"
@@ -270,6 +271,11 @@ void DH3DEngine::CreateGraphicResource()
 	// D2D 를 사용하기 위함.
 	m_D2DSupport = new D2DSupport(g_hWnd, DX11_Swap_Chain);
 	m_AxisGrid = new AxisGrid(DX11_Device, DX11_Device_Context, DX11_Raster_State);
+
+	m_D2DSupport->LoadLoadingImage("../Image/apple_1.png");
+	
+	m_D2DSupport->LoadBitMap("../Image/apple_1.png","../Image/apple_1.png");
+	
 }
 
 void DH3DEngine::SetDebug(bool _Is_Debug, int _Grid_Num)
@@ -303,10 +309,37 @@ void DH3DEngine::BeginDraw()
 	DX11_Device_Context->ClearDepthStencilView(DX11_Depth_Stencil_View, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 }
-
-void DH3DEngine::Update(float DTime)
+/// <summary>
+/// 엔진에서는 게임타이머의 포인터를 따로 적용시킨다.
+/// </summary>
+/// <param name="_pTimer"></param>
+void DH3DEngine::Update(GameTimer* _pTimer)
 {
-	m_Delta_Time = DTime;
+	//이전과 현재 프레임간의 시간계산함수
+	_pTimer->Tick();
+
+	//프레임카운트와
+	static int frameCnt = 0;
+	//누적시간
+	static float timeElapsed = 0.0f;
+	//프레임을 카운트를 늘려주고
+	frameCnt++;
+
+	// Compute averages over one second period.
+	//1초 동안의 평균을 계산합니다.
+	if ((_pTimer->TotalTime() - timeElapsed) >= 1.0f)
+	{
+		float fps = (float)frameCnt; // fps = frameCnt / 1
+		float mspf = 1000.0f / fps;
+
+		// Reset for next average.
+		//다음 평균을 위해 재설정합니다.
+		frameCnt = 0;
+		timeElapsed += 1.0f;
+	}
+
+	//현재 시간을 엔진 델타 타임에 추가합니다.
+	m_Delta_Time = _pTimer->DeltaTime();
 
 	// view TM을 만든다.
 	//m_DHCamera->UpdateViewMatrix();
@@ -327,6 +360,7 @@ void DH3DEngine::RenderDraw(OneFrameData* _OFD, SharedRenderData* _SRD)
 		_SRD->Texture_SetUp = true;
 	}
 
+	
 	if (Is_Debug)
 	{
 		// 갱신주기
@@ -349,6 +383,48 @@ void DH3DEngine::RenderDraw(OneFrameData* _OFD, SharedRenderData* _SRD)
 		m_D2DSupport->Push_DrawText({ 10, 29 }, 500, 1, 0, 0, 1, 20, (TCHAR*)L"DTime : %.4f ms", _deltaTimeMS);
 		m_D2DSupport->Push_DrawText({ 510, 29 }, 500, 1, 0, 0, 1, 20, (TCHAR*)L"카메라 위치 : %f, %f, %f", _OFD->World_Eye_Position.x, _OFD->World_Eye_Position.y, _OFD->World_Eye_Position.z);
 		m_D2DSupport->Push_DrawText({ 510, 50 }, 500, 1, 0, 0, 1, 20, (TCHAR*)L"캐릭터 위치 : %f, %f, %f", _OFD->Main_Position.x, _OFD->Main_Position.y, _OFD->Main_Position.z);
+		POINTF pos;
+
+
+#pragma region ShowImage
+		m_D2DSupport->Push_DrawImage
+		(
+			"../Image/apple_1.png", //name
+			{ 1000,1 },				//Image Position
+			{ 1,1 },				//Image Scale//
+			0,
+			1.0f,
+			{ 1,1 }, //POS
+			{ 0.1f, 0.1f }, //SCALE
+			0,
+			1.0f
+		);
+		m_D2DSupport->Push_DrawImage
+		(
+			"../Image/apple_1.png", //name
+			{ 1200,1 },				//Image Position
+			{ 1,1 },				//Image Scale//
+			0,
+			1.0f,
+			{ 1,1 }, //POS
+			{ 0.1f, 0.1f }, //SCALE
+			0,
+			0.6f
+		);
+		m_D2DSupport->Push_DrawImage
+		(
+			"../Image/apple_1.png", //name
+			{ 1400,1 },				//Image Position
+			{ 1,1 },				//Image Scale//
+			0,
+			1.0f,
+			{ 1,1 }, //POS
+			{ 0.1f, 0.1f }, //SCALE
+			0,
+			0.3f
+		);
+#pragma endregion TestShowImage
+		
 
 		// 피쳐레벨, 어댑터 등의 상태를 그린다.
 		this->Draw_Status();
@@ -361,7 +437,6 @@ void DH3DEngine::RenderDraw(OneFrameData* _OFD, SharedRenderData* _SRD)
 			Is_Draw_AxisGrid = true;
 		}
 	}
-
 
 	/// 그릴 메시가 존재하면 메시리스트를 순회하며 그린다.
 	for (auto& _Render_Mesh : *_SRD->Render_Mesh_List)
@@ -477,6 +552,7 @@ void DH3DEngine::UIDraw(Shared2DRenderData* _S2DRD)
 		for (auto Img_Data : _S2DRD->Img_Path_List)
 		{
 			m_D2DSupport->LoadBitMap(Img_Data.first, Img_Data.second);
+			
 		}
 
 		_S2DRD->Is_Img_Load = true;

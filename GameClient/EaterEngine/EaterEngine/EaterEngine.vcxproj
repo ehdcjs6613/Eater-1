@@ -193,6 +193,7 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)lib"</Command>
     <ClInclude Include="ObjectManager.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="Texture.h" />
     <ClInclude Include="Transfrom.h" />
   </ItemGroup>
   <ItemGroup>
@@ -206,6 +207,7 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)lib"</Command>
     <ClCompile Include="ObjectManager.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Transfrom.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

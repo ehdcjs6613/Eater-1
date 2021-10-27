@@ -9,9 +9,9 @@
 */
 
 #ifdef _DEBUG
-#pragma comment( lib, "DirectXTKd.lib" )
+#pragma comment( lib, "../lib/DirectXTK2021_06_14/DirectXTKd.lib" )
 #else
-#pragma comment( lib, "DirectXTK.lib" )
+#pragma comment( lib, "../lib/DirectXTK2021_06_14/DirectXTK.lib" )
 #endif
 
 /// 우선 SimpleMath를 기반으로한 데이터 구조를 사용.. ( DX에 종속적으로 보일 수 있으나 추후 데이터 구조를 정의해서 사용을 해도 됨 )

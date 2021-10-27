@@ -1,3 +1,4 @@
+#include "GameTimer.h"
 #include "Component.h"
 #include "GameObject.h"
 #include "DebugManager.h"
@@ -21,7 +22,8 @@ ObjectManager* ObjectManager::GM()
 ObjectManager::ObjectManager()
 {
 	pTest_Engine = new DH3DEngine();
-
+	m_pTimer = new GameTimer();
+	m_pTimer->Reset();
 	pTest_OFD = new OneFrameData;
 	pTest_OFD->View_Matrix = DirectX::SimpleMath::Matrix
 	(
@@ -133,6 +135,9 @@ ObjectManager::ObjectManager()
 
 ObjectManager::~ObjectManager()
 {
+	delete m_pTimer;
+	m_pTimer = nullptr;
+
 	delete pTest_Engine;
 }
 
@@ -224,7 +229,8 @@ void ObjectManager::PushAwake(Component* mComponent)
 
 void ObjectManager::PlayUpdate()
 {
-
+	
+	
 	DebugManager::GM()->Print("////////////Update////////////\n");
 
 	//가장 먼저실행되는 StartUpdate 함수 리스트
@@ -251,6 +257,7 @@ void ObjectManager::PlayUpdate()
 
 	pTest_Engine->TextDraw({ (int)(1920 - 350), 10 }, 500, 0, 1, 0, 1, 30, L"카메라 모드 변경 : C");
 
+	pTest_Engine->Update(this->m_pTimer);
 	pTest_Engine->RenderDraw(pTest_OFD, pTest_SRD);
 
 	pTest_Engine->EndDraw();
