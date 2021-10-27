@@ -18,8 +18,7 @@ public:
 	//생성될때 한번
 	void Awake();
 	//가장먼저 실행되는 업데이트
-	void StartUpdate();
-
+	void TransformUpdate();
 
 public:
 	//위치
@@ -29,7 +28,7 @@ public:
 	//크기
 	DirectX::XMFLOAT3 Scale;
 
-
+	
 
 	///로컬 함수를 가져오기전에 SetLocalUpdate
 	///이함수를 실행시켜서 로컬업데이트를 하는지 확인하자

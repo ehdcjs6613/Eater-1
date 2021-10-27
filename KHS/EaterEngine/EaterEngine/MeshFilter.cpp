@@ -1,50 +1,32 @@
 #include "MeshFilter.h"
-#include "DebugManager.h"
 #include "GameObject.h"
 #include "LoadManager.h"
 #include "KHParser.h"
+#include "EngineData.h"
 
 extern LoadManager* gLoadManager;
+
 MeshFilter::MeshFilter()
 {
-	MeshFilterData = nullptr;
 	MeshName = "";
 }
 
 MeshFilter::~MeshFilter()
 {
-
-}
-
-void MeshFilter::Awake()
-{
-	DebugManager::GM()->Print("MeshFilter Awake 함수 실행 \n");
-	//MeshData 불러오기
 	
-
 }
 
 void MeshFilter::Start()
 {
-	MeshFilterData = gLoadManager->GetMesh(MeshName);
-	if (MeshFilterData == nullptr)
+	if (isLoad == true)
 	{
-		DebugManager::GM()->Print("Mesh불러오기 실패 \n");
+		//gameobject->OneMeshData->FBXData = gLoadManager->GetMesh(MeshName);
 	}
-}
-
-void MeshFilter::EndUpdate()
-{
-	//모든 업데이트가 끝나고 각각 컨퍼넌트의 정보를 가져옴
-}
-
-void MeshFilter::Update()
-{
-	
 }
 
 void MeshFilter::SetMeshName(std::string mMeshName)
 {
+	isLoad = true;
 	MeshName = mMeshName;
 }
 

@@ -7,11 +7,12 @@ GameObject::GameObject()
 	Tag	= 0;			//테그
 	IsActive = true;	//모든 컨퍼넌트 사용여부
 	Name = "GameObject";
+	OneMeshData = new MeshData();
 }
 
 GameObject::~GameObject()
 {
-	
+	delete OneMeshData;
 }
 
 void GameObject::SetActive(bool active)

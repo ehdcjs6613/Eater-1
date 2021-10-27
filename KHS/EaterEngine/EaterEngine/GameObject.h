@@ -13,11 +13,13 @@ class Component;
 #endif
 
 
-#define AWAKE			0x00000001
-#define START			0x00000010
-#define START_UPDATE	0x00000100
-#define UPDATE			0x00001000
-#define END_UPDATE		0x00010000
+#define AWAKE				0x00000001
+#define START				0x00000010
+#define START_UPDATE		0x00000100
+#define Transform_UPDATE	0x00001000
+#define Physics_UPDATE		0x00010000
+#define UPDATE				0x00100000
+#define END_UPDATE			0x01000000
 
 
 
@@ -25,8 +27,6 @@ class Component;
 /// 기본 게임 오브젝트
 /// </summary>
 
-class MeshFilter;
-class ObjectManager;
 class Transform;
 class GameObject
 {
@@ -47,7 +47,8 @@ public:
 
 	//오브젝트의 컨퍼넌트 갯수를 가져옴
 	int GetComponentCount();
-
+	
+	MeshData* OneMeshData;
 public:
 	//컨퍼넌트를 추가 시킨다
 	template<typename T>
@@ -90,40 +91,51 @@ inline void GameObject::AddComponent(typename std::enable_if<std::is_base_of<Com
 	//나중에 이타입으로 찾아서 가져올수있도록 타입 설정
 	ConponentBox->ComponentType = typeid(T).hash_code();
 
-
 	///오버라이딩 확인 각각에맞는 함수포인터 리스트에 넣는다 
 	//Awake
 	if (&Component::Awake != &T::Awake)
 	{
-		ObjectManager::GM()->PushAwake(ConponentBox);
+		ObjectManager::PushAwake(ConponentBox);
 		ConponentBox->FUNCTION_MASK |= AWAKE;
 	}
 
 	//Start
 	if (&Component::Start != &T::Start)
 	{
-		ObjectManager::GM()->PushStart(ConponentBox);
+		ObjectManager::PushStart(ConponentBox);
 		ConponentBox->FUNCTION_MASK |= START;
 	}
 
 	//StartUpdate
 	if (&Component::StartUpdate != &T::StartUpdate)
 	{
-		ObjectManager::GM()->PushStartUpdate(ConponentBox);
+		ObjectManager::PushStartUpdate(ConponentBox);
 		ConponentBox->FUNCTION_MASK |= START_UPDATE;
+	}
+	//이동 행렬
+	if (&Component::TransformUpdate != &T::TransformUpdate)
+	{
+		ObjectManager::PushTransformUpdate(ConponentBox);
+		ConponentBox->FUNCTION_MASK |= Transform_UPDATE;
+	}
+	//물리 
+	if (&Component::PhysicsUpdate != &T::PhysicsUpdate)
+	{
+		ObjectManager::PushPhysicsUpdate(ConponentBox);
+		ConponentBox->FUNCTION_MASK |= Physics_UPDATE;
 	}
 
 	//DefaultUpdate
 	if (&Component::Update != &T::Update)
 	{
-		ObjectManager::GM()->PushUpdate(ConponentBox);
+		ObjectManager::PushUpdate(ConponentBox);
 		ConponentBox->FUNCTION_MASK |= UPDATE;
 	}
 
 	//EndUpdate
 	if (&Component::EndUpdate != &T::EndUpdate)
 	{
-		ObjectManager::GM()->PushEndUpdate(ConponentBox);
+		ObjectManager::PushEndUpdate(ConponentBox);
 		ConponentBox->FUNCTION_MASK |= END_UPDATE;
 	}
 }

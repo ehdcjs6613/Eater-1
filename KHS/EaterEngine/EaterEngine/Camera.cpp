@@ -1,6 +1,11 @@
 #include "Camera.h"
 #include "GameObject.h"
 #include "Transform.h"
+
+std::vector<Camera*> Camera::CamList;
+Camera* Camera::MainCam = nullptr;
+
+DirectX::XMMATRIX Camera::mProj_M;
 Camera::Camera()
 {
 	tranform = nullptr;
@@ -11,7 +16,7 @@ Camera::Camera()
 	mNearWindowHeight = 2.0f * mNearZ * tanf(0.5f * mFovY);
 	mFarWindowHeight = 2.0f * mFarZ * tanf(0.5f * mFovY);
 
-	MainCamera = false;
+	PushCamList();
 }
 
 Camera::~Camera()
@@ -33,8 +38,12 @@ void Camera::Update()
 
 DirectX::XMMATRIX Camera::GetProj()
 {
-
 	return mProj_M;
+}
+
+void Camera::ChoiceMainCam()
+{
+	MainCam = this;
 }
 
 DirectX::XMMATRIX Camera::GetView()
@@ -42,9 +51,9 @@ DirectX::XMMATRIX Camera::GetView()
 	return mView_M;
 }
 
-DirectX::XMMATRIX Camera::GetView_Proj()
+DirectX::XMMATRIX Camera::GetMainView()
 {
-	return mView_M * mProj_M;
+	return MainCam->GetView();
 }
 
 void Camera::CreateProj(float fovY, float aspect, float zn, float zf,bool viewPoint)
@@ -102,6 +111,30 @@ void Camera::CreateView()
 	mView._41 = -x;		mView._42 = -y;		mView._43 = -z;	  mView._44 = 1;
 
 	mView_M = DirectX::XMLoadFloat4x4(&mView);
+}
+
+void Camera::PushCamList()
+{
+	//만약 메인카메라로 지정한놈이없다면 처음생성한놈이 메인카메라다
+	if (MainCam == nullptr)
+	{
+		MainCam = this;
+	}
+
+	int count = CamList.size();
+	for (int i = 0; i < count; i++)
+	{
+		if (CamList[i] == nullptr)
+		{
+			CamList[i] = this;
+			CamList[i]->MyIndex = i;
+			return;
+		}
+	}
+
+	//여기로 왔다는것은 리스트가 꽉찼다는 것
+	CamList.push_back(this);
+	MyIndex = count;
 }
 
 

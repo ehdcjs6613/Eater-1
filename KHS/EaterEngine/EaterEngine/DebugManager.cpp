@@ -1,6 +1,5 @@
 #include "DebugManager.h"
 
-DebugManager* DebugManager::instance = nullptr;
 HANDLE DebugManager::hConsole;
 DebugManager::DebugManager()
 {
@@ -12,17 +11,11 @@ DebugManager::~DebugManager()
 {
 }
 
-void DebugManager::init()
+void DebugManager::Initialize()
 {
-	if (instance == nullptr)
-	{
-		instance = new DebugManager();
-		AllocConsole();
-		hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-	}
+	AllocConsole();
+	hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 }
-
-
 
 void DebugManager::Print(const char* strMsg)
 {
@@ -37,13 +30,4 @@ void DebugManager::Delete()
 
 }
 
-DebugManager* DebugManager::GM()
-{
-	if (instance == nullptr)
-	{
-		instance = new DebugManager();
-		AllocConsole();
-		hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-	}
-	return instance;
-}
+

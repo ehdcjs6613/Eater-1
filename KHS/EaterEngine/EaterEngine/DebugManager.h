@@ -8,14 +8,11 @@ class DebugManager
 {
 public:
 	~DebugManager();
-	void init();
+	DebugManager();
+
+	void Initialize();
 	void Print(const char* strMsg);
 	void Delete();
-
-	static DebugManager* GM();
 private:
-	DebugManager();
-	static DebugManager* instance;
-
 	static HANDLE hConsole;
 };

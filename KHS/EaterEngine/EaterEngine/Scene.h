@@ -28,6 +28,11 @@ public:
 		std::function<void()> mEnd
 	);
 
+	void TestAddFunction()
+	{
+		
+	}
+
 	virtual void Awake();
 	virtual void Start();
 	virtual void Update();

@@ -2,7 +2,6 @@
 #include "ObjectManager.h"
 #include "Scene.h"
 
-SceneManager* SceneManager::Instance = nullptr;
 SceneManager::SceneManager()
 {
 	NowScene = nullptr;
@@ -13,13 +12,17 @@ SceneManager::~SceneManager()
 
 }
 
-
-void SceneManager::SetName(std::string Name)
+void SceneManager::PushScene(Scene* mScene, std::string SceneName)
 {
-	SceneName = Name;
+	SceneList.insert({ SceneName,mScene});
 }
 
-void SceneManager::LoadScene(std::string SceneName)
+void SceneManager::Initialize()
+{
+
+}
+
+void SceneManager::ChoiceScene(std::string SceneName)
 {
 	//게임 시작할때가아닌 어떤 씬을 돌리고있다가 다른씬으로 돌릴때
 	if (NowScene != nullptr)
@@ -52,20 +55,11 @@ void SceneManager::SceneStart()
 	NowScene->Start();
 }
 
-void SceneManager::SceneUpdate()
+void SceneManager::Update()
 {
 	//스크린 먼저 업데이트하고 그다음 컨퍼넌트들 업데이트
 	NowScene->Update();
 	///삭제여부?
 }
 
-SceneManager* SceneManager::GM()
-{
-	if (Instance == nullptr)
-	{
-		Instance = new SceneManager;
-	}
-
-	return Instance;
-}
 

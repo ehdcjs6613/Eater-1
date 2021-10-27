@@ -61,7 +61,19 @@
     <Filter Include="소스 파일\Data">
       <UniqueIdentifier>{5dcb3e99-0855-4943-8b83-e3afc16f9656}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\KeyInput">
+    <Filter Include="소스 파일\Manager\CameraManager">
+      <UniqueIdentifier>{a4cefd49-d148-47a2-8470-4b1425e3d9d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Engine">
+      <UniqueIdentifier>{08bc5e81-a29e-42c8-a4f8-d7ad3b9970e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Engine\GraphicsClass">
+      <UniqueIdentifier>{eae1cb74-1f70-430d-b25f-a334f431dc3e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Engine\GameEngine">
+      <UniqueIdentifier>{04116a65-6bb9-4e93-895d-39a70b9a06f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Manager\KeyinputManager">
       <UniqueIdentifier>{a08a0ee9-85c4-4e41-a474-0c2f36fbe5a6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -114,8 +126,17 @@
     <ClInclude Include="EngineData.h">
       <Filter>소스 파일\Data</Filter>
     </ClInclude>
-    <ClInclude Include="hsKey.h">
-      <Filter>소스 파일\KeyInput</Filter>
+    <ClInclude Include="ResourcesData.h">
+      <Filter>소스 파일\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEngine.h">
+      <Filter>소스 파일\Engine\GameEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyinputManager.h">
+      <Filter>소스 파일\Manager\KeyinputManager</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsEngine.h">
+      <Filter>소스 파일\Engine\GraphicsClass</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -158,8 +179,14 @@
     <ClCompile Include="Camera.cpp">
       <Filter>소스 파일\Component\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="hsKey.cpp">
-      <Filter>소스 파일\KeyInput</Filter>
+    <ClCompile Include="GraphicsEngine.cpp">
+      <Filter>소스 파일\Engine\GraphicsClass</Filter>
+    </ClCompile>
+    <ClCompile Include="GameEngine.cpp">
+      <Filter>소스 파일\Engine\GameEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="KeyinputManager.cpp">
+      <Filter>소스 파일\Manager\KeyinputManager</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
