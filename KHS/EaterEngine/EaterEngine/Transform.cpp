@@ -32,14 +32,7 @@ void Transform::TransformUpdate()
 	//월드 좌표들을 기반으로 월드 행렬을 구한다
 	UpdateWorldXM();
 
-	
-	//월드 좌표들 기반으로 로컬좌표도 갱신해준다
-	//다만 사용자가 원할때만
-	if (LocalUpdate != false)
-	{
-		UpdateLocalPosition();
-	}
-
+	UpdateLocalPosition();
 
 	//업데이트가 끝난후 오브젝트 안에 매쉬데이터를 업데이트
 	gameobject->OneMeshData->mWorld = GetWorld();

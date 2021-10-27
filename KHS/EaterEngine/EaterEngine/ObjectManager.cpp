@@ -11,19 +11,16 @@
 
 /// 임시 엔진 추가.
 #include "DH3DEngine.h"
-extern LoadManager* gLoadManager;
-extern hsKey* gKeyinput;
 
-ObjectManager* ObjectManager::instance = nullptr;
-ObjectManager* ObjectManager::GM()
-{
-	if (instance == nullptr)
-	{
-		instance = new ObjectManager();
-	}
 
-	return instance;
-}
+//함수포인터 리스트들
+Delegate_Map<Component> ObjectManager::AwakeFunction;
+Delegate_Map<Component> ObjectManager::StartFunction;
+Delegate_Map<Component> ObjectManager::StartUpdate;
+Delegate_Map<Component> ObjectManager::TransformUpdate;
+Delegate_Map<Component> ObjectManager::PhysicsUpdate;
+Delegate_Map<Component> ObjectManager::Update;
+Delegate_Map<Component> ObjectManager::EndUpdate;
 
 ObjectManager::ObjectManager()
 {
@@ -36,6 +33,8 @@ ObjectManager::ObjectManager()
 	pTest_OFD = nullptr;
 	pTest_SRD = nullptr;
 	pTest_Mesh = nullptr;
+
+	
 }
 
 ObjectManager::~ObjectManager()
@@ -50,6 +49,7 @@ void ObjectManager::Test()
 	pTest_OFD->World_Eye_Position = DirectX::SimpleMath::Vector3(10.f, 8.f, -10.f);
 	pTest_OFD->Main_Position = DirectX::SimpleMath::Vector3(0.f, 0.f, 0.f);
 
+	
 
 	pTest_SRD = new SharedRenderData;
 	pTest_Mesh = new DHParser::Mesh;
@@ -112,11 +112,6 @@ void ObjectManager::PushCreateObject(GameObject* obj)
 	ObjectList.push_back(obj);
 }
 
-EATER_ENGINEDLL void ObjectManager::PushMainCamObject(GameObject* obj)
-{
-	MainCam = obj->GetComponent<Camera>();
-}
-
 void ObjectManager::PushDeleteObject(GameObject* obj)
 {
 	//오브젝트를 넣어줄때 빈곳이 있는지부터 확인
@@ -147,7 +142,7 @@ void ObjectManager::AllDeleteObject()
 	EndUpdate.Clear();
 }
 
-EATER_ENGINEDLL void ObjectManager::CreateEngine(HWND _g_hWnd)
+void ObjectManager::Initialize(HWND _g_hWnd)
 {
 	pTest_Engine = new DH3DEngine();
 	pTest_Engine->Initialize(_g_hWnd, 1920, 1080);
@@ -193,47 +188,30 @@ void ObjectManager::PushAwake(Component* mComponent)
 
 void ObjectManager::PlayUpdate()
 {
-
-	DebugManager::GM()->Print("////////////Update////////////\n");
-	gKeyinput->KeyUpDate();
-	
 	///가장 먼저실행되는 StartUpdate 함수 리스트(각 컨퍼넌트들의 초기화작업을 해줄때)
-	DebugManager::GM()->Print("->StartUpdate			실행 \n");
 	StartUpdate.Play();
 
 	///이동행렬 실행되는 Update 함수 리스트
-	DebugManager::GM()->Print("->TransformUpdate		실행\n");
 	TransformUpdate.Play();
 
 	///물리 충돌관련 Update 함수 리스트 (물리관련 컨퍼넌트들을 업데이트)
-	DebugManager::GM()->Print("->PhysicsUpdate			실행\n");
 	PhysicsUpdate.Play();
 
 	///중간 단계에 실행되는 Update 함수 리스트 (클라이언트쪽에서 만든 컨퍼넌트들이 업데이트될곳)
-	DebugManager::GM()->Print("->DefaultUpdate			실행\n");
 	Update.Play();
 
 	///가장 마지막에 실행되는 Update 함수 리스트
-	DebugManager::GM()->Print("->FinalUpdate			실행\n");
 	EndUpdate.Play();
 
-
-
 	///업데이트 작업끝 그래픽엔진으로 넘겨줄 데이터 정리
-	pTest_OFD->View_Matrix			= MainCam->GetView();
-	pTest_OFD->Projection_Matrix	= MainCam->GetProj();
+	pTest_OFD->View_Matrix			= Camera::GetMainView();
+	pTest_OFD->Projection_Matrix	= Camera::GetProj();
+	//글로벌 데이터
+	Global->mProj = Camera::GetMainView();
+	Global->mViewMX = Camera::GetMainView();
 
-
-
-	//AllMeshData = MeshFilter::GetMeshData();
-	//int size = (*AllMeshData).size();
-
-	//for (int i = 0; i < size; i++)
-	//{
-	//	pTest_OFD->
-	//}
-
-	
+	//모든오브젝트의 데이터를 랜더큐에 담는다
+	CreateRenderQueue();
 
 
 	///랜더링 작업을 여기서?
@@ -253,16 +231,22 @@ void ObjectManager::PlayUpdate()
 
 void ObjectManager::PlayStart()
 {
-	DebugManager::GM()->Print("////////////start////////////\n");
-
-	DebugManager::GM()->Print("->Awake 실행 \n");
 	AwakeFunction.Play();
-	DebugManager::GM()->Print("->Start 실행 \n");
 	StartFunction.Play();
 
-
-	MeshFilterData = gLoadManager->GetMesh("Table");
 	Test();
+}
+
+void ObjectManager::CreateRenderQueue()
+{
+	int count = ObjectList.size();
+	std::vector<GameObject*>::iterator it = ObjectList.begin();
+	for (it; it == ObjectList.end(); it++)
+	{
+		RenderData.push((*it)->OneMeshData);
+	}
+
+
 }
 
 void ObjectManager::ClearFunctionList()

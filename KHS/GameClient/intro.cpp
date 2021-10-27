@@ -21,20 +21,15 @@ void intro::Start()
 	MeshFilter* temp = obj->GetComponent<MeshFilter>();
 	temp->SetMeshName("Table");
 
-	
 
 	obj = Instance();
 	obj->AddComponent<Keyinput>();
 	obj->AddComponent<Camera>();
-	ChoiceMainCamera(obj);
 }
 
 void intro::Update()
 {
-	if (GetKeyDown(VK_SPACE))
-	{
-		int num = 0;
-	}
+	
 }
 
 void intro::End()

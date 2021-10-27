@@ -65,7 +65,7 @@ public:
 	};
 	virtual void Delete() {};
 
-	///(ID3D11ShaderResourceView)
+	//(ID3D11ShaderResourceView)
 	void* TextureBufferPointer;
 	UINT size;
 };

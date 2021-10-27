@@ -25,7 +25,7 @@ public:
 	
 
 	//초기화 및 경로 설정
-	void init();
+	void Initialize();
 public:
 	///GET
 	//매쉬 가져오기

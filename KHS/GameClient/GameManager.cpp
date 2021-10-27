@@ -16,14 +16,12 @@ GameManager::~GameManager()
 void GameManager::Start(HWND _g_hWnd)
 {
 	//엔진 초기화 (매니저들 생성)
-	StartEngine(_g_hWnd);
-	
-	//씬 생성
-	CreateScene<intro>("intro");
-	
+	EngineInitialize(_g_hWnd);
 
+	CreateScene<intro>("intro");
 	ChoiceScene("intro");
-	StartScene();
+
+	
 }
 
 void GameManager::Update()

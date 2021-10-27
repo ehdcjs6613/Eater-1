@@ -44,7 +44,6 @@ namespace ParserData
 	{
 		Vertex();
 
-		float m_PosX, m_PosY, m_PosZ;
 		DXVector3 m_Pos;
 		DXVector3 m_Normal;
 		DXVector3 m_Tanget;

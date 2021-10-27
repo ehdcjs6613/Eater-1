@@ -14,7 +14,7 @@ LoadManager::~LoadManager()
 
 }
 
-void LoadManager::init()
+void LoadManager::Initialize()
 {
 	EATER_Parser = new FBXParser();
 	EATER_Parser->Initalize();
@@ -26,7 +26,6 @@ FBXModel* LoadManager::GetMesh(std::string Name)
 	if (temp == MeshList.end())
 	{
 		std::string temp = "[Find]다음 내용의 매쉬를 찾지못했습니다 ->" + Name;
-		DebugManager::GM()->Print(temp.c_str());
 		return nullptr;
 	}
 
@@ -45,7 +44,6 @@ void LoadManager::LoadMesh( std::string Name, bool Scale, bool LoadAnime)
 	std::string FullName = MeshPath + Name + temp;
 
 	//규황이 파서를 통해서 매쉬를 로드
-	DebugManager::GM()->Print(FullName.c_str());
 	EATER_Parser->LoadScene(FullName.c_str(), Scale, LoadAnime);
 	FBXModel* box = EATER_Parser->GetModel();
 
@@ -82,7 +80,6 @@ void LoadManager::DeleteMesh(std::string mMeshName)
 	if (temp == MeshList.end())
 	{
 		std::string temp = "[Delete]다음 내용의 매쉬를 찾지못했습니다 ->" + mMeshName;
-		DebugManager::GM()->Print(temp.c_str());
 		return;
 	}
 	MeshList.erase(mMeshName);
