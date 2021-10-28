@@ -84,6 +84,7 @@
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <TargetName>$(ProjectName)_x64d</TargetName>
+    <AllProjectIncludesArePublic>false</AllProjectIncludesArePublic>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -96,7 +97,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>PARSER_EXPORT;_WINDOWS;_USRDLL;WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>..\Inc;.\Export;..\FBX\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Inc;.\Export;..\FBX\include;$(SolutionDir)inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
@@ -168,9 +169,10 @@ copy/Y "..\FBX\lib\86\r\libfbxsdk.dll"   "..\\Lib"</Command>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>PARSER_EXPORT;_WINDOWS;_USRDLL;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>..\Inc;.\Export;..\FBX\include;$(SolutionDir)inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)inc;$(ProjectDir)Export;$(SolutionDir)FBX\include;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -187,7 +189,6 @@ copy/Y "$(TargetPath)"      "..\\Lib"
 copy/Y "$(TargetPath)"      "..\\Bin"
 copy/Y "$(OutDir)$(TargetName).lib"      "..\\Lib"
 copy/Y "$(ProjectDir)Export\*.h"   "..\\Inc"
-
 copy/Y "..\FBX\lib\64\d\libfbxsdk.dll"   "..\\Bin"
 
 copy/Y "..\FBX\lib\64\d\libfbxsdk.dll"   "..\\Lib"</Command>
@@ -258,10 +259,6 @@ copy/Y "..\FBX\lib\64\r\libfbxsdk.dll"   "..\\Lib"</Command>
     <ClInclude Include="FBXParser.h" />
     <ClInclude Include="FloatImage.h" />
     <ClInclude Include="Lexer.h" />
-    <ClInclude Include="SimpleMath.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="SimpleMath.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

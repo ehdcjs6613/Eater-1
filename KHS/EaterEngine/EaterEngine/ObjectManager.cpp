@@ -8,13 +8,6 @@
 #include "KeyinputManager.h"
 #include "MeshFilter.h"
 
-//#include "KHParser.h"
-
-
-/// 임시 엔진 추가.
-//#include "DH3DEngine.h"
-
-
 //함수포인터 리스트들
 Delegate_Map<Component> ObjectManager::AwakeFunction;
 Delegate_Map<Component> ObjectManager::StartFunction;
@@ -27,16 +20,6 @@ Delegate_Map<Component> ObjectManager::EndUpdate;
 ObjectManager::ObjectManager()
 {
 	Global = new GlobalData();
-
-	//테스트용 데이터 초기화
-	//MeshFilterData = nullptr;
-	//
-	//pTest_Engine = nullptr;
-	//pTest_OFD = nullptr;
-	//pTest_SRD = nullptr;
-	//pTest_Mesh = nullptr;
-
-	
 }
 
 ObjectManager::~ObjectManager()
@@ -45,57 +28,6 @@ ObjectManager::~ObjectManager()
 	Global = nullptr;
 }
 
-//void ObjectManager::Test()
-//{
-//	// 테스트용 카메라 위치
-//	pTest_OFD = new OneFrameData;
-//	pTest_OFD->World_Eye_Position = DirectX::SimpleMath::Vector3(10.f, 8.f, -10.f);
-//	pTest_OFD->Main_Position = DirectX::SimpleMath::Vector3(0.f, 0.f, 0.f);
-//	
-//	
-//	
-//	pTest_SRD = new SharedRenderData;
-//	pTest_Mesh = new DHParser::Mesh;
-//	pTest_Mesh->Texture_Key = 0;
-//	pTest_Mesh->Vcount = MeshFilterData->m_MeshList[0]->m_Final_Vertex.size();
-//	pTest_Mesh->Tcount = MeshFilterData->m_MeshList[0]->m_MeshFace.size();
-//	pTest_Mesh->Local_TM = MeshFilterData->m_MeshList[0]->m_WorldTM;
-//	pTest_Mesh->World_TM = pTest_Mesh->Local_TM;
-//	
-//	////버텍스 정보 넘겨주기
-//	for (int i = 0; i < pTest_Mesh->Vcount; i++)
-//	{
-//		float x = MeshFilterData->m_MeshList[0]->m_Final_Vertex[i]->m_Pos.x;
-//		float y = MeshFilterData->m_MeshList[0]->m_Final_Vertex[i]->m_Pos.y;
-//		float z = MeshFilterData->m_MeshList[0]->m_Final_Vertex[i]->m_Pos.z;
-//	
-//		float N_x = MeshFilterData->m_MeshList[0]->m_Final_Vertex[i]->m_Normal.x;
-//		float N_y = MeshFilterData->m_MeshList[0]->m_Final_Vertex[i]->m_Normal.y;
-//		float N_z = MeshFilterData->m_MeshList[0]->m_Final_Vertex[i]->m_Normal.z;
-//	
-//	
-//		DHParser::Vertex m_TestVertex;
-//		m_TestVertex.Pos = DirectX::SimpleMath::Vector3(x, y, z);
-//		m_TestVertex.Normal = DirectX::SimpleMath::Vector3(N_x, N_y, N_z);
-//	
-//		pTest_Mesh->Optimize_Vertex.push_back(m_TestVertex);
-//	}
-//	
-//	//인덱스 정보 넘겨주기
-//	for (int j = 0; j < MeshFilterData->m_MeshList[0]->m_MeshFace.size(); j++)
-//	{
-//		int x = MeshFilterData->m_MeshList[0]->m_MeshFace[j]->m_VertexIndex[0];
-//		int y =MeshFilterData->m_MeshList[0]->m_MeshFace[j]->m_VertexIndex[2];
-//		int z =MeshFilterData->m_MeshList[0]->m_MeshFace[j]->m_VertexIndex[1];
-//	
-//		pTest_Mesh->Optimize_Index.push_back(x);
-//		pTest_Mesh->Optimize_Index.push_back(y);
-//		pTest_Mesh->Optimize_Index.push_back(z);
-//	}
-//	
-//	pTest_SRD->Render_Mesh_List = new std::vector<DHParser::Mesh>;
-//	pTest_SRD->Render_Mesh_List->push_back(*pTest_Mesh);
-//}
 GlobalData* ObjectManager::GetGlobalData()
 {
 	return Global;
@@ -239,7 +171,7 @@ void ObjectManager::CreateRenderQueue()
 	int count = ObjectList.size();
 	
 	std::vector<GameObject*>::iterator it = ObjectList.begin();
-	for (it; it == ObjectList.end(); it++)
+	for (it; it != ObjectList.end(); it++)
 	{
 		RenderData.push((*it)->OneMeshData);
 	}

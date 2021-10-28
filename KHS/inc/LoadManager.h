@@ -11,8 +11,13 @@
 
 #include <string>
 #include <map>
+#include "ParserData.h"
+#include "SharedData.h"
 
-
+struct ParserData::Model;
+struct Model;
+class LoadData;
+class ModelParser;
 class FBXParser;
 class FBXModel;
 class DH3DEngine;
@@ -33,7 +38,7 @@ public:
 public:
 	///GET
 	//매쉬 가져오기
-	FBXModel* GetMesh(std::string Name);
+	static LoadData* GetMesh(std::string Name);
 	//텍스쳐 가져오기
 	void GetTexture(std::string Name);
 
@@ -54,37 +59,28 @@ public:
 	void DeleteMesh(std::string mMeshName);
 	//모든 매쉬정보를 삭제
 	void DeleteMeshAll();
+	
 private:
-	//엔진에 맞게 데이터를 변경시킴
-	//void ChangeData(FBXModel* mData);
-
-private:
-
-
 
 	//모델이 들어있는 경로
 	std::string MeshPath;
 	//텍스쳐가 들어있는 경로
 	std::string TexturePath;
-	//인덱스 버퍼 
-	//버텍스 버퍼
-	 
-	//메터리얼
-	 
-	//텍스쳐
 	
-	//애니메이션
-	//
-
-
-
 	///리스트
-	std::map<std::string,FBXModel*> MeshList;
-
-
-	//그래픽 엔진
-	GraphicEngine*	GEngine;
-	DH3DEngine*		DHEngine;
+	static std::map<std::string,LoadData*> MeshList;
 private:
-	//FBXParser* EATER_Parser;
+	//규황이 파서
+	ModelParser*	EaterParser;
+	//누군가의 그래픽 엔진
+	GraphicEngine*	GEngine;
+
+
+	///여기부터는 동혁이꺼 테스트용
+	DH3DEngine*			DHEngine;
+	OneFrameData*		pTest_OFD;
+	SharedRenderData*	pTest_SRD;
+	DHParser::Mesh*		pTest_Mesh;
+
+	void Test_DHData(ParserData::Model* mModel, std::string Name);
 };

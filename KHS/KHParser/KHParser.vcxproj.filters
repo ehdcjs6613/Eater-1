@@ -95,13 +95,5 @@
     <ClInclude Include="Export\ParserDLL.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
-    <ClInclude Include="SimpleMath.h">
-      <Filter>소스 파일\ParserBase</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="SimpleMath.inl">
-      <Filter>소스 파일\ParserBase</Filter>
-    </None>
   </ItemGroup>
 </Project>

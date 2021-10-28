@@ -134,7 +134,7 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)lib"</Command>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)inc;$(SolutionDir)lib\DirectXTK2021_06_14</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)inc;$(SolutionDir)lib;$(SolutionDir)FBX\include;$(SolutionDir)lib\DirectXTK2021_06_14</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
@@ -143,7 +143,7 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)lib"</Command>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalLibraryDirectories>$(SolutionDir)lib;$(SolutionDir)lib\DirectXTK2021_06_14;$(SolutionDir)lib\FX11_2021_06_14</AdditionalLibraryDirectories>
-      <AdditionalDependencies>GraphicEngine.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>GraphicEngine.lib;KHParser_x64d.lib;libfbxsdk.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy /Y "$(ProjectDir)*.h" "$(SolutionDir)inc"

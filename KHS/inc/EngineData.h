@@ -36,6 +36,10 @@ public:
 
 	//오브젝트 타입
 	OBJECT_TYPE ObjType = OBJECT_TYPE::Default;
+	//인덱스버퍼 ,버텍스 버퍼
+	Indexbuffer*	IB;
+	Vertexbuffer*	VB;
+
 
 	//매쉬 관련 행렬
 	DirectX::XMMATRIX mWorld;
@@ -52,12 +56,19 @@ public:
 class LoadData
 {
 public:
-	LoadData() {};
-	~LoadData() {};
-private:
+	LoadData() 
+	{
+		IB = new Indexbuffer();
+		VB = new Vertexbuffer();
+	};
+	~LoadData()
+	{
+		delete IB;
+		delete VB;
+	};
 
-
-
+	Indexbuffer* IB;
+	Vertexbuffer* VB;
 };
 
 

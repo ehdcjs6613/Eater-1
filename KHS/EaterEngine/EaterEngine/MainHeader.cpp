@@ -59,13 +59,13 @@ EATER_ENGINEDLL void CreateScene(Scene* mSceneTemp, std::string SceneName)
 
 EATER_ENGINEDLL void LoadMesh(std::string mMeshName, bool Scale,bool LoadAnime)
 {
-	//gLoadManager->LoadMesh(mMeshName, Scale,LoadAnime);
+	gGameEngine->LoadMesh(mMeshName);
 }
 
 ///로드 관련
 EATER_ENGINEDLL void LoadMeshPath(std::string mPath)
 {
-	//gLoadManager->LoadMeshPath(mPath);
+	gGameEngine->LoadMeshPath(mPath);
 }
 
 EATER_ENGINEDLL GameObject* CreateMainCamera(float x, float y, float z)

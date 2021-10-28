@@ -67,11 +67,12 @@ void GameEngine::Initialize(HWND Hwnd)
 	mDebugManager->Initialize();
 	mSceneManager->Initialize();
 	mObjectManager->Initialize(mHwnd);
+	//테스트용 이곳에 그래픽엔진을 넘겨주면된다
 	mLoadManager->Initialize(pTest_Engine);
 
 
 	pTest_Engine->Initialize(Hwnd, WinSizeWidth, WinSizeHeight);
-
+	
 	//NowGraphicEngine->Initialize(Hwnd, WinSizeWidth, WinSizeHeight);
 }
 
