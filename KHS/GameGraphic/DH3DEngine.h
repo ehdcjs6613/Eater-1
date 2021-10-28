@@ -63,8 +63,10 @@ public:
 
 	/// 화면 갱신시 Resize를 할 함수.
 	void On_Resize(float Change_Width, float Change_Height);
-
 	/// DX11 고유의 함수들.
+	void CreateIndexBuffer(DHParser::Mesh* _Mesh);
+	void CreateVertexBuffer(DHParser::Mesh* _Mesh);
+
 private:
 	/// 스카이박스 셋팅이 되어있다면 그려줌.
 	void DrawSkyBox(OneFrameData* _OFD);
@@ -83,8 +85,6 @@ private:
 	/// 현재 상태를 화면에 출력.
 	void Draw_Status();
 	/// 버퍼생성
-	void CreateIndexBuffer(DHParser::Mesh* _Mesh);
-	void CreateVertexBuffer(DHParser::Mesh* _Mesh);
 
 	/// 랜더 스테이트를 여러개 만들어두고 스위칭.
 	void CreateRenderStates();

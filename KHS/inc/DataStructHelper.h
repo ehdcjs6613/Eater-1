@@ -19,7 +19,7 @@
 #include <vector>
 #include <map>
 #include <atlstr.h>
-#include "../lib/DirectXTK2021_06_14/SimpleMath.h"
+#include "SimpleMath.h"
 
 namespace VertexStruct
 {

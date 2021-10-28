@@ -61,9 +61,6 @@
     <Filter Include="소스 파일\Data">
       <UniqueIdentifier>{5dcb3e99-0855-4943-8b83-e3afc16f9656}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Manager\CameraManager">
-      <UniqueIdentifier>{a4cefd49-d148-47a2-8470-4b1425e3d9d5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\Engine">
       <UniqueIdentifier>{08bc5e81-a29e-42c8-a4f8-d7ad3b9970e6}</UniqueIdentifier>
     </Filter>
@@ -75,6 +72,9 @@
     </Filter>
     <Filter Include="소스 파일\Manager\KeyinputManager">
       <UniqueIdentifier>{a08a0ee9-85c4-4e41-a474-0c2f36fbe5a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Manager\TimeManager">
+      <UniqueIdentifier>{7e157c44-e3ef-43c6-b564-1bd159e7e8d5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -138,6 +138,9 @@
     <ClInclude Include="GraphicsEngine.h">
       <Filter>소스 파일\Engine\GraphicsClass</Filter>
     </ClInclude>
+    <ClInclude Include="TimeManager.h">
+      <Filter>소스 파일\Manager\TimeManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -187,6 +190,9 @@
     </ClCompile>
     <ClCompile Include="KeyinputManager.cpp">
       <Filter>소스 파일\Manager\KeyinputManager</Filter>
+    </ClCompile>
+    <ClCompile Include="TimeManager.cpp">
+      <Filter>소스 파일\Manager\TimeManager</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

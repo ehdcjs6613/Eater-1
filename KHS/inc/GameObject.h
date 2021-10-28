@@ -35,9 +35,6 @@ public:
 	~GameObject();
 
 	EATER_ENGINEDLL void SetActive(bool active);	//모든 컨퍼넌트 기능중지 여부
-	EATER_ENGINEDLL void Delete();					//오브젝트를 삭제함
-	EATER_ENGINEDLL bool GetDelete();				//오브젝트 삭제여부 체크
-
 
 	EATER_ENGINEDLL GameObject* GetChild(std::string Name);	//자식객체를 가져옴
 	EATER_ENGINEDLL GameObject* GetChild(int Number);		//자식객체를 가져옴

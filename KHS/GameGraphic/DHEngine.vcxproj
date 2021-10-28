@@ -136,7 +136,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)lib\FX11_2021_06_14\;$(SolutionDir)lib\DirectXTexture\;$(SolutionDir)lib\DirectXTK2021_06_14\;$(SolutionDir);$(SolutionDir)FX\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)lib\FX11_2021_06_14\;$(SolutionDir)lib\DirectXTexture\;$(SolutionDir)lib\DirectXTK2021_06_14\;$(SolutionDir)FX\;$(SolutionDir)inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>

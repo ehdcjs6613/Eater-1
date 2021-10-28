@@ -1,18 +1,8 @@
 #pragma once
 
-typedef std::pair<std::string, ParserData::Bone*> BonePair;
+typedef std::pair<std::string, ParserData::Bone> BonePair;
 
-struct PARSER_DLL FBXModel
-{
-	bool m_isAnimation = false;									// Animation 유무
-
-	int	m_materialcount = 0;									// Material 개수
-	std::vector<ParserData::CMaterial*> m_list_materialdata;	// Material List
-
-	std::vector<ParserData::Mesh*> m_MeshList;	 				// Mesh List
-};
-
-class FBXParser
+class FBXParser : public ModelParser
 {
 public:
 	FBXParser() = default;
@@ -25,31 +15,36 @@ private:
 	fbxsdk::FbxGeometryConverter* pConverter;
 
 	fbxsdk::FbxMesh* pMesh;
-	
-	fbxsdk::FbxString fbxFileName;
+
+	std::string fbxFileName;
 	std::vector<fbxsdk::FbxSurfaceMaterial*> fbxMaterials;
 
-public:
-	FBXModel* m_Model;
+private:
+	ParserData::Model* m_Model;
+	std::vector<ParserData::Model*> m_ModelList;
 
 	ParserData::CMaterial* m_MaterialData;			// Material Data Struct
-	
+
 	ParserData::Mesh* m_OneMesh;					// Mesh Data Struct
 
-	ParserData::Bone* m_OneBone;					// Bone Data Struct
 	std::vector<BonePair> m_AllBoneList;			// Skinning Object Bone List
 
 	ParserData::OneAnimation* m_OneAnimation;		// Object One Animation Data
 
 	bool m_OnlyAni = false;
 
-public:
-	PARSER_DLL void Initalize();
-	void SceneSetting(fbxsdk::FbxString fileName, bool scaling, bool onlyAni);
-	PARSER_DLL void Release();
-	void ResetModel();
+	std::string m_TextureRoute;
 
-	PARSER_DLL void LoadScene(fbxsdk::FbxString fileName, bool scaling, bool onlyAni = false);
+public:
+	void Initialize();
+	void SetTextureRoute(std::string texRoute);
+	void Release();
+	ParserData::Model* LoadModel(std::string fileName, bool scaling, bool onlyAni = false);
+	
+	void SceneSetting(std::string fileName, bool scaling, bool onlyAni);
+	void CreateModel();
+	void ResetData();
+
 	void LoadMaterial();
 	void LoadNode(fbxsdk::FbxNode* node, fbxsdk::FbxNodeAttribute::EType attribute);
 	void LoadAnimation(fbxsdk::FbxNode* node);
@@ -58,31 +53,31 @@ public:
 	void ProcessMesh(fbxsdk::FbxNode* node);
 
 	bool ProcessBoneWeights(fbxsdk::FbxNode* node, std::vector<BoneWeights>& meshBoneWeights);
-	
+
 	void ProcessAnimation(fbxsdk::FbxNode* node);
 
 	void OptimizeData();
 	void OptimizeVertex(ParserData::Mesh* pMesh);
 	void RecombinationTM(ParserData::Mesh* pMesh);
 
-	DXVector2 ConvertVector2(FbxVector2 v2);
-	DXVector2 ConvertVector2(FbxVector4 v4);
-	DXVector3 ConvertVector3(FbxVector4 v4);
-	DXVector3 NoConvertVector3(FbxVector4 v4);
-	DXVector4 ConvertVector4(FbxVector4 v4);
-	DXVector4 NoConvertVector4(FbxVector4 v4);
-	DXMatrix4X4 ConvertMatrix(FbxMatrix matrix);
-	DXMatrix4X4 NoConvertMatrix(FbxMatrix matrix);
+	DirectX::SimpleMath::Vector2 ConvertVector2(fbxsdk::FbxVector2 v2);
+	DirectX::SimpleMath::Vector2 ConvertVector2(fbxsdk::FbxVector4 v4);
+	DirectX::SimpleMath::Vector3 ConvertVector3(fbxsdk::FbxVector4 v4);
+	DirectX::SimpleMath::Vector3 NoConvertVector3(fbxsdk::FbxVector4 v4);
+	DirectX::SimpleMath::Vector4 ConvertVector4(fbxsdk::FbxVector4 v4);
+	DirectX::SimpleMath::Vector4 NoConvertVector4(fbxsdk::FbxVector4 v4);
+	DirectX::SimpleMath::Matrix ConvertMatrix(fbxsdk::FbxMatrix matrix);
+	DirectX::SimpleMath::Matrix NoConvertMatrix(fbxsdk::FbxMatrix matrix);
 	std::string ConvertFileRoute(const char* fileName);
 
-	DXVector3 GetPos(fbxsdk::FbxMesh* mesh, int vertexIndex);
-	DXVector3 GetNormal(fbxsdk::FbxMesh* mesh, int vertexIndex, int vertexCount);
-	DXVector2 GetUV(fbxsdk::FbxMesh* mesh, int vertexIndex, int uvIndex);
+	DirectX::SimpleMath::Vector3 GetPos(fbxsdk::FbxMesh* mesh, int vertexIndex);
+	DirectX::SimpleMath::Vector3 GetNormal(fbxsdk::FbxMesh* mesh, int vertexIndex, int vertexCount);
+	DirectX::SimpleMath::Vector2 GetUV(fbxsdk::FbxMesh* mesh, int vertexIndex, int uvIndex);
 	void LinkMaterialByPolygon(fbxsdk::FbxMesh* mesh, int polygonIndex, int vertexIndex);
 
 	void SetTransform(fbxsdk::FbxNode* node);
-	DXMatrix4X4 GetGlobalAnimationTransform(fbxsdk::FbxNode* node, fbxsdk::FbxTime time);
-	
+	DirectX::SimpleMath::Matrix GetGlobalAnimationTransform(fbxsdk::FbxNode* node, fbxsdk::FbxTime time);
+
 	int GetMaterialIndex(fbxsdk::FbxSurfaceMaterial* material);
 	void SetMaterial(fbxsdk::FbxSurfaceMaterial* material);
 	void SetTexture(fbxsdk::FbxSurfaceMaterial* material, const char* materialName);
@@ -92,45 +87,44 @@ public:
 	void CreateBone();
 
 	int FindBoneIndex(std::string boneName);
-	ParserData::Bone* FindBone(std::string boneName);
 	ParserData::Mesh* FindMesh(std::string meshName);
 
-	PARSER_DLL FBXModel* GetModel() { return m_Model; }
+	PARSER_DLL ParserData::Model* GetModel() { return m_Model; }
 };
 
-inline DXVector2 FBXParser::ConvertVector2(FbxVector2 v2)
+inline DirectX::SimpleMath::Vector2 FBXParser::ConvertVector2(fbxsdk::FbxVector2 v2)
 {
-	return DXVector2
+	return DirectX::SimpleMath::Vector2
 	(
 		static_cast<float>(v2.mData[0]),
 		1.0f - static_cast<float>(v2.mData[1])
 	);
 }
 
-inline DXVector2 FBXParser::ConvertVector2(FbxVector4 v4)
+inline DirectX::SimpleMath::Vector2 FBXParser::ConvertVector2(fbxsdk::FbxVector4 v4)
 {
-	return DXVector2
+	return DirectX::SimpleMath::Vector2
 	(
 		static_cast<float>(v4.mData[0]),
 		1.0f - static_cast<float>(v4.mData[1])
 	);
 }
 
-inline DXVector3 FBXParser::ConvertVector3(FbxVector4 v4)
+inline DirectX::SimpleMath::Vector3 FBXParser::ConvertVector3(fbxsdk::FbxVector4 v4)
 {
 	// xyz -> xzy
-	return DXVector3
+	return DirectX::SimpleMath::Vector3
 	(
-		static_cast<float>(v4.mData[0]), 
+		static_cast<float>(v4.mData[0]),
 		static_cast<float>(v4.mData[2]),
 		static_cast<float>(v4.mData[1])
 	);
 }
 
-inline DXVector3 FBXParser::NoConvertVector3(FbxVector4 v4)
+inline DirectX::SimpleMath::Vector3 FBXParser::NoConvertVector3(fbxsdk::FbxVector4 v4)
 {
 	// xyz -> xzy
-	return DXVector3
+	return DirectX::SimpleMath::Vector3
 	(
 		static_cast<float>(v4.mData[0]),
 		static_cast<float>(v4.mData[1]),
@@ -138,22 +132,22 @@ inline DXVector3 FBXParser::NoConvertVector3(FbxVector4 v4)
 	);
 }
 
-inline DXVector4 FBXParser::ConvertVector4(FbxVector4 v4)
+inline DirectX::SimpleMath::Vector4 FBXParser::ConvertVector4(fbxsdk::FbxVector4 v4)
 {
 	// xyzw -> xzyw
-	return DXVector4
+	return DirectX::SimpleMath::Vector4
 	(
-		static_cast<float>(v4.mData[0]), 
-		static_cast<float>(v4.mData[2]), 
-		static_cast<float>(v4.mData[1]), 
+		static_cast<float>(v4.mData[0]),
+		static_cast<float>(v4.mData[2]),
+		static_cast<float>(v4.mData[1]),
 		static_cast<float>(v4.mData[3])
 	);
 }
 
-inline DXVector4 FBXParser::NoConvertVector4(FbxVector4 v4)
+inline DirectX::SimpleMath::Vector4 FBXParser::NoConvertVector4(fbxsdk::FbxVector4 v4)
 {
 	// xyzw -> xzyw
-	return DXVector4
+	return DirectX::SimpleMath::Vector4
 	(
 		static_cast<float>(v4.mData[0]),
 		static_cast<float>(v4.mData[1]),
@@ -162,7 +156,7 @@ inline DXVector4 FBXParser::NoConvertVector4(FbxVector4 v4)
 	);
 }
 
-inline DXMatrix4X4 FBXParser::ConvertMatrix(FbxMatrix matrix)
+inline DirectX::SimpleMath::Matrix FBXParser::ConvertMatrix(fbxsdk::FbxMatrix matrix)
 {
 	FbxVector4 r1 = matrix.GetRow(0);
 	FbxVector4 r2 = matrix.GetRow(1);
@@ -170,7 +164,7 @@ inline DXMatrix4X4 FBXParser::ConvertMatrix(FbxMatrix matrix)
 	FbxVector4 r4 = matrix.GetRow(3);
 
 	// 2행, 3행 변경..
-	return DXMatrix4X4
+	return DirectX::SimpleMath::Matrix
 	(
 		ConvertVector4(r1),
 		ConvertVector4(r3),
@@ -179,7 +173,7 @@ inline DXMatrix4X4 FBXParser::ConvertMatrix(FbxMatrix matrix)
 	);
 }
 
-inline DXMatrix4X4 FBXParser::NoConvertMatrix(FbxMatrix matrix)
+inline DirectX::SimpleMath::Matrix FBXParser::NoConvertMatrix(fbxsdk::FbxMatrix matrix)
 {
 	FbxVector4 r1 = matrix.GetRow(0);
 	FbxVector4 r2 = matrix.GetRow(1);
@@ -187,7 +181,7 @@ inline DXMatrix4X4 FBXParser::NoConvertMatrix(FbxMatrix matrix)
 	FbxVector4 r4 = matrix.GetRow(3);
 
 	// 2행, 3행 변경..
-	return DXMatrix4X4
+	return DirectX::SimpleMath::Matrix
 	(
 		ConvertVector4(r1),
 		ConvertVector4(r3),
@@ -204,7 +198,7 @@ inline std::string FBXParser::ConvertFileRoute(const char* fileName)
 	size_t indexDot = filePath.rfind(".");
 
 	// 파일 임시경로..
-	std::string fileRoute = "../Resource/Textures/";
+	std::string fileRoute = m_TextureRoute;
 
 	std::string fileame = filePath.substr(indexSlash, indexDot - indexSlash);
 	fileRoute += filePath.substr(indexSlash, filePath.size() - indexSlash);

@@ -1,7 +1,8 @@
 #pragma once
 #include <windows.h>
-//#include "SceneManager.h"
 #include <string>
+#include "SharedData.h"
+
 
 #ifdef ENGINE_INTERFACE
 #define EATER_ENGINEDLL __declspec(dllexport)
@@ -21,11 +22,11 @@ class ObjectManager;
 class SceneManager;
 class KeyinputManager;
 class GraphicEngine;
-
 class Scene;
 //게임 오브젝트
 class GameObject;
 
+class DH3DEngine;
 
 class GameEngine
 {
@@ -39,6 +40,7 @@ public:
 	void Initialize(HWND gHwnd);//초기화
 	void Update();				//엔진 가동
 	void Finish();				//엔진 중지
+	void OnResize(float Change_Width, float Change_Height); //리사이즈
 public:
 	///오브젝트 관련(오브젝트 매니저)
 	GameObject* Instance(std::string ObjName = "GameObject");	//obj 생성
@@ -51,6 +53,8 @@ public:
 	///로드 관련 
 	void LoadMesh(std::string mMeshName, bool Scale = true, bool LoadAnime = false);
 	void LoadMeshPath(std::string mPath);
+
+	
 public:
 	///키관련 
 	bool  GetKeyDown(byte number);	//키다운
@@ -75,9 +79,11 @@ private:
 	///그래픽 엔진
 	GraphicEngine* NowGraphicEngine;
 
-
-
+	
 	//테스트용 엔진
-
+	DH3DEngine*			pTest_Engine;
+	OneFrameData*		pTest_OFD;
+	SharedRenderData*	pTest_SRD;
+	DHParser::Mesh*		pTest_Mesh;
 };
 

@@ -3,7 +3,7 @@
 #include "GameManager.h"
 #include "intro.h"
 
-#pragma comment (lib,"../lib/EaterEngine")
+#pragma comment (lib,"EaterEngine")
 GameManager::GameManager()
 {
 }

@@ -1,32 +1,48 @@
-#include "KHMath.h"
-#include "ParserDLL.h"
+#define SAFE_DELETE(x) { if(x != nullptr) {delete x; x = nullptr;} }
 
-#include <vector>
-#include <string>
-using namespace std;
+#include "ModelParser.h"
 
-#include "CParsingDataClass.h"
 #include "ASEFile.h"
-#include "CASEParser.h"
+#include "ASEParser.h"
 
+using namespace std;
 using namespace ParserData;
+using namespace DirectX;
+using namespace SimpleMath;
 
-CASEParser::CASEParser()
+ASEParser::ASEParser()
 	: m_Token(0), m_parsingmode(eNone), m_data_asciiexport(0), m_materialcount(0),
 	m_MaterialData(nullptr), m_materialmap(nullptr), m_OneMesh(nullptr), m_IsAnimation(false), m_Animation(nullptr), m_lexer(nullptr)
+{
+}
+
+ASEParser::~ASEParser()
+{
+	SAFE_DELETE(m_lexer);
+}
+
+void ASEParser::Initialize()
 {
 	m_lexer = new ASE::CASELexer;
 }
 
-CASEParser::~CASEParser()
+void ASEParser::SetTextureRoute(std::string texRoute)
 {
-	delete m_lexer;
+	m_TexRoute = texRoute;
 }
 
-PARSER_DLL bool CASEParser::Load(LPSTR p_File)
+void ASEParser::Release()
 {
+	SAFE_DELETE(m_lexer);
+}
+
+ParserData::Model* ASEParser::LoadModel(std::string fileName)
+{
+	// 새로운 Model 생성..
+	CreateModel();
+
 	/// 파일을 로드한다.
-	if (!m_lexer->Open(p_File))
+	if (!m_lexer->Open(const_cast<char*>(fileName.c_str())))
 	{
 		TRACE("파일을 여는 중에 문제가 발생했습니다!");
 		return FALSE;
@@ -38,29 +54,16 @@ PARSER_DLL bool CASEParser::Load(LPSTR p_File)
 	// Optimize & Parent Set..
 	OptimizeData();
 
-	return TRUE;
+	// 필요없는 데이터 제거..
+	ResetData();
+
+	return m_Model;
 }
 
-/// <summary>
-/// 메시의 최적화를 해 준다.
-/// 노말값, 텍스쳐 좌표에 따라 버텍스를 늘리고, 중첩되는것은 제거하고..
-/// </summary>
-void CASEParser::OptimizeVertex(ASEMesh* pMesh)
+void ASEParser::OptimizeVertex(ASEMesh* pMesh)
 {
 	bool new_VertexSet = true;
-	unsigned int resize_VertexIndex = pMesh->m_MeshVertex.size();
-
-	// 기본 Vertex 넣어두고 시작..
-	for (unsigned int i = 0; i < pMesh->m_MeshVertex.size(); i++)
-	{
-		Vertex* newVertex = new Vertex;
-		newVertex->m_Pos = pMesh->m_MeshVertex[i]->m_Pos;
-		newVertex->m_Indices = pMesh->m_MeshVertex[i]->m_Indices;
-		newVertex->m_BoneIndices = pMesh->m_MeshVertex[i]->m_BoneIndices;
-		newVertex->m_BoneWeights = pMesh->m_MeshVertex[i]->m_BoneWeights;
-
-		pMesh->m_Final_Vertex.push_back(newVertex);
-	}
+	unsigned int resize_VertexIndex = pMesh->m_VertexList.size();
 
 	// 각각 Face마다 존재하는 3개의 Vertex 비교..
 	for (unsigned int i = 0; i < pMesh->m_MeshFace.size(); i++)
@@ -69,7 +72,7 @@ void CASEParser::OptimizeVertex(ASEMesh* pMesh)
 		{
 			unsigned int vertexIndex = pMesh->m_MeshFace[i]->m_VertexIndex[j];
 
-			Vertex* nowVertex = pMesh->m_Final_Vertex[vertexIndex];
+			Vertex* nowVertex = pMesh->m_VertexList[vertexIndex];
 
 			// 텍스처가 있고, 설정하지 않았으면 텍스처 u,v 설정..
 			if (pMesh->m_Mesh_NumTVertex > 0 && nowVertex->m_IsTextureSet == false)
@@ -87,15 +90,15 @@ void CASEParser::OptimizeVertex(ASEMesh* pMesh)
 			}
 
 			// Normal, U, V 값중 한개라도 다르면 Vertex 새로 생성..
-			if ((pMesh->m_Final_Vertex[vertexIndex]->m_Normal != pMesh->m_MeshFace[i]->m_NormalVertex[j]))
+			if ((pMesh->m_VertexList[vertexIndex]->m_Normal != pMesh->m_MeshFace[i]->m_NormalVertex[j]))
 			{
 				new_VertexSet = true;
 			}
 
 			if (pMesh->m_Mesh_NumTVertex > 0)
 			{
-				if ((pMesh->m_Final_Vertex[vertexIndex]->m_U != pMesh->m_Mesh_TVertex[pMesh->m_MeshFace[i]->m_TFace[j]]->m_U) ||
-					(pMesh->m_Final_Vertex[vertexIndex]->m_V != pMesh->m_Mesh_TVertex[pMesh->m_MeshFace[i]->m_TFace[j]]->m_V))
+				if ((pMesh->m_VertexList[vertexIndex]->m_U != pMesh->m_Mesh_TVertex[pMesh->m_MeshFace[i]->m_TFace[j]]->m_U) ||
+					(pMesh->m_VertexList[vertexIndex]->m_V != pMesh->m_Mesh_TVertex[pMesh->m_MeshFace[i]->m_TFace[j]]->m_V))
 				{
 					new_VertexSet = true;
 				}
@@ -104,18 +107,18 @@ void CASEParser::OptimizeVertex(ASEMesh* pMesh)
 			if (new_VertexSet)
 			{
 				// 추가된 Vertex가 있다면 체크..
-				if (resize_VertexIndex > pMesh->m_MeshVertex.size())
+				if (resize_VertexIndex > pMesh->m_VertexList.size())
 				{
-					for (unsigned int k = pMesh->m_MeshVertex.size(); k < resize_VertexIndex; k++)
+					for (unsigned int k = pMesh->m_VertexList.size(); k < resize_VertexIndex; k++)
 					{
 						// 새로 추가한 Vertex와 동일한 데이터를 갖고있는 Face 내의 Vertex Index 수정..
-						if ((pMesh->m_Final_Vertex[k]->m_Indices == pMesh->m_MeshFace[i]->m_VertexIndex[j]) &&
-							(pMesh->m_Final_Vertex[k]->m_Normal == pMesh->m_MeshFace[i]->m_NormalVertex[j]))
+						if ((pMesh->m_VertexList[k]->m_Indices == pMesh->m_MeshFace[i]->m_VertexIndex[j]) &&
+							(pMesh->m_VertexList[k]->m_Normal == pMesh->m_MeshFace[i]->m_NormalVertex[j]))
 						{
 							if (pMesh->m_Mesh_NumTVertex > 0)
 							{
-								if ((pMesh->m_Final_Vertex[k]->m_U == pMesh->m_Mesh_TVertex[pMesh->m_MeshFace[i]->m_TFace[j]]->m_U) &&
-									(pMesh->m_Final_Vertex[k]->m_V == pMesh->m_Mesh_TVertex[pMesh->m_MeshFace[i]->m_TFace[j]]->m_V))
+								if ((pMesh->m_VertexList[k]->m_U == pMesh->m_Mesh_TVertex[pMesh->m_MeshFace[i]->m_TFace[j]]->m_U) &&
+									(pMesh->m_VertexList[k]->m_V == pMesh->m_Mesh_TVertex[pMesh->m_MeshFace[i]->m_TFace[j]]->m_V))
 								{
 									pMesh->m_MeshFace[i]->m_VertexIndex[j] = (int)k;
 									new_VertexSet = false;
@@ -139,8 +142,8 @@ void CASEParser::OptimizeVertex(ASEMesh* pMesh)
 					newVertex->m_Pos = nowVertex->m_Pos;
 					newVertex->m_Indices = nowVertex->m_Indices;
 					newVertex->m_Normal = pMesh->m_MeshFace[i]->m_NormalVertex[j];
-					newVertex->m_BoneIndices = pMesh->m_MeshVertex[nowVertex->m_Indices]->m_BoneIndices;
-					newVertex->m_BoneWeights = pMesh->m_MeshVertex[nowVertex->m_Indices]->m_BoneWeights;
+					newVertex->m_BoneIndices = pMesh->m_VertexList[nowVertex->m_Indices]->m_BoneIndices;
+					newVertex->m_BoneWeights = pMesh->m_VertexList[nowVertex->m_Indices]->m_BoneWeights;
 					newVertex->m_IsNormalSet = true;
 
 					if (pMesh->m_Mesh_NumTVertex > 0)
@@ -150,7 +153,7 @@ void CASEParser::OptimizeVertex(ASEMesh* pMesh)
 						newVertex->m_IsTextureSet = true;
 					}
 
-					pMesh->m_Final_Vertex.push_back(newVertex);
+					pMesh->m_VertexList.push_back(newVertex);
 					pMesh->m_MeshFace[i]->m_VertexIndex[j] = resize_VertexIndex;
 					resize_VertexIndex++;
 				}
@@ -165,13 +168,13 @@ void CASEParser::OptimizeVertex(ASEMesh* pMesh)
 		int index1 = pMesh->m_MeshFace[i]->m_VertexIndex[1];
 		int index2 = pMesh->m_MeshFace[i]->m_VertexIndex[2];
 
-		DXVector3 ep1 = pMesh->m_Final_Vertex[index1]->m_Pos - pMesh->m_Final_Vertex[index0]->m_Pos;
-		DXVector3 ep2 = pMesh->m_Final_Vertex[index2]->m_Pos - pMesh->m_Final_Vertex[index0]->m_Pos;
+		DirectX::SimpleMath::Vector3 ep1 = pMesh->m_VertexList[index1]->m_Pos - pMesh->m_VertexList[index0]->m_Pos;
+		DirectX::SimpleMath::Vector3 ep2 = pMesh->m_VertexList[index2]->m_Pos - pMesh->m_VertexList[index0]->m_Pos;
 
-		DXVector3 uv1 = { pMesh->m_Final_Vertex[index1]->m_U - pMesh->m_Final_Vertex[index0]->m_U,
-						  pMesh->m_Final_Vertex[index1]->m_V - pMesh->m_Final_Vertex[index0]->m_V };
-		DXVector3 uv2 = { pMesh->m_Final_Vertex[index2]->m_U - pMesh->m_Final_Vertex[index0]->m_U,
-						  pMesh->m_Final_Vertex[index2]->m_V - pMesh->m_Final_Vertex[index0]->m_V };
+		DirectX::SimpleMath::Vector2 uv1 = { pMesh->m_VertexList[index1]->m_U - pMesh->m_VertexList[index0]->m_U,
+						  pMesh->m_VertexList[index1]->m_V - pMesh->m_VertexList[index0]->m_V };
+		DirectX::SimpleMath::Vector2 uv2 = { pMesh->m_VertexList[index2]->m_U - pMesh->m_VertexList[index0]->m_U,
+						  pMesh->m_VertexList[index2]->m_V - pMesh->m_VertexList[index0]->m_V };
 
 		float den = 1.0f / (uv1.x * uv2.y - uv2.x * uv1.y);
 
@@ -179,48 +182,40 @@ void CASEParser::OptimizeVertex(ASEMesh* pMesh)
 		// 픽셀 쉐이더 내의 연산은 버텍스 쉐이더의 연산에 비해 호출 횟수가 차원이 다르게 크므로 부하가 올 수 있다..
 		// 법선맵의 픽셀의 색은 픽셀 쉐이더 안이 아니면 얻을수 없기 때문에 픽셀 쉐이더에서 연산을 한다고 한다..
 		/// 현재 연산과정을 버텍스 쉐이더로 옮겨둠
-		DXVector3 tangent = (ep1 * uv2.y - ep2 * uv1.y) * den;
+		DirectX::SimpleMath::Vector3 tangent = (ep1 * uv2.y - ep2 * uv1.y) * den;
 		tangent.Normalize();
 
-		//DXVector3 binormal = (ep2 * uv1.x - ep1 * uv2.x) * den;
+		//DirectX::SimpleMath::Vector3 binormal = (ep2 * uv1.x - ep1 * uv2.x) * den;
 		//binormal.Normalize();
 
 		// 유사 정점은 값을 누적하여 쉐이더에서 평균값을 사용하도록 하자..
-		pMesh->m_Final_Vertex[index0]->m_Tanget += tangent;
-		pMesh->m_Final_Vertex[index1]->m_Tanget += tangent;
-		pMesh->m_Final_Vertex[index2]->m_Tanget += tangent;
+		pMesh->m_VertexList[index0]->m_Tanget += tangent;
+		pMesh->m_VertexList[index1]->m_Tanget += tangent;
+		pMesh->m_VertexList[index2]->m_Tanget += tangent;
 	}
 
 	// 인덱스는 그냥 복사
-	pMesh->m_Final_Index = new IndexList[pMesh->m_MeshFace.size()];
-
 	for (unsigned int i = 0; i < pMesh->m_MeshFace.size(); i++)
 	{
+		pMesh->m_IndexList.push_back(new IndexList);
+
 		for (int j = 0; j < 3; j++)
 		{
-			pMesh->m_Final_Index[i].m_Index[j] = pMesh->m_MeshFace[i]->m_VertexIndex[j];
+			pMesh->m_IndexList[i]->m_Index[j] = pMesh->m_MeshFace[i]->m_VertexIndex[j];
 		}
+
 	}
 }
 
-void CASEParser::RecombinationTM(ParserData::ASEMesh* pMesh)
+void ASEParser::RecombinationTM(ParserData::ASEMesh* pMesh)
 {
-	// WorldTM -> LocalTM 변환..
-	DXVector4 row0 = pMesh->m_tm_row0;
-	DXVector4 row1 = pMesh->m_tm_row1;
-	DXVector4 row2 = pMesh->m_tm_row2;
-	DXVector4 row3 = pMesh->m_tm_row3;
-	row3.w = 1;
-
-	DXMatrix4X4 oMatrix(row0, row1, row2, row3);
-
 	/// Negative Scale Check
 	// 3D Max의 작업상 Mirroring으로 인해 Scale값이 음수가 나올 경우를 Negative Scale 이라고 한다
 	// 처리를 안해줄 경우 Normal 처리나 Animation 처리시에 문제가 된다
 	// Rotaion을 나타내는 축 Row1 ~ Row3 중 두축을 외적 한 값과 다른 한 축을 내적하여 음수이면 축이 반대이고 양수이면 축이 일치한다
 
-	XMVECTOR crossVec = XMVector3Cross(pMesh->m_tm_row0, pMesh->m_tm_row1);
-	XMVECTOR dotVec = XMVector3Dot(crossVec, pMesh->m_tm_row2);
+	XMVECTOR crossVec = XMVector3Cross(pMesh->m_WorldTM.Right(), pMesh->m_WorldTM.Up());
+	XMVECTOR dotVec = XMVector3Dot(crossVec, pMesh->m_WorldTM.Backward());
 
 	XMFLOAT3 resultVec;
 
@@ -234,13 +229,13 @@ void CASEParser::RecombinationTM(ParserData::ASEMesh* pMesh)
 		XMVECTOR nodePos;
 
 		// 기존 매트릭스에서 분리..
-		XMMatrixDecompose(&nodeScale, &nodetRot, &nodePos, oMatrix);
+		XMMatrixDecompose(&nodeScale, &nodetRot, &nodePos, pMesh->m_WorldTM);
 
 		// 스케일 재조정..
 		nodeScale *= -1;
 
 		// 노말값 재조정..
-		for (auto& k : pMesh->m_Final_Vertex)
+		for (auto& k : pMesh->m_VertexList)
 		{
 			k->m_Normal *= -1;
 		}
@@ -248,14 +243,11 @@ void CASEParser::RecombinationTM(ParserData::ASEMesh* pMesh)
 		/// 텍스쳐나 맵핑 데이터도 변환을 해주어야 할까..?
 
 		// 매트릭스 재조합..
-		oMatrix = XMMatrixScalingFromVector(nodeScale) * XMMatrixRotationQuaternion(nodetRot) * XMMatrixTranslationFromVector(nodePos);
+		pMesh->m_WorldTM = XMMatrixScalingFromVector(nodeScale) * XMMatrixRotationQuaternion(nodetRot) * XMMatrixTranslationFromVector(nodePos);
 	}
 
 	// WorldTM 역행렬을 구한다..
-	DXMatrix4X4 iMatrix = oMatrix.Inverse();
-
-	// 원점으로 이동하기위해 WorldTM 을 LocalTM 으로 설정..
-	pMesh->m_WorldTM = oMatrix;
+	DirectX::SimpleMath::Matrix iMatrix = pMesh->m_WorldTM.Invert();
 
 	// 부모 노드가 없을경우 WorldTM 이 곧 LocalTM..
 	// 부모 노드가 있을경우 LocalTM 을 구해주자..
@@ -265,13 +257,13 @@ void CASEParser::RecombinationTM(ParserData::ASEMesh* pMesh)
 	}
 	else
 	{
-		DXMatrix4X4 piMatrix = pMesh->m_Parent->m_WorldTM;
-		pMesh->m_LocalTM = pMesh->m_WorldTM * piMatrix.Inverse();
+		DirectX::SimpleMath::Matrix piMatrix = pMesh->m_Parent->m_WorldTM;
+		pMesh->m_LocalTM = pMesh->m_WorldTM * piMatrix.Invert();
 	}
 
-	for (unsigned int i = 0; i < pMesh->m_Final_Vertex.size(); i++)
+	for (unsigned int i = 0; i < pMesh->m_VertexList.size(); i++)
 	{
-		pMesh->m_Final_Vertex[i]->m_Pos = XMVector3Transform(pMesh->m_Final_Vertex[i]->m_Pos, iMatrix);
+		pMesh->m_VertexList[i]->m_Pos = XMVector3Transform(pMesh->m_VertexList[i]->m_Pos, iMatrix);
 	}
 
 	// 애니메이션이 있을경우 사이즈를 구해두자..
@@ -282,7 +274,7 @@ void CASEParser::RecombinationTM(ParserData::ASEMesh* pMesh)
 	}
 }
 
-void CASEParser::OptimizeData()
+void ASEParser::OptimizeData()
 {
 	// 부모 자식 연결..
 	for (unsigned int i = 0; i < m_MeshList.size(); i++)
@@ -307,10 +299,20 @@ void CASEParser::OptimizeData()
 	{
 		OptimizeVertex(m_MeshList[i]);
 		RecombinationTM(m_MeshList[i]);
+		SetBoneTM(m_MeshList[i]);
+	}
+
+	m_Model->m_isAnimation = m_IsAnimation;
+	m_Model->m_MaterialList = m_MaterialList;
+	m_Model->m_MeshList.resize(m_MeshList.size());
+
+	for (unsigned int i = 0; i< m_MeshList.size(); i++)
+	{
+		m_Model->m_MeshList[i] = m_MeshList[i];
 	}
 }
 
-PARSER_DLL void CASEParser::SetBoneTM(ParserData::ASEMesh* pMesh)
+void ASEParser::SetBoneTM(ParserData::ASEMesh* pMesh)
 {
 	for (size_t i = 0; i < pMesh->m_BoneList.size(); i++)
 	{
@@ -318,7 +320,11 @@ PARSER_DLL void CASEParser::SetBoneTM(ParserData::ASEMesh* pMesh)
 		{
 			if (m_MeshList[j]->m_NodeName == pMesh->m_BoneList[i]->m_BoneName)
 			{
-				// Mesh Node Name과 Bone Name이 일치할경우 Bone의 Mesh 포인터를 넣어주자..
+				// Bone NodeTM * Mesh NodeTM 역행렬 -> Mesh 기준 Bone의 OffsetTM
+				DirectX::SimpleMath::Matrix boneoffsetTM = m_MeshList[j]->m_WorldTM * pMesh->m_WorldTM.Invert();
+
+				// Bone OffsetTM 역행렬 -> Bone 기준 Mesh의 OffsetTM
+				pMesh->m_BoneTMList.emplace_back(boneoffsetTM.Invert());
 				pMesh->m_BoneMeshList.emplace_back(m_MeshList[j]);
 
 				// Bone Setting..
@@ -326,36 +332,33 @@ PARSER_DLL void CASEParser::SetBoneTM(ParserData::ASEMesh* pMesh)
 			}
 
 			// Bone List size가 같아지면 더 돌 필요가 없다..
-			if (pMesh->m_BoneMeshList.size() == pMesh->m_BoneList.size())
+			if (pMesh->m_BoneTMList.size() == pMesh->m_BoneList.size())
 			{
 				break;
 			}
 		}
 	}
-
-	// Mesh에 포함되있는 Bone들의 OffsetTM을 구해두자..
-	for (size_t i = 0; i < pMesh->m_BoneMeshList.size(); i++)
-	{
-		// Bone의 WorldTM(NodeTM)
-		DXMatrix4X4 boneNodeTM = pMesh->m_BoneMeshList[i]->m_WorldTM;
-
-		// Mesh의 WorldTM(NodeTM)
-		DXMatrix4X4 skinNodeTM = pMesh->m_WorldTM;
-
-		// Bone NodeTM * Mesh NodeTM 역행렬 -> Mesh 기준 Bone의 OffsetTM
-		DXMatrix4X4 boneoffsetTM = boneNodeTM * skinNodeTM.Inverse();
-
-		// Bone OffsetTM 역행렬 -> Bone 기준 Mesh의 OffsetTM
-		pMesh->m_BoneTMList.emplace_back(boneoffsetTM.Inverse());
-	}
 }
 
-ParserData::Mesh* CASEParser::GetMesh(int m_Index)
+void ASEParser::CreateModel()
 {
-	return m_MeshList[m_Index];
+	m_Model = nullptr; 
+	m_Model = new Model();
 }
 
-void CASEParser::DataParsing()
+void ASEParser::ResetData()
+{
+	m_MaterialData = nullptr;
+	m_materialmap = nullptr;
+	m_OneMesh = nullptr;
+	m_Bone = nullptr;
+	m_Animation = nullptr;
+
+	m_MeshList.clear();
+	m_MaterialList.clear();
+}
+
+void ASEParser::DataParsing()
 {
 	// 재귀 돌리다가 일정 이상 루프를 도는 경우(오류)를 체크하기 위한 변수
 	int i = 0;
@@ -593,20 +596,20 @@ void CASEParser::DataParsing()
 		case TOKENR_INHERIT_ROT:
 		case TOKENR_INHERIT_SCL:
 		case TOKENR_TM_ROW0:
-			if (m_OneMesh->m_tm_row0 == DXVector3::Zero())
-				m_OneMesh->m_tm_row0 = Parsing_ChangeNumberVector3();
+			if (m_OneMesh->m_WorldTM.Right() == DirectX::SimpleMath::Vector3())
+				m_OneMesh->m_WorldTM.Right(Parsing_ChangeNumberVector3());
 			break;
 		case TOKENR_TM_ROW1:
-			if (m_OneMesh->m_tm_row2 == DXVector3::Zero())
-				m_OneMesh->m_tm_row2 = Parsing_ChangeNumberVector3();
+			if (m_OneMesh->m_WorldTM.Backward() == DirectX::SimpleMath::Vector3())
+				m_OneMesh->m_WorldTM.Backward(Parsing_ChangeNumberVector3());
 			break;
 		case TOKENR_TM_ROW2:
-			if (m_OneMesh->m_tm_row1 == DXVector3::Zero())
-				m_OneMesh->m_tm_row1 = Parsing_ChangeNumberVector3();
+			if (m_OneMesh->m_WorldTM.Up() == DirectX::SimpleMath::Vector3())
+				m_OneMesh->m_WorldTM.Up(Parsing_ChangeNumberVector3());
 			break;
 		case TOKENR_TM_ROW3:
-			if (m_OneMesh->m_tm_row3 == DXVector3::Zero())
-				m_OneMesh->m_tm_row3 = Parsing_ChangeNumberVector3();
+			if (m_OneMesh->m_WorldTM.Translation() == DirectX::SimpleMath::Vector3())
+				m_OneMesh->m_WorldTM.Translation(Parsing_ChangeNumberVector3());
 			break;
 		case TOKENR_TM_POS:
 		case TOKENR_TM_ROTAXIS:
@@ -693,8 +696,8 @@ void CASEParser::DataParsing()
 			int boneNum = Parsing_NumberInt();
 			float boneWeight = Parsing_NumberFloat();
 
-			m_OneMesh->m_MeshVertex[m_Index]->m_BoneIndices.push_back(boneNum);
-			m_OneMesh->m_MeshVertex[m_Index]->m_BoneWeights.push_back(boneWeight);
+			m_OneMesh->m_VertexList[m_Index]->m_BoneIndices.push_back(boneNum);
+			m_OneMesh->m_VertexList[m_Index]->m_BoneWeights.push_back(boneWeight);
 		}
 		break;
 
@@ -718,15 +721,15 @@ void CASEParser::DataParsing()
 		{
 			for (int i = 0; i < m_OneMesh->m_Mesh_NumVertex; i++)
 			{
-				m_OneMesh->m_MeshVertex.push_back(new Vertex);
+				m_OneMesh->m_VertexList.push_back(new Vertex);
 			}
 		}
 		break;
 		case TOKENR_MESH_VERTEX:
 		{
 			m_Index = Parsing_NumberInt();
-			m_OneMesh->m_MeshVertex[m_Index]->m_Indices = m_Index;
-			m_OneMesh->m_MeshVertex[m_Index]->m_Pos = Parsing_ChangeNumberVector3();
+			m_OneMesh->m_VertexList[m_Index]->m_Indices = m_Index;
+			m_OneMesh->m_VertexList[m_Index]->m_Pos = Parsing_ChangeNumberVector3();
 		}
 		break;
 
@@ -769,7 +772,7 @@ void CASEParser::DataParsing()
 		{
 			m_Index = Parsing_NumberInt();
 
-			m_OneMesh->m_MeshFace[m_Index]->m_Normal = Parsing_ChangeNumberVector3();
+			Parsing_ChangeNumberVector3();
 			// 다음 토큰
 			m_lexer->GetToken(m_TokenString);
 			Parsing_NumberInt();
@@ -841,7 +844,6 @@ void CASEParser::DataParsing()
 			m_OneMesh->m_Animation->m_AniData.push_back(new OneFrame);
 			break;
 		case TOKENR_CONTROL_POS_TRACK:
-			m_OneMesh->m_Animation->m_isPosAnimation = true;
 			break;
 		case TOKENR_CONTROL_POS_SAMPLE:
 		{
@@ -850,7 +852,6 @@ void CASEParser::DataParsing()
 			break;
 		}
 		case TOKENR_CONTROL_ROT_TRACK:
-			m_OneMesh->m_Animation->m_isRotAnimation = true;
 			break;
 		case TOKENR_CONTROL_ROT_SAMPLE:
 		{
@@ -877,7 +878,6 @@ void CASEParser::DataParsing()
 			break;
 		}
 		case TOKENR_CONTROL_SCALE_TRACK:
-			m_OneMesh->m_Animation->m_isScaleAnimation = true;
 			break;
 		case TOKENR_CONTROL_SCALE_SAMPLE:
 		{
@@ -893,7 +893,7 @@ void CASEParser::DataParsing()
 			int materialIndex = Parsing_NumberInt();
 
 			// Mesh에 해당하는 Material Data 삽입
-			m_OneMesh->m_MaterialData = m_list_materialdata[materialIndex];
+			m_OneMesh->m_MaterialData = m_MaterialList[materialIndex];
 		}
 		break;
 
@@ -935,12 +935,7 @@ void CASEParser::DataParsing()
 }
 
 
-///----------------------------------------------------------------------
-/// parsing을 위한 단위별 함수들
-///----------------------------------------------------------------------
-
-// long을 읽어서 리턴해준다.
-int CASEParser::Parsing_NumberLong()
+int ASEParser::Parsing_NumberLong()
 {
 	LONG			token;
 	LONG			tempNumber;
@@ -951,8 +946,7 @@ int CASEParser::Parsing_NumberLong()
 	return			tempNumber;
 }
 
-// float
-float CASEParser::Parsing_NumberFloat()
+float ASEParser::Parsing_NumberFloat()
 {
 	LONG			token;
 	float			tempNumber;
@@ -963,17 +957,14 @@ float CASEParser::Parsing_NumberFloat()
 	return			tempNumber;
 }
 
-// String
-LPSTR CASEParser::Parsing_String()
+LPSTR ASEParser::Parsing_String()
 {
 	m_lexer->GetToken(m_TokenString);
 
 	return m_TokenString;
 }
 
-
-// int
-int CASEParser::Parsing_NumberInt() {
+int ASEParser::Parsing_NumberInt() {
 
 	LONG			token;
 	int				tempNumber;
@@ -984,9 +975,7 @@ int CASEParser::Parsing_NumberInt() {
 	return			tempNumber;
 }
 
-
-// 3개의 Float를 벡터 하나로
-Vector3 CASEParser::Parsing_ChangeNumberVector3()
+Vector3 ASEParser::Parsing_ChangeNumberVector3()
 {
 	LONG				token;
 	Vector3			tempVector3;
@@ -1001,7 +990,7 @@ Vector3 CASEParser::Parsing_ChangeNumberVector3()
 	return			tempVector3;		// 스태틱 변수의 레퍼런스보다는 값 전달을 하자.
 }
 
-Vector3 CASEParser::Parsing_NormalNumberVector3()
+Vector3 ASEParser::Parsing_NormalNumberVector3()
 {
 	LONG				token;
 	Vector3			tempVector3;
@@ -1016,26 +1005,21 @@ Vector3 CASEParser::Parsing_NormalNumberVector3()
 	return			tempVector3;
 }
 
-///--------------------------------------------------
-/// 내부에서 뭔가를 생성, 리스트에 넣는다
-///--------------------------------------------------
-// 메시를 하나 동적으로 생성하고, 그 포인터를 리스트에 넣는다.
-void CASEParser::Create_OneMesh_to_list()
+void ASEParser::Create_OneMesh_to_list()
 {
 	ASEMesh* temp = new ASEMesh;
 	m_OneMesh = temp;
 	m_MeshList.push_back(m_OneMesh);
 }
 
-// 메트리얼 하나를 동적으로 생성하고, 그 포인터를 리스트에 넣는다.
-void CASEParser::Create_MaterialData_to_list()
+void ASEParser::Create_MaterialData_to_list()
 {
 	CMaterial* temp = new CMaterial;
 	m_MaterialData = temp;
-	m_list_materialdata.push_back(m_MaterialData);
+	m_MaterialList.push_back(m_MaterialData);
 }
 
-void CASEParser::Create_DiffuseMap_to_list()
+void ASEParser::Create_DiffuseMap_to_list()
 {
 	MaterialMap* temp = new MaterialMap;
 	m_materialmap = temp;
@@ -1044,7 +1028,7 @@ void CASEParser::Create_DiffuseMap_to_list()
 	m_MaterialData->m_IsDiffuseMap = true;
 }
 
-void CASEParser::Create_BumpMap_to_list()
+void ASEParser::Create_BumpMap_to_list()
 {
 	MaterialMap* temp = new MaterialMap;
 	m_materialmap = temp;
@@ -1053,7 +1037,7 @@ void CASEParser::Create_BumpMap_to_list()
 	m_MaterialData->m_IsBumpMap = true;
 }
 
-void CASEParser::Create_SpecularMap_to_list()
+void ASEParser::Create_SpecularMap_to_list()
 {
 	MaterialMap* temp = new MaterialMap;
 	m_materialmap = temp;
@@ -1062,7 +1046,7 @@ void CASEParser::Create_SpecularMap_to_list()
 	m_MaterialData->m_IsSpecularMap = true;
 }
 
-void CASEParser::Create_ShineMap_to_list()
+void ASEParser::Create_ShineMap_to_list()
 {
 	MaterialMap* temp = new MaterialMap;
 	m_materialmap = temp;
@@ -1071,7 +1055,7 @@ void CASEParser::Create_ShineMap_to_list()
 	m_MaterialData->m_IsShineMap = true;
 }
 
-void CASEParser::Create_AnimationData_to_mesh(Mesh* nowMesh)
+void ASEParser::Create_AnimationData_to_mesh(Mesh* nowMesh)
 {
 	OneAnimation* temp = new OneAnimation;
 	m_Animation = temp;
@@ -1083,22 +1067,15 @@ void CASEParser::Create_AnimationData_to_mesh(Mesh* nowMesh)
 }
 
 // 정점 하나를..
-void CASEParser::Create_OneVertex_to_list()
+void ASEParser::Create_OneVertex_to_list()
 {
 	Vertex* temp = new Vertex;
-	m_OneMesh->m_MeshVertex.push_back(temp);
+	m_OneMesh->m_VertexList.push_back(temp);
 }
 
-void CASEParser::Create_BoneData_to_list()
+void ASEParser::Create_BoneData_to_list()
 {
 	Bone* temp = new Bone;
 	m_Bone = temp;
 	m_OneMesh->m_BoneList.push_back(temp);
 }
-
-
-
-
-
-
-

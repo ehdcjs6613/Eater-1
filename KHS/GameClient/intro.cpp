@@ -9,6 +9,10 @@
 
 void intro::Awake()
 {
+	GameObject* obj = Instance();
+	obj->AddComponent<Keyinput>();
+	obj->AddComponent<Camera>();
+
 	//불러오는 매쉬의 경로 파악
 	LoadMeshPath("../FBXFile/");
 	LoadMesh("Table");
@@ -21,10 +25,6 @@ void intro::Start()
 	MeshFilter* temp = obj->GetComponent<MeshFilter>();
 	temp->SetMeshName("Table");
 
-
-	obj = Instance();
-	obj->AddComponent<Keyinput>();
-	obj->AddComponent<Camera>();
 }
 
 void intro::Update()

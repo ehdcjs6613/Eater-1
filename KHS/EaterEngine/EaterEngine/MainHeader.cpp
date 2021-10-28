@@ -18,6 +18,16 @@ EATER_ENGINEDLL void UpdateEngine()
 {
 	gGameEngine->Update();
 }
+
+EATER_ENGINEDLL void OnReSize(int X, int Y)
+{
+	//처음 시작 상태가 아닐때
+	if (gGameEngine != nullptr)
+	{
+		gGameEngine->OnResize(X, Y);
+	}
+}
+
 ///오브젝트 관련
 EATER_ENGINEDLL GameObject* Instance(std::string ObjName)
 {
@@ -49,13 +59,13 @@ EATER_ENGINEDLL void CreateScene(Scene* mSceneTemp, std::string SceneName)
 
 EATER_ENGINEDLL void LoadMesh(std::string mMeshName, bool Scale,bool LoadAnime)
 {
-	//gLoadManager->LoadMesh(mMeshName, Scale,LoadAnime);
+	gGameEngine->LoadMesh(mMeshName);
 }
 
 ///로드 관련
 EATER_ENGINEDLL void LoadMeshPath(std::string mPath)
 {
-	//gLoadManager->LoadMeshPath(mPath);
+	gGameEngine->LoadMeshPath(mPath);
 }
 
 EATER_ENGINEDLL GameObject* CreateMainCamera(float x, float y, float z)
