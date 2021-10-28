@@ -16,6 +16,8 @@
 class FBXParser;
 class FBXModel;
 class DH3DEngine;
+class GraphicEngine;
+
 class LoadManager
 {
 public:
@@ -25,7 +27,7 @@ public:
 	
 
 	//초기화 및 경로 설정
-	void Initialize();
+	void Initialize(GraphicEngine* Graphic);
 public:
 	///GET
 	//매쉬 가져오기
@@ -52,10 +54,7 @@ public:
 	void DeleteMeshAll();
 private:
 	//엔진에 맞게 데이터를 변경시킴
-	void ChangeData(FBXModel* mData);
-
-
-
+	//void ChangeData(FBXModel* mData);
 
 private:
 
@@ -83,6 +82,7 @@ private:
 	//쉐이더 
 	//텍스쳐
 
+	GraphicEngine* GEngine;
 private:
-	FBXParser* EATER_Parser;
+	//FBXParser* EATER_Parser;
 };

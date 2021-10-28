@@ -7,7 +7,7 @@
 #include "EngineData.h"
 #include <functional>
 #include "Delegate.h"
-#include "../SharedData.h"
+//#include "../SharedData.h"
 
 #ifdef ENGINE_INTERFACE
 #define EATER_ENGINEDLL __declspec(dllexport)
@@ -21,6 +21,7 @@ class GameObject;
 class Component;
 class DH3DEngine;
 class MeshFilter;
+
 
 class ObjectManager
 {
@@ -58,9 +59,16 @@ public:
 	///그래픽 엔진쪽으로 보낼 랜더메세지큐를 생성
 	void CreateRenderQueue();
 
-
 	/// 업데이트와 랜더링 함수리스트를 모두 삭제함
 	void ClearFunctionList();
+
+	///오브젝트를 삭제한다
+	void DeleteObject();
+
+	std::queue<MeshData*>* GetRenderQueue();
+
+	///매쉬마다 없어도되는 데이터들
+	GlobalData* GetGlobalData();
 private:
 	std::vector<GameObject*> ObjectList;
 	std::queue<GameObject*> DeleteList;
@@ -72,16 +80,16 @@ private:
 
 	/// 테스트용
 	////////////////////////////////////////////
-	std::string MeshName;
-	FBXModel* MeshFilterData;
-
-	DH3DEngine* pTest_Engine;
-
-	OneFrameData* pTest_OFD;
-	SharedRenderData* pTest_SRD;
-	DHParser::Mesh* pTest_Mesh;
-
-	void Test();
+	//std::string MeshName;
+	//FBXModel* MeshFilterData;
+	//
+	//DH3DEngine* pTest_Engine;
+	//
+	//OneFrameData* pTest_OFD;
+	//SharedRenderData* pTest_SRD;
+	//DHParser::Mesh* pTest_Mesh;
+	//
+	//void Test();
 	////////////////////////////////////////////
 
 
@@ -98,7 +106,5 @@ private:
 	static Delegate_Map<Component> EndUpdate;			//가장 마지막에 실행되는 업데이트
 
 
-	///오브젝트를 삭제한다
-	void DeleteObject();
 	void DeleteComponent(Component* cpt);
 };

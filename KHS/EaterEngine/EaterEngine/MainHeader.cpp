@@ -18,6 +18,16 @@ EATER_ENGINEDLL void UpdateEngine()
 {
 	gGameEngine->Update();
 }
+
+EATER_ENGINEDLL void OnReSize(int X, int Y)
+{
+	//처음 시작 상태가 아닐때
+	if (gGameEngine != nullptr)
+	{
+		gGameEngine->OnResize(X, Y);
+	}
+}
+
 ///오브젝트 관련
 EATER_ENGINEDLL GameObject* Instance(std::string ObjName)
 {

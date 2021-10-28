@@ -21,7 +21,6 @@ void intro::Start()
 	MeshFilter* temp = obj->GetComponent<MeshFilter>();
 	temp->SetMeshName("Table");
 
-
 	obj = Instance();
 	obj->AddComponent<Keyinput>();
 	obj->AddComponent<Camera>();

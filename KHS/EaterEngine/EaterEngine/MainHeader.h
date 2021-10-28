@@ -16,8 +16,9 @@ class Scene;
 extern GameEngine* gGameEngine;
 
 extern "C" EATER_ENGINEDLL void EngineInitialize(HWND _g_hWnd);		//GameEngine 시작
-extern "C" EATER_ENGINEDLL void EndEngine();					//GameEngine 종료
-extern "C" EATER_ENGINEDLL void UpdateEngine();				//GameEngine 업데이트
+extern "C" EATER_ENGINEDLL void EndEngine();						//GameEngine 종료
+extern "C" EATER_ENGINEDLL void UpdateEngine();						//GameEngine 업데이트
+extern "C" EATER_ENGINEDLL void OnReSize(int X,int Y);				//윈도우 사이즈 재조정	
 
 
 extern "C" EATER_ENGINEDLL GameObject*	Instance(std::string ObjName= "GameObject");//오브젝트 생성

@@ -1,6 +1,4 @@
 #include "GameObject.h"
-
-
 GameObject::GameObject()
 {
 	IsDelete = true;	//삭제 여부
@@ -13,23 +11,12 @@ GameObject::GameObject()
 GameObject::~GameObject()
 {
 	delete OneMeshData;
+	OneMeshData = nullptr;
 }
 
 void GameObject::SetActive(bool active)
 {
 	IsActive = active;
-}
-
-void GameObject::Delete()
-{
-	IsDelete = true;
-
-
-}
-
-bool GameObject::GetDelete()
-{
-	return IsDelete;
 }
 
 GameObject* GameObject::GetChild(std::string Name)

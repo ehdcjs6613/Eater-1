@@ -6,7 +6,6 @@ enum class OBJECT_TYPE
 	///현재 기본형으로 넣어둔 오브젝트 종류
 	///나중에 필요한건 넣고 필요없는건 빼자
 	
-
 	Default,		//값을 넣지않았을때 기본형
 	Base,			//상속구조로 되어있는 오브젝트
 	Skinning,		//스키닝이 추가된 오브젝트
@@ -48,6 +47,17 @@ public:
 
 	//Mesh 위치값
 	DirectX::XMFLOAT3 Pos;
+};
+
+class LoadData
+{
+public:
+	LoadData() {};
+	~LoadData() {};
+private:
+
+
+
 };
 
 

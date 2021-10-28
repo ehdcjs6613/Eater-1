@@ -1,7 +1,6 @@
 #include "MeshFilter.h"
 #include "GameObject.h"
 #include "LoadManager.h"
-#include "KHParser.h"
 #include "EngineData.h"
 
 extern LoadManager* gLoadManager;

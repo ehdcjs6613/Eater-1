@@ -13,6 +13,10 @@
 //컨퍼넌트
 #include "Transform.h"
 
+//테스트용
+#include "DH3DEngine.h"
+#include "GraphicsEngine.h"
+
 
 GameEngine::GameEngine()
 {
@@ -23,6 +27,15 @@ GameEngine::GameEngine()
 	mSceneManager	= nullptr;
 	mKeyManager		= nullptr;
 
+	//그래픽 엔진 테스트용
+	NowGraphicEngine = nullptr;
+
+	//기본 윈도우 사이즈 설정
+	WinSizeWidth	= 1920;
+	WinSizeHeight	= 1080;
+
+	//윈도우 핸들
+	mHwnd = NULL;
 }
 
 GameEngine::~GameEngine()
@@ -43,20 +56,45 @@ void GameEngine::Initialize(HWND Hwnd)
 	mSceneManager	= new SceneManager();
 	mDebugManager	= new DebugManager();
 
+	//그래픽 엔진 생성
+
+
+
+
 	//매니저들 초기화
 	mKeyManager->Initialize(mHwnd);
 	mDebugManager->Initialize();
 	mSceneManager->Initialize();
 	mObjectManager->Initialize(mHwnd);
-	mLoadManager->Initialize();	
+	mLoadManager->Initialize(NowGraphicEngine);
+
+
+	//그래픽 엔진 초기화
+	pTest_Engine = new DH3DEngine();
+	pTest_Engine->Initialize(Hwnd, WinSizeWidth, WinSizeHeight);
+
+	//NowGraphicEngine->Initialize(Hwnd, WinSizeWidth, WinSizeHeight);
 }
 
 void GameEngine::Update()
 {
-	//키관련 업데이트
+	//매니저들 업데이트
 	mKeyManager->Update();
 	mSceneManager->Update();
 	mObjectManager->PlayUpdate();
+	
+	//엔진에 랜더큐와 글로벌 데이터를 넘겨준다
+	//NowGraphicEngine->Render(mObjectManager->GetRenderQueue(), mObjectManager->GetGlobalData());
+
+	//업데이트가 끝나고 랜더링 테스트용
+	//pTest_Engine->BeginDraw();
+	//pTest_Engine->TextDraw({ (int)(1920 - 350), 10 }, 500, 0, 1, 0, 1, 30, L"카메라 모드 변경 : C");
+	//pTest_Engine->RenderDraw(pTest_OFD, pTest_SRD);
+	//pTest_Engine->EndDraw();
+
+
+	//랜더링이 끝나고 오브젝트 Delete
+	mObjectManager->DeleteObject();
 }
 
 void GameEngine::Finish()
@@ -66,6 +104,15 @@ void GameEngine::Finish()
 
 	mDebugManager->Delete();
 	mSceneManager->Delete();
+}
+
+void GameEngine::OnResize(float Change_Width, float Change_Height)
+{
+	//윈도우 크기 재설정
+	WinSizeWidth	= Change_Width;
+	WinSizeHeight	= Change_Height;
+		
+	//그래픽 엔진의 리사이즈 함수를 넣으면 될듯
 }
 
 ///오브젝트 생성 삭제

@@ -4,7 +4,7 @@
 #include "framework.h"
 #include "stdio.h"
 #include "GameManager.h"
-
+#include "MainHeader.h"
 
 
 // 윈도 프로시저의 전방선언
@@ -81,8 +81,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
 		int SizeX = LOWORD(lParam);
 		int SizeY = HIWORD(lParam);
-
-		//Engine->OnResize(SizeX, SizeY);
+		OnReSize(SizeX, SizeY);
 		break;
 
 	}
