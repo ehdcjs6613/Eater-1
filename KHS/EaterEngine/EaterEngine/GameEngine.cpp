@@ -57,6 +57,7 @@ void GameEngine::Initialize(HWND Hwnd)
 	mDebugManager	= new DebugManager();
 
 	//그래픽 엔진 생성
+	pTest_Engine = new DH3DEngine();
 
 
 
@@ -66,11 +67,9 @@ void GameEngine::Initialize(HWND Hwnd)
 	mDebugManager->Initialize();
 	mSceneManager->Initialize();
 	mObjectManager->Initialize(mHwnd);
-	mLoadManager->Initialize(NowGraphicEngine);
+	mLoadManager->Initialize(pTest_Engine);
 
 
-	//그래픽 엔진 초기화
-	pTest_Engine = new DH3DEngine();
 	pTest_Engine->Initialize(Hwnd, WinSizeWidth, WinSizeHeight);
 
 	//NowGraphicEngine->Initialize(Hwnd, WinSizeWidth, WinSizeHeight);

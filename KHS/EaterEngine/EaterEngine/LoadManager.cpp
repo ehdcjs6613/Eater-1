@@ -1,9 +1,9 @@
 #include "LoadManager.h"
 #include "DebugManager.h"
 #include "DH3DEngine.h"
-//#include "KHParser.h"
-#include "EngineData.h"
+//#include "KHParser.h
 
+#include "EngineData.h"
 LoadManager::LoadManager()
 {
 	//EATER_Parser = nullptr;
@@ -18,6 +18,12 @@ void LoadManager::Initialize(GraphicEngine* Graphic)
 {
 	//그래픽 엔진 받아오기
 	GEngine = Graphic;
+}
+
+void LoadManager::Initialize(DH3DEngine* Graphic)
+{
+
+
 }
 
 FBXModel* LoadManager::GetMesh(std::string Name)
@@ -54,7 +60,7 @@ void LoadManager::LoadMesh( std::string Name, bool Scale, bool LoadAnime)
 
 	
 	//그리고 매쉬 데이터로 넘기고 저장
-
+	
 
 
 }
@@ -94,25 +100,6 @@ void LoadManager::DeleteMeshAll()
 	MeshList.clear();
 }
 
-//void LoadManager::ChangeData(FBXModel* mData)
-//{
-//	///로드한 데이터 EaterEngine 데이터 타입에 맞게 변경
-//	
-//	//지금은 동혁이 엔진을 참조하여 만들것
-//	
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//}
+
 
 

@@ -28,6 +28,8 @@ public:
 
 	//초기화 및 경로 설정
 	void Initialize(GraphicEngine* Graphic);
+	//테스트용
+	void Initialize(DH3DEngine* Graphic);
 public:
 	///GET
 	//매쉬 가져오기
@@ -79,10 +81,10 @@ private:
 	///리스트
 	std::map<std::string,FBXModel*> MeshList;
 
-	//쉐이더 
-	//텍스쳐
 
-	GraphicEngine* GEngine;
+	//그래픽 엔진
+	GraphicEngine*	GEngine;
+	DH3DEngine*		DHEngine;
 private:
 	//FBXParser* EATER_Parser;
 };
