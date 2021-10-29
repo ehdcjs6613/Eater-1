@@ -277,7 +277,7 @@ void D2DSupport::Draw_AllText()
 		Text_Data_Pool.ResetObject(Queue_Data);
 	}
 
-	m_2D_RenderTarget->EndDraw();
+	//m_2D_RenderTarget->EndDraw();
 }
 
 void D2DSupport::Draw_AllImage()

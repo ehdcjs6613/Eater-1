@@ -59,7 +59,7 @@ public:
 	EATER_ENGINEDLL DirectX::XMMATRIX GetScaleXM();
 
 	//월드매트릭스를 가져옴
-	EATER_ENGINEDLL DirectX::XMMATRIX	GetWorld();
+	EATER_ENGINEDLL DirectX::XMMATRIX*GetWorld();
 
 	//로컬좌표들을 매프레임 업데이트 해줄것인가 여부
 	EATER_ENGINEDLL void SetLocalUpdate(bool isUpdate);

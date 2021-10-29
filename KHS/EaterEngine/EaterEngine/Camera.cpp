@@ -36,9 +36,9 @@ void Camera::Update()
 	CreateView();
 }
 
-DirectX::XMMATRIX Camera::GetProj()
+DirectX::XMMATRIX* Camera::GetProj()
 {
-	return mProj_M;
+	return &mProj_M;
 }
 
 void Camera::ChoiceMainCam()
@@ -46,12 +46,12 @@ void Camera::ChoiceMainCam()
 	MainCam = this;
 }
 
-DirectX::XMMATRIX Camera::GetView()
+DirectX::XMMATRIX* Camera::GetView()
 {
-	return mView_M;
+	return &mView_M;
 }
 
-DirectX::XMMATRIX Camera::GetMainView()
+DirectX::XMMATRIX* Camera::GetMainView()
 {
 	return MainCam->GetView();
 }

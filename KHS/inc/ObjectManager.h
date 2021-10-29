@@ -7,13 +7,14 @@
 #include "EngineData.h"
 #include <functional>
 #include "Delegate.h"
-//#include "../SharedData.h"
+#include "SharedData.h"
 
 #ifdef ENGINE_INTERFACE
 #define EATER_ENGINEDLL __declspec(dllexport)
 #else
 #define EATER_ENGINEDLL __declspec(dllimport)
 #endif
+
 
 class Camera;
 class FBXModel;
@@ -58,6 +59,7 @@ public:
 
 	///그래픽 엔진쪽으로 보낼 랜더메세지큐를 생성
 	void CreateRenderQueue();
+	void CreateDHRenderQueue();
 
 	/// 업데이트와 랜더링 함수리스트를 모두 삭제함
 	void ClearFunctionList();
@@ -65,7 +67,10 @@ public:
 	///오브젝트를 삭제한다
 	void DeleteObject();
 
-	std::queue<MeshData*>* GetRenderQueue();
+	std::queue<MeshData*>*		GetRenderQueue();
+	std::vector<DHParser::Mesh>* GetDHRenderQueue();
+	void DeleteRenderQueue();
+	
 
 	///매쉬마다 없어도되는 데이터들
 	GlobalData* GetGlobalData();
@@ -75,6 +80,7 @@ private:
 
 	///그래픽엔진쪽으로 던저줄 데이터들
 	std::queue<MeshData*> RenderData;
+	std::vector<DHParser::Mesh> DHRenderData;
 	GlobalData* Global;
 
 

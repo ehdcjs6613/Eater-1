@@ -27,11 +27,11 @@ public:
 	//현재카메라를 메인카메라로 변경시킨다
 	void ChoiceMainCam();
 	//현재 카메라의 뷰행렬
-	DirectX::XMMATRIX GetView();
+	DirectX::XMMATRIX* GetView();
 	//메인으로 지정한 카메라의 뷰행렬
-	static DirectX::XMMATRIX GetMainView();
+	static DirectX::XMMATRIX* GetMainView();
 	//프로젝션 행렬을 가져온다
-	static DirectX::XMMATRIX GetProj();
+	static DirectX::XMMATRIX* GetProj();
 	
 private:
 	Transform* tranform;
