@@ -2,6 +2,7 @@
 #include "windows.h"
 #include <queue>
 #include "EngineData.h"
+#include "ParserData.h"
 /// <summary>
 /// 게임 엔진에서 제공하는 그래픽 엔진 최상위 클래스
 /// 이클래스를 상속받은 그래픽 엔진을 제작하면 된다 
@@ -10,6 +11,7 @@
 
 class MeshData;
 class GlobalData;
+
 
 class GraphicEngine
 {
@@ -27,10 +29,10 @@ public:
 
 
 	///그래픽 엔진과 게임엔진에서 주고받아야할 함수들
-	virtual void CreateIndexBuffer(Indexbuffer* buffer)	= 0;		//인덱스 버퍼를 만들어준다
-	virtual void CreateVertexBuffer(Vertexbuffer* buffer)	= 0;	//버텍스 버퍼를 만들어준다
-	virtual void CreateTextureBuffer()  = 0;						//텍스쳐를 만들어준다
-	virtual void OnReSize(float Change_Width, float Change_Height) = 0; //리사이즈
+	virtual Indexbuffer* CreateIndexBuffer(ParserData::Model* mModel)	= 0;	//인덱스 버퍼를 만들어준다
+	virtual Vertexbuffer* CreateVertexBuffer(ParserData::Model* mModel)	= 0;	//버텍스 버퍼를 만들어준다
+	virtual void CreateTextureBuffer()  = 0;									//텍스쳐를 만들어준다
+	virtual void OnReSize(float Change_Width, float Change_Height) = 0;			//리사이즈
 
 
 	/// 랜더링을 한다 매쉬 랜더데이터 리스트, 글로벌 데이터

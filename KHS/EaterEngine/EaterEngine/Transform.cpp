@@ -135,9 +135,9 @@ DirectX::XMMATRIX Transform::GetScaleXM()
 	return ScaleXM;
 }
 
-DirectX::XMMATRIX Transform::GetWorld()
+DirectX::XMMATRIX* Transform::GetWorld()
 {
-	return World_M;
+	return &World_M;
 }
 
 void Transform::SetLocalUpdate(bool isUpdate)
@@ -164,6 +164,8 @@ DirectX::XMMATRIX Transform::CreateXMRot4x4()
 	DirectX::XMMATRIX _P = DirectX::XMMatrixRotationX(radX);
 	DirectX::XMMATRIX _Y = DirectX::XMMatrixRotationY(radY);
 	DirectX::XMMATRIX _R = DirectX::XMMatrixRotationZ(radZ);
+
+	//DirectX::XMMatrixRotationRollPitchYaw(radX, radY, radZ);
 
 	return _R * _Y * _P;
 }

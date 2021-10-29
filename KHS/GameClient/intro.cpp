@@ -24,6 +24,25 @@ void intro::Start()
 	obj->AddComponent<MeshFilter>();
 	MeshFilter* temp = obj->GetComponent<MeshFilter>();
 	temp->SetMeshName("Table");
+	t = obj->GetComponent<Transform>();
+
+
+
+	
+	
+
+	for (int i = -5; i < 5; i++)
+	{
+		for (int j = -5; j < 5; j++)
+		{
+			obj = Instance();
+			obj->AddComponent<MeshFilter>();
+			temp = obj->GetComponent<MeshFilter>();
+			temp->SetMeshName("Table");
+			Transform* tr = obj->GetComponent<Transform>();
+			tr->Position = { (float)i*2,0,(float)j*2 };
+		}
+	}
 
 }
 

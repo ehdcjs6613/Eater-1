@@ -23,34 +23,39 @@ enum class OBJECT_TYPE
 struct GlobalData
 {
 	//카메라 정보들
-	DirectX::XMMATRIX mViewMX;
-	DirectX::XMMATRIX mProj;
+	DirectX::XMMATRIX* mViewMX;
+	DirectX::XMMATRIX* mProj;
 };
 
 //한개의 매쉬에 존재하는 데이터
 class MeshData
 {
 public:
-	MeshData()= default;
+	MeshData()
+	{	
+		//초기화
+		indexCount	= 0;
+		vertexCount = 0;
+
+		mWorld = nullptr;
+		mLocal = nullptr;
+		Pos = { 0,0,0 };
+		ObjType = OBJECT_TYPE::Default;
+	}
 	~MeshData() {};
 
-	//오브젝트 타입
-	OBJECT_TYPE ObjType = OBJECT_TYPE::Default;
-	//인덱스버퍼 ,버텍스 버퍼
-	Indexbuffer*	IB;
-	Vertexbuffer*	VB;
 
+	OBJECT_TYPE ObjType;//오브젝트 타입
 
-	//매쉬 관련 행렬
-	DirectX::XMMATRIX mWorld;
-	DirectX::XMMATRIX mlocal;
+	Indexbuffer*	IB;	//인덱스 버퍼
+	Vertexbuffer*	VB;	//버텍스 버퍼
+	
+	int indexCount;		//인덱스 카운터
+	int vertexCount;	//버텍스 카운터
 
-	//애니메이션
-
-
-
-	//Mesh 위치값
-	DirectX::XMFLOAT3 Pos;
+	DirectX::XMMATRIX* mWorld;	//매쉬의 월드 행렬
+	DirectX::XMMATRIX* mLocal;	//매쉬의 로컬행렬
+	DirectX::XMFLOAT3 Pos;		//매쉬의 위치값
 };
 
 class LoadData
@@ -58,8 +63,8 @@ class LoadData
 public:
 	LoadData() 
 	{
-		IB = new Indexbuffer();
-		VB = new Vertexbuffer();
+		indexCount	= 0;
+		vertexCount = 0;
 	};
 	~LoadData()
 	{
@@ -67,6 +72,9 @@ public:
 		delete VB;
 	};
 
+
+	int indexCount;
+	int vertexCount;
 	Indexbuffer* IB;
 	Vertexbuffer* VB;
 };

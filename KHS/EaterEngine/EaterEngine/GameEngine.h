@@ -70,6 +70,7 @@ private:
 	LoadManager*		mLoadManager;		//로드 관련 매니저
 	SceneManager*		mSceneManager;		//스크린 관리 매니저
 	KeyinputManager*	mKeyManager;		//키인풋 관련 매니저
+
 private:
 	///클라쪽에서 받아야 하는 데이터
 	HWND mHwnd; //핸들

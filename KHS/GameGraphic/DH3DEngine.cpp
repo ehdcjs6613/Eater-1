@@ -784,7 +784,7 @@ void DH3DEngine::CreateIndexBuffer(DHParser::Mesh* _Mesh)
 
 	D3D11_BUFFER_DESC ibd;
 	ibd.Usage = D3D11_USAGE_IMMUTABLE;
-	ibd.ByteWidth = sizeof(UINT) * _Mesh->Tcount * 3;
+	ibd.ByteWidth = sizeof(UINT) * _Mesh->Tcount*3;
 	ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	ibd.CPUAccessFlags = 0;
 	ibd.MiscFlags = 0;

@@ -143,18 +143,24 @@ void ObjectManager::PlayUpdate()
 	EndUpdate.Play();
 
 	///업데이트 작업끝 그래픽엔진으로 넘겨줄 데이터 정리
-	//pTest_OFD->View_Matrix			= Camera::GetMainView();
-	//pTest_OFD->Projection_Matrix		= Camera::GetProj();
+
+
+
 	//글로벌 데이터
 	Global->mProj = Camera::GetMainView();
 	Global->mViewMX = Camera::GetMainView();
 
 	///모든오브젝트의 데이터를 랜더큐에 담는다
 	CreateRenderQueue();
-	
+	CreateDHRenderQueue();
 
 	///모든 오브젝트 업데이트 완료
 }
+void ObjectManager::DeleteRenderQueue()
+{
+	DHRenderData.clear();
+}
+
 
 void ObjectManager::PlayStart()
 {
@@ -202,6 +208,40 @@ void ObjectManager::DeleteObject()
 		DeleteList.pop();
 	}
 }
+
+void ObjectManager::CreateDHRenderQueue()
+{
+	//테스트용 동혁이 랜더큐 만들기..
+
+	int count = ObjectList.size();
+
+	std::vector<GameObject*>::iterator it = ObjectList.begin();
+	for (it; it != ObjectList.end(); it++)
+	{
+		DHParser::Mesh temp = DHParser::Mesh();
+		
+		MeshData* data = (*it)->OneMeshData;
+
+		if (DHRenderData.size() == count) { return; }
+		if (data->IB == nullptr || data->VB == nullptr) { continue; }
+
+		temp.Texture_Key	= 0;
+		temp.Tcount			= data->indexCount;
+		temp.Index_Buffer	= data->IB->IndexBufferPointer;
+		temp.Vertex_Buffer	= data->VB->VertexbufferPointer;
+		temp.World_TM		= *data->mWorld;
+		temp.Local_TM		= *data->mWorld;
+
+
+		DHRenderData.push_back(temp);
+	}
+}
+
+std::vector<DHParser::Mesh>* ObjectManager::GetDHRenderQueue()
+{
+	return &DHRenderData;
+}
+
 
 void ObjectManager::DeleteComponent(Component* cpt)
 {

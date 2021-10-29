@@ -6,7 +6,7 @@
 #include "ObjectManager.h"
 #include "SceneManager.h"
 #include "DebugManager.h"
-
+#include "Camera.h"
 //오브젝트
 #include "GameObject.h"
 
@@ -69,28 +69,39 @@ void GameEngine::Initialize(HWND Hwnd)
 	mObjectManager->Initialize(mHwnd);
 	//테스트용 이곳에 그래픽엔진을 넘겨주면된다
 	mLoadManager->Initialize(pTest_Engine);
-
+	pTest_OFD = new OneFrameData();
+	pTest_SRD = new SharedRenderData();
 
 	pTest_Engine->Initialize(Hwnd, WinSizeWidth, WinSizeHeight);
-	
-	//NowGraphicEngine->Initialize(Hwnd, WinSizeWidth, WinSizeHeight);
+	pTest_Engine->SetDebug(true);
 }
 
 void GameEngine::Update()
 {
-	//매니저들 업데이트
+	//매니저들 업데이트 (컨퍼넌트 업데이트후 변경된 사항을 각각의 게임오브젝트 OneMeshData에 전달)
 	mKeyManager->Update();
 	mSceneManager->Update();
 	mObjectManager->PlayUpdate();
 	
-	//엔진에 랜더큐와 글로벌 데이터를 넘겨준다
-	//NowGraphicEngine->Render(mObjectManager->GetRenderQueue(), mObjectManager->GetGlobalData());
 
+
+
+
+	/// 테스트용
+	////////////////////////////////////////////////////////////////////////////////////
+	pTest_OFD->World_Eye_Position	= DirectX::SimpleMath::Vector3(10.f, 8.f, -10.f);
+	pTest_OFD->Main_Position		= DirectX::SimpleMath::Vector3(0.f, 0.f, 0.f);
+	pTest_OFD->View_Matrix			= *Camera::GetMainView();
+	pTest_OFD->Projection_Matrix	= *Camera::GetProj();
+	pTest_SRD->Render_Mesh_List		= mObjectManager->GetDHRenderQueue();
 	//업데이트가 끝나고 랜더링 테스트용
-	//pTest_Engine->BeginDraw();
-	//pTest_Engine->TextDraw({ (int)(1920 - 350), 10 }, 500, 0, 1, 0, 1, 30, L"카메라 모드 변경 : C");
-	//pTest_Engine->RenderDraw(pTest_OFD, pTest_SRD);
-	//pTest_Engine->EndDraw();
+	pTest_Engine->BeginDraw();
+	pTest_Engine->TextDraw({ (int)(1920 - 350), 10 }, 500, 0, 1, 0, 1, 30, L"카메라 모드 변경 : C");
+	pTest_Engine->RenderDraw(pTest_OFD, pTest_SRD);
+	pTest_Engine->EndDraw();
+	////////////////////////////////////////////////////////////////////////////////////
+	
+
 
 
 	//랜더링이 끝나고 오브젝트 Delete
@@ -113,6 +124,7 @@ void GameEngine::OnResize(float Change_Width, float Change_Height)
 	WinSizeHeight	= Change_Height;
 		
 	//그래픽 엔진의 리사이즈 함수를 넣으면 될듯
+	pTest_Engine->On_Resize(WinSizeWidth, WinSizeHeight);
 }
 
 ///오브젝트 생성 삭제
