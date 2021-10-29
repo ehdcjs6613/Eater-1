@@ -1,5 +1,6 @@
 #pragma once
 #include "Scene.h"
+class Transform;
 class  intro :public Scene
 {
 public:
@@ -11,5 +12,7 @@ public:
 	virtual void End();
 
 private:
+	GameObject* testobj;
+	Transform* t;
 };
 

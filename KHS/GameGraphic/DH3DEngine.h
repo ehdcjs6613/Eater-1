@@ -67,6 +67,8 @@ public:
 	void CreateIndexBuffer(DHParser::Mesh* _Mesh);
 	void CreateVertexBuffer(DHParser::Mesh* _Mesh);
 
+	/// 텍스쳐를 만드는 부분
+	void SetTextureSRV(SharedRenderData* _SRD);
 private:
 	/// 스카이박스 셋팅이 되어있다면 그려줌.
 	void DrawSkyBox(OneFrameData* _OFD);
@@ -74,8 +76,6 @@ private:
 	/// 현재 종횡비를 리턴하는 부분.
 	float GetAspectRatio() const;
 
-	/// 텍스쳐를 만드는 부분
-	void SetTextureSRV(SharedRenderData* _SRD);
 
 	/// 화면크기가 변했을때 갱신.
 

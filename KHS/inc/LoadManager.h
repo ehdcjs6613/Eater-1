@@ -61,7 +61,6 @@ public:
 	void DeleteMeshAll();
 	
 private:
-
 	//모델이 들어있는 경로
 	std::string MeshPath;
 	//텍스쳐가 들어있는 경로
@@ -75,12 +74,18 @@ private:
 	//누군가의 그래픽 엔진
 	GraphicEngine*	GEngine;
 
+	//그래픽엔진을 통해서 인덱스버퍼와 버텍스 버퍼를 생성
+	void CreateBuffer(ParserData::Model* mesh);
+
+
+
 
 	///여기부터는 동혁이꺼 테스트용
 	DH3DEngine*			DHEngine;
 	OneFrameData*		pTest_OFD;
 	SharedRenderData*	pTest_SRD;
 	DHParser::Mesh*		pTest_Mesh;
+
 
 	void Test_DHData(ParserData::Model* mModel, std::string Name);
 };
