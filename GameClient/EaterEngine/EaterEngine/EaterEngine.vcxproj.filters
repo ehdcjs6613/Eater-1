@@ -52,6 +52,30 @@
     <Filter Include="소스 파일\Component\Collider">
       <UniqueIdentifier>{d34d8a60-5880-4358-a416-fe8f2edab2e9}</UniqueIdentifier>
     </Filter>
+<<<<<<< Updated upstream
+=======
+    <Filter Include="소스 파일\Component\ComponentBase">
+      <UniqueIdentifier>{de7214b3-5118-4f0b-92cb-81c38251b2b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Component\Texture">
+      <UniqueIdentifier>{2babd354-be67-4255-bcc1-cfeb30136bfd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Component\Button">
+      <UniqueIdentifier>{ff5eb20e-835a-4d5a-bf4c-aaec7c695399}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Component\Image">
+      <UniqueIdentifier>{f8de5315-eef2-40ba-aef5-712dfa9ef271}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Component\CanvasRenderer">
+      <UniqueIdentifier>{02b6ac8a-84bc-4a82-a972-9f91f84aff9b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Component\Texture2D">
+      <UniqueIdentifier>{829de3a6-df1f-4387-9bf5-092a98d08ccb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Component\UIBehaviour">
+      <UniqueIdentifier>{8d4365ff-bd39-433b-b40c-a57e61f3a069}</UniqueIdentifier>
+    </Filter>
+>>>>>>> Stashed changes
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -93,6 +117,15 @@
     <ClInclude Include="EnumClass.h">
       <Filter>소스 파일\EnumClass</Filter>
     </ClInclude>
+<<<<<<< Updated upstream
+=======
+    <ClInclude Include="Texture.h">
+      <Filter>소스 파일\Component\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="UIBehaviour.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+>>>>>>> Stashed changes
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -128,5 +161,14 @@
     <ClCompile Include="MeshFilter.cpp">
       <Filter>소스 파일\Component\MeshFilter</Filter>
     </ClCompile>
+<<<<<<< Updated upstream
+=======
+    <ClCompile Include="Texture.cpp">
+      <Filter>소스 파일\Component\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="UIBehaviour.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+>>>>>>> Stashed changes
   </ItemGroup>
 </Project>

@@ -42,13 +42,13 @@ namespace DHRENDER
 	struct TexturePathAndSRV
 	{
 		TexturePathAndSRV() {}
-		TexturePathAndSRV(ATL::CString _Texture_Path, void* _Texture_SRV)
+		TexturePathAndSRV(std::wstring _Texture_Path, void* _Texture_SRV)
 		{
 			Texture_Path = _Texture_Path;
 			Texture_SRV = _Texture_SRV;
 		}
 
-		ATL::CString Texture_Path;
+		std::wstring Texture_Path;
 		void* Texture_SRV;
 	};
 
@@ -56,11 +56,11 @@ namespace DHRENDER
 	struct ImageTRSA
 	{
 		ImageTRSA() {}
-		ImageTRSA(ATL::CString _Image_File_Name)
+		ImageTRSA(std::string _Image_File_Name)
 		{
 			Image_File_Name = _Image_File_Name;
 		}
-		ImageTRSA(ATL::CString _Image_File_Name , DirectX::SimpleMath::Vector2 _Position,
+		ImageTRSA(std::string _Image_File_Name , DirectX::SimpleMath::Vector2 _Position,
 			DirectX::SimpleMath::Vector2 _Scale, float _Rotate_Angle, float _Alpha)
 		{
 			Image_File_Name = _Image_File_Name;
@@ -70,7 +70,7 @@ namespace DHRENDER
 			Alpha = _Alpha;
 		}
 
-		ATL::CString Image_File_Name;
+		std::string Image_File_Name;
 		DirectX::SimpleMath::Vector2 Position = DirectX::SimpleMath::Vector2(0,0);
 		DirectX::SimpleMath::Vector2 Scale = DirectX::SimpleMath::Vector2(1, 1);
 		float Rotate_Angle = 0.f;
@@ -81,7 +81,7 @@ namespace DHRENDER
 	struct TextTCSA
 	{
 		TextTCSA() {}
-		TextTCSA(ATL::CString _Text_File_Name, DirectX::SimpleMath::Vector2 _Position,
+		TextTCSA(std::string _Text_File_Name, DirectX::SimpleMath::Vector2 _Position,
 			float _Size, DirectX::SimpleMath::Vector3 _Color, float _Alpha)
 		{
 			Text_File_Name = _Text_File_Name;
@@ -91,7 +91,7 @@ namespace DHRENDER
 			Alpha = _Alpha;
 		}
 
-		ATL::CString Text_File_Name = "";
+		std::string Text_File_Name = "";
 		DirectX::SimpleMath::Vector2 Position = DirectX::SimpleMath::Vector2(0, 0);
 		DirectX::SimpleMath::Vector3 Color = DirectX::SimpleMath::Vector3(0, 0, 0);
 		float Size = 20.f;
@@ -250,9 +250,9 @@ namespace DHParser
 		void* Index_Buffer = nullptr;
 
 		/// 한 메시에 대한 노드 관계 이름.
-		ATL::CString Node_Name = "";
-		ATL::CString Parent_Name = "";
-		ATL::CString Child_Name = "";
+		std::string Node_Name = "";
+		std::string Parent_Name = "";
+		std::string Child_Name = "";
 
 		/// 메터리얼 정보.
 		Material Mesh_Material;

@@ -43,12 +43,12 @@ struct Shared2DRenderData
 {
 	// 텍스트 재생 (현재는 한 UI에 하나의 텍스트만 띄울수 있음)
 	DHRENDER::TextTCSA Play_Text_Att;
-	ATL::CString Play_Text_String;
+	std::wstring Play_Text_String;
 	bool Is_Text = false;	// 텍스트가 존재하는 UI인가?
 	// 이미지의 속성값들.
-	std::map<ATL::CString, DHRENDER::ImageTRSA*> Img_List;
+	std::map<std::wstring, DHRENDER::ImageTRSA*> Img_List;
 	// 이미지 로드시 필요한 변수.
-	std::map<ATL::CString, ATL::CString> Img_Path_List;
+	std::map<std::wstring, std::wstring> Img_Path_List;
 	bool Is_Img_Load = false;
 	// 이미지들을 전체적으로 묶어서 관리할 UI 속성
 	DHRENDER::ImageTRSA UI_TRSA;

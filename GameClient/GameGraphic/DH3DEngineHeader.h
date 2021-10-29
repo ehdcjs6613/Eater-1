@@ -23,6 +23,7 @@
 #include <DirectXMath.h>
 #include <DirectXColors.h>
 #include <DirectXPackedVector.h>
+#include <iostream>
 #include "d3dx11effect.h"
 
 /// Helper

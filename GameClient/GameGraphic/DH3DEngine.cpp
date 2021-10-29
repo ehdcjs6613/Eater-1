@@ -107,8 +107,8 @@ void DH3DEngine::CreateGraphicResource()
 	swapChainDesc.BufferCount = 1;
 
 	// Set the width and height of the back buffer.
-	swapChainDesc.BufferDesc.Width = g_Screen_Width;
-	swapChainDesc.BufferDesc.Height = g_Screen_Height;
+	swapChainDesc.BufferDesc.Width = (UINT)g_Screen_Width;
+	swapChainDesc.BufferDesc.Height = (UINT)g_Screen_Height;
 
 	// Set regular 32-bit surface for the back buffer.
 	swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -270,6 +270,18 @@ void DH3DEngine::CreateGraphicResource()
 	// D2D 를 사용하기 위함.
 	m_D2DSupport = new D2DSupport(g_hWnd, DX11_Swap_Chain);
 	m_AxisGrid = new AxisGrid(DX11_Device, DX11_Device_Context, DX11_Raster_State);
+<<<<<<< Updated upstream
+=======
+
+	//m_D2DSupport->LoadLoadingImage("../Image/apple_1.png");
+	
+	m_pTestTexture = new Texture(L"../Image/apple_1.png", this->m_pD2DSupport);
+	
+
+	m_pD2DSupport->LoadBitMap(L"../Image/apple_1.png", L"../Image/apple_1.png");
+	m_pD2DSupport->LoadBitMap(L"../Image/atk_1.png", L"../Image/atk_1.png");
+	
+>>>>>>> Stashed changes
 }
 
 void DH3DEngine::SetDebug(bool _Is_Debug, int _Grid_Num)
@@ -281,7 +293,7 @@ void DH3DEngine::SetDebug(bool _Is_Debug, int _Grid_Num)
 	m_AxisGrid->Initialize(_Grid_Num);
 }
 
-void DH3DEngine::SetSkyBox(ATL::CString _Sky_Box_Path)
+void DH3DEngine::SetSkyBox(std::wstring _Sky_Box_Path)
 {
 	Sky_Box_Path = _Sky_Box_Path;
 }
@@ -303,6 +315,31 @@ void DH3DEngine::BeginDraw()
 	DX11_Device_Context->ClearDepthStencilView(DX11_Depth_Stencil_View, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 }
+<<<<<<< Updated upstream
+=======
+/// <summary>
+/// 엔진에서는 게임타이머의 포인터를 넘겨서 적용시킨다.
+/// </summary>
+/// <param name="_pTimer"></param>
+void DH3DEngine::Update(GameTimer* _pTimer)
+{
+	//이전과 현재 프레임간의 시간계산함수
+	_pTimer->Tick();
+
+	//프레임카운트와
+	static int frameCnt = 0;
+	//누적시간
+	static float timeElapsed = 0.0f;
+	//프레임을 카운트를 늘려주고
+	frameCnt++;
+
+	// Compute averages over one second period.
+	//1초 동안의 평균을 계산합니다.
+	if ((_pTimer->TotalTime() - timeElapsed) >= 1.0f)
+	{
+		float fps = (float)frameCnt; // fps = frameCnt / 1
+		float mspf = 1000.0f / fps;
+>>>>>>> Stashed changes
 
 void DH3DEngine::Update(float DTime)
 {
@@ -333,22 +370,88 @@ void DH3DEngine::RenderDraw(OneFrameData* _OFD, SharedRenderData* _SRD)
 		static float _addedTime = 0;
 		static float _FPS = 0;
 		static float _deltaTimeMS = 0;
-
+		
 		// 갱신주기는 0.2초
 		if (0.2f < _addedTime)
 		{
 			_FPS = (1.0f / m_Delta_Time);
 			_deltaTimeMS = m_Delta_Time * 1000.0f;
-
+		
 			_addedTime = 0;
 		}
-
+		
 		_addedTime += (m_Delta_Time);
 		// FPS, deltaTime을 그린다.
+<<<<<<< Updated upstream
 		m_D2DSupport->Push_DrawText({ 10, 8 }, 500, 1, 0, 0, 1, 20, (TCHAR*)L"FPS : %.2f", _FPS);
 		m_D2DSupport->Push_DrawText({ 10, 29 }, 500, 1, 0, 0, 1, 20, (TCHAR*)L"DTime : %.4f ms", _deltaTimeMS);
 		m_D2DSupport->Push_DrawText({ 510, 29 }, 500, 1, 0, 0, 1, 20, (TCHAR*)L"카메라 위치 : %f, %f, %f", _OFD->World_Eye_Position.x, _OFD->World_Eye_Position.y, _OFD->World_Eye_Position.z);
 		m_D2DSupport->Push_DrawText({ 510, 50 }, 500, 1, 0, 0, 1, 20, (TCHAR*)L"캐릭터 위치 : %f, %f, %f", _OFD->Main_Position.x, _OFD->Main_Position.y, _OFD->Main_Position.z);
+=======
+		m_pD2DSupport->Push_DrawText({ 10, 8 }, 500, 1, 1, 1, 1, 20, (TCHAR*)L"FPS : %.2f", _FPS);
+		m_pD2DSupport->Push_DrawText({ 10, 29 }, 500, 1, 0, 0, 1, 20, (TCHAR*)L"DTime : %.4f ms", _deltaTimeMS);
+		m_pD2DSupport->Push_DrawText({ 510, 29 }, 500, 1, 0, 0, 1, 20, (TCHAR*)L"카메라 위치 : %f, %f, %f", _OFD->World_Eye_Position.x, _OFD->World_Eye_Position.y, _OFD->World_Eye_Position.z);
+		m_pD2DSupport->Push_DrawText({ 510, 50 }, 500, 1, 0, 0, 1, 20, (TCHAR*)L"캐릭터 위치 : %f, %f, %f", _OFD->Main_Position.x, _OFD->Main_Position.y, _OFD->Main_Position.z);
+		POINTF pos;
+
+
+#pragma region ShowImage
+		m_pD2DSupport->Push_DrawImage
+		(
+			L"../Image/apple_1.png", //name
+			{ 1000,1 },				//Image Position
+			{ 1,1 },				//Image Scale//
+			0,
+			1.0f,
+			{ 0,0 }, //POS
+			{ 0.1f, 0.1f }, //SCALE
+			0,
+			1.0f
+		);
+		m_pD2DSupport->Push_DrawImage
+		(
+			L"../Image/apple_1.png", //name
+			{ 1200,1 },				//Image Position
+			{ 1,1 },				//Image Scale//
+			0,
+			1.0f,
+			{ 0,0 }, //POS
+			{ 0.1f, 0.1f }, //SCALE
+			0,
+			0.6f
+		);
+		m_pD2DSupport->Push_DrawImage
+		(
+			L"../Image/apple_1.png", //name
+			{ 1400,1 },				//Image Position
+			{ 1,1 },				//Image Scale//
+			0,
+			1.0f,
+			{ 0,0 }, //POS
+			{ 0.1f, 0.1f }, //SCALE
+			0,
+			0.3f
+		);
+		m_pTestTexture->Render();
+
+		//m_pD2DSupport->Push_DrawSprite
+		//(
+		//	L"../Image/atk_1.png", //name
+		//	{ 500,500  },				//Image Position
+		//	{ 2.0f,2.0f },				//Image Scale//
+		//	0,
+		//	1.0f,
+		//	{ 0 ,0  }, //POS
+		//	{ 1.0f, 1.0f }, //SCALE
+		//	0,
+		//	1.0f,		//Alpha Channel
+		//	7,			//MAX Image index
+		//	171,
+		//	144
+		//);
+#pragma endregion TestShowImage
+		
+>>>>>>> Stashed changes
 
 		// 피쳐레벨, 어댑터 등의 상태를 그린다.
 		this->Draw_Status();
@@ -468,7 +571,7 @@ void DH3DEngine::UIDraw(Shared2DRenderData* _S2DRD)
 	{
 		m_D2DSupport->Push_DrawText(POINT{ (int)_S2DRD->Play_Text_Att.Position.x, (int)_S2DRD->Play_Text_Att.Position.y },
 			1200, _S2DRD->Play_Text_Att.Color.x, _S2DRD->Play_Text_Att.Color.y, _S2DRD->Play_Text_Att.Color.z,
-			_S2DRD->Play_Text_Att.Alpha, _S2DRD->Play_Text_Att.Size, _S2DRD->Play_Text_String);
+			_S2DRD->Play_Text_Att.Alpha, _S2DRD->Play_Text_Att.Size, _S2DRD->Play_Text_String.c_str());
 	}
 
 	if (!_S2DRD->Is_Img_Load)
@@ -499,7 +602,7 @@ void DH3DEngine::TextDraw(POINT _Pos, float _Width, float r, float g, float b, f
 	m_D2DSupport->Push_DrawText(_Pos, _Width, r, g, b, a, _Size, _Input_String);
 }
 
-void DH3DEngine::LoadingDraw(ATL::CString _Loading_Path)
+void DH3DEngine::LoadingDraw(std::wstring _Loading_Path)
 {
 	m_D2DSupport->LoadLoadingImage(_Loading_Path);
 
@@ -508,6 +611,8 @@ void DH3DEngine::LoadingDraw(ATL::CString _Loading_Path)
 
 void DH3DEngine::EndDraw()
 {
+	//스프라이트 그리기
+	m_pD2DSupport->Draw_AllSprite();
 	// 이미지 그리기
 	m_D2DSupport->Draw_AllImage();
 	// 텍스트 그리기.
@@ -579,7 +684,7 @@ void DH3DEngine::Finalize()
 void DH3DEngine::DrawSkyBox(OneFrameData* _OFD)
 {
 	// 스카이박스가 설정되어 있지 않다면.. return
-	if (Sky_Box_Path == "" && m_SkyBox == nullptr)
+	if (Sky_Box_Path == L"" && m_SkyBox == nullptr)
 	{
 		return;
 	}
@@ -614,7 +719,7 @@ void DH3DEngine::SetTextureSRV(SharedRenderData* _SRD)
 			// 텍스쳐 SRV
 			ID3D11ShaderResourceView* DX11_SRV = nullptr;
 			// 텍스쳐 정보 셋팅.
-			CreateWICTextureFromFile(DX11_Device, k.second->Texture_Path, &Texture_Resource, &DX11_SRV);
+			CreateWICTextureFromFile(DX11_Device, k.second->Texture_Path.c_str(), &Texture_Resource, &DX11_SRV);
 			ReleaseCOM(Texture_Resource);
 
 			k.second->Texture_SRV = DX11_SRV;
@@ -630,7 +735,7 @@ void DH3DEngine::SetTextureSRV(SharedRenderData* _SRD)
 			// 텍스쳐 SRV
 			ID3D11ShaderResourceView* DX11_SRV = nullptr;
 			// 텍스쳐 정보 셋팅.
-			CreateWICTextureFromFile(DX11_Device, k.second->Texture_Path, &Texture_Resource, &DX11_SRV);
+			CreateWICTextureFromFile(DX11_Device, k.second->Texture_Path.c_str(), &Texture_Resource, &DX11_SRV);
 			ReleaseCOM(Texture_Resource);
 
 			k.second->Texture_SRV = DX11_SRV;
@@ -646,7 +751,7 @@ void DH3DEngine::SetTextureSRV(SharedRenderData* _SRD)
 			// 텍스쳐 SRV
 			ID3D11ShaderResourceView* DX11_SRV = nullptr;
 			// 텍스쳐 정보 셋팅.
-			CreateWICTextureFromFile(DX11_Device, k.second->Texture_Path, &Texture_Resource, &DX11_SRV);
+			CreateWICTextureFromFile(DX11_Device, k.second->Texture_Path.c_str(), &Texture_Resource, &DX11_SRV);
 			ReleaseCOM(Texture_Resource);
 
 			k.second->Texture_SRV = DX11_SRV;
@@ -662,7 +767,7 @@ void DH3DEngine::SetTextureSRV(SharedRenderData* _SRD)
 			// 텍스쳐 SRV
 			ID3D11ShaderResourceView* DX11_SRV = nullptr;
 			// 텍스쳐 정보 셋팅.
-			CreateWICTextureFromFile(DX11_Device, k.second->Texture_Path, &Texture_Resource, &DX11_SRV);
+			CreateWICTextureFromFile(DX11_Device, k.second->Texture_Path.c_str(), &Texture_Resource, &DX11_SRV);
 			ReleaseCOM(Texture_Resource);
 
 			k.second->Texture_SRV = DX11_SRV;
@@ -678,7 +783,7 @@ void DH3DEngine::SetTextureSRV(SharedRenderData* _SRD)
 			// 텍스쳐 SRV
 			ID3D11ShaderResourceView* DX11_SRV = nullptr;
 			// 텍스쳐 정보 셋팅.
-			CreateWICTextureFromFile(DX11_Device, k.second->Texture_Path, &Texture_Resource, &DX11_SRV);
+			CreateWICTextureFromFile(DX11_Device, k.second->Texture_Path.c_str(), &Texture_Resource, &DX11_SRV);
 			ReleaseCOM(Texture_Resource);
 
 			k.second->Texture_SRV = DX11_SRV;

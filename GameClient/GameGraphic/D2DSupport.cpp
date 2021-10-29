@@ -94,7 +94,7 @@ D2DSupport::~D2DSupport()
 	m_TextColor->Release();
 }
 
-void D2DSupport::LoadLoadingImage(ATL::CString _Image_Path)
+void D2DSupport::LoadLoadingImage(std::wstring _Image_Path)
 {
 	// 이미지가 이미 로드 되어있으면 두번 로드하지 않는다.
 	if (_Loading_Img != nullptr)
@@ -106,7 +106,7 @@ void D2DSupport::LoadLoadingImage(ATL::CString _Image_Path)
 	HRESULT hr;
 
 	// 디코더 생성
-	hr = pWICFactory->CreateDecoderFromFilename(_Image_Path, nullptr,
+	hr = pWICFactory->CreateDecoderFromFilename(_Image_Path.c_str(), nullptr,
 		GENERIC_READ, WICDecodeMetadataCacheOnDemand, &pDecodePtr);
 
 	// 디코더에서 프레임 획득
@@ -139,7 +139,7 @@ void D2DSupport::DrawLoadingImage()
 	m_2D_RenderTarget->EndDraw();
 }
 
-void D2DSupport::LoadBitMap(ATL::CString _Image_Name, ATL::CString _File_Path)
+void D2DSupport::LoadBitMap(std::wstring _Image_Name, std::wstring _File_Path)
 {
 	// 이미지가 이미 로드 되어있으면 두번 로드하지 않는다.
 	if (Image_Resource.find(_Image_Name) != Image_Resource.end())
@@ -152,7 +152,7 @@ void D2DSupport::LoadBitMap(ATL::CString _Image_Name, ATL::CString _File_Path)
 	HRESULT hr;
 
 	// 디코더 생성
-	hr = pWICFactory->CreateDecoderFromFilename(_File_Path, nullptr,
+	hr = pWICFactory->CreateDecoderFromFilename(_File_Path.c_str(), nullptr,
 		GENERIC_READ, WICDecodeMetadataCacheOnDemand, &pDecodePtr);
 
 	// 디코더에서 프레임 획득
@@ -176,14 +176,18 @@ void D2DSupport::LoadBitMap(ATL::CString _Image_Name, ATL::CString _File_Path)
 	SafeRelease(&pFramePtr);
 }
 
-void D2DSupport::thDrawBitmap(ATL::CString _Image_Name, POINTF _Position, float _Alpha, float _Scale_X /*= 1.f*/, float _Scale_Y /*= 1.f*/, float _Angle /*= 0.f*/)
+void D2DSupport::thDrawBitmap(std::wstring _Image_Name, POINTF _Position, float _Alpha, float _Scale_X /*= 1.f*/, float _Scale_Y /*= 1.f*/, float _Angle /*= 0.f*/)
 {
 	auto _map_data = Image_Resource.find(_Image_Name);
 	ID2D1Bitmap* _Img_Data = _map_data->second;
 
 	D2D1_SIZE_F Bitmap_Size = _Img_Data->GetSize();
-	D2D1_RECT_F Draw_Area = { _Position.x, _Position.y,
-	 _Position.x + Bitmap_Size.width * _Scale_X, _Position.y + Bitmap_Size.height * _Scale_Y };
+	D2D1_RECT_F Draw_Area = 
+	{
+	 _Position.x, _Position.y, // position
+	 _Position.x + Bitmap_Size.width  * _Scale_X,//scale
+	 _Position.y + Bitmap_Size.height * _Scale_Y //scale
+	};
 
 	m_2D_RenderTarget->SetTransform(D2D1::Matrix3x2F::Rotation(_Angle, D2D1::Point2F(_Position.x, _Position.y)));
 
@@ -192,7 +196,62 @@ void D2DSupport::thDrawBitmap(ATL::CString _Image_Name, POINTF _Position, float 
 	m_2D_RenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
 }
 
-void D2DSupport::Push_DrawImage(ATL::CString _Image_Name, POINTF _Pos, POINTF _Scale, float _Angle, float _Alpha,
+void D2DSupport::thDrawSprite(std::wstring _Image_Name, POINTF _Position, float _Alpha, float _Scale_X, float _Scale_Y, int _Angle, int _Accross, int _maxindex,float _StartOneSpace, float _EndOneSpace)
+{
+	auto _map_data = Image_Resource.find(_Image_Name);
+	ID2D1Bitmap* _Img_Data = _map_data->second;
+
+	m_2D_RenderTarget->SetTransform(D2D1::Matrix3x2F::Rotation(_Angle, D2D1::Point2F(_Position.x, _Position.y)));
+
+	//m_2D_RenderTarget->DrawBitmap(_Img_Data, Draw_Area, _Alpha);
+
+	static int idx = 0;
+	if (idx < _maxindex)
+	{
+		idx++;
+	}
+	else
+	{
+		idx = 0;
+	}
+
+	int Accross = (int)_Img_Data->GetSize().width / _StartOneSpace;
+
+
+	D2D1_RECT_F DrawAfterImage =
+	{
+		(idx % Accross) * _StartOneSpace,
+		(idx / Accross) * _EndOneSpace,
+		((idx % Accross * _StartOneSpace) + _StartOneSpace),
+		(idx / Accross) * _EndOneSpace + _EndOneSpace
+	};
+
+
+	m_2D_RenderTarget->DrawBitmap
+	(
+		_Img_Data,										//BitmapFile Pointer
+		D2D1::RectF
+		(
+			_Position.x,
+			_Position.y,
+			_Position.x + _StartOneSpace * _Scale_X,
+			_Position.y + _Img_Data->GetSize().height * _Scale_Y
+		),					//DrawArea
+		1.0f,
+		D2D1_BITMAP_INTERPOLATION_MODE::				//
+		D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
+		DrawAfterImage
+	);
+
+	m_2D_RenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
+
+
+
+}
+
+
+
+void D2DSupport::Push_DrawImage(std::wstring _Image_Name, POINTF _Pos, POINTF _Scale, float _Angle, float _Alpha,
 	POINTF UI_Pos, POINTF UI_Scale, float UI_Angle, float UI_Alpha)
 {
 	Image_Queue_Data* Queue_Data = Image_Data_Pool.GetObject();
@@ -206,6 +265,26 @@ void D2DSupport::Push_DrawImage(ATL::CString _Image_Name, POINTF _Pos, POINTF _S
 	Queue_Data->Alpha = UI_Alpha * _Alpha;
 
 	Image_Queue.push(Queue_Data);
+}
+
+void D2DSupport::Push_DrawSprite(std::wstring _Image_Name, POINTF _Pos, POINTF _Scale, float _Angle, float _Alpha,
+	POINTF UI_Pos, POINTF UI_Scale, float UI_Angle, float UI_Alpha,int IMG_Index,float _StartOneSpace,float _EndOneSpace)
+{
+	Image_Queue_Data* Queue_Data = Sprite_Data_Pool.GetObject();
+
+	
+	Queue_Data->Img_Name = _Image_Name;
+	Queue_Data->Position_X = UI_Pos.x + _Pos.x;
+	Queue_Data->Position_Y = UI_Pos.y + _Pos.y;
+	Queue_Data->Scale_X = UI_Scale.x * _Scale.x;
+	Queue_Data->Scale_Y = UI_Scale.y * _Scale.y;
+	Queue_Data->Rotate_Angle = UI_Angle + _Angle;
+	Queue_Data->Alpha = UI_Alpha * _Alpha;
+	Queue_Data->Index = IMG_Index;
+	Queue_Data->WidthDraw = _StartOneSpace;
+	Queue_Data->HeightDraw = _EndOneSpace;
+
+	Sprite_Queue.push(Queue_Data);
 }
 
 void D2DSupport::Push_DrawText(POINT _Pos, float _Width,
@@ -289,12 +368,46 @@ void D2DSupport::Draw_AllImage()
 		Image_Queue_Data* Queue_Data = Image_Queue.front();
 		Image_Queue.pop();
 
-		thDrawBitmap(Queue_Data->Img_Name, POINTF{ Queue_Data->Position_X, Queue_Data->Position_Y },
-			Queue_Data->Alpha, Queue_Data->Scale_X, Queue_Data->Scale_Y, Queue_Data->Rotate_Angle);
+		thDrawBitmap
+		(
+			Queue_Data->Img_Name, 
+			POINTF{ Queue_Data->Position_X, Queue_Data->Position_Y },
+			Queue_Data->Alpha, 
+			Queue_Data->Scale_X, Queue_Data->Scale_Y,
+			Queue_Data->Rotate_Angle
+		);
 
 		Image_Data_Pool.ResetObject(Queue_Data);
 	}
 
 	m_2D_RenderTarget->EndDraw();
 
+}
+
+void D2DSupport::Draw_AllSprite()
+{
+	m_2D_RenderTarget->BeginDraw();
+
+	while (!Sprite_Queue.empty())
+	{
+		Image_Queue_Data* Queue_Data = Sprite_Queue.front();
+		Sprite_Queue.pop();
+
+		thDrawSprite
+		(
+			Queue_Data->Img_Name,
+			POINTF{ Queue_Data->Position_X, Queue_Data->Position_Y },
+			Queue_Data->Alpha,
+			Queue_Data->Scale_X, Queue_Data->Scale_Y,
+			Queue_Data->Rotate_Angle,
+			0,
+			Queue_Data->Index,
+			Queue_Data->WidthDraw,
+			Queue_Data->HeightDraw
+		);
+
+		Sprite_Data_Pool.ResetObject(Queue_Data);
+	}
+
+	m_2D_RenderTarget->EndDraw();
 }

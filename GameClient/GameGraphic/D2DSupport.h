@@ -8,6 +8,10 @@
 #include "D2DSupportDefine.h"
 #include "D2DSupportHeader.h"
 
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 class D2DSupport
 {
 private:
@@ -55,26 +59,35 @@ private:
 
 	Non_ThreadObjectPool<Text_Queue_Data> Text_Data_Pool;
 	Non_ThreadObjectPool<Image_Queue_Data> Image_Data_Pool;
+	Non_ThreadObjectPool<Image_Queue_Data> Sprite_Data_Pool;
 
 	///	이미지가 그려진후에 텍스쳐가 그려짐
-	std::queue<Image_Queue_Data*> Image_Queue;	// 이미지 데이터 큐	
 	std::queue<Text_Queue_Data*> Msg_Queue;		// 텍스트 데이터 큐
-	std::map<ATL::CString, ID2D1Bitmap*> Image_Resource;
+	std::queue<Image_Queue_Data*> Image_Queue;	// 이미지 데이터 큐	
+	std::queue<Image_Queue_Data*> Sprite_Queue;	// 스프라이트 이미지 데이터 큐	
+	std::map<std::wstring, ID2D1Bitmap*> Image_Resource;
 
 public:
 	D2DSupport(HWND g_hWnd, IDXGISwapChain* _3D_SwapChain, float _Font_Size = 24.f);
 	~D2DSupport();
 
-	void LoadLoadingImage(ATL::CString _Image_Path);
+	void LoadLoadingImage(std::wstring _Image_Path);
 	void DrawLoadingImage();
 
-	void LoadBitMap(ATL::CString _Image_Name ,ATL::CString _File_Path);
+	void LoadBitMap( std::wstring _Image_Name ,std::wstring _File_Path);
 
-	void thDrawBitmap(ATL::CString _Image_Name, POINTF _Position, float _Alpha, float _Scale_X = 1.f, float _Scale_Y = 1.f, float _Angle = 0.f);
+	void thDrawBitmap(std::wstring _Image_Name, POINTF _Position, float _Alpha, float _Scale_X = 1.f, float _Scale_Y = 1.f, float _Angle = 0.f);
+	//스프라이트용 임지ㅣ 그리기
+	void thDrawSprite(std::wstring _Image_Name, POINTF _Position, float _Alpha, float _Scale_X , float _Scale_Y , int _Angle ,
+		int _Accross , int _maxindex, float _StartOneSpace, float _EndOneSpace);
 
-	void Push_DrawImage(ATL::CString _Image_Name, POINTF _Pos, POINTF _Scale, float _Angle, float _Alpha,
+	void Push_DrawImage(std::wstring _Image_Name, POINTF _Pos, POINTF _Scale, float _Angle, float _Alpha,
 		POINTF UI_Pos, POINTF UI_Scale, float UI_Angle, float UI_Alpha);
 
+	void Push_DrawSprite(std::wstring _Image_Name,
+		POINTF _Pos, POINTF _Scale, float _Angle, float _Alpha,
+		POINTF UI_Pos, POINTF UI_Scale, float UI_Angle, float UI_Alpha,
+		int IMG_Index , float _StartOneSpace,float _EndOneSpace);
 	/// <summary>
 	/// 텍스트 출력 함수 - 가변인자를 받을 수 있다.색깔도 지정가능.
 	/// </summary>
@@ -93,5 +106,6 @@ public:
 
 	void Draw_AllText();
 	void Draw_AllImage();
+	void Draw_AllSprite();
 };
 

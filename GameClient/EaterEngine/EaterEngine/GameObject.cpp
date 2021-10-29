@@ -11,7 +11,7 @@ GameObject::GameObject()
 
 GameObject::~GameObject()
 {
-	
+
 }
 
 void GameObject::SetActive(bool active)

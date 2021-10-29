@@ -2,6 +2,14 @@
 /// <summary>
 /// 컨퍼넌트들의 최상위 클래스
 /// </summary>
+<<<<<<< Updated upstream
+=======
+/// 
+
+
+#include <iostream>
+#include <string>
+>>>>>>> Stashed changes
 
 #ifdef ENGINE_INTERFACE
 #define EATER_ENGINEDLL __declspec(dllexport)
@@ -10,6 +18,7 @@
 #endif
 
 #include "EnumClass.h"
+
 class GameObject;
 class Component
 {

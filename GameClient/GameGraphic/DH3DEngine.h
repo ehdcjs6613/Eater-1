@@ -7,6 +7,12 @@
 class D2DSupport;
 class AxisGrid;
 class SkyBox;
+<<<<<<< Updated upstream
+=======
+class GameTimer;
+//테스트용 
+class Texture;
+>>>>>>> Stashed changes
 
 class DH3DEngine
 {
@@ -23,7 +29,7 @@ private:
 	bool Is_Draw_AxisGrid = false;
 
 	// skybox
-	ATL::CString Sky_Box_Path = "";
+	std::wstring Sky_Box_Path = L"";
 	SkyBox* m_SkyBox = nullptr;
 
 public:
@@ -38,7 +44,7 @@ public:
 	void SetDebug(bool _Is_Debug, int _Grid_Num = 50);
 
 	/// 스카이박스 셋팅
-	void SetSkyBox(ATL::CString _Sky_Box_Path);
+	void SetSkyBox(std::wstring _Sky_Box_Path);
 
 	/// 엔진 Draw 시작
 	void BeginDraw();
@@ -53,7 +59,7 @@ public:
 	void TextDraw(POINT _Pos, float _Width,
 		float r, float g, float b, float a,
 		float _Size, const wchar_t* _Input_String);
-	void LoadingDraw(ATL::CString _Loading_Path);
+	void LoadingDraw(std::wstring _Loading_Path);
 
 	/// 엔진 Draw 종료.
 	void EndDraw();
@@ -148,5 +154,8 @@ private:
 
 	ID3DX11Effect* mFX = nullptr;
 	ID3DX11EffectTechnique* mTech = nullptr;
+	/// 나중에 버릴거
+	Texture* m_pTestTexture;
+
 };
 
