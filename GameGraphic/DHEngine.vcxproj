@@ -196,7 +196,9 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)lib"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\DataStructHelper.h" />
+    <ClInclude Include="..\DataStructHelper.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="..\Lib\DirectXTexture\DDSTextureLoader11.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
@@ -213,44 +215,90 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)lib"</Command>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClInclude>
-    <ClInclude Include="..\Lib\DirectXTK2021_06_14\Audio.h" />
-    <ClInclude Include="..\Lib\DirectXTK2021_06_14\BufferHelpers.h" />
-    <ClInclude Include="..\Lib\DirectXTK2021_06_14\CommonStates.h" />
-    <ClInclude Include="..\Lib\DirectXTK2021_06_14\d3dx11effect.h" />
+    <ClInclude Include="..\Lib\DirectXTK2021_06_14\Audio.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\Lib\DirectXTK2021_06_14\BufferHelpers.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\Lib\DirectXTK2021_06_14\CommonStates.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\Lib\DirectXTK2021_06_14\d3dx11effect.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="..\Lib\DirectXTK2021_06_14\DDSTextureLoader.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClInclude>
-    <ClInclude Include="..\Lib\DirectXTK2021_06_14\DirectXHelpers.h" />
-    <ClInclude Include="..\Lib\DirectXTK2021_06_14\Effects.h" />
-    <ClInclude Include="..\Lib\DirectXTK2021_06_14\GamePad.h" />
-    <ClInclude Include="..\Lib\DirectXTK2021_06_14\GeometricPrimitive.h" />
-    <ClInclude Include="..\Lib\DirectXTK2021_06_14\GraphicsMemory.h" />
-    <ClInclude Include="..\Lib\DirectXTK2021_06_14\Keyboard.h" />
-    <ClInclude Include="..\Lib\DirectXTK2021_06_14\Model.h" />
-    <ClInclude Include="..\Lib\DirectXTK2021_06_14\Mouse.h" />
-    <ClInclude Include="..\Lib\DirectXTK2021_06_14\PostProcess.h" />
-    <ClInclude Include="..\Lib\DirectXTK2021_06_14\PrimitiveBatch.h" />
-    <ClInclude Include="..\Lib\DirectXTK2021_06_14\ScreenGrab.h" />
-    <ClInclude Include="..\Lib\DirectXTK2021_06_14\SimpleMath.h" />
-    <ClInclude Include="..\Lib\DirectXTK2021_06_14\SpriteBatch.h" />
-    <ClInclude Include="..\Lib\DirectXTK2021_06_14\SpriteFont.h" />
-    <ClInclude Include="..\Lib\DirectXTK2021_06_14\VertexTypes.h" />
+    <ClInclude Include="..\Lib\DirectXTK2021_06_14\DirectXHelpers.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\Lib\DirectXTK2021_06_14\Effects.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\Lib\DirectXTK2021_06_14\GamePad.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\Lib\DirectXTK2021_06_14\GeometricPrimitive.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\Lib\DirectXTK2021_06_14\GraphicsMemory.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\Lib\DirectXTK2021_06_14\Keyboard.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\Lib\DirectXTK2021_06_14\Model.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\Lib\DirectXTK2021_06_14\Mouse.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\Lib\DirectXTK2021_06_14\PostProcess.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\Lib\DirectXTK2021_06_14\PrimitiveBatch.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\Lib\DirectXTK2021_06_14\ScreenGrab.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\Lib\DirectXTK2021_06_14\SimpleMath.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\Lib\DirectXTK2021_06_14\SpriteBatch.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\Lib\DirectXTK2021_06_14\SpriteFont.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\Lib\DirectXTK2021_06_14\VertexTypes.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="..\Lib\DirectXTK2021_06_14\WICTextureLoader.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\Lib\DirectXTK2021_06_14\XboxDDSTextureLoader.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\Lib\FX11_2021_06_14\d3dx11effect.h" />
     <ClInclude Include="..\Lib\FX11_2021_06_14\d3dxGlobal.h" />
-    <ClInclude Include="..\SharedData.h" />
+    <ClInclude Include="..\SharedData.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="AxisGrid.h" />
-    <ClInclude Include="D2DSupport.h" />
-    <ClInclude Include="D2DSupportDefine.h" />
-    <ClInclude Include="D2DSupportHeader.h" />
+    <ClInclude Include="D2DSupport.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="D2DSupportDefine.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="D2DSupportHeader.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="DH3DEngineHeader.h" />
     <ClInclude Include="DH3DEngine.h" />
     <ClInclude Include="DH3DEngineDefine.h" />
@@ -262,7 +310,6 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)lib"</Command>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="MathHelper.h" />
-    <ClInclude Include="Non_ThreadObjectPool.h" />
     <ClInclude Include="SkyBox.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
@@ -287,7 +334,9 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)lib"</Command>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="AxisGrid.cpp" />
-    <ClCompile Include="D2DSupport.cpp" />
+    <ClCompile Include="D2DSupport.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="DH3DEngine.cpp" />
     <ClCompile Include="Effects.cpp" />
     <ClCompile Include="GameTimer.cpp" />
@@ -365,7 +414,9 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)lib"</Command>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Lib\DirectXTK2021_06_14\SimpleMath.inl" />
+    <None Include="..\Lib\DirectXTK2021_06_14\SimpleMath.inl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

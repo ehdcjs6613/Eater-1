@@ -26,7 +26,10 @@ class Scene;
 //게임 오브젝트
 class GameObject;
 
+//테스트용 클래스
 class DH3DEngine;
+class Texture;
+class Grahpics2D;
 
 class GameEngine
 {
@@ -70,6 +73,7 @@ private:
 	LoadManager*		mLoadManager;		//로드 관련 매니저
 	SceneManager*		mSceneManager;		//스크린 관리 매니저
 	KeyinputManager*	mKeyManager;		//키인풋 관련 매니저
+	Grahpics2D*			mUI;
 
 private:
 	///클라쪽에서 받아야 하는 데이터
@@ -87,5 +91,10 @@ private:
 	OneFrameData*		pTest_OFD;
 	SharedRenderData*	pTest_SRD;
 	DHParser::Mesh*		pTest_Mesh;
+
+private:
+	//테스트용 
+	IDXGISwapChain* DX11_Swap_Chain = nullptr;
+	Texture* m_pTexture = nullptr;
 };
 

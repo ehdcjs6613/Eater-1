@@ -76,6 +76,9 @@
     <Filter Include="소스 파일\Manager\TimeManager">
       <UniqueIdentifier>{7e157c44-e3ef-43c6-b564-1bd159e7e8d5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Component\Texture">
+      <UniqueIdentifier>{fb22b3e1-fd42-4f27-af04-36467a8ea363}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -135,11 +138,14 @@
     <ClInclude Include="KeyinputManager.h">
       <Filter>소스 파일\Manager\KeyinputManager</Filter>
     </ClInclude>
-    <ClInclude Include="GraphicsEngine.h">
-      <Filter>소스 파일\Engine\GraphicsClass</Filter>
-    </ClInclude>
     <ClInclude Include="TimeManager.h">
       <Filter>소스 파일\Manager\TimeManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>소스 파일\Component\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsEngine.h">
+      <Filter>소스 파일\Engine\GraphicsClass</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -182,9 +188,6 @@
     <ClCompile Include="Camera.cpp">
       <Filter>소스 파일\Component\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="GraphicsEngine.cpp">
-      <Filter>소스 파일\Engine\GraphicsClass</Filter>
-    </ClCompile>
     <ClCompile Include="GameEngine.cpp">
       <Filter>소스 파일\Engine\GameEngine</Filter>
     </ClCompile>
@@ -193,6 +196,12 @@
     </ClCompile>
     <ClCompile Include="TimeManager.cpp">
       <Filter>소스 파일\Manager\TimeManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>소스 파일\Component\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsEngine.cpp">
+      <Filter>소스 파일\Engine\GraphicsClass</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

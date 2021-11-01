@@ -4,13 +4,13 @@
 #include "DH3DEngineDefine.h"
 #include "DH3DEngineHeader.h"
 
-class D2DSupport;
 class AxisGrid;
 class SkyBox;
 
 class GameTimer;
 //테스트용 
 class Texture;
+class Grahpics2D;
 
 
 class DH3DEngine
@@ -109,7 +109,8 @@ private:
 	ID3D11DepthStencilState* NormalDSS = nullptr;
 
 	/// Text출력
-	D2DSupport* m_D2DSupport = nullptr;
+	//D2DSupport* m_D2DSupport = nullptr;
+	Grahpics2D* m_pGraphics2D = nullptr;
 
 	/// Axis, Grid
 	AxisGrid* m_AxisGrid = nullptr;

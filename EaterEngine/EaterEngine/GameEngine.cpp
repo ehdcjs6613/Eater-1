@@ -14,6 +14,8 @@
 #include "Transform.h"
 
 //테스트용
+#include "Texture.h"
+#include "Grahpics2D.h"
 #include "DH3DEngine.h"
 #include "GraphicsEngine.h"
 
@@ -40,7 +42,8 @@ GameEngine::GameEngine()
 
 GameEngine::~GameEngine()
 {
-
+	delete mUI;
+	mUI = nullptr;
 }
 
 ///게임 엔진 관련
@@ -71,11 +74,13 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 	mLoadManager->Initialize(pTest_Engine);
 	pTest_OFD = new OneFrameData();
 	pTest_SRD = new SharedRenderData();
+	//mUI = new Grahpics2D(mHwnd, DX11_Swap_Chain);
 
 	pTest_Engine->Initialize(Hwnd, WinSizeWidth, WinSizeHeight);
 	pTest_Engine->SetDebug(true);
 
-	
+	/*테스트용 이미지*/
+	//m_pTexture = new Texture(L"../image/atk_1.png", this->mUI);
 	mDebugManager->printStart();
 }
 
@@ -87,7 +92,7 @@ void GameEngine::Update()
 	mObjectManager->PlayUpdate();
 	mDebugManager->Update();
 	
-
+	//m_pTexture->Render();
 
 
 

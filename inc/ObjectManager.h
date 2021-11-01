@@ -22,6 +22,7 @@ class GameObject;
 class Component;
 class DH3DEngine;
 class MeshFilter;
+class D2DSupport;
 
 
 class ObjectManager
@@ -83,7 +84,7 @@ private:
 	std::vector<DHParser::Mesh> DHRenderData;
 	
 	GlobalData* Global;
-
+	D2DSupport* m_pD2DSupport;
 
 
 	/// 시작단계 한번만 실행됨

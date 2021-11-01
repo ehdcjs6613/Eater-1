@@ -169,9 +169,6 @@
     <ClInclude Include="D2DSupportDefine.h">
       <Filter>DHEngine\DH2DSupport</Filter>
     </ClInclude>
-    <ClInclude Include="Non_ThreadObjectPool.h">
-      <Filter>Helper\Non_ThreadObjectPool</Filter>
-    </ClInclude>
     <ClInclude Include="..\SharedData.h">
       <Filter>SharedData</Filter>
     </ClInclude>

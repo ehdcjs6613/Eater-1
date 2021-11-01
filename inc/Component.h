@@ -6,6 +6,12 @@
 /// 업데이트 함수 포인터 리스트에 넣어줌
 /// </summary>
 
+#include <iostream>
+#include <string>
+
+#pragma comment(lib,"../x64/Debug/DirectX2DSupporter.lib")
+
+
 #ifdef ENGINE_INTERFACE
 #define EATER_ENGINEDLL __declspec(dllexport)
 #else

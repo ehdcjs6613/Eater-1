@@ -88,6 +88,7 @@ void ObjectManager::AllDeleteObject()
 
 void ObjectManager::Initialize(HWND _g_hWnd)
 {
+
 	//pTest_Engine = new DH3DEngine();
 	//pTest_Engine->Initialize(_g_hWnd, 1920, 1080);
 	//pTest_Engine->SetDebug(true);

@@ -1,4 +1,6 @@
 #pragma once
+class Texture;
+
 #include "Scene.h"
 class  intro :public Scene
 {

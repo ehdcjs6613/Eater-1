@@ -1,4 +1,5 @@
 #include "MainHeader.h"
+#include "Texture.h"
 #include "intro.h";
 #include "GameObject.h"
 #include "MeshFilter.h"
@@ -29,6 +30,7 @@ void intro::Awake()
 		testobj->AddComponent<MeshFilter>()->SetMeshName("Table");
 		testobj->transform->Position = {i*2.0f,0,0};
 	}
+	
 }
 
 void intro::Start()
