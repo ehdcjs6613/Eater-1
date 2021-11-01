@@ -76,6 +76,9 @@
     <Filter Include="소스 파일\Manager\TimeManager">
       <UniqueIdentifier>{7e157c44-e3ef-43c6-b564-1bd159e7e8d5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Manager\GraphicManager">
+      <UniqueIdentifier>{b223fce5-c4e2-428b-b257-6e662f5be63b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -141,6 +144,9 @@
     <ClInclude Include="TimeManager.h">
       <Filter>소스 파일\Manager\TimeManager</Filter>
     </ClInclude>
+    <ClInclude Include="GraphicEngineManager.h">
+      <Filter>소스 파일\Manager\GraphicManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -193,6 +199,9 @@
     </ClCompile>
     <ClCompile Include="TimeManager.cpp">
       <Filter>소스 파일\Manager\TimeManager</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicEngineManager.cpp">
+      <Filter>소스 파일\Manager\GraphicManager</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
