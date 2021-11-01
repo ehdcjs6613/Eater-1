@@ -1,8 +1,8 @@
+#include "GameTimer.h"
 #include "Component.h"
 #include "GameObject.h"
 #include "DebugManager.h"
 #include "ObjectManager.h"
-
 /// 임시 엔진 추가.
 #include "DH3DEngine.h"
 
@@ -21,7 +21,7 @@ ObjectManager* ObjectManager::GM()
 ObjectManager::ObjectManager()
 {
 	pTest_Engine = new DH3DEngine();
-
+	pGameTimer = new GameTimer();
 	pTest_OFD = new OneFrameData;
 	pTest_OFD->View_Matrix = DirectX::SimpleMath::Matrix
 	(
@@ -127,12 +127,15 @@ ObjectManager::ObjectManager()
 	TestAddIndex(20);
 	TestAddIndex(23);
 
+	pGameTimer->Reset();
 	pTest_SRD->Render_Mesh_List = new std::vector<DHParser::Mesh>;
 	pTest_SRD->Render_Mesh_List->push_back(*pTest_Mesh);
 }
 
 ObjectManager::~ObjectManager()
 {
+	delete pGameTimer;
+	pGameTimer = nullptr;
 	delete pTest_Engine;
 }
 
@@ -250,7 +253,7 @@ void ObjectManager::PlayUpdate()
 	pTest_Engine->BeginDraw();
 
 	pTest_Engine->TextDraw({ (int)(1920 - 350), 10 }, 500, 0, 1, 0, 1, 30, L"카메라 모드 변경 : C");
-
+	pTest_Engine->Update(pGameTimer);
 	pTest_Engine->RenderDraw(pTest_OFD, pTest_SRD);
 
 	pTest_Engine->EndDraw();

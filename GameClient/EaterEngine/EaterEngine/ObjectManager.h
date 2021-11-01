@@ -19,6 +19,7 @@
 class GameObject;
 class Component;
 class DH3DEngine;
+class GameTimer;
 
 class ObjectManager
 {
@@ -63,6 +64,7 @@ public:
 	/// 테스트용 엔진
 private:
 	DH3DEngine* pTest_Engine;
+	GameTimer* pGameTimer;
 	OneFrameData* pTest_OFD;
 	SharedRenderData* pTest_SRD;
 	DHParser::Mesh* pTest_Mesh;

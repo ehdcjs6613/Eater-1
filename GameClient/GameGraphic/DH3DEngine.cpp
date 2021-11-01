@@ -1,4 +1,6 @@
 
+#include "GameTimer.h"
+#include "../inc/Texture.h"
 #include "DH3DEngine.h"
 #include "SkyBox.h"
 #include "D2DSupport.h"
@@ -107,8 +109,8 @@ void DH3DEngine::CreateGraphicResource()
 	swapChainDesc.BufferCount = 1;
 
 	// Set the width and height of the back buffer.
-	swapChainDesc.BufferDesc.Width = g_Screen_Width;
-	swapChainDesc.BufferDesc.Height = g_Screen_Height;
+	swapChainDesc.BufferDesc.Width = (UINT)g_Screen_Width;
+	swapChainDesc.BufferDesc.Height = (UINT)g_Screen_Height;
 
 	// Set regular 32-bit surface for the back buffer.
 	swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -268,8 +270,19 @@ void DH3DEngine::CreateGraphicResource()
 	GetAdapterInfo();
 
 	// D2D 를 사용하기 위함.
-	m_D2DSupport = new D2DSupport(g_hWnd, DX11_Swap_Chain);
+	m_pD2DSupport = new D2DSupport(g_hWnd, DX11_Swap_Chain);
 	m_AxisGrid = new AxisGrid(DX11_Device, DX11_Device_Context, DX11_Raster_State);
+
+
+	//m_D2DSupport->LoadLoadingImage("../Image/apple_1.png");
+
+	m_pTestTexture = new Texture(L"../Image/apple_1.png", this->m_pD2DSupport);
+
+
+	m_pD2DSupport->LoadBitMap(L"../Image/apple_1.png", L"../Image/apple_1.png");
+	m_pD2DSupport->LoadBitMap(L"../Image/atk_1.png", L"../Image/atk_1.png");
+
+
 }
 
 void DH3DEngine::SetDebug(bool _Is_Debug, int _Grid_Num)
@@ -281,7 +294,7 @@ void DH3DEngine::SetDebug(bool _Is_Debug, int _Grid_Num)
 	m_AxisGrid->Initialize(_Grid_Num);
 }
 
-void DH3DEngine::SetSkyBox(ATL::CString _Sky_Box_Path)
+void DH3DEngine::SetSkyBox(std::wstring _Sky_Box_Path)
 {
 	Sky_Box_Path = _Sky_Box_Path;
 }
@@ -304,13 +317,38 @@ void DH3DEngine::BeginDraw()
 
 }
 
-void DH3DEngine::Update(float DTime)
+/// <summary>
+/// 엔진에서는 게임타이머의 포인터를 넘겨서 적용시킨다.
+/// </summary>
+/// <param name="_pTimer"></param>
+void DH3DEngine::Update(GameTimer* _pTimer)
 {
-	m_Delta_Time = DTime;
+	//이전과 현재 프레임간의 시간계산함수
+	_pTimer->Tick();
 
-	// view TM을 만든다.
-	//m_DHCamera->UpdateViewMatrix();
+	//프레임카운트와
+	static int frameCnt = 0;
+	//누적시간
+	static float timeElapsed = 0.0f;
+	//프레임을 카운트를 늘려주고
+	frameCnt++;
+
+	// Compute averages over one second period.
+	//1초 동안의 평균을 계산합니다.
+	if ((_pTimer->TotalTime() - timeElapsed) >= 1.0f)
+	{
+		float fps = (float)frameCnt; // fps = frameCnt / 1
+		float mspf = 1000.0f / fps;
+	}
+	m_Delta_Time = _pTimer->DeltaTime();
 }
+//void DH3DEngine::Update(float DTime)
+//{
+//	m_Delta_Time = DTime;
+//
+//	// view TM을 만든다.
+//	//m_DHCamera->UpdateViewMatrix();
+//}
 
 
 void DH3DEngine::RenderDraw(OneFrameData* _OFD, SharedRenderData* _SRD)
@@ -345,10 +383,71 @@ void DH3DEngine::RenderDraw(OneFrameData* _OFD, SharedRenderData* _SRD)
 
 		_addedTime += (m_Delta_Time);
 		// FPS, deltaTime을 그린다.
-		m_D2DSupport->Push_DrawText({ 10, 8 }, 500, 1, 0, 0, 1, 20, (TCHAR*)L"FPS : %.2f", _FPS);
-		m_D2DSupport->Push_DrawText({ 10, 29 }, 500, 1, 0, 0, 1, 20, (TCHAR*)L"DTime : %.4f ms", _deltaTimeMS);
-		m_D2DSupport->Push_DrawText({ 510, 29 }, 500, 1, 0, 0, 1, 20, (TCHAR*)L"카메라 위치 : %f, %f, %f", _OFD->World_Eye_Position.x, _OFD->World_Eye_Position.y, _OFD->World_Eye_Position.z);
-		m_D2DSupport->Push_DrawText({ 510, 50 }, 500, 1, 0, 0, 1, 20, (TCHAR*)L"캐릭터 위치 : %f, %f, %f", _OFD->Main_Position.x, _OFD->Main_Position.y, _OFD->Main_Position.z);
+
+		m_pD2DSupport->Push_DrawText({ 10, 8 }, 500, 1, 0, 0, 1, 20, (TCHAR*)L"FPS : %.2f", _FPS);
+		m_pD2DSupport->Push_DrawText({ 10, 29 }, 500, 1, 0, 0, 1, 20, (TCHAR*)L"DTime : %.4f ms", _deltaTimeMS);
+		m_pD2DSupport->Push_DrawText({ 510, 29 }, 500, 1, 0, 0, 1, 20, (TCHAR*)L"카메라 위치 : %f, %f, %f", _OFD->World_Eye_Position.x, _OFD->World_Eye_Position.y, _OFD->World_Eye_Position.z);
+		m_pD2DSupport->Push_DrawText({ 510, 50 }, 500, 1, 0, 0, 1, 20, (TCHAR*)L"캐릭터 위치 : %f, %f, %f", _OFD->Main_Position.x, _OFD->Main_Position.y, _OFD->Main_Position.z);
+		POINTF pos;
+
+
+#pragma region ShowImage
+		m_pD2DSupport->Push_DrawImage
+		(
+			L"../Image/apple_1.png", //name
+			{ 1000,1 },				//Image Position
+			{ 1,1 },				//Image Scale//
+			0,
+			1.0f,
+			{ 0,0 }, //POS
+			{ 0.1f, 0.1f }, //SCALE
+			0,
+			1.0f
+		);
+		m_pD2DSupport->Push_DrawImage
+		(
+			L"../Image/apple_1.png", //name
+			{ 1200,1 },				//Image Position
+			{ 1,1 },				//Image Scale//
+			0,
+			1.0f,
+			{ 0,0 }, //POS
+			{ 0.1f, 0.1f }, //SCALE
+			0,
+			0.6f
+		);
+		m_pD2DSupport->Push_DrawImage
+		(
+			L"../Image/apple_1.png", //name
+			{ 1400,1 },				//Image Position
+			{ 1,1 },				//Image Scale//
+			0,
+			1.0f,
+			{ 0,0 }, //POS
+			{ 0.1f, 0.1f }, //SCALE
+			0,
+			0.3f
+		);
+		m_pTestTexture->Render();
+
+		//m_pD2DSupport->Push_DrawSprite
+		//(
+		//	L"../Image/atk_1.png", //name
+		//	{ 500,500  },				//Image Position
+		//	{ 2.0f,2.0f },				//Image Scale//
+		//	0,
+		//	1.0f,
+		//	{ 0 ,0  }, //POS
+		//	{ 1.0f, 1.0f }, //SCALE
+		//	0,
+		//	1.0f,		//Alpha Channel
+		//	7,			//MAX Image index
+		//	171,
+		//	144
+		//);
+#pragma endregion TestShowImage
+
+
 
 		// 피쳐레벨, 어댑터 등의 상태를 그린다.
 		this->Draw_Status();
@@ -391,7 +490,7 @@ void DH3DEngine::RenderDraw(OneFrameData* _OFD, SharedRenderData* _SRD)
 		Vertex_Buffer_Offset = 0;
 
 		/// WVP TM등을 셋팅
-		Mul_WVP = _Render_Mesh.World_TM * _SRD->SRT_Matrix  * _OFD->View_Matrix * _OFD->Projection_Matrix;
+		Mul_WVP = _Render_Mesh.World_TM * _SRD->SRT_Matrix * _OFD->View_Matrix * _OFD->Projection_Matrix;
 
 		// 월드의 역행렬
 		World_Inverse = _Render_Mesh.World_TM.Invert();
@@ -406,7 +505,7 @@ void DH3DEngine::RenderDraw(OneFrameData* _OFD, SharedRenderData* _SRD)
 		_temp_Dir.Diffuse = _Diffuse;
 		_temp_Dir.Specular = _Specular;
 		_temp_Dir.Direction = _Direction;
-		
+
 		_OFD->DirLight_List.push_back(_temp_Dir);
 
 		Effects::BasicFX->SetDirLights(_OFD->DirLight_List);
@@ -466,9 +565,9 @@ void DH3DEngine::UIDraw(Shared2DRenderData* _S2DRD)
 	// 텍스트 데이터가 있다면 그려줌
 	if (_S2DRD->Is_Text)
 	{
-		m_D2DSupport->Push_DrawText(POINT{ (int)_S2DRD->Play_Text_Att.Position.x, (int)_S2DRD->Play_Text_Att.Position.y },
+		m_pD2DSupport->Push_DrawText(POINT{ (int)_S2DRD->Play_Text_Att.Position.x, (int)_S2DRD->Play_Text_Att.Position.y },
 			1200, _S2DRD->Play_Text_Att.Color.x, _S2DRD->Play_Text_Att.Color.y, _S2DRD->Play_Text_Att.Color.z,
-			_S2DRD->Play_Text_Att.Alpha, _S2DRD->Play_Text_Att.Size, _S2DRD->Play_Text_String);
+			_S2DRD->Play_Text_Att.Alpha, _S2DRD->Play_Text_Att.Size, _S2DRD->Play_Text_String.c_str());
 	}
 
 	if (!_S2DRD->Is_Img_Load)
@@ -476,7 +575,7 @@ void DH3DEngine::UIDraw(Shared2DRenderData* _S2DRD)
 		// 이미지 로드.
 		for (auto Img_Data : _S2DRD->Img_Path_List)
 		{
-			m_D2DSupport->LoadBitMap(Img_Data.first, Img_Data.second);
+			m_pD2DSupport->LoadBitMap(Img_Data.first, Img_Data.second);
 		}
 
 		_S2DRD->Is_Img_Load = true;
@@ -487,7 +586,7 @@ void DH3DEngine::UIDraw(Shared2DRenderData* _S2DRD)
 	{
 		DHRENDER::ImageTRSA* TRSA_Data = Img_Data.second;
 
-		m_D2DSupport->Push_DrawImage(Img_Data.first,
+		m_pD2DSupport->Push_DrawImage(Img_Data.first,
 			POINTF{ TRSA_Data->Position.x, TRSA_Data->Position.y }, POINTF{ TRSA_Data->Scale.x, TRSA_Data->Scale.y }, TRSA_Data->Rotate_Angle, TRSA_Data->Alpha,
 			POINTF{ _S2DRD->UI_TRSA.Position.x, _S2DRD->UI_TRSA.Position.y }, POINTF{ _S2DRD->UI_TRSA.Scale.x, _S2DRD->UI_TRSA.Scale.y }, _S2DRD->UI_TRSA.Rotate_Angle, _S2DRD->UI_TRSA.Alpha);
 	}
@@ -496,22 +595,24 @@ void DH3DEngine::UIDraw(Shared2DRenderData* _S2DRD)
 
 void DH3DEngine::TextDraw(POINT _Pos, float _Width, float r, float g, float b, float a, float _Size, const wchar_t* _Input_String)
 {
-	m_D2DSupport->Push_DrawText(_Pos, _Width, r, g, b, a, _Size, _Input_String);
+	m_pD2DSupport->Push_DrawText(_Pos, _Width, r, g, b, a, _Size, _Input_String);
 }
 
-void DH3DEngine::LoadingDraw(ATL::CString _Loading_Path)
+void DH3DEngine::LoadingDraw(std::wstring _Loading_Path)
 {
-	m_D2DSupport->LoadLoadingImage(_Loading_Path);
+	m_pD2DSupport->LoadLoadingImage(_Loading_Path);
 
-	m_D2DSupport->DrawLoadingImage();
+	m_pD2DSupport->DrawLoadingImage();
 }
 
 void DH3DEngine::EndDraw()
 {
+	//스프라이트 그리기
+	m_pD2DSupport->Draw_AllSprite();
 	// 이미지 그리기
-	m_D2DSupport->Draw_AllImage();
+	m_pD2DSupport->Draw_AllImage();
 	// 텍스트 그리기.
-	m_D2DSupport->Draw_AllText();
+	m_pD2DSupport->Draw_AllText();
 	// 다음 프레임에 다시 Axis_Grid를 그릴 수 있도록..
 	Is_Draw_AxisGrid = false;
 	// Present as fast as possible.
@@ -579,7 +680,7 @@ void DH3DEngine::Finalize()
 void DH3DEngine::DrawSkyBox(OneFrameData* _OFD)
 {
 	// 스카이박스가 설정되어 있지 않다면.. return
-	if (Sky_Box_Path == "" && m_SkyBox == nullptr)
+	if (Sky_Box_Path == L"" && m_SkyBox == nullptr)
 	{
 		return;
 	}
@@ -614,7 +715,7 @@ void DH3DEngine::SetTextureSRV(SharedRenderData* _SRD)
 			// 텍스쳐 SRV
 			ID3D11ShaderResourceView* DX11_SRV = nullptr;
 			// 텍스쳐 정보 셋팅.
-			CreateWICTextureFromFile(DX11_Device, k.second->Texture_Path, &Texture_Resource, &DX11_SRV);
+			CreateWICTextureFromFile(DX11_Device, k.second->Texture_Path.c_str(), &Texture_Resource, &DX11_SRV);
 			ReleaseCOM(Texture_Resource);
 
 			k.second->Texture_SRV = DX11_SRV;
@@ -630,7 +731,7 @@ void DH3DEngine::SetTextureSRV(SharedRenderData* _SRD)
 			// 텍스쳐 SRV
 			ID3D11ShaderResourceView* DX11_SRV = nullptr;
 			// 텍스쳐 정보 셋팅.
-			CreateWICTextureFromFile(DX11_Device, k.second->Texture_Path, &Texture_Resource, &DX11_SRV);
+			CreateWICTextureFromFile(DX11_Device, k.second->Texture_Path.c_str(), &Texture_Resource, &DX11_SRV);
 			ReleaseCOM(Texture_Resource);
 
 			k.second->Texture_SRV = DX11_SRV;
@@ -646,7 +747,7 @@ void DH3DEngine::SetTextureSRV(SharedRenderData* _SRD)
 			// 텍스쳐 SRV
 			ID3D11ShaderResourceView* DX11_SRV = nullptr;
 			// 텍스쳐 정보 셋팅.
-			CreateWICTextureFromFile(DX11_Device, k.second->Texture_Path, &Texture_Resource, &DX11_SRV);
+			CreateWICTextureFromFile(DX11_Device, k.second->Texture_Path.c_str(), &Texture_Resource, &DX11_SRV);
 			ReleaseCOM(Texture_Resource);
 
 			k.second->Texture_SRV = DX11_SRV;
@@ -662,7 +763,7 @@ void DH3DEngine::SetTextureSRV(SharedRenderData* _SRD)
 			// 텍스쳐 SRV
 			ID3D11ShaderResourceView* DX11_SRV = nullptr;
 			// 텍스쳐 정보 셋팅.
-			CreateWICTextureFromFile(DX11_Device, k.second->Texture_Path, &Texture_Resource, &DX11_SRV);
+			CreateWICTextureFromFile(DX11_Device, k.second->Texture_Path.c_str(), &Texture_Resource, &DX11_SRV);
 			ReleaseCOM(Texture_Resource);
 
 			k.second->Texture_SRV = DX11_SRV;
@@ -678,7 +779,7 @@ void DH3DEngine::SetTextureSRV(SharedRenderData* _SRD)
 			// 텍스쳐 SRV
 			ID3D11ShaderResourceView* DX11_SRV = nullptr;
 			// 텍스쳐 정보 셋팅.
-			CreateWICTextureFromFile(DX11_Device, k.second->Texture_Path, &Texture_Resource, &DX11_SRV);
+			CreateWICTextureFromFile(DX11_Device, k.second->Texture_Path.c_str(), &Texture_Resource, &DX11_SRV);
 			ReleaseCOM(Texture_Resource);
 
 			k.second->Texture_SRV = DX11_SRV;
@@ -749,7 +850,7 @@ void DH3DEngine::On_Resize(float Change_Width, float Change_Height)
 	DX11_Device_Context->RSSetViewports(1, &DX11_View_Port);
 
 	// The window resized, so update the aspect ratio and recompute the projection matrix.
-	
+
 	/// 창의 크기가 변했으므로, 종횡비를 업데이트하고 투영 행렬을 재계산한다.
 	//m_DHCamera->SetLens(0.25f * MathHelper::Pi, GetAspectRatio(), 1.0f, 1000.0f);
 }
@@ -764,15 +865,15 @@ void DH3DEngine::Draw_Status()
 	//m_DXTKFont->DrawTextColor(0, _yPos, _white, (TCHAR*)L"Feature Level : %x", featureLevel);
 
 	//// 어댑터 정보
-	m_D2DSupport->Push_DrawText({ 10, _yPos }, 500, 1, 0, 0, 1, 20, (TCHAR*)L"Description: %s", m_Adapter_Desc1.Description);
-	m_D2DSupport->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 1, 0, 1, 20, (TCHAR*)L"VendorID: %u", m_Adapter_Desc1.VendorId);
-	m_D2DSupport->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 1, 0, 1, 20, (TCHAR*)L"DeviceID: %u", m_Adapter_Desc1.DeviceId);
-	m_D2DSupport->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 1, 0, 1, 20, (TCHAR*)L"SubSysID: %u", m_Adapter_Desc1.SubSysId);
-	m_D2DSupport->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 1, 0, 1, 20, (TCHAR*)L"Revision: %u", m_Adapter_Desc1.Revision);
-	m_D2DSupport->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 0, 1, 1, 20, (TCHAR*)L"VideoMemory: %lu MB", m_Adapter_Desc1.DedicatedVideoMemory / 1024 / 1024);
-	m_D2DSupport->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 0, 1, 1, 20, (TCHAR*)L"SystemMemory: %lu MB", m_Adapter_Desc1.DedicatedSystemMemory / 1024 / 1024);
-	m_D2DSupport->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 0, 1, 1, 20, (TCHAR*)L"SharedSysMemory: %lu MB", m_Adapter_Desc1.SharedSystemMemory / 1024 / 1024);
-	m_D2DSupport->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 1, 1, 0, 1, 20, (TCHAR*)L"AdpaterLuid: %u.%d", m_Adapter_Desc1.AdapterLuid.HighPart, m_Adapter_Desc1.AdapterLuid.LowPart);
+	m_pD2DSupport->Push_DrawText({ 10, _yPos }, 500, 1, 0, 0, 1, 20, (TCHAR*)L"Description: %s", m_Adapter_Desc1.Description);
+	m_pD2DSupport->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 1, 0, 1, 20, (TCHAR*)L"VendorID: %u", m_Adapter_Desc1.VendorId);
+	m_pD2DSupport->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 1, 0, 1, 20, (TCHAR*)L"DeviceID: %u", m_Adapter_Desc1.DeviceId);
+	m_pD2DSupport->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 1, 0, 1, 20, (TCHAR*)L"SubSysID: %u", m_Adapter_Desc1.SubSysId);
+	m_pD2DSupport->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 1, 0, 1, 20, (TCHAR*)L"Revision: %u", m_Adapter_Desc1.Revision);
+	m_pD2DSupport->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 0, 1, 1, 20, (TCHAR*)L"VideoMemory: %lu MB", m_Adapter_Desc1.DedicatedVideoMemory / 1024 / 1024);
+	m_pD2DSupport->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 0, 1, 1, 20, (TCHAR*)L"SystemMemory: %lu MB", m_Adapter_Desc1.DedicatedSystemMemory / 1024 / 1024);
+	m_pD2DSupport->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 0, 1, 1, 20, (TCHAR*)L"SharedSysMemory: %lu MB", m_Adapter_Desc1.SharedSystemMemory / 1024 / 1024);
+	m_pD2DSupport->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 1, 1, 0, 1, 20, (TCHAR*)L"AdpaterLuid: %u.%d", m_Adapter_Desc1.AdapterLuid.HighPart, m_Adapter_Desc1.AdapterLuid.LowPart);
 
 	//// 카메라 정보
 	//m_DXTKFont->DrawTextColor(0, _yPos += 28, _white, (TCHAR*)L"Camera Pos : %.2f / %.2f / %.2f", m_DHCamera->GetPosition().x, m_DHCamera->GetPosition().y, m_DHCamera->GetPosition().z);

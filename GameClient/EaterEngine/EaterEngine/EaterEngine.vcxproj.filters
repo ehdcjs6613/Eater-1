@@ -52,6 +52,9 @@
     <Filter Include="소스 파일\Component\Collider">
       <UniqueIdentifier>{d34d8a60-5880-4358-a416-fe8f2edab2e9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Component\Texture">
+      <UniqueIdentifier>{190f9980-8bad-407c-b91e-4c9202a8572e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -93,6 +96,9 @@
     <ClInclude Include="EnumClass.h">
       <Filter>소스 파일\EnumClass</Filter>
     </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>소스 파일\Component\Texture</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -127,6 +133,9 @@
     </ClCompile>
     <ClCompile Include="MeshFilter.cpp">
       <Filter>소스 파일\Component\MeshFilter</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>소스 파일\Component\Texture</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

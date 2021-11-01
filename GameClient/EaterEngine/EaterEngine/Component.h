@@ -3,6 +3,9 @@
 /// 컨퍼넌트들의 최상위 클래스
 /// </summary>
 
+#include <iostream>
+#include <string>
+
 #ifdef ENGINE_INTERFACE
 #define EATER_ENGINEDLL __declspec(dllexport)
 #else

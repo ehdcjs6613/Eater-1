@@ -2,10 +2,17 @@
 #include "GeometryGenerator.h"
 #include "DDSTextureLoader.h"
 
-SkyBox::SkyBox(ID3D11Device* device, const ATL::CString& cubemapFilename, float skySphereRadius)
+SkyBox::SkyBox(ID3D11Device* device, const std::wstring& cubemapFilename, float skySphereRadius)
 {
+	//CreateDDSTextureFromFile함수의 파라미터를 충족시키기위해
+	//한번만 cstring으로 변환해준다.
+	ATL::CString msg = cubemapFilename.c_str();
+
 	ID3D11Resource* texResource = nullptr;
-	HR(DirectX::CreateDDSTextureFromFile(device, cubemapFilename, &texResource, &mCubeMapSRV));
+	HR(DirectX::CreateDDSTextureFromFile
+	(
+		device, msg, &texResource, &mCubeMapSRV)
+	);
 	ReleaseCOM(texResource); // view saves reference
 
 	GeometryGenerator::MeshData sphere;
