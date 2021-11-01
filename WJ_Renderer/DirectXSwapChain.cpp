@@ -93,4 +93,9 @@ bool DirectXSwapChain::MakeASwapChain(ID3D11Device* _pDevice, HWND _hWnd, int _i
 	return 0;
 }
 
+IDXGISwapChain* DirectXSwapChain::GetSwapChain()
+{
+	return m_pSwapChain;
+}
+
 

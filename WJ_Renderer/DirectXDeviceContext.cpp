@@ -69,6 +69,13 @@ HRESULT DirectXDeviceContext::CreateDeviceContext(ID3D11Device* _pDevice)
 	return S_OK;
 }
 
+ID3D11DeviceContext* DirectXDeviceContext::GetDeviceContext()
+{
+	//만약 디바이스 컨텍스트가없다면 반환
+	if (nullptr == m_pDX11DeviceContext) { return nullptr; }
+	return m_pDX11DeviceContext;
+}
+
 /*
 4. Flags: 추가적인 장치 플래그들을 지정한다.
 

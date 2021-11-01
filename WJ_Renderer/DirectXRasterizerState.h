@@ -27,5 +27,7 @@ public:
 
 	//미리 레스터라이져스테이트(rs) 만들어주는 함수이다.
 	virtual HRESULT Create(ID3D11Device* _pDevice, StateRS _StateRS) override;
+public:
+	ID3D11RasterizerState* GetFrameRS();
 };
 

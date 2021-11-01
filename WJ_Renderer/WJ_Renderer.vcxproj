@@ -159,6 +159,7 @@
     <ClCompile Include="DirectXRasterizerState.cpp" />
     <ClCompile Include="DirectXSwapChain.cpp" />
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="RenderQueue.cpp" />
     <ClCompile Include="X3Engine.cpp" />
     <ClCompile Include="XRenderer.cpp" />
   </ItemGroup>
@@ -170,6 +171,7 @@
     <ClInclude Include="DirectXRasterizerState.h" />
     <ClInclude Include="DirectXSwapChain.h" />
     <ClInclude Include="OneCompile.h" />
+    <ClInclude Include="RenderQueue.h" />
     <ClInclude Include="X3Engine.h" />
     <ClInclude Include="XRenderer.h" />
   </ItemGroup>

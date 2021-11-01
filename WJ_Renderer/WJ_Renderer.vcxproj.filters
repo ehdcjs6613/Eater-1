@@ -22,6 +22,9 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
+    <Filter Include="R">
+      <UniqueIdentifier>{266f6d07-0979-46a3-afd2-affccb8d17ea}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -47,6 +50,9 @@
     </ClCompile>
     <ClCompile Include="DirectXRasterizerState.cpp">
       <Filter>DirectX</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderQueue.cpp">
+      <Filter>DirectX\Define</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -76,6 +82,9 @@
     </ClInclude>
     <ClInclude Include="DirectXRasterizerState.h">
       <Filter>DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderQueue.h">
+      <Filter>DirectX\Define</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

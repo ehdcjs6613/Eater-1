@@ -16,5 +16,8 @@ public:
 public:
 	//Make  SwapChain 
 	bool MakeASwapChain(ID3D11Device* _pDevice, HWND _hWnd, int _iWidth, int _iHeight);
+
+public:
+	IDXGISwapChain* GetSwapChain();
 };
 

@@ -4,6 +4,7 @@
 
 DirectXRasterizerState::DirectXRasterizerState() : m_State(StateRS::eSolid), m_pFrameRS(nullptr)
 {
+	//기본생성자 초기화
 }
 
 DirectXRasterizerState::~DirectXRasterizerState()
@@ -20,6 +21,7 @@ HRESULT DirectXRasterizerState::Create(ID3D11Device* _pDevice, StateRS _StateRS)
 
 	ZeroMemory(&RasterRizeDESC, sizeof(D3D11_RASTERIZER_DESC));
 
+	//switch 문으로 어떻게 그릴지 정한다.
 	switch (m_State)
 	{
 		case StateRS::eWireFrame:
@@ -49,4 +51,9 @@ HRESULT DirectXRasterizerState::Create(ID3D11Device* _pDevice, StateRS _StateRS)
 	hr = S_OK;
 
 	return hr;
+}
+
+ID3D11RasterizerState* DirectXRasterizerState::GetFrameRS()
+{
+	return m_pFrameRS;
 }
