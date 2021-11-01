@@ -172,7 +172,7 @@ void LoadManager::Test_DHData(ParserData::Model* mModel,std::string Name)
 	pTest_SRD->Render_Mesh_List = new std::vector<DHParser::Mesh>;
 	pTest_SRD->Render_Mesh_List->push_back(*pTest_Mesh);
 	DHRENDER::TexturePathAndSRV* texture = new DHRENDER::TexturePathAndSRV();
-	std::string t = "ABCD";
+	std::wstring t = L"ABCD";
 	texture->Texture_Path = t.c_str();
 	pTest_SRD->Ambient_Texture.insert({0,texture });
 
