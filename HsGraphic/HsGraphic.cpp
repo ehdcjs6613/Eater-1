@@ -1,22 +1,12 @@
 #include "GraphicsEngine.h"
 #include "HsGraphic.h"
-#include "HsDefine.h"
 #include "ParserData.h"
 #include "EngineData.h"
-#include "Data.h"
-#include <assert.h>
+#include "HsDefine.h"
 #include <vector>
-#include <winerror.h>
+#include "Data.h"
 
-#pragma comment(lib, "d3d11")
-
-//#include "DDSTextureLoader.h"
-
-#ifdef _DEBUG
-#pragma comment( lib, "DirectXTK.lib" )
-#else
-#pragma comment( lib, "DirectXTKr.lib" )
-#endif
+using namespace DirectX;
 
 HsGraphic::HsGraphic()
 {
@@ -152,6 +142,7 @@ void HsGraphic::Initialize(HWND _hWnd, int screenWidth, int screenHeight)
 	dxgiFactory->Release();
 
 	CreateRenderTarget();
+	CreateRenderState();
 }
 
 Indexbuffer* HsGraphic::CreateIndexBuffer(ParserData::Model* mModel)
@@ -161,8 +152,8 @@ Indexbuffer* HsGraphic::CreateIndexBuffer(ParserData::Model* mModel)
 	Indexbuffer* indexbuffer = new Indexbuffer();
 
 	//모델의 계수
-	int ModelCount = mModel->m_MeshList.size();
-	int Icount = mModel->m_MeshList[0]->m_IndexList.size();
+	int ModelCount = (int)mModel->m_MeshList.size();
+	int Icount =  (int)mModel->m_MeshList[0]->m_IndexList.size();
 	std::vector<ParserData::IndexList*> IndexList = mModel->m_MeshList[0]->m_IndexList;
 
 
@@ -191,8 +182,8 @@ Vertexbuffer* HsGraphic::CreateVertexBuffer(ParserData::Model* mModel)
 	Vertexbuffer* vertexbuffer = new Vertexbuffer();
 
 	//모델의 계수
-	int ModelCount = mModel->m_MeshList.size();
-	int Vcount = mModel->m_MeshList[0]->m_VertexList.size();
+	int ModelCount = (int)mModel->m_MeshList.size();
+	int Vcount = (int)mModel->m_MeshList[0]->m_VertexList.size();
 	std::vector<ParserData::Vertex*> VertexList = mModel->m_MeshList[0]->m_VertexList;
 	
 
@@ -309,11 +300,11 @@ void HsGraphic::EndRender()
 	HR(mSwapChain->Present(0, 0));
 }
 
-float HsGraphic::GetAspectRatio()
+int HsGraphic::GetAspectRatio()
 {
-	float width = WinSizeX;
-	float Height = WinSizeY;
-	float Ratio = width / Height;
+	int width = WinSizeX;
+	int Height = WinSizeY;
+	int Ratio = width / Height;
 	return  Ratio;
 }
 
@@ -322,20 +313,27 @@ TextureBuffer* HsGraphic::CreateTextureBuffer(std::string path)
 	ID3D11ShaderResourceView* Textures = nullptr;
 	ID3D11Resource* texResource = nullptr;
 
-	//CreateDDSTextureFromFile(m_device, path, &texResource, &Textures, 0);
-	//CreateDDSTextureFromFile(m_device, path, &texResource, &Textures, 0);
-	//if ((CreateDDSTextureFromFile(m_device, path, &texResource, &Textures, 0)))
-	//{
-	//	MessageBox(0, L"텍스쳐를 불러오는 도중 에러발생", 0, 0);
-	//	return nullptr;
-	//}
+	CString _path = path.c_str();
+	 
+	if ( FAILED(DirectX::CreateDDSTextureFromFile(m_device, _path, &texResource, &Textures, 0)))
+	{
+		CString mError = "텍스쳐 불러오기오류 :" + _path;
+		MessageBox(0, mError, 0, 0);
+		return nullptr;
+	}
 	
-	//texResource->Release();
+	
+	
+	
+	
+	
+	
+	texResource->Release();
 
 	return nullptr;
 }
 
-void HsGraphic::OnReSize(float Change_Width, float Change_Height)
+void HsGraphic::OnReSize(int Change_Width, int Change_Height)
 {
 	WinSizeX = Change_Width;
 	WinSizeY = Change_Height;

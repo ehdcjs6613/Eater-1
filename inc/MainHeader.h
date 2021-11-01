@@ -20,7 +20,7 @@ extern "C" EATER_ENGINEDLL void EndEngine();						//GameEngine 종료
 extern "C" EATER_ENGINEDLL void UpdateEngine();						//GameEngine 업데이트
 extern "C" EATER_ENGINEDLL void OnReSize(int X,int Y);				//윈도우 사이즈 재조정	
 
-
+///게임 오브젝트 생성
 extern "C" EATER_ENGINEDLL GameObject*	Instance(std::string ObjName= "GameObject");//오브젝트 생성
 extern "C" EATER_ENGINEDLL void			Destroy(GameObject* obj);					//오브젝트 삭제
 
@@ -42,12 +42,8 @@ EATER_ENGINEDLL void CreateScene(Scene* mSceneTemp,std::string SceneName);
 ///매쉬 불러오기
 extern "C" EATER_ENGINEDLL void LoadMesh(std::string mMeshName, bool Scale = true,bool LoadAnime = false);	//매쉬 로드
 extern "C" EATER_ENGINEDLL void LoadMeshPath(std::string mPath);											//매쉬 로드 경로
-
-
-///기본 오브젝트들 간단하게생성하기
-//메인 카메라
-extern "C" EATER_ENGINEDLL GameObject* CreateMainCamera(float x = 0,float y = 0,float z = 0);
-extern "C" EATER_ENGINEDLL void	ChoiceMainCamera(GameObject* obj);
+extern "C" EATER_ENGINEDLL void LoadTesture(std::string mPath);
+extern "C" EATER_ENGINEDLL void LoadTesturePath(std::string mPath);
 
 
 ///키입력

@@ -42,7 +42,7 @@ public:
 	void Initialize(HWND gHwnd,bool mConsoleDebug = true);//초기화
 	void Update();				//엔진 가동
 	void Finish();				//엔진 중지
-	void OnResize(float Change_Width, float Change_Height); //리사이즈
+	void OnResize(int Change_Width, int Change_Height); //리사이즈
 public:
 	///오브젝트 관련(오브젝트 매니저)
 	GameObject* Instance(std::string ObjName = "GameObject");	//obj 생성
@@ -53,8 +53,10 @@ public:
 	void ChoiceScene(std::string name);					//씬 선택
 public:
 	///로드 관련 
-	void LoadMesh(std::string mMeshName, bool Scale = true, bool LoadAnime = false);
 	void LoadMeshPath(std::string mPath);
+	void LoadTexturePath(std::string mPath);
+	void LoadMesh(std::string mMeshName, bool Scale = true, bool LoadAnime = false);
+	void LoadTexture(std::string mMeshName);
 
 public:
 	///키관련 
