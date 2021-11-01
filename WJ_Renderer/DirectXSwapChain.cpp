@@ -20,6 +20,7 @@ DirectXSwapChain::DirectXSwapChain(ID3D11Device* _pDevice) :  m_pSwapChain(nullp
 
 DirectXSwapChain::~DirectXSwapChain()
 {
+	ReleaseCOM(m_pSwapChain);
 }
 
 bool DirectXSwapChain::MakeASwapChain(ID3D11Device* _pDevice, HWND _hWnd, int _iWidth, int _iHeight)
@@ -43,6 +44,7 @@ bool DirectXSwapChain::MakeASwapChain(ID3D11Device* _pDevice, HWND _hWnd, int _i
 	swapChain_Description.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
 
 	// Use 4X MSAA? 
+	//멀티샘플링 안티앨리어싱을 사용할것인가요?
 	if (m_Enable4xMsaa)
 	{
 		swapChain_Description.SampleDesc.Count = 4;
@@ -54,7 +56,7 @@ bool DirectXSwapChain::MakeASwapChain(ID3D11Device* _pDevice, HWND _hWnd, int _i
 		swapChain_Description.SampleDesc.Count = 1;
 		swapChain_Description.SampleDesc.Quality = 0;
 	}
-
+	//추가 설정
 	swapChain_Description.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	swapChain_Description.BufferCount = 1;
 	swapChain_Description.OutputWindow = _hWnd;
@@ -83,6 +85,7 @@ bool DirectXSwapChain::MakeASwapChain(ID3D11Device* _pDevice, HWND _hWnd, int _i
 	// 드디어 스왑체인을 생성한다.
 	HR(dxgiFactory->CreateSwapChain(_pDevice, &swapChain_Description, &m_pSwapChain));
 
+	//안전하게 초기화
 	ReleaseCOM(dxgiDevice);
 	ReleaseCOM(dxgiAdapter);
 	ReleaseCOM(dxgiFactory);

@@ -2,10 +2,6 @@
 #include "DirectXDevice.h"
 #include "DirectXDeviceContext.h"
 
-#define DEBUG
-
-
-
 DirectXDeviceContext::DirectXDeviceContext()
 {
 

@@ -45,7 +45,7 @@
     <ClCompile Include="XRenderer.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="DirectXRenderState.cpp">
+    <ClCompile Include="DirectXRasterizerState.cpp">
       <Filter>DirectX</Filter>
     </ClCompile>
   </ItemGroup>
@@ -74,7 +74,7 @@
     <ClInclude Include="XRenderer.h">
       <Filter>Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="DirectXRenderState.h">
+    <ClInclude Include="DirectXRasterizerState.h">
       <Filter>DirectX</Filter>
     </ClInclude>
   </ItemGroup>

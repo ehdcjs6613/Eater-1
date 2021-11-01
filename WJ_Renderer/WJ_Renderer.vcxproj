@@ -156,7 +156,7 @@
     <ClCompile Include="DirectXAdapter.cpp" />
     <ClCompile Include="DirectXDevice.cpp" />
     <ClCompile Include="DirectXDeviceContext.cpp" />
-    <ClCompile Include="DirectXRenderState.cpp" />
+    <ClCompile Include="DirectXRasterizerState.cpp" />
     <ClCompile Include="DirectXSwapChain.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="X3Engine.cpp" />
@@ -167,7 +167,7 @@
     <ClInclude Include="DirectXDefine.h" />
     <ClInclude Include="DirectXDevice.h" />
     <ClInclude Include="DirectXDeviceContext.h" />
-    <ClInclude Include="DirectXRenderState.h" />
+    <ClInclude Include="DirectXRasterizerState.h" />
     <ClInclude Include="DirectXSwapChain.h" />
     <ClInclude Include="OneCompile.h" />
     <ClInclude Include="X3Engine.h" />
