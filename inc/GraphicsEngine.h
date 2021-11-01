@@ -38,7 +38,7 @@ public:
 	virtual Indexbuffer* CreateIndexBuffer(ParserData::Model* mModel)	= 0;	//인덱스 버퍼를 만들어준다
 	virtual Vertexbuffer* CreateVertexBuffer(ParserData::Model* mModel)	= 0;	//버텍스 버퍼를 만들어준다
 	virtual TextureBuffer* CreateTextureBuffer(std::string path)  = 0;					//텍스쳐를 만들어준다
-	virtual void OnReSize(float Change_Width, float Change_Height) = 0;			//리사이즈
+	virtual void OnReSize(int Change_Width, int Change_Height) = 0;			//리사이즈
 	virtual void Delete() = 0;
 
 

@@ -10,7 +10,11 @@ void intro::Awake()
 {
 	//불러오는 매쉬의 경로 파악
 	LoadMeshPath("../FBXFile/");
+	LoadTesturePath("../Texture/");
+
 	LoadMesh("Table");
+	LoadTesture("WoodCrate01");
+
 
 	///카메라
 	testobj = Instance();

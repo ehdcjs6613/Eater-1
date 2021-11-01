@@ -1,8 +1,7 @@
 #pragma once
 
 #include "GraphicsEngine.h"
-#include <d3d11.h>
-#include <string>
+#include "HsEngineHelper.h"
 
 #ifdef HSGRAPHIC_INTERFACE
 #define HS_GRAPHICDLL __declspec(dllexport)
@@ -21,12 +20,15 @@ public:
 
 	
 	virtual HS_GRAPHICDLL void Initialize(HWND _hWnd, int screenWidth, int screenHeight) override;
-	virtual HS_GRAPHICDLL void OnReSize(float Change_Width, float Change_Height) override;
+	virtual HS_GRAPHICDLL void OnReSize(int Change_Width, int Change_Height) override;
 	virtual HS_GRAPHICDLL void Render(std::queue<MeshData*>* meshList, GlobalData* global) override;
 	virtual HS_GRAPHICDLL void Delete() override;
 
+	//텍스쳐 버퍼를생성
 	virtual HS_GRAPHICDLL TextureBuffer* CreateTextureBuffer(std::string path) override;
+	//인덱스 버퍼를 생성
 	virtual HS_GRAPHICDLL Indexbuffer*	CreateIndexBuffer(ParserData::Model* mModel) override;
+	//버텍스 버퍼를 생성
 	virtual HS_GRAPHICDLL Vertexbuffer* CreateVertexBuffer(ParserData::Model* mModel) override;
 private:
 	void CreateRenderTarget();	//랜더타겟 뎁스스텐실 뷰포트를 생성한다
@@ -34,7 +36,7 @@ private:
 	void BeginRender();			//랜더링 시작
 	void EngineRender();		//엔진 랜더링
 	void EndRender();			//랜더링 종료
-	float GetAspectRatio();		//화면비율 종횡비를 설정
+	int GetAspectRatio();		//화면비율 종횡비를 설정
 private:
 
 	///엔진 데이터

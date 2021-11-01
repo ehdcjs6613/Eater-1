@@ -145,7 +145,7 @@ void GameEngine::Finish()
 	mSceneManager->Delete();
 }
 
-void GameEngine::OnResize(float Change_Width, float Change_Height)
+void GameEngine::OnResize(int Change_Width, int Change_Height)
 {
 	//윈도우 크기 재설정
 	WinSizeWidth	= Change_Width;
@@ -204,13 +204,26 @@ void GameEngine::ChoiceScene(std::string name)
 ///로드 관련 함수들
 void GameEngine::LoadMesh(std::string mMeshName, bool Scale, bool LoadAnime)
 {
+	std::string temp = "매쉬를 로드합니다 : " + mMeshName;
 	mLoadManager->LoadMesh(mMeshName, Scale, LoadAnime);
-	mDebugManager->Print(mMeshName, DebugManager::MSG_TYPE::MSG_LOAD);
+	mDebugManager->Print(temp, DebugManager::MSG_TYPE::MSG_LOAD);
+}
+
+void GameEngine::LoadTexture(std::string mTextureName)
+{
+	std::string temp = "텍스쳐를 로드합니다 : " + mTextureName;
+	mLoadManager->LoadTexture(mTextureName);
+	mDebugManager->Print(temp, DebugManager::MSG_TYPE::MSG_LOAD);
 }
 
 void GameEngine::LoadMeshPath(std::string mPath)
 {
 	mLoadManager->LoadMeshPath(mPath);
+}
+
+void GameEngine::LoadTexturePath(std::string mPath)
+{
+	mLoadManager->LoadTexturePath(mPath);
 }
 
 ///키인풋 함수들

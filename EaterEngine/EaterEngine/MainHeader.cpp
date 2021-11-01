@@ -68,38 +68,15 @@ EATER_ENGINEDLL void LoadMeshPath(std::string mPath)
 	gGameEngine->LoadMeshPath(mPath);
 }
 
-EATER_ENGINEDLL GameObject* CreateMainCamera(float x, float y, float z)
+EATER_ENGINEDLL void LoadTesture(std::string mPath)
 {
-	//오브젝트 생성
-	//GameObject* temp = new GameObject();
-	//ObjectManager::GM()->PushCreateObject(temp);
-	//
-	////필요 컨퍼넌트 생성
-	//temp->AddComponent<Transform>();
-	//temp->AddComponent<Camera>();
-	//
-	////메인카메라로 지정
-	//Camera* tempCamera = temp->GetComponent<Camera>();
-	//tempCamera->MainCamera = true;
-	//
-	//Transform* tempTransform = temp->GetComponent<Transform>();
-	//tempTransform->SetLocalUpdate(true);
-	//
-	//ObjectManager::GM()->PushMainCamObject(temp);
-	return nullptr;
+	gGameEngine->LoadTexture(mPath);
 }
 
-EATER_ENGINEDLL void ChoiceMainCamera(GameObject* obj)
+EATER_ENGINEDLL void LoadTesturePath(std::string mPath)
 {
-	//Camera* tempCamera = obj->GetComponent<Camera>();
-	//tempCamera->MainCamera = true;
-	//
-	//Transform* tempTransform = obj->GetComponent<Transform>();
-	//tempTransform->SetLocalUpdate(true);
-	//
-	//ObjectManager::GM()->PushMainCamObject(obj);
+	gGameEngine->LoadTexturePath(mPath);
 }
-
 
 ///키관련
 EATER_ENGINEDLL bool GetKeyDown(byte number)
