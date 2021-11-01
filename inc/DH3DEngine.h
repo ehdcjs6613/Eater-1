@@ -8,6 +8,11 @@ class D2DSupport;
 class AxisGrid;
 class SkyBox;
 
+class GameTimer;
+//테스트용 
+class Texture;
+
+
 class DH3DEngine
 {
 	/// 엔진내부에서 관리하면 좋은 변수들?
@@ -23,7 +28,7 @@ private:
 	bool Is_Draw_AxisGrid = false;
 
 	// skybox
-	ATL::CString Sky_Box_Path = "";
+	std::wstring Sky_Box_Path = L"";
 	SkyBox* m_SkyBox = nullptr;
 
 public:
@@ -38,13 +43,14 @@ public:
 	void SetDebug(bool _Is_Debug, int _Grid_Num = 50);
 
 	/// 스카이박스 셋팅
-	void SetSkyBox(ATL::CString _Sky_Box_Path);
+	void SetSkyBox(std::wstring _Sky_Box_Path);
 
 	/// 엔진 Draw 시작
 	void BeginDraw();
 
 	/// 엔진 Update ( Dtime 기반 )
-	void Update(float DTime);
+	void Update(GameTimer* _pTimer);
+	//void Update(float DTime);
 
 	/// 엔진 Draw
 	void RenderDraw(OneFrameData* _OFD, SharedRenderData* _SRD);
@@ -53,7 +59,7 @@ public:
 	void TextDraw(POINT _Pos, float _Width,
 		float r, float g, float b, float a,
 		float _Size, const wchar_t* _Input_String);
-	void LoadingDraw(ATL::CString _Loading_Path);
+	void LoadingDraw(std::wstring _Loading_Path);
 
 	/// 엔진 Draw 종료.
 	void EndDraw();
@@ -125,7 +131,7 @@ private:
 	ID3D11Texture2D* DX11_Depth_Stencil_Buffer = nullptr;
 	ID3D11DepthStencilState* DX11_Depth_Stencil_State = nullptr;
 	ID3D11DepthStencilView* DX11_Depth_Stencil_View = nullptr;
-	ID3D11RasterizerState* DX11_Raster_State = nullptr;	
+	ID3D11RasterizerState* DX11_Raster_State = nullptr;
 	D3D11_VIEWPORT DX11_View_Port = { 0, };					// 뷰포트
 
 private:
@@ -148,5 +154,8 @@ private:
 
 	ID3DX11Effect* mFX = nullptr;
 	ID3DX11EffectTechnique* mTech = nullptr;
+	/// 나중에 버릴거
+	Texture* m_pTestTexture;
+
 };
 

@@ -6,7 +6,7 @@
 class SkyBox
 {
 public:
-	SkyBox(ID3D11Device* device, const ATL::CString& cubemapFilename, float skySphereRadius);
+	SkyBox(ID3D11Device* device, const std::wstring& cubemapFilename, float skySphereRadius);
 	~SkyBox();
 
 	ID3D11ShaderResourceView* CubeMapSRV();
