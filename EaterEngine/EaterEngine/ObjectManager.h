@@ -67,8 +67,8 @@ public:
 	///오브젝트를 삭제한다
 	void DeleteObject();
 
-	std::queue<MeshData*>*		GetRenderQueue();
-	std::vector<DHParser::Mesh>* GetDHRenderQueue();
+	std::queue<MeshData*>*			GetRenderQueue();
+	std::vector<DHParser::Mesh>*	GetDHRenderQueue();
 	void DeleteRenderQueue();
 	
 

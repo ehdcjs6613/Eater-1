@@ -249,6 +249,11 @@ void ObjectManager::CreateDHRenderQueue()
 	}
 }
 
+std::queue<MeshData*>* ObjectManager::GetRenderQueue()
+{
+	return &RenderData;
+}
+
 std::vector<DHParser::Mesh>* ObjectManager::GetDHRenderQueue()
 {
 	return &DHRenderData;

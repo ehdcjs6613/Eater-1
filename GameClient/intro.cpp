@@ -16,19 +16,19 @@ void intro::Awake()
 	testobj = Instance();
 	testobj->AddComponent<Keyinput>();
 	testobj->AddComponent<Camera>();
-
-	
-	testobj = Instance("Table");
-	testobj->AddComponent<MeshFilter>()->SetMeshName("Table");
-	testobj->transform->Position = { 2, 0, 0 };
-
-	
-	for (int i = 0; i < 5; i++) 
-	{
-		testobj = Instance("Table");
-		testobj->AddComponent<MeshFilter>()->SetMeshName("Table");
-		testobj->transform->Position = {i*2.0f,0,0};
-	}
+	//
+	//
+	//testobj = Instance("Table");
+	//testobj->AddComponent<MeshFilter>()->SetMeshName("Table");
+	//testobj->transform->Position = { 2, 0, 0 };
+	//
+	//
+	//for (int i = 0; i < 5; i++) 
+	//{
+	//	testobj = Instance("Table");
+	//	testobj->AddComponent<MeshFilter>()->SetMeshName("Table");
+	//	testobj->transform->Position = {i*2.0f,0,0};
+	//}
 }
 
 void intro::Start()

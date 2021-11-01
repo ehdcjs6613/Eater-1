@@ -5,13 +5,14 @@
 #include "ModelParser.h"
 #include "Camera.h"
 #include "DH3DEngine.h"
-#include "atlstr.h"
+#include "GraphicEngineManager.h"
+
 
 
 std::map<std::string, LoadData*> LoadManager::MeshList;
 LoadManager::LoadManager()
 {
-	//EATER_Parser = nullptr;
+	GEngine = nullptr;
 }
 
 LoadManager::~LoadManager()
@@ -19,10 +20,12 @@ LoadManager::~LoadManager()
 
 }
 
-void LoadManager::Initialize(GraphicEngine* Graphic)
+void LoadManager::Initialize(GraphicEngineManager* Graphic)
 {
 	//그래픽 엔진 받아오기
 	GEngine = Graphic;
+	EaterParser = ModelParser::Create(ModelParser::FBX);
+	EaterParser->Initialize();
 }
 
 void LoadManager::Initialize(DH3DEngine* Graphic)
@@ -47,7 +50,7 @@ LoadData* LoadManager::GetMesh(std::string Name)
 
 void LoadManager::GetTexture(std::string Name)
 {
-
+	
 }
 
 void LoadManager::LoadMesh( std::string Name, bool Scale, bool LoadAnime)
@@ -60,16 +63,29 @@ void LoadManager::LoadMesh( std::string Name, bool Scale, bool LoadAnime)
 	//파서를 통해서 매쉬를 로드
 	 ParserData::Model* temp = EaterParser->LoadModel(FullName,Scale,LoadAnime);
 	
+
+	 LoadData* data = new LoadData();
+
 	 ///테스트용
 	 ////////////////////////////////////////////////////////////////////////////////////
 	 //로드한 데이터를 그래픽엔진으로 넘겨서 인덱스버퍼나 각종버퍼들을 생성하고 리스트에 넣어준다
-	 Test_DHData(temp, Name);
+	 //Test_DHData(temp, Name);
 	 //////////////////////////////////////////////////////////////////////////////////////
-	
+	Indexbuffer*	IB = GEngine->CreateIndexBuffer(temp);
+	Vertexbuffer*	VB = GEngine->CreateVertexBuffer(temp);
+
+	data->IB = IB;
+	data->VB = VB;
+	data->indexCount = temp->m_MeshList[0]->m_IndexList.size();
+	data->vertexCount = temp->m_MeshList[0]->m_VertexList.size();
 
 
-	 //그래픽 엔진이 붙게되면이걸로
-	 //void CreateBuffer(ParserData::Model * mesh);
+	MeshList.insert({Name,data});
+}
+
+void LoadManager::LoadTexture(std::string Name)
+{
+	GEngine->CreateTextureBuffer(Name);
 }
 
 void LoadManager::LoadPrefap(std::string Name)

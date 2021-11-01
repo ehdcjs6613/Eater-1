@@ -21,7 +21,9 @@ class LoadManager;
 class ObjectManager;
 class SceneManager;
 class KeyinputManager;
-class GraphicEngine;
+class GraphicEngineManager;
+
+class HsGraphic;
 class Scene;
 //게임 오브젝트
 class GameObject;
@@ -54,7 +56,6 @@ public:
 	void LoadMesh(std::string mMeshName, bool Scale = true, bool LoadAnime = false);
 	void LoadMeshPath(std::string mPath);
 
-	
 public:
 	///키관련 
 	bool  GetKeyDown(byte number);	//키다운
@@ -65,12 +66,12 @@ public:
 	float GetMousePosY();			//마우스 위치 Y
 private:
 	///각종 매니저들
-	ObjectManager*		mObjectManager;		//오브젝트 관리 매니저
-	DebugManager*		mDebugManager;		//디버깅매니저
-	LoadManager*		mLoadManager;		//로드 관련 매니저
-	SceneManager*		mSceneManager;		//스크린 관리 매니저
-	KeyinputManager*	mKeyManager;		//키인풋 관련 매니저
-
+	ObjectManager*			mObjectManager;		//오브젝트 관리 매니저
+	DebugManager*			mDebugManager;		//디버깅매니저
+	LoadManager*			mLoadManager;		//로드 관련 매니저
+	SceneManager*			mSceneManager;		//스크린 관리 매니저
+	KeyinputManager*		mKeyManager;		//키인풋 관련 매니저
+	GraphicEngineManager*	mGraphicManager;	//그래픽엔진 관리 매니저
 private:
 	///클라쪽에서 받아야 하는 데이터
 	HWND mHwnd; //핸들
@@ -78,14 +79,12 @@ private:
 	int WinSizeHeight;	//윈도우 사이즈 세로
 	bool ConsoleDebug;
 private:
-	///그래픽 엔진
-	GraphicEngine* NowGraphicEngine;
-
+	
 	
 	//테스트용 엔진
-	DH3DEngine*			pTest_Engine;
-	OneFrameData*		pTest_OFD;
-	SharedRenderData*	pTest_SRD;
-	DHParser::Mesh*		pTest_Mesh;
+	//DH3DEngine*			pTest_Engine;
+	//OneFrameData*		pTest_OFD;
+	//SharedRenderData*	pTest_SRD;
+	//DHParser::Mesh*		pTest_Mesh;
 };
 

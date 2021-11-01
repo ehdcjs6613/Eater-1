@@ -6,29 +6,30 @@
 #include "ObjectManager.h"
 #include "SceneManager.h"
 #include "DebugManager.h"
-#include "Camera.h"
+#include "GraphicEngineManager.h"
+
+#include "ParserData.h"
+#include "EngineData.h"
 //오브젝트
 #include "GameObject.h"
 
 //컨퍼넌트
 #include "Transform.h"
+#include "Camera.h"
 
 //테스트용
 #include "DH3DEngine.h"
-#include "GraphicsEngine.h"
+#include "HsGraphic.h";
 
 
 GameEngine::GameEngine()
 {
-	//디버깅 매니저
 	mDebugManager	= nullptr;
 	mLoadManager	= nullptr;
 	mObjectManager	= nullptr;
 	mSceneManager	= nullptr;
 	mKeyManager		= nullptr;
 
-	//그래픽 엔진 테스트용
-	NowGraphicEngine = nullptr;
 
 	//기본 윈도우 사이즈 설정
 	WinSizeWidth	= 1920;
@@ -55,10 +56,10 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 	mObjectManager	= new ObjectManager();
 	mSceneManager	= new SceneManager();
 	mDebugManager	= new DebugManager();
+	mGraphicManager = new GraphicEngineManager();
 
 	//그래픽 엔진 생성
-	pTest_Engine = new DH3DEngine();
-
+	//pTest_Engine = new DH3DEngine();
 
 
 
@@ -67,15 +68,34 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 	mDebugManager->Initialize(mKeyManager,mConsoleDebug);
 	mSceneManager->Initialize();
 	mObjectManager->Initialize(mHwnd);
-	//테스트용 이곳에 그래픽엔진을 넘겨주면된다
-	mLoadManager->Initialize(pTest_Engine);
-	pTest_OFD = new OneFrameData();
-	pTest_SRD = new SharedRenderData();
+	mLoadManager->Initialize(mGraphicManager);
+	//mLoadManager->Initialize(pTest_Engine);
 
-	pTest_Engine->Initialize(Hwnd, WinSizeWidth, WinSizeHeight);
-	pTest_Engine->SetDebug(true);
 
+
+
+	/// <summary>
+	/// 여기 두부분만 해주면 그래픽엔진 매니저에서 알아서 해줄꺼임
+	/// </summary>
+	/////////////////////////////////////////////////////////////////
+	mGraphicManager->PushEngine<HsGraphic>("형선");
+	mGraphicManager->ChoiceEngine("형선");
+	/////////////////////////////////////////////////////////////////
+
+
+	//지울 부분
+	/////////////////////////////////////////////////////////////////
+	//pTest_OFD = new OneFrameData();
+	//pTest_SRD = new SharedRenderData();
+	//pTest_Engine->Initialize(Hwnd, WinSizeWidth, WinSizeHeight);
+	//pTest_Engine->SetDebug(true);
+	//////////////////////////////////////////////////////////////////
 	
+
+
+
+	mGraphicManager->Initialize(Hwnd, WinSizeWidth, WinSizeHeight);
+	//처음시작하기전 엔진의 구조간략설명
 	mDebugManager->printStart();
 }
 
@@ -89,22 +109,25 @@ void GameEngine::Update()
 	
 
 
-
-
+	
+	
 	/// 테스트용
 	////////////////////////////////////////////////////////////////////////////////////
-	pTest_OFD->World_Eye_Position	= DirectX::SimpleMath::Vector3(10.f, 8.f, -10.f);
-	pTest_OFD->Main_Position		= DirectX::SimpleMath::Vector3(0.f, 0.f, 0.f);
-	pTest_OFD->View_Matrix			= *Camera::GetMainView();
-	pTest_OFD->Projection_Matrix	= *Camera::GetProj();
-	pTest_SRD->Render_Mesh_List		= mObjectManager->GetDHRenderQueue();
-	//업데이트가 끝나고 랜더링 테스트용
-	pTest_Engine->BeginDraw();
-	pTest_Engine->TextDraw({ (int)(1920 - 350), 10 }, 500, 0, 1, 0, 1, 30, L"카메라 모드 변경 : C");
-	pTest_Engine->RenderDraw(pTest_OFD, pTest_SRD);
-	pTest_Engine->EndDraw();
+	//pTest_OFD->World_Eye_Position	= DirectX::SimpleMath::Vector3(10.f, 8.f, -10.f);
+	//pTest_OFD->Main_Position		= DirectX::SimpleMath::Vector3(0.f, 0.f, 0.f);
+	//pTest_OFD->View_Matrix			= *Camera::GetMainView();
+	//pTest_OFD->Projection_Matrix	= *Camera::GetProj();
+	//pTest_SRD->Render_Mesh_List		= mObjectManager->GetDHRenderQueue();
+	////업데이트가 끝나고 랜더링 테스트용
+	//pTest_Engine->BeginDraw();
+	//pTest_Engine->TextDraw({ (int)(1920 - 350), 10 }, 500, 0, 1, 0, 1, 30, L"카메라 모드 변경 : C");
+	//pTest_Engine->RenderDraw(pTest_OFD, pTest_SRD);
+	//pTest_Engine->EndDraw();
 	////////////////////////////////////////////////////////////////////////////////////
 	
+	mGraphicManager->Render(mObjectManager->GetRenderQueue(), mObjectManager->GetGlobalData());
+
+
 
 
 
@@ -129,7 +152,8 @@ void GameEngine::OnResize(float Change_Width, float Change_Height)
 	WinSizeHeight	= Change_Height;
 		
 	//그래픽 엔진의 리사이즈 함수를 넣으면 될듯
-	pTest_Engine->On_Resize(WinSizeWidth, WinSizeHeight);
+	//pTest_Engine->On_Resize(WinSizeWidth, WinSizeHeight);
+	mGraphicManager->OnReSize(Change_Width, Change_Height);
 	mDebugManager->Print("윈도우 사이즈 변경",DebugManager::MSG_TYPE::MSG_ENGINE);
 }
 

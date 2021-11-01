@@ -1,0 +1,26 @@
+﻿  Camera.cpp
+C:\Users\KGIT20\Documents\GitHub\Eater\EaterEngine\EaterEngine\ObjectManager.h(10,10): fatal error C1083: 포함 파일을 열 수 없습니다. 'SharedData.h': No such file or directory
+  GameEngine.cpp
+C:\Users\KGIT20\Documents\GitHub\Eater\EaterEngine\EaterEngine\GameEngine.h(4,10): fatal error C1083: 포함 파일을 열 수 없습니다. 'SharedData.h': No such file or directory
+  GameObject.cpp
+C:\Users\KGIT20\Documents\GitHub\Eater\EaterEngine\EaterEngine\ObjectManager.h(10,10): fatal error C1083: 포함 파일을 열 수 없습니다. 'SharedData.h': No such file or directory
+  GraphicsEngine.cpp
+C:\Users\KGIT20\Documents\GitHub\Eater\EaterEngine\EaterEngine\EngineData.h(24,1): warning C4099: 'GlobalData': 처음에는 'class'을(를) 사용하여 형식 이름을 표시했는데 이제는 'struct'을(를) 사용하여 표시합니다.
+C:\Users\KGIT20\Documents\GitHub\Eater\EaterEngine\EaterEngine\EngineData.h(23): message : 'GlobalData' 선언을 참조하십시오.
+C:\Users\KGIT20\Documents\GitHub\Eater\EaterEngine\EaterEngine\GraphicsEngine.cpp(3,10): fatal error C1083: 포함 파일을 열 수 없습니다. 'ParserData.h': No such file or directory
+  KeyinputManager.cpp
+  MainHeader.cpp
+C:\Users\KGIT20\Documents\GitHub\Eater\EaterEngine\EaterEngine\GameEngine.h(4,10): fatal error C1083: 포함 파일을 열 수 없습니다. 'SharedData.h': No such file or directory
+  MeshFilter.cpp
+C:\Users\KGIT20\Documents\GitHub\Eater\EaterEngine\EaterEngine\ObjectManager.h(10,10): fatal error C1083: 포함 파일을 열 수 없습니다. 'SharedData.h': No such file or directory
+  ObjectManager.cpp
+C:\Users\KGIT20\Documents\GitHub\Eater\EaterEngine\EaterEngine\ObjectManager.h(10,10): fatal error C1083: 포함 파일을 열 수 없습니다. 'SharedData.h': No such file or directory
+  LoadManager.cpp
+C:\Users\KGIT20\Documents\GitHub\Eater\EaterEngine\EaterEngine\LoadManager.h(14,10): fatal error C1083: 포함 파일을 열 수 없습니다. 'ParserData.h': No such file or directory
+  Scene.cpp
+  SceneManager.cpp
+C:\Users\KGIT20\Documents\GitHub\Eater\EaterEngine\EaterEngine\ObjectManager.h(10,10): fatal error C1083: 포함 파일을 열 수 없습니다. 'SharedData.h': No such file or directory
+  TimeManager.cpp
+  Transform.cpp
+C:\Users\KGIT20\Documents\GitHub\Eater\EaterEngine\EaterEngine\ObjectManager.h(10,10): fatal error C1083: 포함 파일을 열 수 없습니다. 'SharedData.h': No such file or directory
+  코드를 생성하고 있습니다...
