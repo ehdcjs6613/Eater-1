@@ -1,7 +1,7 @@
-
+#include "GameTimer.h"
+#include "D2DSupport.h"
 #include "DH3DEngine.h"
 #include "SkyBox.h"
-#include "D2DSupport.h"
 #include "AxisGrid.h"
 
 DH3DEngine::DH3DEngine()
@@ -281,7 +281,7 @@ void DH3DEngine::SetDebug(bool _Is_Debug, int _Grid_Num)
 	m_AxisGrid->Initialize(_Grid_Num);
 }
 
-void DH3DEngine::SetSkyBox(ATL::CString _Sky_Box_Path)
+void DH3DEngine::SetSkyBox(std::wstring _Sky_Box_Path)
 {
 	Sky_Box_Path = _Sky_Box_Path;
 }
@@ -303,14 +303,37 @@ void DH3DEngine::BeginDraw()
 	DX11_Device_Context->ClearDepthStencilView(DX11_Depth_Stencil_View, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 }
-
-void DH3DEngine::Update(float DTime)
+/// <summary>
+/// 엔진에서는 게임타이머의 포인터를 넘겨서 적용시킨다.
+/// </summary>
+/// <param name="_pTimer"></param>
+void DH3DEngine::Update(GameTimer* _pTimer)
 {
-	m_Delta_Time = DTime;
+	//이전과 현재 프레임간의 시간계산함수
+	_pTimer->Tick();
 
-	// view TM을 만든다.
-	//m_DHCamera->UpdateViewMatrix();
+	//프레임카운트와
+	static int frameCnt = 0;
+	//누적시간
+	static float timeElapsed = 0.0f;
+	//프레임을 카운트를 늘려주고
+	frameCnt++;
+
+	// Compute averages over one second period.
+	//1초 동안의 평균을 계산합니다.
+	if ((_pTimer->TotalTime() - timeElapsed) >= 1.0f)
+	{
+		float fps = (float)frameCnt; // fps = frameCnt / 1
+		float mspf = 1000.0f / fps;
+	}
 }
+//void DH3DEngine::Update(float DTime)
+//{
+//	m_Delta_Time = DTime;
+//
+//	// view TM을 만든다.
+//	//m_DHCamera->UpdateViewMatrix();
+//}
 
 
 void DH3DEngine::RenderDraw(OneFrameData* _OFD, SharedRenderData* _SRD)
@@ -468,7 +491,7 @@ void DH3DEngine::UIDraw(Shared2DRenderData* _S2DRD)
 	{
 		m_D2DSupport->Push_DrawText(POINT{ (int)_S2DRD->Play_Text_Att.Position.x, (int)_S2DRD->Play_Text_Att.Position.y },
 			1200, _S2DRD->Play_Text_Att.Color.x, _S2DRD->Play_Text_Att.Color.y, _S2DRD->Play_Text_Att.Color.z,
-			_S2DRD->Play_Text_Att.Alpha, _S2DRD->Play_Text_Att.Size, _S2DRD->Play_Text_String);
+			_S2DRD->Play_Text_Att.Alpha, _S2DRD->Play_Text_Att.Size, _S2DRD->Play_Text_String.c_str());
 	}
 
 	if (!_S2DRD->Is_Img_Load)
@@ -499,7 +522,7 @@ void DH3DEngine::TextDraw(POINT _Pos, float _Width, float r, float g, float b, f
 	m_D2DSupport->Push_DrawText(_Pos, _Width, r, g, b, a, _Size, _Input_String);
 }
 
-void DH3DEngine::LoadingDraw(ATL::CString _Loading_Path)
+void DH3DEngine::LoadingDraw(std::wstring _Loading_Path)
 {
 	m_D2DSupport->LoadLoadingImage(_Loading_Path);
 
@@ -579,7 +602,7 @@ void DH3DEngine::Finalize()
 void DH3DEngine::DrawSkyBox(OneFrameData* _OFD)
 {
 	// 스카이박스가 설정되어 있지 않다면.. return
-	if (Sky_Box_Path == "" && m_SkyBox == nullptr)
+	if (Sky_Box_Path ==  L"" && m_SkyBox == nullptr)
 	{
 		return;
 	}
@@ -614,7 +637,7 @@ void DH3DEngine::SetTextureSRV(SharedRenderData* _SRD)
 			// 텍스쳐 SRV
 			ID3D11ShaderResourceView* DX11_SRV = nullptr;
 			// 텍스쳐 정보 셋팅.
-			CreateWICTextureFromFile(DX11_Device, k.second->Texture_Path, &Texture_Resource, &DX11_SRV);
+			CreateWICTextureFromFile(DX11_Device, k.second->Texture_Path.c_str(), &Texture_Resource, &DX11_SRV);
 			ReleaseCOM(Texture_Resource);
 
 			k.second->Texture_SRV = DX11_SRV;
@@ -630,7 +653,7 @@ void DH3DEngine::SetTextureSRV(SharedRenderData* _SRD)
 			// 텍스쳐 SRV
 			ID3D11ShaderResourceView* DX11_SRV = nullptr;
 			// 텍스쳐 정보 셋팅.
-			CreateWICTextureFromFile(DX11_Device, k.second->Texture_Path, &Texture_Resource, &DX11_SRV);
+			CreateWICTextureFromFile(DX11_Device, k.second->Texture_Path.c_str(), &Texture_Resource, &DX11_SRV);
 			ReleaseCOM(Texture_Resource);
 
 			k.second->Texture_SRV = DX11_SRV;
@@ -646,7 +669,7 @@ void DH3DEngine::SetTextureSRV(SharedRenderData* _SRD)
 			// 텍스쳐 SRV
 			ID3D11ShaderResourceView* DX11_SRV = nullptr;
 			// 텍스쳐 정보 셋팅.
-			CreateWICTextureFromFile(DX11_Device, k.second->Texture_Path, &Texture_Resource, &DX11_SRV);
+			CreateWICTextureFromFile(DX11_Device, k.second->Texture_Path.c_str(), &Texture_Resource, &DX11_SRV);
 			ReleaseCOM(Texture_Resource);
 
 			k.second->Texture_SRV = DX11_SRV;
@@ -662,7 +685,7 @@ void DH3DEngine::SetTextureSRV(SharedRenderData* _SRD)
 			// 텍스쳐 SRV
 			ID3D11ShaderResourceView* DX11_SRV = nullptr;
 			// 텍스쳐 정보 셋팅.
-			CreateWICTextureFromFile(DX11_Device, k.second->Texture_Path, &Texture_Resource, &DX11_SRV);
+			CreateWICTextureFromFile(DX11_Device, k.second->Texture_Path.c_str(), &Texture_Resource, &DX11_SRV);
 			ReleaseCOM(Texture_Resource);
 
 			k.second->Texture_SRV = DX11_SRV;
@@ -678,7 +701,7 @@ void DH3DEngine::SetTextureSRV(SharedRenderData* _SRD)
 			// 텍스쳐 SRV
 			ID3D11ShaderResourceView* DX11_SRV = nullptr;
 			// 텍스쳐 정보 셋팅.
-			CreateWICTextureFromFile(DX11_Device, k.second->Texture_Path, &Texture_Resource, &DX11_SRV);
+			CreateWICTextureFromFile(DX11_Device, k.second->Texture_Path.c_str(), &Texture_Resource, &DX11_SRV);
 			ReleaseCOM(Texture_Resource);
 
 			k.second->Texture_SRV = DX11_SRV;

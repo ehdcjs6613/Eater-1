@@ -4,7 +4,7 @@
 	2021/08/10 CDH - 최동혁
 	<작업내용>
 		Scene 에서 엔진으로 그리기 위해서 필요한 정보들만 담아둔 구조체 생성.
-	<주요 동작>	
+	<주요 동작>
 		해당 구조체를 통해 Render() 를 할때 데이터를 전달하여, 이를 기반으로 해서 엔진에서 그린다.
 			=> VB , IB, Shader 등의 사용정보들이 들어갈 예정.
 */
@@ -35,7 +35,7 @@ struct SharedRenderData
 
 	// 텍스쳐가 셋팅 되었는지 여부.
 	bool Texture_SetUp = false;
-	
+
 };
 
 /// 2D 데이터를 그릴 때 필요한 데이터.
@@ -43,12 +43,12 @@ struct Shared2DRenderData
 {
 	// 텍스트 재생 (현재는 한 UI에 하나의 텍스트만 띄울수 있음)
 	DHRENDER::TextTCSA Play_Text_Att;
-	ATL::CString Play_Text_String;
+	std::wstring Play_Text_String;
 	bool Is_Text = false;	// 텍스트가 존재하는 UI인가?
 	// 이미지의 속성값들.
-	std::map<ATL::CString, DHRENDER::ImageTRSA*> Img_List;
+	std::map<std::wstring, DHRENDER::ImageTRSA*> Img_List;
 	// 이미지 로드시 필요한 변수.
-	std::map<ATL::CString, ATL::CString> Img_Path_List;
+	std::map<std::wstring, std::wstring> Img_Path_List;
 	bool Is_Img_Load = false;
 	// 이미지들을 전체적으로 묶어서 관리할 UI 속성
 	DHRENDER::ImageTRSA UI_TRSA;
