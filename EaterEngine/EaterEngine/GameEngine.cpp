@@ -107,6 +107,7 @@ void GameEngine::Update()
 
 	
 	pX3Engine->Render(0,0);
+
 	pX3Engine->DrawSystemStatus();
 
 	//pTest_Engine->BeginDraw();

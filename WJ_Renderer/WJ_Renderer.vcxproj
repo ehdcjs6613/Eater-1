@@ -164,6 +164,7 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)lib"
     <ClCompile Include="DirectXDevice.cpp" />
     <ClCompile Include="DirectXDeviceContext.cpp" />
     <ClCompile Include="DirectXRasterizerState.cpp" />
+    <ClCompile Include="DirectXRenderTargeter.cpp" />
     <ClCompile Include="DirectXSwapChain.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="RenderQueue.cpp" />
@@ -176,6 +177,7 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)lib"
     <ClInclude Include="DirectXDevice.h" />
     <ClInclude Include="DirectXDeviceContext.h" />
     <ClInclude Include="DirectXRasterizerState.h" />
+    <ClInclude Include="DirectXRenderTargeter.h" />
     <ClInclude Include="DirectXSwapChain.h" />
     <ClInclude Include="OneCompile.h" />
     <ClInclude Include="RenderQueue.h" />

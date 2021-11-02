@@ -181,9 +181,11 @@ void X3Engine::Initialize(HWND _hWnd, int screenWidth, int screenHeight)
 	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 
 	// Don't set the advanced flags.
-	swapChainDesc.Flags = 0;
+	//  플래그는 세우지않는다
+	swapChainDesc.Flags = false;
 
 	// Set the feature level to DirectX 11.
+	// 형상 레벨을 DirectX 11로 설정
 	m_FeatureLevel = D3D_FEATURE_LEVEL_11_0;
 
 	// 스왑 체인과 Device를 같이 생성. (D2D를 지원하기 위해 옵션으로 BGRA 를 셋팅 해 두었다.)
@@ -197,21 +199,28 @@ void X3Engine::Initialize(HWND _hWnd, int screenWidth, int screenHeight)
 	);
 
 	// Get the pointer to the back buffer.
+	//포인터를 뒤쪽 버퍼로 가져갑니다.
 	(m_pSwapChain->GetSwapChain()->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBufferPtr));
+	
+	if (nullptr == backBufferPtr) { return; }
 
 	// Create the render target view with the back buffer pointer.
+	// 백 버퍼 포인터를 사용하여 렌더 대상 뷰를 작성합니다.
 	m_pDevice->GetDevice()->CreateRenderTargetView
 	(
 		backBufferPtr, NULL, &m_pRenderer->m_pRenderTarget[0]
 	);
 
 	// Release pointer to the back buffer as we no longer need it.
+	// 더 이상 필요하지 않으므로 후면 버퍼에 대한 삭제 함수입니다.
 	SAFE_RELEASE(backBufferPtr);
 
 	// Initialize the description of the depth buffer.
+	// 깊이버퍼에 대한 설명을 초기화 합니다.
 	ZeroMemory(&depthBufferDesc, sizeof(depthBufferDesc));
 
 	// Set up the description of the depth buffer.
+	// 깊이 버퍼에 대한 설명을 설정합니다.
 	depthBufferDesc.Width = m_iWidth;
 	depthBufferDesc.Height = m_iHeight;
 	depthBufferDesc.MipLevels = 1;
@@ -267,6 +276,7 @@ void X3Engine::Initialize(HWND _hWnd, int screenWidth, int screenHeight)
 
 	if (nullptr == m_pRenderer->m_pDepthStencil_Buffer) { return; }
 	// Create the depth stencil view.
+	// 뎁스스텐실 뷰를 만듭니다.
 	m_pDevice->m_pDX11Device->CreateDepthStencilView
 	(
 		m_pRenderer->m_pDepthStencil_Buffer, 
@@ -280,6 +290,7 @@ void X3Engine::Initialize(HWND _hWnd, int screenWidth, int screenHeight)
 	);
 
 	// Setup the raster description which will determine how and what polygons will be drawn.
+	// 그릴 폴리곤과 방법을 결정하는 래스터 설명을 설정합니다.
 	rasterDesc.AntialiasedLineEnable = false;
 	rasterDesc.CullMode = D3D11_CULL_BACK;
 	rasterDesc.DepthBias = 0;
@@ -401,11 +412,29 @@ void X3Engine::OnReSize(float Change_Width, float Change_Height)
 
 void X3Engine::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 {
+	//렌더링시작의 순서.
+	//나중에 렌더 큐? 같은걸로 해보자,
 	m_pRenderer->Render_Begin(m_pDeviceContext->m_pDX11DeviceContext);
 	
 	m_pRenderer->Render_Update(m_pDeviceContext->m_pDX11DeviceContext);
 
+	m_pRenderer->Render_LateUpdate(m_pDeviceContext->m_pDX11DeviceContext);
+
 	m_pRenderer->Render_End(m_pDeviceContext->m_pDX11DeviceContext);
+
+	int _yPos = 50;
+	int _Text_Offset = 21;
+	//
+	m_pGraphics2D->Push_DrawText({ 10, _yPos }, 500, 1, 0, 0, 1, 20, (TCHAR*)L"Description: %s", m_pAdapter->GetAdapter().Description);
+	m_pGraphics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 1, 0, 1, 20, (TCHAR*)L"VendorID: %u", m_pAdapter->GetAdapter().VendorId);
+	m_pGraphics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 1, 0, 1, 20, (TCHAR*)L"DeviceID: %u", m_pAdapter->GetAdapter().DeviceId);
+	m_pGraphics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 1, 0, 1, 20, (TCHAR*)L"SubSysID: %u", m_pAdapter->GetAdapter().SubSysId);
+	m_pGraphics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 1, 0, 1, 20, (TCHAR*)L"Revision: %u", m_pAdapter->GetAdapter().Revision);
+	m_pGraphics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 0, 1, 1, 20, (TCHAR*)L"VideoMemory: %lu MB", m_pAdapter->GetAdapter().DedicatedVideoMemory / 1024 / 1024);
+	m_pGraphics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 0, 1, 1, 20, (TCHAR*)L"SystemMemory: %lu MB", m_pAdapter->GetAdapter().DedicatedSystemMemory / 1024 / 1024);
+	m_pGraphics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 0, 1, 1, 20, (TCHAR*)L"SharedSysMemory: %lu MB", m_pAdapter->GetAdapter().SharedSystemMemory / 1024 / 1024);
+	m_pGraphics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 1, 1, 0, 1, 20, (TCHAR*)L"AdpaterLuid: %u.%d", m_pAdapter->GetAdapter().AdapterLuid.HighPart, m_pAdapter->GetAdapter().AdapterLuid.LowPart);
+
 
 	m_pSwapChain->m_pSwapChain->Present(0, false);
 
@@ -420,19 +449,7 @@ void X3Engine::CreateRenderState()
 void X3Engine::DrawSystemStatus()
 {
 	// 피쳐레벨
-	int _yPos = 50;
-	int _Text_Offset = 21;
 	
-	m_pGraphics2D->Push_DrawText({ 10, _yPos }, 500, 1, 0, 0, 1, 20, (TCHAR*)L"Description: %s", m_pAdapter->GetAdapter().Description);
-	m_pGraphics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 1, 0, 1, 20, (TCHAR*)L"VendorID: %u", m_pAdapter->GetAdapter().VendorId);
-	m_pGraphics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 1, 0, 1, 20, (TCHAR*)L"DeviceID: %u", m_pAdapter->GetAdapter().DeviceId);
-	m_pGraphics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 1, 0, 1, 20, (TCHAR*)L"SubSysID: %u", m_pAdapter->GetAdapter().SubSysId);
-	m_pGraphics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 1, 0, 1, 20, (TCHAR*)L"Revision: %u", m_pAdapter->GetAdapter().Revision);
-	m_pGraphics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 0, 1, 1, 20, (TCHAR*)L"VideoMemory: %lu MB", m_pAdapter->GetAdapter().DedicatedVideoMemory / 1024 / 1024);
-	m_pGraphics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 0, 1, 1, 20, (TCHAR*)L"SystemMemory: %lu MB", m_pAdapter->GetAdapter().DedicatedSystemMemory / 1024 / 1024);
-	m_pGraphics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 0, 1, 1, 20, (TCHAR*)L"SharedSysMemory: %lu MB", m_pAdapter->GetAdapter().SharedSystemMemory / 1024 / 1024);
-	m_pGraphics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 1, 1, 0, 1, 20, (TCHAR*)L"AdpaterLuid: %u.%d", m_pAdapter->GetAdapter().AdapterLuid.HighPart, m_pAdapter->GetAdapter().AdapterLuid.LowPart);
-
 }
 
 void X3Engine::SetTextureSRV(SharedRenderData* _SRD)
