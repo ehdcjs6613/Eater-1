@@ -143,7 +143,7 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)lib"</Command>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalLibraryDirectories>$(SolutionDir)lib;$(SolutionDir)lib\DirectXTK2021_06_14;$(SolutionDir)lib\FX11_2021_06_14</AdditionalLibraryDirectories>
-      <AdditionalDependencies>GraphicEngine.lib;KHParser_x64d.lib;libfbxsdk.lib;WJ_Renderer.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>GraphicEngine.lib;KHParser_x64d.lib;libfbxsdk.lib;HsGraphic_x64d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy /Y "$(ProjectDir)*.h" "$(SolutionDir)inc"
@@ -190,6 +190,7 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)lib"</Command>
     <ClInclude Include="framework.h" />
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="GraphicEngineManager.h" />
     <ClInclude Include="GraphicsEngine.h" />
     <ClInclude Include="KeyinputManager.h" />
     <ClInclude Include="MainHeader.h" />
@@ -199,7 +200,6 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)lib"</Command>
     <ClInclude Include="ResourcesData.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneManager.h" />
-    <ClInclude Include="Texture.h" />
     <ClInclude Include="TimeManager.h" />
     <ClInclude Include="Transform.h" />
   </ItemGroup>
@@ -211,6 +211,7 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)lib"</Command>
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="GameEngine.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="GraphicEngineManager.cpp" />
     <ClCompile Include="GraphicsEngine.cpp" />
     <ClCompile Include="KeyinputManager.cpp" />
     <ClCompile Include="MainHeader.cpp" />
@@ -219,7 +220,6 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)lib"</Command>
     <ClCompile Include="LoadManager.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneManager.cpp" />
-    <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TimeManager.cpp" />
     <ClCompile Include="Transform.cpp" />
   </ItemGroup>

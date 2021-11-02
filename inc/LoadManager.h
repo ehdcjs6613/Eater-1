@@ -20,9 +20,9 @@ class LoadData;
 class ModelParser;
 class FBXParser;
 class FBXModel;
-
+class DH3DEngine;
 class GraphicEngine;
-class X3Engine;
+class GraphicEngineManager;
 
 class LoadManager
 {
@@ -33,9 +33,9 @@ public:
 	
 
 	//초기화 및 경로 설정
-	void Initialize(GraphicEngine* Graphic);
+	void Initialize(GraphicEngineManager* Graphic);
 	//테스트용
-	void Initialize(X3Engine* Graphic);
+	void Initialize(DH3DEngine* Graphic);
 public:
 	///GET
 	//매쉬 가져오기
@@ -46,6 +46,7 @@ public:
 	///Load
 	//모델 로드(스크린 이름,모델의 이름,스케일 여부,애니메이션 여부)
 	void LoadMesh(std::string Name, bool Scale = true,bool LoadAnime = false);
+	void LoadTexture(std::string Name);
 	//프리펩 로드
 	void LoadPrefap(std::string Name);
 
@@ -71,9 +72,9 @@ private:
 	static std::map<std::string,LoadData*> MeshList;
 private:
 	//규황이 파서
-	ModelParser*	EaterParser;
+	ModelParser* EaterParser;
 	//누군가의 그래픽 엔진
-	GraphicEngine*	GEngine;
+	GraphicEngineManager* GEngine;
 
 	//그래픽엔진을 통해서 인덱스버퍼와 버텍스 버퍼를 생성
 	void CreateBuffer(ParserData::Model* mesh);
@@ -82,11 +83,10 @@ private:
 
 
 	///여기부터는 동혁이꺼 테스트용
-	X3Engine*			WJEngine;
+	DH3DEngine*			DHEngine;
 	OneFrameData*		pTest_OFD;
 	SharedRenderData*	pTest_SRD;
 	DHParser::Mesh*		pTest_Mesh;
-	//ParserData::Model*		pTest_Mesh;
 
 
 	void Test_DHData(ParserData::Model* mModel, std::string Name);

@@ -21,15 +21,14 @@ class LoadManager;
 class ObjectManager;
 class SceneManager;
 class KeyinputManager;
-class GraphicEngine;
+class GraphicEngineManager;
+
+class HsGraphic;
 class Scene;
 //게임 오브젝트
 class GameObject;
 
-//테스트용 클래스
-class X3Engine;
-class Texture;
-class Grahpics2D;
+class DH3DEngine;
 
 class GameEngine
 {
@@ -43,7 +42,7 @@ public:
 	void Initialize(HWND gHwnd,bool mConsoleDebug = true);//초기화
 	void Update();				//엔진 가동
 	void Finish();				//엔진 중지
-	void OnResize(float Change_Width, float Change_Height); //리사이즈
+	void OnResize(int Change_Width, int Change_Height); //리사이즈
 public:
 	///오브젝트 관련(오브젝트 매니저)
 	GameObject* Instance(std::string ObjName = "GameObject");	//obj 생성
@@ -54,10 +53,11 @@ public:
 	void ChoiceScene(std::string name);					//씬 선택
 public:
 	///로드 관련 
-	void LoadMesh(std::string mMeshName, bool Scale = true, bool LoadAnime = false);
 	void LoadMeshPath(std::string mPath);
+	void LoadTexturePath(std::string mPath);
+	void LoadMesh(std::string mMeshName, bool Scale = true, bool LoadAnime = false);
+	void LoadTexture(std::string mMeshName);
 
-	
 public:
 	///키관련 
 	bool  GetKeyDown(byte number);	//키다운
@@ -68,13 +68,12 @@ public:
 	float GetMousePosY();			//마우스 위치 Y
 private:
 	///각종 매니저들
-	ObjectManager*		mObjectManager;		//오브젝트 관리 매니저
-	DebugManager*		mDebugManager;		//디버깅매니저
-	LoadManager*		mLoadManager;		//로드 관련 매니저
-	SceneManager*		mSceneManager;		//스크린 관리 매니저
-	KeyinputManager*	mKeyManager;		//키인풋 관련 매니저
-	Grahpics2D*			mUI;
-
+	ObjectManager*			mObjectManager;		//오브젝트 관리 매니저
+	DebugManager*			mDebugManager;		//디버깅매니저
+	LoadManager*			mLoadManager;		//로드 관련 매니저
+	SceneManager*			mSceneManager;		//스크린 관리 매니저
+	KeyinputManager*		mKeyManager;		//키인풋 관련 매니저
+	GraphicEngineManager*	mGraphicManager;	//그래픽엔진 관리 매니저
 private:
 	///클라쪽에서 받아야 하는 데이터
 	HWND mHwnd; //핸들
@@ -82,21 +81,12 @@ private:
 	int WinSizeHeight;	//윈도우 사이즈 세로
 	bool ConsoleDebug;
 private:
-	///그래픽 엔진
-	GraphicEngine* NowGraphicEngine;
-
+	
 	
 	//테스트용 엔진
 	//DH3DEngine*			pTest_Engine;
-	X3Engine*			pX3Engine;
-
-	OneFrameData*		pTest_OFD;
-	SharedRenderData*	pTest_SRD;
-	DHParser::Mesh*		pTest_Mesh;
-
-private:
-	//테스트용 
-	IDXGISwapChain* DX11_Swap_Chain = nullptr;
-	Texture* m_pTexture = nullptr;
+	//OneFrameData*		pTest_OFD;
+	//SharedRenderData*	pTest_SRD;
+	//DHParser::Mesh*		pTest_Mesh;
 };
 

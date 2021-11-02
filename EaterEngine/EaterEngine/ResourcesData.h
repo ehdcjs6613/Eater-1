@@ -65,38 +65,10 @@ public:
 	};
 	virtual void Delete() {};
 
-	//(ID3D11ShaderResourceView)
 	void* TextureBufferPointer;
 	UINT size;
 };
 
-//쉐이더 데이터
-class ShaderBuffer : Resources
-{
-public:
-	ShaderBuffer() {};
-	virtual ~ShaderBuffer() {};
-	///뭐가있을지몰라서 일단은 그냥 만들기만..
-	virtual void Delete() {};
-};
-
-//메터리얼 데이터
-class MaterialBuffer :Resources
-{
-	MaterialBuffer() {};
-	virtual ~MaterialBuffer() {};
-	///뭐가있을지몰라서 일단은 그냥 만들기만..
-	virtual void Delete() {};
-};
-
-//애니메이션 데이터
-class AnimationBuffer : Resources
-{
-	AnimationBuffer() {};
-	virtual ~AnimationBuffer() {};
-	///뭐가있을지몰라서 일단은 그냥 만들기만..
-	virtual void Delete() {};
-};
 
 
 
