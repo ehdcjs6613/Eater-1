@@ -141,7 +141,7 @@
     <PostBuildEvent>
       <Command>copy/Y "$(TargetDir)*.lib"   "$(SolutionDir)lib"
 copy/Y "$(TargetDir)*.dll"   "$(SolutionDir)lib"
-copy /Y "$(ProjectDir)*.h" "$(SolutionDir)inc"
+copy /Y "$(ProjectDir)HsGraphic.h" "$(SolutionDir)inc"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -167,19 +167,38 @@ copy /Y "$(ProjectDir)*.h" "$(SolutionDir)inc"
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AlignedAllocationPolicy.h" />
+    <ClInclude Include="BufferData.h" />
     <ClInclude Include="Data.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="HsDefine.h" />
     <ClInclude Include="HsEngineHelper.h" />
     <ClInclude Include="HsGraphic.h" />
+    <ClInclude Include="InputLayout.h" />
+    <ClInclude Include="RenderingManager.h" />
+    <ClInclude Include="ShaderManager.h" />
     <ClInclude Include="SimpleMath.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="HsGraphic.cpp" />
+    <ClCompile Include="RenderingManager.cpp" />
+    <ClCompile Include="ShaderManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\Shader\HS\MainHeader.hlsli" />
     <None Include="SimpleMath.inl" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\Shader\HS\texture_ps.hlsl">
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="..\Shader\HS\texture_vs.hlsl">
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+    </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

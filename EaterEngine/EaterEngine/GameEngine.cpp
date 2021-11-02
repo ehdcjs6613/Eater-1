@@ -211,9 +211,7 @@ void GameEngine::LoadMesh(std::string mMeshName, bool Scale, bool LoadAnime)
 
 void GameEngine::LoadTexture(std::string mTextureName)
 {
-	std::string temp = "텍스쳐를 로드합니다 : " + mTextureName;
 	mLoadManager->LoadTexture(mTextureName);
-	mDebugManager->Print(temp, DebugManager::MSG_TYPE::MSG_LOAD);
 }
 
 void GameEngine::LoadMeshPath(std::string mPath)
@@ -254,11 +252,11 @@ bool GameEngine::GetTogle(byte number)
 float GameEngine::GetMousePosX()
 {
 	//마우스 위치 X좌표
-	return mKeyManager->GetMousePos()->x;
+	return (float)mKeyManager->GetMousePos()->x;
 }
 
 float GameEngine::GetMousePosY()
 {
 	//마우스 위치 y좌표
-	return mKeyManager->GetMousePos()->y;
+	return (float)mKeyManager->GetMousePos()->y;
 }
