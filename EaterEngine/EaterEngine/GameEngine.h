@@ -1,8 +1,6 @@
 #pragma once
 #include <windows.h>
 #include <string>
-#include "SharedData.h"
-
 
 #ifdef ENGINE_INTERFACE
 #define EATER_ENGINEDLL __declspec(dllexport)
@@ -27,8 +25,6 @@ class HsGraphic;
 class Scene;
 //게임 오브젝트
 class GameObject;
-
-class DH3DEngine;
 
 class GameEngine
 {
@@ -57,7 +53,6 @@ public:
 	void LoadTexturePath(std::string mPath);
 	void LoadMesh(std::string mMeshName, bool Scale = true, bool LoadAnime = false);
 	void LoadTexture(std::string mMeshName);
-
 public:
 	///키관련 
 	bool  GetKeyDown(byte number);	//키다운
@@ -81,12 +76,5 @@ private:
 	int WinSizeHeight;	//윈도우 사이즈 세로
 	bool ConsoleDebug;
 private:
-	
-	
-	//테스트용 엔진
-	//DH3DEngine*			pTest_Engine;
-	//OneFrameData*		pTest_OFD;
-	//SharedRenderData*	pTest_SRD;
-	//DHParser::Mesh*		pTest_Mesh;
 };
 

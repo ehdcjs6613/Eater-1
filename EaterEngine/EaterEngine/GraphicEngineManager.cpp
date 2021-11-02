@@ -86,7 +86,7 @@ void GraphicEngineManager::ChoiceEngine(std::string Name)
 	else
 	{
 		std::string temp = "선택된 그래픽 엔진 :" + Name;
-		DebugManager::Print(temp, DebugManager::MSG_TYPE::MSG_ERROR);
+		DebugManager::Print(temp, DebugManager::MSG_TYPE::MSG_ENGINE);
 		NowEngine = GEngineList[Name];
 	}
 }

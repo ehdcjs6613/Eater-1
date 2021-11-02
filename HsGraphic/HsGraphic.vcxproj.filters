@@ -94,15 +94,15 @@
     <None Include="SimpleMath.inl">
       <Filter>소스 파일\Helper</Filter>
     </None>
-    <None Include="..\Shader\HS\MainHeader.hlsli">
+    <None Include="..\Resources\Shader\HS\MainHeader.hlsli">
       <Filter>소스 파일\Shader\Header</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="..\Shader\HS\texture_ps.hlsl">
+    <FxCompile Include="..\Resources\Shader\HS\texture_ps.hlsl">
       <Filter>소스 파일\Shader\hlsl</Filter>
     </FxCompile>
-    <FxCompile Include="..\Shader\HS\texture_vs.hlsl">
+    <FxCompile Include="..\Resources\Shader\HS\texture_vs.hlsl">
       <Filter>소스 파일\Shader\hlsl</Filter>
     </FxCompile>
   </ItemGroup>

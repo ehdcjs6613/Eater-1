@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "Transform.h"
 
+using namespace DirectX;
 std::vector<Camera*> Camera::CamList;
 Camera* Camera::MainCam = nullptr;
 
@@ -29,7 +30,7 @@ Camera::~Camera()
 void Camera::Awake()
 {
 	//오브젝트의 컨퍼넌트 가져오기
-	tranform = gameobject->GetComponent<Transform>();
+	tranform = gameobject->transform;
 	CreateProj();
 }
 

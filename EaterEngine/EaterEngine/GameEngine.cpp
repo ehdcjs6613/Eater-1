@@ -18,7 +18,6 @@
 #include "Camera.h"
 
 //테스트용
-#include "DH3DEngine.h"
 #include "HsGraphic.h";
 
 
@@ -83,16 +82,6 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 	/////////////////////////////////////////////////////////////////
 
 
-	//지울 부분
-	/////////////////////////////////////////////////////////////////
-	//pTest_OFD = new OneFrameData();
-	//pTest_SRD = new SharedRenderData();
-	//pTest_Engine->Initialize(Hwnd, WinSizeWidth, WinSizeHeight);
-	//pTest_Engine->SetDebug(true);
-	//////////////////////////////////////////////////////////////////
-	
-
-
 
 	mGraphicManager->Initialize(Hwnd, WinSizeWidth, WinSizeHeight);
 	//처음시작하기전 엔진의 구조간략설명
@@ -106,34 +95,17 @@ void GameEngine::Update()
 	mSceneManager->Update();
 	mObjectManager->PlayUpdate();
 	mDebugManager->Update();
-	
+	//컨퍼넌트 업데이트 끝
+	//그래픽엔진으로 넘겨줄 랜더큐도 생성완료
 
 
-	
-	
-	/// 테스트용
-	////////////////////////////////////////////////////////////////////////////////////
-	//pTest_OFD->World_Eye_Position	= DirectX::SimpleMath::Vector3(10.f, 8.f, -10.f);
-	//pTest_OFD->Main_Position		= DirectX::SimpleMath::Vector3(0.f, 0.f, 0.f);
-	//pTest_OFD->View_Matrix			= *Camera::GetMainView();
-	//pTest_OFD->Projection_Matrix	= *Camera::GetProj();
-	//pTest_SRD->Render_Mesh_List		= mObjectManager->GetDHRenderQueue();
-	////업데이트가 끝나고 랜더링 테스트용
-	//pTest_Engine->BeginDraw();
-	//pTest_Engine->TextDraw({ (int)(1920 - 350), 10 }, 500, 0, 1, 0, 1, 30, L"카메라 모드 변경 : C");
-	//pTest_Engine->RenderDraw(pTest_OFD, pTest_SRD);
-	//pTest_Engine->EndDraw();
-	////////////////////////////////////////////////////////////////////////////////////
-	
+	//랜더큐 넘겨줌
 	mGraphicManager->Render(mObjectManager->GetRenderQueue(), mObjectManager->GetGlobalData());
-
-
-
 
 
 	//랜더링이 끝나고 오브젝트 Delete
 	mObjectManager->DeleteObject();
-	mObjectManager->DeleteRenderQueue();
+	//mObjectManager->DeleteRenderQueue();
 }
 
 void GameEngine::Finish()
@@ -152,7 +124,6 @@ void GameEngine::OnResize(int Change_Width, int Change_Height)
 	WinSizeHeight	= Change_Height;
 		
 	//그래픽 엔진의 리사이즈 함수를 넣으면 될듯
-	//pTest_Engine->On_Resize(WinSizeWidth, WinSizeHeight);
 	mGraphicManager->OnReSize(Change_Width, Change_Height);
 	mDebugManager->Print("윈도우 사이즈 변경",DebugManager::MSG_TYPE::MSG_ENGINE);
 }
@@ -164,6 +135,7 @@ GameObject* GameEngine::Instance(std::string ObjName)
 	GameObject* temp = new GameObject();
 	mObjectManager->PushCreateObject(temp);
 	temp->Name = ObjName;
+
 	//Transform 은 기본으로 넣어준다
 	Transform* Tr = temp->AddComponent<Transform>();
 	temp->transform = Tr;

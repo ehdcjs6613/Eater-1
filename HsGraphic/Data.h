@@ -1,4 +1,6 @@
 #pragma once
+#include "d3d11.h"
+#include "../ShareData/SimpleMath.h"
 #include <DirectXMath.h>
 struct Deferred32
 {

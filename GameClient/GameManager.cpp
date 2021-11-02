@@ -4,7 +4,7 @@
 #include "intro.h"
 #include "inGame.h"
 
-//#pragma comment (lib,"EaterEngine")
+
 GameManager::GameManager()
 {
 }
