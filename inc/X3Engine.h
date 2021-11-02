@@ -16,6 +16,10 @@ class DirectXRasterizerState;
 //	  렌더러 클래스
 class XRenderer;
 
+class SharedRenderData;
+
+class Grahpics2D;
+
 #if _DEBUG
 
 #ifdef _DEBUG
@@ -33,9 +37,11 @@ class XRenderer;
 
 #endif
 
+class __declspec(dllimport) GraphicEngine;
+
 #include <d3dcommon.h>
 
-class X3Engine_DLL X3Engine : public GraphicEngine
+class X3Engine_DLL X3Engine : public  GraphicEngine
 {
 private:
 	//
@@ -58,6 +64,8 @@ private:
 	//렌더러 기능
 	XRenderer*				m_pRenderer;
 
+	Grahpics2D* m_pGraphics2D;
+	
 
 
 private:
@@ -68,7 +76,7 @@ public:
 
 public:
 	//기본엔진 생성자
-	X3Engine(void);
+	 X3Engine();
 	//이 엔진에 아래는 없다
 	virtual ~X3Engine() final;
 public:
@@ -94,5 +102,11 @@ public:
 public:
 	//엔진 고유의 함수
 	void CreateRenderState();
+	void DrawSystemStatus();
+
+	/// 텍스쳐를 만드는 부분
+	void SetTextureSRV(SharedRenderData* _SRD);
+
+	void Release();
 };
 

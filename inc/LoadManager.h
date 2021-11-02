@@ -20,8 +20,9 @@ class LoadData;
 class ModelParser;
 class FBXParser;
 class FBXModel;
-class DH3DEngine;
+
 class GraphicEngine;
+class X3Engine;
 
 class LoadManager
 {
@@ -34,7 +35,7 @@ public:
 	//초기화 및 경로 설정
 	void Initialize(GraphicEngine* Graphic);
 	//테스트용
-	void Initialize(DH3DEngine* Graphic);
+	void Initialize(X3Engine* Graphic);
 public:
 	///GET
 	//매쉬 가져오기
@@ -81,10 +82,11 @@ private:
 
 
 	///여기부터는 동혁이꺼 테스트용
-	DH3DEngine*			DHEngine;
+	X3Engine*			WJEngine;
 	OneFrameData*		pTest_OFD;
 	SharedRenderData*	pTest_SRD;
 	DHParser::Mesh*		pTest_Mesh;
+	//ParserData::Model*		pTest_Mesh;
 
 
 	void Test_DHData(ParserData::Model* mModel, std::string Name);

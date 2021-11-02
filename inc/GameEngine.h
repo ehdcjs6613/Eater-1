@@ -88,7 +88,7 @@ private:
 	
 	//테스트용 엔진
 	//DH3DEngine*			pTest_Engine;
-	X3Engine*			pTest_Engine;
+	X3Engine*			pX3Engine;
 
 	OneFrameData*		pTest_OFD;
 	SharedRenderData*	pTest_SRD;

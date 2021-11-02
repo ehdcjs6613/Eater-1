@@ -60,7 +60,7 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 	mDebugManager	= new DebugManager();
 
 	//그래픽 엔진 생성
-	pTest_Engine = new X3Engine();
+	pX3Engine = new X3Engine();
 
 
 
@@ -71,12 +71,12 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 	mSceneManager->Initialize();
 	mObjectManager->Initialize(mHwnd);
 	//테스트용 이곳에 그래픽엔진을 넘겨주면된다
-	mLoadManager->Initialize(pTest_Engine);
+	mLoadManager->Initialize(pX3Engine);
 	pTest_OFD = new OneFrameData();
 	pTest_SRD = new SharedRenderData();
 	//mUI = new Grahpics2D(mHwnd, DX11_Swap_Chain);
 
-	pTest_Engine->Initialize(Hwnd, WinSizeWidth, WinSizeHeight);
+	pX3Engine->Initialize(Hwnd, WinSizeWidth, WinSizeHeight);
 	//pTest_Engine->SetDebug(true);
 
 	/*테스트용 이미지*/
@@ -106,7 +106,9 @@ void GameEngine::Update()
 	//업데이트가 끝나고 랜더링 테스트용
 
 	
-	pTest_Engine->Render(0,0);
+	pX3Engine->Render(0,0);
+	pX3Engine->DrawSystemStatus();
+
 	//pTest_Engine->BeginDraw();
 	//pTest_Engine->TextDraw({ (int)(1920 - 350), 10 }, 500, 0, 1, 0, 1, 30, L"카메라 모드 변경 : C");
 	//pTest_Engine->RenderDraw(pTest_OFD, pTest_SRD);

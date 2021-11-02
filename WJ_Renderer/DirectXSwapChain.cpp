@@ -4,6 +4,10 @@
 
 DirectXSwapChain::DirectXSwapChain(ID3D11Device* _pDevice) :  m_pSwapChain(nullptr),m_4xMsaaQuality(0),m_Enable4xMsaa(false)
 {
+	if (nullptr == _pDevice)
+	{
+		return;
+	}
 	/// 멀티샘플링 몇단계까지 되는지 체크
 	// Check 4X MSAA quality support for our back buffer format.
 	// All Direct3D 11 capable devices support 4X MSAA for all render 

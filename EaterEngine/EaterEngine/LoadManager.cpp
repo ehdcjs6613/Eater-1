@@ -5,6 +5,7 @@
 #include "ModelParser.h"
 #include "Camera.h"
 #include "DH3DEngine.h"
+#include "X3Engine.h"
 #include "atlstr.h"
 
 
@@ -25,9 +26,9 @@ void LoadManager::Initialize(GraphicEngine* Graphic)
 	GEngine = Graphic;
 }
 
-void LoadManager::Initialize(DH3DEngine* Graphic)
+void LoadManager::Initialize(X3Engine* Graphic)
 {
-	DHEngine = Graphic;
+	WJEngine = Graphic;
 
 	EaterParser = ModelParser::Create(ModelParser::FBX);
 	EaterParser->Initialize();
@@ -178,9 +179,9 @@ void LoadManager::Test_DHData(ParserData::Model* mModel,std::string Name)
 
 	
 	//인덱스 버퍼와 버텍스 버퍼를 만들었다..
-	DHEngine->CreateIndexBuffer(pTest_Mesh);
-	DHEngine->CreateVertexBuffer(pTest_Mesh);
-	DHEngine->SetTextureSRV(pTest_SRD);
+	WJEngine->CreateIndexBuffer(nullptr);
+	WJEngine->CreateVertexBuffer(nullptr);
+	//WJEngine->SetTextureSRV(pTest_SRD);
 	
 
 	//이것을 이제 나의구조체에 맞게 다시변형..

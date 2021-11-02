@@ -14,6 +14,7 @@ __interface IRenderableFunc
 /// 이제 어떻게 그릴것인가..
 /// </summary>
 
+
 class XRenderer : public IRenderableFunc
 {
 public:
@@ -37,7 +38,8 @@ public:
 	bool Render_End   (ID3D11DeviceContext* _pD3DeviceContext);
 	
 public:
-	void Render_State();
+	void DrawState();
+	
 public:
 	ID3D11DepthStencilState* GetDepthStencil_State();
 	ID3D11Texture2D*		 GetDepthStencil_Buffer();

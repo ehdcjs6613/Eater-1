@@ -1,4 +1,5 @@
 #include "OneCompile.h"
+#include "DDSTextureLoader11.h"
 #include "DirectXDefine.h"
 #include "DirectXDevice.h"
 #include "DirectXDeviceContext.h"
@@ -6,15 +7,26 @@
 #include "DirectXRasterizerState.h"
 #include "DirectXAdapter.h"
 #include "GraphicsEngine.h"
+#include "SharedData.h"
 #include "XRenderer.h"
 #include "X3Engine.h"
-
+#include "Grahpics2D.h"
 
 
 
 X3Engine::X3Engine() : m_pDevice(nullptr), m_pDeviceContext(nullptr) 
 {
-	
+	m_pDevice = new DirectXDevice();
+	m_pDeviceContext = new DirectXDeviceContext();
+
+	//HR(m_pDeviceContext->CreateDeviceContext(m_pDevice->m_pDX11Device));
+
+	m_pSwapChain = new DirectXSwapChain(m_pDevice->m_pDX11Device);
+	m_pRenderer = new XRenderer();
+	m_pRasterizerState = new DirectXRasterizerState();
+	m_pRasterizerSolid = new DirectXRasterizerState();
+	m_pRasterizerWire = new DirectXRasterizerState();
+	m_pAdapter = new DirectXAdapter();
 	
 }
 
@@ -25,6 +37,9 @@ X3Engine::~X3Engine()
 
 void X3Engine::Initialize(HWND _hWnd, int screenWidth, int screenHeight)
 {
+
+
+
 	m_hWnd		= _hWnd;
 	m_iWidth	= screenWidth;
 	m_iHeight	= screenHeight;
@@ -170,14 +185,23 @@ void X3Engine::Initialize(HWND _hWnd, int screenWidth, int screenHeight)
 	m_FeatureLevel = D3D_FEATURE_LEVEL_11_0;
 
 	// 스왑 체인과 Device를 같이 생성. (D2D를 지원하기 위해 옵션으로 BGRA 를 셋팅 해 두었다.)
-	D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, D3D11_CREATE_DEVICE_BGRA_SUPPORT, &m_FeatureLevel, 1,
-		D3D11_SDK_VERSION, &swapChainDesc, &m_pSwapChain->m_pSwapChain, &m_pDevice->m_pDX11Device, NULL, &m_pDeviceContext->m_pDX11DeviceContext);
+	D3D11CreateDeviceAndSwapChain
+	(
+		NULL, D3D_DRIVER_TYPE_HARDWARE, 
+		NULL, D3D11_CREATE_DEVICE_BGRA_SUPPORT,
+		&m_FeatureLevel, 1,
+		D3D11_SDK_VERSION, 
+		&swapChainDesc, &m_pSwapChain->m_pSwapChain, &m_pDevice->m_pDX11Device, NULL, &m_pDeviceContext->m_pDX11DeviceContext
+	);
 
 	// Get the pointer to the back buffer.
 	(m_pSwapChain->GetSwapChain()->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBufferPtr));
 
 	// Create the render target view with the back buffer pointer.
-	(m_pDevice->GetDevice()->CreateRenderTargetView(backBufferPtr, NULL, &m_pRenderer->m_pRenderTarget[0]));
+	m_pDevice->GetDevice()->CreateRenderTargetView
+	(
+		backBufferPtr, NULL, &m_pRenderer->m_pRenderTarget[0]
+	);
 
 	// Release pointer to the back buffer as we no longer need it.
 	SAFE_RELEASE(backBufferPtr);
@@ -240,10 +264,17 @@ void X3Engine::Initialize(HWND _hWnd, int screenWidth, int screenHeight)
 	depthStencilViewDesc.Texture2D.MipSlice = 0;
 
 	// Create the depth stencil view.
-	(m_pDevice->m_pDX11Device->CreateDepthStencilView(m_pRenderer->m_pDepthStencil_Buffer, &depthStencilViewDesc, &m_pRenderer->m_pDepthStencil_View));
+	m_pDevice->m_pDX11Device->CreateDepthStencilView
+	(
+		m_pRenderer->m_pDepthStencil_Buffer, 
+		&depthStencilViewDesc, &m_pRenderer->m_pDepthStencil_View
+	);
 
 	/// 렌더타겟뷰, 뎁스/스탠실뷰를 파이프라인에 바인딩한다.
-	m_pDeviceContext->GetDeviceContext()->OMSetRenderTargets(1, &m_pRenderer->m_pRenderTarget[0], m_pRenderer->GetDepthStencil_View());
+	m_pDeviceContext->GetDeviceContext()->OMSetRenderTargets
+	(
+		1, &m_pRenderer->m_pRenderTarget[0], m_pRenderer->GetDepthStencil_View()
+	);
 
 	// Setup the raster description which will determine how and what polygons will be drawn.
 	rasterDesc.AntialiasedLineEnable = false;
@@ -264,6 +295,7 @@ void X3Engine::Initialize(HWND _hWnd, int screenWidth, int screenHeight)
 	m_pDeviceContext->GetDeviceContext()->RSSetState( m_pRasterizerState->GetFrameRS());
 
 	// Setup the viewport for rendering.
+	// 뷰포트의 렌더링을 위해 세팅합니다
 	viewport.Width	  = (float)m_iWidth;
 	viewport.Height	  = (float)m_iHeight;
 	viewport.MinDepth = 0.0f;
@@ -271,16 +303,10 @@ void X3Engine::Initialize(HWND _hWnd, int screenWidth, int screenHeight)
 	viewport.TopLeftX = 0.0f;
 	viewport.TopLeftY = 0.0f;
 
-	// Create the viewport.
+	// Create the viewport. 뷰포트를 만듭니다.
 	m_pDeviceContext->GetDeviceContext()->RSSetViewports(1, &viewport);
 
-	m_pDevice = new DirectXDevice();
-	m_pDeviceContext = new DirectXDeviceContext();
-
-	HR(m_pDeviceContext->CreateDeviceContext(m_pDevice->GetDevice()));
-
-	m_pSwapChain = new DirectXSwapChain(m_pDevice->GetDevice());
-	m_pRenderer = new XRenderer();
+	
 	// Render State
 	CreateRenderState();
 
@@ -288,7 +314,8 @@ void X3Engine::Initialize(HWND _hWnd, int screenWidth, int screenHeight)
 	m_pAdapter->GetAdapter();
 
 	m_pAdapter->GetAdapterInfo();
-	
+
+	m_pGraphics2D = new Grahpics2D(m_hWnd, m_pSwapChain->m_pSwapChain);
 
 }
 
@@ -334,4 +361,111 @@ void X3Engine::CreateRenderState()
 {
 	this->m_pRasterizerSolid->Create(this->m_pDevice->GetDevice(), StateRS::eSolid);
 	this->m_pRasterizerWire->Create(this->m_pDevice->GetDevice(), StateRS::eWireFrame);
+}
+
+void X3Engine::DrawSystemStatus()
+{
+	// 피쳐레벨
+	int _yPos = 50;
+	int _Text_Offset = 21;
+	
+	m_pGraphics2D->Push_DrawText({ 10, _yPos }, 500, 1, 0, 0, 1, 20, (TCHAR*)L"Description: %s", m_pAdapter->GetAdapter().Description);
+	m_pGraphics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 1, 0, 1, 20, (TCHAR*)L"VendorID: %u", m_pAdapter->GetAdapter().VendorId);
+	m_pGraphics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 1, 0, 1, 20, (TCHAR*)L"DeviceID: %u", m_pAdapter->GetAdapter().DeviceId);
+	m_pGraphics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 1, 0, 1, 20, (TCHAR*)L"SubSysID: %u", m_pAdapter->GetAdapter().SubSysId);
+	m_pGraphics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 1, 0, 1, 20, (TCHAR*)L"Revision: %u", m_pAdapter->GetAdapter().Revision);
+	m_pGraphics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 0, 1, 1, 20, (TCHAR*)L"VideoMemory: %lu MB", m_pAdapter->GetAdapter().DedicatedVideoMemory / 1024 / 1024);
+	m_pGraphics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 0, 1, 1, 20, (TCHAR*)L"SystemMemory: %lu MB", m_pAdapter->GetAdapter().DedicatedSystemMemory / 1024 / 1024);
+	m_pGraphics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 0, 1, 1, 20, (TCHAR*)L"SharedSysMemory: %lu MB", m_pAdapter->GetAdapter().SharedSystemMemory / 1024 / 1024);
+	m_pGraphics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 1, 1, 0, 1, 20, (TCHAR*)L"AdpaterLuid: %u.%d", m_pAdapter->GetAdapter().AdapterLuid.HighPart, m_pAdapter->GetAdapter().AdapterLuid.LowPart);
+
+}
+
+void X3Engine::SetTextureSRV(SharedRenderData* _SRD)
+{
+	//if (!_SRD->Ambient_Texture.empty())
+	//{
+	//	for (auto k : _SRD->Ambient_Texture)
+	//	{
+	//		// 텍스쳐 생성을 위한 임시 객체
+	//		ID3D11Resource* Texture_Resource = nullptr;
+	//		// 텍스쳐 SRV
+	//		ID3D11ShaderResourceView* DX11_SRV = nullptr;
+	//		// 텍스쳐 정보 셋팅.
+	//		CreateWICTextureFromFile(m_pDevice->GetDevice(), k.second->Texture_Path.c_str(), &Texture_Resource, &DX11_SRV);
+	//		ReleaseCOM(Texture_Resource);
+	//
+	//		k.second->Texture_SRV = DX11_SRV;
+	//	}
+	//}
+	//
+	//if (!_SRD->Emissive_Texture.empty())
+	//{
+	//	for (auto k : _SRD->Emissive_Texture)
+	//	{
+	//		// 텍스쳐 생성을 위한 임시 객체
+	//		ID3D11Resource* Texture_Resource = nullptr;
+	//		// 텍스쳐 SRV
+	//		ID3D11ShaderResourceView* DX11_SRV = nullptr;
+	//		// 텍스쳐 정보 셋팅.
+	//		CreateWICTextureFromFile(m_pDevice->GetDevice(), k.second->Texture_Path.c_str(), &Texture_Resource, &DX11_SRV);
+	//		ReleaseCOM(Texture_Resource);
+	//
+	//		k.second->Texture_SRV = DX11_SRV;
+	//	}
+	//}
+	//
+	//if (!_SRD->Diffuse_Texture.empty())
+	//{
+	//	for (auto k : _SRD->Diffuse_Texture)
+	//	{
+	//		// 텍스쳐 생성을 위한 임시 객체
+	//		ID3D11Resource* Texture_Resource = nullptr;
+	//		// 텍스쳐 SRV
+	//		ID3D11ShaderResourceView* DX11_SRV = nullptr;
+	//		// 텍스쳐 정보 셋팅.
+	//		CreateWICTextureFromFile(m_pDevice->GetDevice(), k.second->Texture_Path.c_str(), &Texture_Resource, &DX11_SRV);
+	//		ReleaseCOM(Texture_Resource);
+	//
+	//		k.second->Texture_SRV = DX11_SRV;
+	//	}
+	//}
+	//
+	//if (!_SRD->Specular_Texture.empty())
+	//{
+	//	for (auto k : _SRD->Specular_Texture)
+	//	{
+	//		// 텍스쳐 생성을 위한 임시 객체
+	//		ID3D11Resource* Texture_Resource = nullptr;
+	//		// 텍스쳐 SRV
+	//		ID3D11ShaderResourceView* DX11_SRV = nullptr;
+	//		// 텍스쳐 정보 셋팅.
+	//		CreateWICTextureFromFile(m_pDevice->GetDevice(), k.second->Texture_Path.c_str(), &Texture_Resource, &DX11_SRV);
+	//		ReleaseCOM(Texture_Resource);
+	//
+	//		k.second->Texture_SRV = DX11_SRV;
+	//	}
+	//}
+	//
+	//if (!_SRD->NormalMap_Texture.empty())
+	//{
+	//	for (auto k : _SRD->NormalMap_Texture)
+	//	{
+	//		// 텍스쳐 생성을 위한 임시 객체
+	//		ID3D11Resource* Texture_Resource = nullptr;
+	//		// 텍스쳐 SRV
+	//		ID3D11ShaderResourceView* DX11_SRV = nullptr;
+	//		// 텍스쳐 정보 셋팅.
+	//		CreateWICTextureFromFile(m_pDevice->GetDevice(), k.second->Texture_Path.c_str(), &Texture_Resource, &DX11_SRV);
+	//		ReleaseCOM(Texture_Resource);
+	//
+	//		k.second->Texture_SRV = DX11_SRV;
+	//	}
+	//}
+}
+
+void X3Engine::Release()
+{
+	delete m_pGraphics2D;
+	m_pGraphics2D = nullptr;
 }

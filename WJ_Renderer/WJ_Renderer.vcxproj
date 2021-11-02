@@ -125,17 +125,19 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(SolutionDir)lib\FX11_2021_06_14\;$(SolutionDir)lib\DirectXTexture\;$(SolutionDir)lib\DirectXTK2021_06_14\;$(SolutionDir)FX\;$(SolutionDir)inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>../lib/GraphicEngine.lib;../lib/KHParser_x64d.lib;../lib/libfbxsdk.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>../lib/GraphicEngine.lib;../lib/KHParser_x64d.lib;../lib/libfbxsdk.lib;../lib/DirectX2DSupporter.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy /Y "$(ProjectDir)*.h" "$(SolutionDir)inc"
 copy /Y "$(TargetDir)*.dll" "$(SolutionDir)lib"
-copy /Y "$(TargetDir)*.lib" "$(SolutionDir)lib"</Command>
+copy /Y "$(TargetDir)*.lib" "$(SolutionDir)lib"
+</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

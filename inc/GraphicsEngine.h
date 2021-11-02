@@ -10,7 +10,11 @@
 
 
 class MeshData;
+//class Model;
 class GlobalData;
+//class Indexbuffer;
+//class Vertexbuffer;
+
 
 #ifdef ENGINE_INTERFACE
 #define EATER_ENGINEDLL __declspec(dllexport)
@@ -19,7 +23,7 @@ class GlobalData;
 #endif
 
 
-class EATER_ENGINEDLL GraphicEngine
+class GraphicEngine
 {
 public:
 	GraphicEngine() {};

@@ -10,10 +10,10 @@
 
 
 class MeshData;
-class Model;
+//class Model;
 class GlobalData;
-class Indexbuffer;
-class Vertexbuffer;
+//class Indexbuffer;
+//class Vertexbuffer;
 
 
 #ifdef ENGINE_INTERFACE
@@ -23,7 +23,7 @@ class Vertexbuffer;
 #endif
 
 
-class EATER_ENGINEDLL GraphicEngine
+class GraphicEngine
 {
 public:
 	GraphicEngine() {};
