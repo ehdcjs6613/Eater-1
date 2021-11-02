@@ -1,5 +1,5 @@
 #include "MainHeader.h"
-
+#include "GameEngine.h"
 GameEngine* gGameEngine;
 
 ///엔진 관련

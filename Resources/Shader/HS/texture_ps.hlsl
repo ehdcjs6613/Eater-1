@@ -17,7 +17,7 @@ struct PixeloutputType
     float4 color : SV_Target0;
 };
 
-PixeloutputType main(PixelInputType input) : SV_TARGET
+PixeloutputType main(PixelInputType input)
 { 
     PixeloutputType output;
 	output.color = float4(1, 1, 1, 1);
@@ -27,5 +27,5 @@ PixeloutputType main(PixelInputType input) : SV_TARGET
     //output.color = Tex01;
     //output.color = pow(output.color, 1 / 2.2f);
     //output.color.a =1;
-		return output;
+	return output;
 }

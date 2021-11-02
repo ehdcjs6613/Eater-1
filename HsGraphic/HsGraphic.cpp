@@ -3,8 +3,8 @@
 #include "HsEngineHelper.h"
 #include "ParserData.h"
 #include "EngineData.h"
-#include "ShaderManager.h"
-#include "RenderingManager.h"
+//#include "ShaderManager.h"
+//#include "RenderingManager.h"
 #include "HsDefine.h"
 #include <vector>
 #include "Data.h"
@@ -50,10 +50,10 @@ void HsGraphic::Initialize(HWND _hWnd, int screenWidth, int screenHeight)
 	CreateRenderState();
 
 	//매니저들 생성
-	mShaderManager = new ShaderManager();
-	mRenderManager = new RenderingManager();
-
-	mShaderManager->Initialize(Device, DeviceContext);
+	//mShaderManager = new ShaderManager();
+	//mRenderManager = new RenderingManager();
+	//
+	//mShaderManager->Initialize(Device, DeviceContext);
 }
 
 Indexbuffer* HsGraphic::CreateIndexBuffer(ParserData::Model* mModel)
@@ -387,8 +387,8 @@ void HsGraphic::Delete()
 	mWireframe->Release();
 	mSolid->Release();
 
-	mShaderManager;
-	mRenderManager;
+	//mShaderManager;
+	//mRenderManager;
 }
 
 

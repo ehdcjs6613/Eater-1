@@ -1,7 +1,7 @@
 #pragma once
 
 #include "GraphicsEngine.h"
-#include <d3d11.h>
+#include "d3d11.h"
 
 #ifdef HSGRAPHIC_INTERFACE
 #define HS_GRAPHICDLL __declspec(dllexport)
@@ -9,8 +9,8 @@
 #define HS_GRAPHICDLL __declspec(dllimport)
 #endif
 
-class ShaderManager;
-class RenderingManager;
+//class ShaderManager;
+//class RenderingManager;
 
 
 class TextureBuffer;
@@ -65,6 +65,6 @@ private:
 	ID3D11RasterizerState* mSolid;
 
 	//매니저들
-	ShaderManager*		mShaderManager;
-	RenderingManager*	mRenderManager;
+	//ShaderManager*		mShaderManager;
+	//RenderingManager*	mRenderManager;
 };

@@ -274,29 +274,29 @@ bool ShaderManager::LoadVertexShader(std::string vsFileName, std::string ShaderN
 	}
 
 	//쉐이더 리플렉션을 위한 준비
-	HR(D3DReflect(_vertexShaderBuffer->GetBufferPointer(),_vertexShaderBuffer->GetBufferSize(),
-		IID_ID3D11ShaderReflection,(void**)&ReFlector));
-
-
-
-	
-	//인풋레이아웃을 생성한다
-	if (CreateInputLayout(ShaderName, _vertexShaderBuffer) == false)
-	{
-		return false;
-	}
-
-
-
-	//상수버퍼를 생성한다 이미 있는 버퍼라면 생성하지않음..
-	//CreateConstantBuffer();
-
-	//샘플러를 생성한다 이미있는 샘플러라면 생성하지않는다
-//	CreateSamPler(ShaderName);
-
-	//파일을 모두 읽었으니 삭제
-	ReFlector->Release();
-	ReFlector = nullptr;
+	//HR(D3DReflect(_vertexShaderBuffer->GetBufferPointer(),_vertexShaderBuffer->GetBufferSize(),
+	//	IID_ID3D11ShaderReflection,(void**)&ReFlector));
+	//
+	//
+	//
+	//
+	////인풋레이아웃을 생성한다
+	//if (CreateInputLayout(ShaderName, _vertexShaderBuffer) == false)
+	//{
+	//	return false;
+	//}
+	//
+	//
+	//
+	////상수버퍼를 생성한다 이미 있는 버퍼라면 생성하지않음..
+	////CreateConstantBuffer();
+	//
+	////샘플러를 생성한다 이미있는 샘플러라면 생성하지않는다
+//	//CreateSamPler(ShaderName);
+	//
+	////파일을 모두 읽었으니 삭제
+	//ReFlector->Release();
+	//ReFlector = nullptr;
 
 	return true;
 }
@@ -354,19 +354,19 @@ bool ShaderManager::LoadPixelShader(std::string psFileName, std::string ShaderNa
 	);
 
 
-	HR(D3DReflect(pixelShaderBuffer->GetBufferPointer(),pixelShaderBuffer->GetBufferSize(),
-		IID_ID3D11ShaderReflection,(void**)&ReFlector));
-
-
-	g_pPsClassLinkage->Release();
-	//실패하면 리턴..
-	if (FAILED(result))
-	{
-		return false;
-	}
-	else
-	{
-		ShaderList[ShaderName].PixelShader = m_pixelShader;
-		return true;
-	}
+	//HR(D3DReflect(pixelShaderBuffer->GetBufferPointer(),pixelShaderBuffer->GetBufferSize(),
+	//	IID_ID3D11ShaderReflection,(void**)&ReFlector));
+	//
+	//
+	//g_pPsClassLinkage->Release();
+	////실패하면 리턴..
+	//if (FAILED(result))
+	//{
+	//	return false;
+	//}
+	//else
+	//{
+	//	ShaderList[ShaderName].PixelShader = m_pixelShader;
+	//	return true;
+	//}
 }

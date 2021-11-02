@@ -5,9 +5,9 @@
 #ifdef _DEBUG
 #pragma comment(lib, "DirectXTKd.lib")
 #else
-#pragma comment(lib, "DirectXTex.lib")
+#pragma comment(lib, "DirectXTK.lib")
 #endif
-#include "DDSTextureLoader11.h"
+#include "DDSTextureLoader.h"
 ////////////////////////////////////////////////
 
 
@@ -19,9 +19,9 @@
 ////////////////////////////////////////////////
 
 
+#include <d3dcompiler.h>
 #include <winerror.h>
 #include <assert.h>
 #include <d3d11.h>
-#include <d3dcompiler.h>
 #include <string>
 #include "atlstr.h"

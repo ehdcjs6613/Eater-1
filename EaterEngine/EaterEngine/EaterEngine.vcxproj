@@ -78,9 +78,12 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <TargetName>$(ProjectName)_x64d</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <TargetName>$(ProjectName)_x86r</TargetName>
+    <LibraryPath>$(SolutionDir)ShareData\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -134,7 +137,7 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)lib"</Command>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)inc;$(SolutionDir)lib;$(SolutionDir)FBX\include;$(SolutionDir)lib\DirectXTK2021_06_14</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)ShareData\lib;$(SolutionDir)ShareData</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
@@ -146,9 +149,19 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)lib"</Command>
       <AdditionalDependencies>GraphicEngine.lib;KHParser_x64d.lib;libfbxsdk.lib;HsGraphic_x64d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy /Y "$(ProjectDir)*.h" "$(SolutionDir)inc"
-copy /Y "$(TargetDir)*.dll" "$(SolutionDir)lib"
-copy /Y "$(TargetDir)*.lib" "$(SolutionDir)lib"</Command>
+      <Command>copy /Y "$(ProjectDir)GraphicsEngine.h" "$(SolutionDir)ShareData"
+copy /Y "$(ProjectDir)MainHeader.h" "$(SolutionDir)ShareData"
+copy /Y "$(ProjectDir)GameObject.h" "$(SolutionDir)ShareData"
+copy /Y "$(ProjectDir)Scene.h" "$(SolutionDir)ShareData"
+copy /Y "$(ProjectDir)ObjectManager.h" "$(SolutionDir)ShareData"
+
+copy /Y "$(TargetDir)*.dll" "$(SolutionDir)ShareData\lib"
+copy /Y "$(TargetDir)*.lib" "$(SolutionDir)ShareData\lib"
+
+copy /Y "$(ProjectDir)Transform.h" "$(SolutionDir)ShareData\Component"
+copy /Y "$(ProjectDir)MeshFilter.h" "$(SolutionDir)ShareData\Component"
+copy /Y "$(ProjectDir)Component.h" "$(SolutionDir)ShareData\Component"
+copy /Y "$(ProjectDir)Camera.h" "$(SolutionDir)ShareData\Component"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -161,7 +174,7 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)lib"</Command>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)inc;$(SolutionDir)lib\FX11_2021_06_14;$(SolutionDir);$(SolutionDir)lib\DirectXTK2021_06_14;$(SolutionDir)FBX\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)ShareData\lib;$(SolutionDir)ShareData</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -171,12 +184,22 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)lib"</Command>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalLibraryDirectories>$(SolutionDir)lib;$(SolutionDir)lib\FX11_2021_06_14;$(SolutionDir)lib\DirectXTK2021_06_14</AdditionalLibraryDirectories>
-      <AdditionalDependencies>DH3DEngine.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>HsGraphic_x64r.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy /Y "$(ProjectDir)*.h" "$(SolutionDir)inc"
-copy /Y "$(TargetDir)*.dll" "$(SolutionDir)lib"
-copy /Y "$(TargetDir)*.lib" "$(SolutionDir)lib"</Command>
+      <Command>copy /Y "$(ProjectDir)GraphicsEngine.h" "$(SolutionDir)ShareData"
+copy /Y "$(ProjectDir)MainHeader.h" "$(SolutionDir)ShareData"
+copy /Y "$(ProjectDir)GameObject.h" "$(SolutionDir)ShareData"
+copy /Y "$(ProjectDir)Scene.h" "$(SolutionDir)ShareData"
+copy /Y "$(ProjectDir)ObjectManager.h" "$(SolutionDir)ShareData"
+
+copy /Y "$(TargetDir)*.dll" "$(SolutionDir)ShareData\lib"
+copy /Y "$(TargetDir)*.lib" "$(SolutionDir)ShareData\lib"
+
+copy /Y "$(ProjectDir)Transform.h" "$(SolutionDir)ShareData\Component"
+copy /Y "$(ProjectDir)MeshFilter.h" "$(SolutionDir)ShareData\Component"
+copy /Y "$(ProjectDir)Component.h" "$(SolutionDir)ShareData\Component"
+copy /Y "$(ProjectDir)Camera.h" "$(SolutionDir)ShareData\Component"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
