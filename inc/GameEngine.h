@@ -27,7 +27,7 @@ class Scene;
 class GameObject;
 
 //테스트용 클래스
-class DH3DEngine;
+class X3Engine;
 class Texture;
 class Grahpics2D;
 
@@ -87,7 +87,9 @@ private:
 
 	
 	//테스트용 엔진
-	DH3DEngine*			pTest_Engine;
+	//DH3DEngine*			pTest_Engine;
+	X3Engine*			pTest_Engine;
+
 	OneFrameData*		pTest_OFD;
 	SharedRenderData*	pTest_SRD;
 	DHParser::Mesh*		pTest_Mesh;

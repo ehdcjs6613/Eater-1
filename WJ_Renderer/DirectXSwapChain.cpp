@@ -20,7 +20,8 @@ DirectXSwapChain::DirectXSwapChain(ID3D11Device* _pDevice) :  m_pSwapChain(nullp
 
 DirectXSwapChain::~DirectXSwapChain()
 {
-	ReleaseCOM(m_pSwapChain);
+	//ReleaseCOM(m_pSwapChain);
+	m_pSwapChain->Release();
 }
 
 bool DirectXSwapChain::MakeASwapChain(ID3D11Device* _pDevice, HWND _hWnd, int _iWidth, int _iHeight)

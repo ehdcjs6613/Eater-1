@@ -14,17 +14,27 @@
 #pragma comment( lib, "Effects11.lib" )
 #endif
 
-#include <fstream>
-#include <vector>
+
 
 /// DX11 인클루드.
 #include <d3d11.h>
 #include <d3dcompiler.h>
+#include <d3dcommon.h>
+
 #include <dxgi.h>
+
 #include <DirectXMath.h>
 #include <DirectXColors.h>
 #include <DirectXPackedVector.h>
 
+//스마트포인터 인클르드
+#include <wrl/client.h>
+#include <memory>
 
+//c++ iostream 및 자료구조 헤더
 #include <iostream>
+#include <fstream>
+#include <vector>
+#include <queue>
+
 

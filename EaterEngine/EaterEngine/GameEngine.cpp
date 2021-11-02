@@ -14,11 +14,11 @@
 #include "Transform.h"
 
 //테스트용
-#include "Texture.h"
-#include "Grahpics2D.h"
-#include "DH3DEngine.h"
 #include "GraphicsEngine.h"
-
+#include "X3Engine.h"
+#include "XRenderer.h"
+#include "Grahpics2D.h"
+#include "Texture.h"
 
 GameEngine::GameEngine()
 {
@@ -60,7 +60,7 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 	mDebugManager	= new DebugManager();
 
 	//그래픽 엔진 생성
-	pTest_Engine = new DH3DEngine();
+	pTest_Engine = new X3Engine();
 
 
 
@@ -77,7 +77,7 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 	//mUI = new Grahpics2D(mHwnd, DX11_Swap_Chain);
 
 	pTest_Engine->Initialize(Hwnd, WinSizeWidth, WinSizeHeight);
-	pTest_Engine->SetDebug(true);
+	//pTest_Engine->SetDebug(true);
 
 	/*테스트용 이미지*/
 	//m_pTexture = new Texture(L"../image/atk_1.png", this->mUI);
@@ -104,10 +104,13 @@ void GameEngine::Update()
 	pTest_OFD->Projection_Matrix	= *Camera::GetProj();
 	pTest_SRD->Render_Mesh_List		= mObjectManager->GetDHRenderQueue();
 	//업데이트가 끝나고 랜더링 테스트용
-	pTest_Engine->BeginDraw();
-	pTest_Engine->TextDraw({ (int)(1920 - 350), 10 }, 500, 0, 1, 0, 1, 30, L"카메라 모드 변경 : C");
-	pTest_Engine->RenderDraw(pTest_OFD, pTest_SRD);
-	pTest_Engine->EndDraw();
+
+	
+	pTest_Engine->Render(0,0);
+	//pTest_Engine->BeginDraw();
+	//pTest_Engine->TextDraw({ (int)(1920 - 350), 10 }, 500, 0, 1, 0, 1, 30, L"카메라 모드 변경 : C");
+	//pTest_Engine->RenderDraw(pTest_OFD, pTest_SRD);
+	//pTest_Engine->EndDraw();
 	////////////////////////////////////////////////////////////////////////////////////
 	
 
@@ -134,7 +137,7 @@ void GameEngine::OnResize(float Change_Width, float Change_Height)
 	WinSizeHeight	= Change_Height;
 		
 	//그래픽 엔진의 리사이즈 함수를 넣으면 될듯
-	pTest_Engine->On_Resize(WinSizeWidth, WinSizeHeight);
+	//pTest_Engine->On_Resize(WinSizeWidth, WinSizeHeight);
 	mDebugManager->Print("윈도우 사이즈 변경",DebugManager::MSG_TYPE::MSG_ENGINE);
 }
 

@@ -1,6 +1,6 @@
 #pragma once
-#include "windows.h"
-#include <queue>
+
+#include "framework.h"
 #include "EngineData.h"
 #include "ParserData.h"
 /// <summary>
@@ -12,8 +12,14 @@
 class MeshData;
 class GlobalData;
 
+#ifdef ENGINE_INTERFACE
+#define EATER_ENGINEDLL __declspec(dllexport)
+#else
+#define EATER_ENGINEDLL __declspec(dllimport)
+#endif
 
-class GraphicEngine
+
+class EATER_ENGINEDLL GraphicEngine
 {
 public:
 	GraphicEngine() {};

@@ -9,6 +9,7 @@ DirectXAdapter::DirectXAdapter()
 
 DirectXAdapter::~DirectXAdapter()
 {
+	ZeroMemory(&m_AdapterDesc, sizeof(DXGI_ADAPTER_DESC1));
 }
 
 HRESULT DirectXAdapter::GetAdapterInfo()

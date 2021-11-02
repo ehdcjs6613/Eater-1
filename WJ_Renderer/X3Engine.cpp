@@ -5,6 +5,7 @@
 #include "DirectXSwapChain.h"
 #include "DirectXRasterizerState.h"
 #include "DirectXAdapter.h"
+#include "GraphicsEngine.h"
 #include "XRenderer.h"
 #include "X3Engine.h"
 
@@ -13,18 +14,13 @@
 
 X3Engine::X3Engine() : m_pDevice(nullptr), m_pDeviceContext(nullptr) 
 {
-	m_pDevice		 = new DirectXDevice();
-	m_pDeviceContext = new DirectXDeviceContext();
 	
-	HR(m_pDeviceContext->CreateDeviceContext(m_pDevice->GetDevice()));
-
-	m_pSwapChain = new DirectXSwapChain(m_pDevice->GetDevice());
-	m_pRenderer = new XRenderer();
 	
 }
 
 X3Engine::~X3Engine()
 {
+
 }
 
 void X3Engine::Initialize(HWND _hWnd, int screenWidth, int screenHeight)
@@ -171,17 +167,17 @@ void X3Engine::Initialize(HWND _hWnd, int screenWidth, int screenHeight)
 	swapChainDesc.Flags = 0;
 
 	// Set the feature level to DirectX 11.
-	featureLevel = D3D_FEATURE_LEVEL_11_0;
+	m_FeatureLevel = D3D_FEATURE_LEVEL_11_0;
 
 	// 스왑 체인과 Device를 같이 생성. (D2D를 지원하기 위해 옵션으로 BGRA 를 셋팅 해 두었다.)
-	HR(D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, D3D11_CREATE_DEVICE_BGRA_SUPPORT, &featureLevel, 1,
-		D3D11_SDK_VERSION, &swapChainDesc, &m_pSwapChain->GetSwapChain(), &m_pDevice->GetDevice(), NULL, &m_pDeviceContext->GetDeviceContext()));
+	D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, D3D11_CREATE_DEVICE_BGRA_SUPPORT, &m_FeatureLevel, 1,
+		D3D11_SDK_VERSION, &swapChainDesc, &m_pSwapChain->m_pSwapChain, &m_pDevice->m_pDX11Device, NULL, &m_pDeviceContext->m_pDX11DeviceContext);
 
 	// Get the pointer to the back buffer.
-	HR(m_pSwapChain->GetSwapChain()->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBufferPtr));
+	(m_pSwapChain->GetSwapChain()->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBufferPtr));
 
 	// Create the render target view with the back buffer pointer.
-	HR(m_pDevice->GetDevice()->CreateRenderTargetView(backBufferPtr, NULL, &DX11_Render_Target_View));
+	(m_pDevice->GetDevice()->CreateRenderTargetView(backBufferPtr, NULL, &m_pRenderer->m_pRenderTarget[0]));
 
 	// Release pointer to the back buffer as we no longer need it.
 	SAFE_RELEASE(backBufferPtr);
@@ -203,8 +199,8 @@ void X3Engine::Initialize(HWND _hWnd, int screenWidth, int screenHeight)
 	depthBufferDesc.MiscFlags = 0;
 
 	// Create the texture for the depth buffer using the filled out description.
-	HR(m_pDevice.GetDevice()->CreateTexture2D(&depthBufferDesc, NULL, &m_pRenderer->GetDepthStencil_Buffer()));
-
+	(m_pDevice->GetDevice()->CreateTexture2D(&depthBufferDesc, NULL, &m_pRenderer->m_pDepthStencil_Buffer));
+	
 	// Initialize the description of the stencil state.
 	ZeroMemory(&depthStencilDesc, sizeof(depthStencilDesc));
 
@@ -230,7 +226,7 @@ void X3Engine::Initialize(HWND _hWnd, int screenWidth, int screenHeight)
 	depthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
 
 	// Create the depth stencil state.
-	HR(m_pDevice->GetDevice()->CreateDepthStencilState(&depthStencilDesc, &m_pRenderer->GetDepthStencil_State()));
+	(m_pDevice->GetDevice()->CreateDepthStencilState(&depthStencilDesc, &m_pRenderer->m_pDepthStencil_State));
 
 	// Set the depth stencil state.
 	m_pDeviceContext->GetDeviceContext()->OMSetDepthStencilState(m_pRenderer->GetDepthStencil_State(), 1);
@@ -244,10 +240,10 @@ void X3Engine::Initialize(HWND _hWnd, int screenWidth, int screenHeight)
 	depthStencilViewDesc.Texture2D.MipSlice = 0;
 
 	// Create the depth stencil view.
-	HR(DX11_Device->CreateDepthStencilView(DX11_Depth_Stencil_Buffer, &depthStencilViewDesc, &DX11_Depth_Stencil_View));
+	(m_pDevice->m_pDX11Device->CreateDepthStencilView(m_pRenderer->m_pDepthStencil_Buffer, &depthStencilViewDesc, &m_pRenderer->m_pDepthStencil_View));
 
 	/// 렌더타겟뷰, 뎁스/스탠실뷰를 파이프라인에 바인딩한다.
-	m_pDeviceContext->GetDeviceContext()->OMSetRenderTargets(1, &m_pRenderer->GetRenderTargetView(), m_pRenderer->GetDepthStencil_View());
+	m_pDeviceContext->GetDeviceContext()->OMSetRenderTargets(1, &m_pRenderer->m_pRenderTarget[0], m_pRenderer->GetDepthStencil_View());
 
 	// Setup the raster description which will determine how and what polygons will be drawn.
 	rasterDesc.AntialiasedLineEnable = false;
@@ -262,7 +258,7 @@ void X3Engine::Initialize(HWND _hWnd, int screenWidth, int screenHeight)
 	rasterDesc.SlopeScaledDepthBias = 0.0f;
 
 	// Create the rasterizer state from the description we just filled out.
-	HR(m_pDevice->GetDevice()->CreateRasterizerState(&rasterDesc, &m_pRasterizerState->GetFrameRS()));
+	(m_pDevice->GetDevice()->CreateRasterizerState(&rasterDesc, &m_pRasterizerState->m_pFrameRS));
 
 	// Now set the rasterizer state.
 	m_pDeviceContext->GetDeviceContext()->RSSetState( m_pRasterizerState->GetFrameRS());
@@ -278,18 +274,18 @@ void X3Engine::Initialize(HWND _hWnd, int screenWidth, int screenHeight)
 	// Create the viewport.
 	m_pDeviceContext->GetDeviceContext()->RSSetViewports(1, &viewport);
 
-	// Mesh
-	//BuildGeometryBuffers();
+	m_pDevice = new DirectXDevice();
+	m_pDeviceContext = new DirectXDeviceContext();
 
-	//BuildFX();
-	//BuildFX_Create();
-	//BuildVertexLayout();
+	HR(m_pDeviceContext->CreateDeviceContext(m_pDevice->GetDevice()));
 
+	m_pSwapChain = new DirectXSwapChain(m_pDevice->GetDevice());
+	m_pRenderer = new XRenderer();
 	// Render State
 	CreateRenderState();
 
 	// 어댑터 정보를 얻는다.
-	GetAdapterInfo();
+	m_pAdapter->GetAdapter();
 
 	m_pAdapter->GetAdapterInfo();
 	
@@ -325,6 +321,13 @@ void X3Engine::OnReSize(float Change_Width, float Change_Height)
 
 void X3Engine::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 {
+	m_pRenderer->Render_Begin(m_pDeviceContext->m_pDX11DeviceContext);
+	
+	m_pRenderer->Render_Update(m_pDeviceContext->m_pDX11DeviceContext);
+
+	m_pRenderer->Render_End(m_pDeviceContext->m_pDX11DeviceContext);
+
+
 }
 
 void X3Engine::CreateRenderState()

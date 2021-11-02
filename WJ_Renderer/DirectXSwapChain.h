@@ -7,9 +7,9 @@ class DirectXSwapChain
 private:
 	UINT					 m_4xMsaaQuality;
 	bool					 m_Enable4xMsaa;
-	IDXGISwapChain*			 m_pSwapChain;
 
 public:
+	IDXGISwapChain*			 m_pSwapChain;
 	//insert Device initialize 
 	DirectXSwapChain(ID3D11Device* _pDevice);
 	~DirectXSwapChain();

@@ -1,5 +1,5 @@
 #pragma once
-#include "GraphicsEngine.h"
+
 
 //    DirectX관련 클래스
 //	  장치의 관리의 D		evice클래스
@@ -16,8 +16,33 @@ class DirectXRasterizerState;
 //	  렌더러 클래스
 class XRenderer;
 
+#if _DEBUG
 
-class X3Engine : public GraphicEngine
+#ifdef _DEBUG
+#define X3Engine_DLL __declspec(dllexport)
+#else 
+#define X3Engine_DLL __declspec(dllimport)
+#endif // X3Engine_DLL __declspec(dllimport)
+
+#else
+#ifdef 1
+#define X3Engine_DLL __declspec(dllexport)
+#else 
+#define X3Engine_DLL __declspec(dllimport)
+#endif // X3Engine_DLL __declspec(dllimport)
+
+#endif
+
+
+#ifdef ENGINE_INTERFACE
+#define EATER_ENGINEDLL __declspec(dllexport)
+#else
+#define EATER_ENGINEDLL __declspec(dllimport)
+#endif
+
+#include <d3dcommon.h>
+
+class EATER_ENGINEDLL X3Engine : public GraphicEngine
 {
 private:
 	//
@@ -35,7 +60,7 @@ private:
 	DirectXAdapter*			m_pAdapter;			///
 ///---------------------------------------------///
 	
-	D3D_FEATURE_LEVEL	    featureLevel;
+	D3D_FEATURE_LEVEL	    m_FeatureLevel;
 private:
 	//렌더러 기능
 	XRenderer*				m_pRenderer;

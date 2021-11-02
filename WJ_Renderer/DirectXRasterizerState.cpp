@@ -9,6 +9,7 @@ DirectXRasterizerState::DirectXRasterizerState() : m_State(StateRS::eSolid), m_p
 
 DirectXRasterizerState::~DirectXRasterizerState()
 {
+	m_pFrameRS->Release();
 }
 
 HRESULT DirectXRasterizerState::Create(ID3D11Device* _pDevice, StateRS _StateRS)

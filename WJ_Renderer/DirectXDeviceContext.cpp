@@ -2,13 +2,14 @@
 #include "DirectXDevice.h"
 #include "DirectXDeviceContext.h"
 
-DirectXDeviceContext::DirectXDeviceContext()
+DirectXDeviceContext::DirectXDeviceContext() : m_pDX11DeviceContext(nullptr)
 {
 
 }
 
 DirectXDeviceContext::~DirectXDeviceContext()
 {
+	m_pDX11DeviceContext->Release();
 }
 
 HRESULT DirectXDeviceContext::CreateDeviceContext(ID3D11Device* _pDevice)
@@ -16,10 +17,11 @@ HRESULT DirectXDeviceContext::CreateDeviceContext(ID3D11Device* _pDevice)
 	
 	//디버그 모드에 따라 dx11의 모드를 설정한다.
 	UINT CreateDeviceFlag = false;
+	CreateDeviceFlag |= D3D11_CREATE_DEVICE_DEBUG;
 
 	D3D_DRIVER_TYPE    DriverType = D3D_DRIVER_TYPE::D3D_DRIVER_TYPE_UNKNOWN;
 
-	D3D_FEATURE_LEVEL  D3DFeatureLevel;
+	D3D_FEATURE_LEVEL  D3DFeatureLevel = D3D_FEATURE_LEVEL_11_0;
 
 	UINT			   D3D4xMsaaQuality;
 

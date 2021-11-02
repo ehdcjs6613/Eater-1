@@ -2,6 +2,8 @@
 /// <summary>
 /// 렌더러의 기능을 지닌 인터페이스이다.
 /// </summary>
+#include "OneCompile.h"
+
 __interface IRenderableFunc
 {
 	bool Render_Begin (ID3D11DeviceContext* _pD3DeviceContext) = 0;
@@ -14,7 +16,9 @@ __interface IRenderableFunc
 
 class XRenderer : public IRenderableFunc
 {
-private:
+public:
+
+
 	ID3D11RenderTargetView*  m_pRenderTarget[5];
 	ID3D11Texture2D*		 m_pDepthStencil_Buffer;
 	ID3D11DepthStencilState* m_pDepthStencil_State;

@@ -1,4 +1,3 @@
-#include "OneCompile.h"
 #include "XRenderer.h"
 
 //기본생성자로 초기화
