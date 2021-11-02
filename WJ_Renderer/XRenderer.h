@@ -6,9 +6,10 @@
 
 __interface IRenderableFunc
 {
-	bool Render_Begin (ID3D11DeviceContext* _pD3DeviceContext) = 0;
-	bool Render_Update(ID3D11DeviceContext* _pD3DeviceContext) = 0;
-	bool Render_End	  (ID3D11DeviceContext* _pD3DeviceContext) = 0;
+	bool Render_Begin		(ID3D11DeviceContext* _pD3DeviceContext) = 0;
+	bool Render_Update		(ID3D11DeviceContext* _pD3DeviceContext) = 0;
+	bool Render_LateUpdate	(ID3D11DeviceContext* _pD3DeviceContext) = 0;
+	bool Render_End			(ID3D11DeviceContext* _pD3DeviceContext) = 0;
 };
 /// <summary>
 /// 이제 어떻게 그릴것인가..
@@ -33,9 +34,10 @@ public:
 	virtual ~XRenderer() final;
 
 public:
-	bool Render_Begin (ID3D11DeviceContext* _pD3DeviceContext);
-	bool Render_Update(ID3D11DeviceContext* _pD3DeviceContext);
-	bool Render_End   (ID3D11DeviceContext* _pD3DeviceContext);
+	bool Render_Begin		 (ID3D11DeviceContext* _pD3DeviceContext);
+	bool Render_Update		 (ID3D11DeviceContext* _pD3DeviceContext);
+	bool Render_LateUpdate   (ID3D11DeviceContext* _pD3DeviceContext);
+	bool Render_End			 (ID3D11DeviceContext* _pD3DeviceContext);
 	
 public:
 	void DrawState();

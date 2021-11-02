@@ -33,6 +33,12 @@ bool XRenderer::Render_Update(ID3D11DeviceContext* _pD3DeviceContext)
 	return 0;
 }
 
+bool XRenderer::Render_LateUpdate(ID3D11DeviceContext* _pD3DeviceContext)
+{
+
+	return 0;
+}
+
 bool XRenderer::Render_End(ID3D11DeviceContext* _pD3DeviceContext)
 {
 	_pD3DeviceContext->RSSetState(0);

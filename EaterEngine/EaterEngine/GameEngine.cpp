@@ -111,7 +111,7 @@ void GameEngine::Update()
 
 	//pTest_Engine->BeginDraw();
 	//pTest_Engine->TextDraw({ (int)(1920 - 350), 10 }, 500, 0, 1, 0, 1, 30, L"카메라 모드 변경 : C");
-	//pTest_Engine->RenderDraw(pTest_OFD, pTest_SRD);
+	//Test_Engine->RenderDraw(pTest_OFD, pTest_SRD);
 	//pTest_Engine->EndDraw();
 	////////////////////////////////////////////////////////////////////////////////////
 	

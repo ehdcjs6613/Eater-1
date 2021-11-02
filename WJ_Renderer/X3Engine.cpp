@@ -57,7 +57,9 @@ void X3Engine::Initialize(HWND _hWnd, int screenWidth, int screenHeight)
 	D3D11_TEXTURE2D_DESC depthBufferDesc;
 	D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
 	D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
+
 	D3D11_RASTERIZER_DESC rasterDesc;
+
 	D3D11_VIEWPORT viewport;
 	float fieldOfView, screenAspect;
 
@@ -223,7 +225,7 @@ void X3Engine::Initialize(HWND _hWnd, int screenWidth, int screenHeight)
 	depthBufferDesc.MiscFlags = 0;
 
 	// Create the texture for the depth buffer using the filled out description.
-	(m_pDevice->GetDevice()->CreateTexture2D(&depthBufferDesc, NULL, &m_pRenderer->m_pDepthStencil_Buffer));
+	m_pDevice->GetDevice()->CreateTexture2D(&depthBufferDesc, NULL, &m_pRenderer->m_pDepthStencil_Buffer);
 	
 	// Initialize the description of the stencil state.
 	ZeroMemory(&depthStencilDesc, sizeof(depthStencilDesc));
@@ -250,7 +252,7 @@ void X3Engine::Initialize(HWND _hWnd, int screenWidth, int screenHeight)
 	depthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
 
 	// Create the depth stencil state.
-	(m_pDevice->GetDevice()->CreateDepthStencilState(&depthStencilDesc, &m_pRenderer->m_pDepthStencil_State));
+	m_pDevice->GetDevice()->CreateDepthStencilState(&depthStencilDesc, &m_pRenderer->m_pDepthStencil_State);
 
 	// Set the depth stencil state.
 	m_pDeviceContext->GetDeviceContext()->OMSetDepthStencilState(m_pRenderer->GetDepthStencil_State(), 1);
@@ -263,6 +265,7 @@ void X3Engine::Initialize(HWND _hWnd, int screenWidth, int screenHeight)
 	depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 	depthStencilViewDesc.Texture2D.MipSlice = 0;
 
+	if (nullptr == m_pRenderer->m_pDepthStencil_Buffer) { return; }
 	// Create the depth stencil view.
 	m_pDevice->m_pDX11Device->CreateDepthStencilView
 	(
@@ -289,10 +292,12 @@ void X3Engine::Initialize(HWND _hWnd, int screenWidth, int screenHeight)
 	rasterDesc.SlopeScaledDepthBias = 0.0f;
 
 	// Create the rasterizer state from the description we just filled out.
+	// 방금 작성한 설명에서 래스터라이저 상태를 만듭니다
 	(m_pDevice->GetDevice()->CreateRasterizerState(&rasterDesc, &m_pRasterizerState->m_pFrameRS));
 
 	// Now set the rasterizer state.
-	m_pDeviceContext->GetDeviceContext()->RSSetState( m_pRasterizerState->GetFrameRS());
+	//이제 래스터라이저 상태를 설정합니다.
+	m_pDeviceContext->GetDeviceContext()->RSSetState( m_pRasterizerState->m_pFrameRS);
 
 	// Setup the viewport for rendering.
 	// 뷰포트의 렌더링을 위해 세팅합니다
@@ -342,7 +347,55 @@ void X3Engine::OnReSize(float Change_Width, float Change_Height)
 	
 
 	/// 재구성 하는데 필요한 정보들 => 랜더타겟의 뷰, 스탠실 뷰,버퍼
+	m_pRenderer->GetRenderTargetView()[0].Release();
+	ReleaseCOM(m_pRenderer->m_pDepthStencil_View);
+	ReleaseCOM(m_pRenderer->m_pDepthStencil_Buffer);
 
+	HR(m_pSwapChain->m_pSwapChain->ResizeBuffers(1, m_iWidth, m_iHeight, DXGI_FORMAT_R8G8B8A8_UNORM, 0));
+	ID3D11Texture2D* backBuffer;
+	HR(m_pSwapChain->m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&backBuffer)));
+	HR(m_pDevice->m_pDX11Device->CreateRenderTargetView(backBuffer, 0, &m_pRenderer->m_pRenderTarget[0]));
+	ReleaseCOM(backBuffer);
+
+	// Create the depth/stencil buffer and view.
+
+	D3D11_TEXTURE2D_DESC depthStencilDesc;
+
+	depthStencilDesc.Width = m_iWidth;
+	depthStencilDesc.Height = m_iHeight;
+	depthStencilDesc.MipLevels = 1;
+	depthStencilDesc.ArraySize = 1;
+	depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+
+	/// 4X MSAA 모드를 사용하지 않음.
+	depthStencilDesc.SampleDesc.Count = 1;
+	depthStencilDesc.SampleDesc.Quality = 0;
+
+	depthStencilDesc.Usage = D3D11_USAGE_DEFAULT;
+	depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	depthStencilDesc.CPUAccessFlags = 0;
+	depthStencilDesc.MiscFlags = 0;
+
+	/// 스탠실 Desc를 기반으로 하여 스탠실 버퍼와 뷰를 재생성한다.
+	HR(m_pDevice->m_pDX11Device->CreateTexture2D(&depthStencilDesc, 0, &m_pRenderer->m_pDepthStencil_Buffer));
+	if (nullptr == m_pRenderer->m_pDepthStencil_Buffer){	return;	}
+	HR(m_pDevice->m_pDX11Device->CreateDepthStencilView(m_pRenderer->m_pDepthStencil_Buffer, 0, &m_pRenderer->m_pDepthStencil_View));
+
+
+	/// 렌더타겟뷰, 뎁스/스탠실뷰를 파이프라인에 바인딩한다.
+	m_pDeviceContext->m_pDX11DeviceContext->OMSetRenderTargets(1, &m_pRenderer->m_pRenderTarget[0], m_pRenderer->m_pDepthStencil_View);
+
+
+	// Set the viewport transform.
+	/// 뷰포트 변환을 셋팅한다.
+	m_pRenderer->m_D3D11_ViewPort[0].TopLeftX = 0;
+	m_pRenderer->m_D3D11_ViewPort[0].TopLeftY = 0;
+	m_pRenderer->m_D3D11_ViewPort[0].Width = static_cast<float>(m_iWidth);
+	m_pRenderer->m_D3D11_ViewPort[0].Height = static_cast<float>(m_iHeight);
+	m_pRenderer->m_D3D11_ViewPort[0].MinDepth = 0.0f;
+	m_pRenderer->m_D3D11_ViewPort[0].MaxDepth = 1.0f;
+
+	m_pDeviceContext->m_pDX11DeviceContext->RSSetViewports(1, &m_pRenderer->m_D3D11_ViewPort[0]);
 
 }
 
@@ -354,6 +407,7 @@ void X3Engine::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 
 	m_pRenderer->Render_End(m_pDeviceContext->m_pDX11DeviceContext);
 
+	m_pSwapChain->m_pSwapChain->Present(0, false);
 
 }
 
