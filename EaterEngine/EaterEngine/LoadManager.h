@@ -14,14 +14,18 @@
 #include "ParserData.h"
 #include "SharedData.h"
 
-struct ParserData::Model;
-struct Model;
+namespace ParserData
+{
+	struct Model;
+}
+
 class LoadData;
 class ModelParser;
 class FBXParser;
 class FBXModel;
 class DH3DEngine;
 class GraphicEngine;
+class TextureBuffer;
 class GraphicEngineManager;
 
 class LoadManager
@@ -41,7 +45,7 @@ public:
 	//매쉬 가져오기
 	static LoadData* GetMesh(std::string Name);
 	//텍스쳐 가져오기
-	void GetTexture(std::string Name);
+	TextureBuffer* GetTexture(std::string Name);
 
 	///Load
 	//모델 로드(스크린 이름,모델의 이름,스케일 여부,애니메이션 여부)
@@ -69,7 +73,8 @@ private:
 	std::string TexturePath;
 	
 	///리스트
-	static std::map<std::string,LoadData*> MeshList;
+	static std::map<std::string,LoadData*>			MeshList;
+	static std::map<std::string, TextureBuffer*>	TextureList;
 private:
 	//규황이 파서
 	ModelParser* EaterParser;

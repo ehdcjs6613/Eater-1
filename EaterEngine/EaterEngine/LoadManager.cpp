@@ -10,6 +10,7 @@
 
 
 std::map<std::string, LoadData*> LoadManager::MeshList;
+std::map<std::string, TextureBuffer*> LoadManager::TextureList;
 LoadManager::LoadManager()
 {
 	GEngine = nullptr;
@@ -41,16 +42,28 @@ LoadData* LoadManager::GetMesh(std::string Name)
 	std::map<std::string, LoadData*>::iterator temp = MeshList.find(Name);
 	if (temp == MeshList.end())
 	{
-		std::string temp = "[Find]다음 내용의 매쉬를 찾지못했습니다 ->" + Name;
+		DebugManager::Print(Name, DebugManager::MSG_TYPE::MSG_LOAD, true);
 		return nullptr;
 	}
+	else
+	{
+		return temp->second;
+	}
 
-	return temp->second;
 }
 
-void LoadManager::GetTexture(std::string Name)
+TextureBuffer* LoadManager::GetTexture(std::string Name)
 {
-	
+	std::map<std::string, TextureBuffer*>::iterator temp = TextureList.find(Name);
+	if (temp == TextureList.end())
+	{
+		DebugManager::Print(Name, DebugManager::MSG_TYPE::MSG_LOAD, true);
+		return nullptr;
+	}
+	else
+	{
+		return temp->second;
+	}
 }
 
 void LoadManager::LoadMesh( std::string Name, bool Scale, bool LoadAnime)
@@ -59,18 +72,11 @@ void LoadManager::LoadMesh( std::string Name, bool Scale, bool LoadAnime)
 	std::string Strtemp = ".fbx";
 	std::string FullName = MeshPath + Name + Strtemp;
 
-
 	//파서를 통해서 매쉬를 로드
 	 ParserData::Model* temp = EaterParser->LoadModel(FullName,Scale,LoadAnime);
 	
 
-	 LoadData* data = new LoadData();
-
-	 ///테스트용
-	 ////////////////////////////////////////////////////////////////////////////////////
-	 //로드한 데이터를 그래픽엔진으로 넘겨서 인덱스버퍼나 각종버퍼들을 생성하고 리스트에 넣어준다
-	 //Test_DHData(temp, Name);
-	 //////////////////////////////////////////////////////////////////////////////////////
+	LoadData* data = new LoadData();
 	Indexbuffer*	IB = GEngine->CreateIndexBuffer(temp);
 	Vertexbuffer*	VB = GEngine->CreateVertexBuffer(temp);
 
@@ -80,13 +86,39 @@ void LoadManager::LoadMesh( std::string Name, bool Scale, bool LoadAnime)
 	data->vertexCount = (int)temp->m_MeshList[0]->m_VertexList.size();
 
 
-	MeshList.insert({Name,data});
+	if (data->IB == nullptr)
+	{
+		std::string strtemp = FullName + "[인덱스버퍼]";
+		DebugManager::Print(strtemp, DebugManager::MSG_TYPE::MSG_LOAD, true);
+		return;
+	}
+	else if (data->VB == nullptr) 
+	{
+		std::string strtemp = FullName + "[버텍스버퍼]";
+		DebugManager::Print(FullName, DebugManager::MSG_TYPE::MSG_LOAD, true);
+		return;
+	}
+	else
+	{
+		MeshList.insert({Name,data});
+	}
 }
 
 void LoadManager::LoadTexture(std::string Name)
 {
 	std::string TextureName = TexturePath + Name + ".dds";
-	GEngine->CreateTextureBuffer(TextureName);
+	TextureBuffer* Tbuffer = GEngine->CreateTextureBuffer(TextureName);
+
+	if (Tbuffer == nullptr || Tbuffer->TextureBufferPointer == nullptr) 
+	{
+		DebugManager::Print(TextureName, DebugManager::MSG_TYPE::MSG_LOAD, true);
+	}
+	else
+	{
+		std::string strTemp = "텍스쳐를 로드합니다 :" + Name;
+		DebugManager::Print(strTemp, DebugManager::MSG_TYPE::MSG_LOAD);
+		TextureList.insert({Name,Tbuffer});
+	}
 }
 
 void LoadManager::LoadPrefap(std::string Name)
@@ -113,10 +145,14 @@ void LoadManager::DeleteMesh(std::string mMeshName)
 	std::map<std::string, LoadData*>::iterator temp = MeshList.find(mMeshName);
 	if (temp == MeshList.end())
 	{
-		std::string temp = "[Delete]다음 내용의 매쉬를 찾지못했습니다 ->" + mMeshName;
+		DebugManager::Print(mMeshName, DebugManager::MSG_TYPE::MSG_DELETE,true);
 		return;
 	}
-	MeshList.erase(mMeshName);
+	else
+	{
+		DebugManager::Print(mMeshName, DebugManager::MSG_TYPE::MSG_DELETE);
+		MeshList.erase(mMeshName);
+	}
 }
 
 void LoadManager::DeleteMeshAll()

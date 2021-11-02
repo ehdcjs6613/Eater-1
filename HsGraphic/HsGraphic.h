@@ -1,7 +1,7 @@
 #pragma once
 
 #include "GraphicsEngine.h"
-#include "HsEngineHelper.h"
+#include <d3d11.h>
 
 #ifdef HSGRAPHIC_INTERFACE
 #define HS_GRAPHICDLL __declspec(dllexport)
@@ -9,6 +9,13 @@
 #define HS_GRAPHICDLL __declspec(dllimport)
 #endif
 
+class ShaderManager;
+class RenderingManager;
+
+
+class TextureBuffer;
+class Indexbuffer;
+class Vertexbuffer;
 
 class HsGraphic : public GraphicEngine
 {
@@ -17,8 +24,6 @@ public:
 	virtual ~HsGraphic();
 
 
-
-	
 	virtual HS_GRAPHICDLL void Initialize(HWND _hWnd, int screenWidth, int screenHeight) override;
 	virtual HS_GRAPHICDLL void OnReSize(int Change_Width, int Change_Height) override;
 	virtual HS_GRAPHICDLL void Render(std::queue<MeshData*>* meshList, GlobalData* global) override;
@@ -33,6 +38,7 @@ public:
 private:
 	void CreateRenderTarget();	//랜더타겟 뎁스스텐실 뷰포트를 생성한다
 	void CreateRenderState();	//랜더타겟 상태를 생성해준다
+	void CreateDevice();		//엔진의 디바이스를 생성해준다
 	void BeginRender();			//랜더링 시작
 	void EngineRender();		//엔진 랜더링
 	void EndRender();			//랜더링 종료
@@ -41,9 +47,9 @@ private:
 
 	///엔진 데이터
 	HWND					hwnd;				//윈도우 핸들
-	ID3D11Device*			m_device;			//디바이스
-	ID3D11DeviceContext*	m_deviceContext;	//디바이스 컨텍스트
-	ID3D11RenderTargetView* m_renderTargetView;	//랜더 타겟
+	ID3D11Device*			Device;				//디바이스
+	ID3D11DeviceContext*	DeviceContext;		//디바이스 컨텍스트
+	ID3D11RenderTargetView* mRenderTargetView;	//랜더 타겟
 	ID3D11DepthStencilView* mDepthStencilView;	//뎁스 스텐실뷰
 	D3D11_VIEWPORT			mScreenViewport;	//뷰포트
 	IDXGISwapChain*			mSwapChain;			//스왑체인	
@@ -57,4 +63,8 @@ private:
 	//랜더링 모드
 	ID3D11RasterizerState* mWireframe;
 	ID3D11RasterizerState* mSolid;
+
+	//매니저들
+	ShaderManager*		mShaderManager;
+	RenderingManager*	mRenderManager;
 };

@@ -54,7 +54,7 @@ public:
 	TextureBuffer* CreateTextureBuffer(std::string Name);
 
 	//선택한 그래픽 엔진으로 Resize
-	void OnReSize(float Change_Width, float Change_Height);
+	void OnReSize(int Change_Width, int Change_Height);
 
 	//모든 엔진 삭제
 	void Delete();
