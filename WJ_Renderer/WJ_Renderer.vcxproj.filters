@@ -92,5 +92,8 @@
     <ClInclude Include="DirectXRenderTargeter.h">
       <Filter>DirectX</Filter>
     </ClInclude>
+    <ClInclude Include="AlignedAllocationPolicy.h">
+      <Filter>DirectX\Define</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

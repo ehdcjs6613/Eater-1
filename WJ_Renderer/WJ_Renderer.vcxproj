@@ -172,6 +172,7 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)lib"
     <ClCompile Include="XRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AlignedAllocationPolicy.h" />
     <ClInclude Include="DirectXAdapter.h" />
     <ClInclude Include="DirectXDefine.h" />
     <ClInclude Include="DirectXDevice.h" />

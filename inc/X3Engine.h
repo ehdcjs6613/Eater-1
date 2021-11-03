@@ -77,7 +77,9 @@ private:
 	Grahpics2D*				m_pGraphics2D;
 	
 
-
+	DirectX::XMMATRIX m_ProjectionMatrix;
+	DirectX::XMMATRIX m_WorldMatrix;
+	DirectX::XMMATRIX m_OtherMatrix;
 private:
 	//int					  m_iWidth;
 	//int					  m_iHeight;
