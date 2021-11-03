@@ -132,7 +132,7 @@ void HsGraphic::CreateRenderTarget()
 
 	ID3D11Texture2D* backBuffer;
 	mSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&backBuffer));
-	//HR(Device->CreateRenderTargetView(backBuffer, 0, &mRenderTargetView));
+	Device->CreateRenderTargetView(backBuffer, 0, &mRenderTargetView);
 	backBuffer->Release();
 
 	ID3D11Texture2D* mDepthStencilBuffer = nullptr;
@@ -153,7 +153,7 @@ void HsGraphic::CreateRenderTarget()
 
 
 	Device->CreateTexture2D(&depthStencilDesc, 0, &mDepthStencilBuffer);
-	//HR(Device->CreateDepthStencilView(mDepthStencilBuffer, 0, &mDepthStencilView));
+	Device->CreateDepthStencilView(mDepthStencilBuffer, 0, &mDepthStencilView);
 	DeviceContext->OMSetRenderTargets(1, &mRenderTargetView, mDepthStencilView);
 
 	//ViewPort
@@ -315,7 +315,7 @@ void HsGraphic::EngineRender()
 void HsGraphic::EndRender()
 {
 	//엔진 랜더링 종료
-	//HR(mSwapChain->Present(0, 0));
+	mSwapChain->Present(0, 0);
 }
 
 int HsGraphic::GetAspectRatio()
@@ -331,20 +331,21 @@ TextureBuffer* HsGraphic::CreateTextureBuffer(std::string path)
 	ID3D11ShaderResourceView* Textures = nullptr;
 	ID3D11Resource* texResource = nullptr;
 
-	//CString _path = path.c_str();
+	CString _path = path.c_str();
 	 
-	//if ( FAILED(DirectX::CreateDDSTextureFromFile(Device, _path, &texResource, &Textures, 0)))
+	//if (CreateDDSTextureFromFile(Device, _path, &texResource, &Textures, 0))
 	//{
 	//	return nullptr;
 	//}
-	//
-	TextureBuffer* buffer = new TextureBuffer();
+	
+	//TextureBuffer* buffer = new TextureBuffer();
 	//buffer->TextureBufferPointer = Textures;
 	//buffer->size = sizeof(ID3D11ShaderResourceView);
 	//
 	//texResource->Release();
 
-	return buffer;
+	//return buffer;
+	return nullptr;
 }
 
 void HsGraphic::OnReSize(int Change_Width, int Change_Height)

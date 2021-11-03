@@ -1,4 +1,5 @@
 #include "GameObject.h"
+#include "EngineData.h"
 #include "ObjectManager.h"
 GameObject::GameObject()
 {
@@ -75,8 +76,4 @@ void GameObject::PushConponentFunction(Component* con, unsigned int type)
 		con->FUNCTION_MASK |= END_UPDATE;
 		break;
 	}
-
-	//ObjectManager::PushAwake(con);
-
-
 }

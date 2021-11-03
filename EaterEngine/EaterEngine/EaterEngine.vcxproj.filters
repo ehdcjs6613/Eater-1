@@ -126,9 +126,6 @@
     <ClInclude Include="GraphicEngineManager.h">
       <Filter>소스 파일\Manager\GraphicManager</Filter>
     </ClInclude>
-    <ClInclude Include="Export\GraphicsEngine.h">
-      <Filter>소스 파일\Engine\GraphicsClass</Filter>
-    </ClInclude>
     <ClInclude Include="Export\Transform.h">
       <Filter>소스 파일\Component\Transform</Filter>
     </ClInclude>
@@ -144,11 +141,14 @@
     <ClInclude Include="Export\GameObject.h">
       <Filter>소스 파일\GameObject</Filter>
     </ClInclude>
-    <ClInclude Include="EaterEngineDLL.h">
-      <Filter>소스 파일\Data</Filter>
-    </ClInclude>
     <ClInclude Include="Export\Camera.h">
       <Filter>소스 파일\Component\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Export\EaterEngineDLL.h">
+      <Filter>소스 파일\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsEngine.h">
+      <Filter>소스 파일\Engine\GraphicsClass</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

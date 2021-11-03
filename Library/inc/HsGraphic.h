@@ -1,8 +1,8 @@
 #pragma once
 
+#include "HsGraphicDLL.h"
 #include "GraphicsEngine.h"
 #include "d3d11.h"
-#include "HsGraphicDLL.h"
 
 //class ShaderManager;
 //class RenderingManager;
