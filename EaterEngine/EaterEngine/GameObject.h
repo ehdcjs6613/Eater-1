@@ -2,9 +2,10 @@
 
 #include <string>
 #include <vector>
+#include <functional>
 #include "Component.h"
 #include "EngineData.h"
-#include "ObjectManager.h"
+
 class Component;
 #ifdef ENGINE_INTERFACE
 #define EATER_ENGINEDLL __declspec(dllexport)
@@ -70,9 +71,8 @@ private:
 
 	//컨퍼넌트 리스트
 	std::vector<Component*> ComponentList;
-	//자식객체 리스트
-	//std::vector<GameObject*> ChildList;
 
+	EATER_ENGINEDLL void PushConponentFunction(Component* con, unsigned int type);
 };
 
 template<typename T>
@@ -87,54 +87,47 @@ inline T* GameObject::AddComponent(typename std::enable_if<std::is_base_of<Compo
 	ConponentBox->SetObject(this);
 	
 	//나중에 이타입으로 찾아서 가져올수있도록 타입 설정
-	ConponentBox->ComponentType = typeid(T).hash_code();
+	ConponentBox->SetConponentType(typeid(T).hash_code());
 
 	///오버라이딩 확인 각각에맞는 함수포인터 리스트에 넣는다 
 	//Awake
 	if (&Component::Awake != &T::Awake)
 	{
-		ObjectManager::PushAwake(ConponentBox);
-		ConponentBox->FUNCTION_MASK |= AWAKE;
+		PushConponentFunction(ConponentBox, AWAKE);
 	}
 
 	//Start
 	if (&Component::Start != &T::Start)
 	{
-		ObjectManager::PushStart(ConponentBox);
-		ConponentBox->FUNCTION_MASK |= START;
+		PushConponentFunction(ConponentBox, START);
 	}
 
 	//StartUpdate
 	if (&Component::StartUpdate != &T::StartUpdate)
 	{
-		ObjectManager::PushStartUpdate(ConponentBox);
-		ConponentBox->FUNCTION_MASK |= START_UPDATE;
+		PushConponentFunction(ConponentBox, START_UPDATE);
 	}
 	//이동 행렬
 	if (&Component::TransformUpdate != &T::TransformUpdate)
 	{
-		ObjectManager::PushTransformUpdate(ConponentBox);
-		ConponentBox->FUNCTION_MASK |= Transform_UPDATE;
+		PushConponentFunction(ConponentBox, Transform_UPDATE);
 	}
 	//물리 
 	if (&Component::PhysicsUpdate != &T::PhysicsUpdate)
 	{
-		ObjectManager::PushPhysicsUpdate(ConponentBox);
-		ConponentBox->FUNCTION_MASK |= Physics_UPDATE;
+		PushConponentFunction(ConponentBox, Physics_UPDATE);
 	}
 
 	//DefaultUpdate
 	if (&Component::Update != &T::Update)
 	{
-		ObjectManager::PushUpdate(ConponentBox);
-		ConponentBox->FUNCTION_MASK |= UPDATE;
+		PushConponentFunction(ConponentBox, UPDATE);
 	}
 
 	//EndUpdate
 	if (&Component::EndUpdate != &T::EndUpdate)
 	{
-		ObjectManager::PushEndUpdate(ConponentBox);
-		ConponentBox->FUNCTION_MASK |= END_UPDATE;
+		PushConponentFunction(ConponentBox, END_UPDATE);
 	}
 
 	return ConponentBox;
@@ -150,7 +143,7 @@ inline T* GameObject::GetComponent(typename std::enable_if<std::is_base_of<Compo
 	for (int i = 0; i < count; i++)
 	{
 		//현재 컨퍼넌트와 찾고자하는 컨퍼넌트의 타입 비교
-		if (ComponentList[i]->ComponentType == typeid(T).hash_code())
+		if (ComponentList[i]->GetConponentType() == typeid(T).hash_code())
 		{
 			//찾은 컨퍼넌트를 타입변환
 			T* temp = dynamic_cast<T*>(ComponentList[i]);
