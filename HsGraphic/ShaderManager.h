@@ -1,6 +1,5 @@
 #pragma once
 #include <string>
-
 #include "d3dcommon.h"
 #include "d3d11shader.h"
 #include "dxgiformat.h"

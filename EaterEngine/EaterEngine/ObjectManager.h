@@ -7,13 +7,7 @@
 #include "EngineData.h"
 #include <functional>
 #include "Delegate.h"
-
-
-#ifdef ENGINE_INTERFACE
-#define EATER_ENGINEDLL __declspec(dllexport)
-#else
-#define EATER_ENGINEDLL __declspec(dllimport)
-#endif
+#include "EaterEngineDLL.h"
 
 
 class Camera;
@@ -22,7 +16,6 @@ class GameObject;
 class Component;
 class DH3DEngine;
 class MeshFilter;
-
 
 class ObjectManager
 {
@@ -43,15 +36,15 @@ public:
 	void Initialize(HWND _g_hWnd);
 
 	/// 시작 단계
-	static EATER_ENGINEDLL void PushStart(Component* obj);
-	static EATER_ENGINEDLL void PushAwake(Component* obj);
+	static void PushStart(Component* obj);
+	static void PushAwake(Component* obj);
 
 	/// 컨퍼넌트의 업데이트 함수를 넣어준다
-	static EATER_ENGINEDLL void PushStartUpdate(Component* obj);
-	static EATER_ENGINEDLL void PushTransformUpdate(Component* obj);
-	static EATER_ENGINEDLL void PushPhysicsUpdate(Component* obj);
-	static EATER_ENGINEDLL void PushEndUpdate(Component* obj);
-	static EATER_ENGINEDLL void PushUpdate(Component* obj);
+	static void PushStartUpdate(Component* obj);
+	static void PushTransformUpdate(Component* obj);
+	static void PushPhysicsUpdate(Component* obj);
+	static void PushEndUpdate(Component* obj);
+	static void PushUpdate(Component* obj);
 
 	/// 업데이트 함수 리스트를 실행시킴
 	void PlayUpdate();

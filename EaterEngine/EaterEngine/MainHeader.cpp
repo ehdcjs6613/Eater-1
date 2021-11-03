@@ -52,7 +52,7 @@ EATER_ENGINEDLL void StartScene()
 	//ObjectManager::GM()->PlayStart();
 }
 
-EATER_ENGINEDLL void CreateScene(Scene* mSceneTemp, std::string SceneName)
+EATER_ENGINEDLL void CreateSceneSub(Scene* mSceneTemp, std::string SceneName)
 {
 	gGameEngine->PushScene(mSceneTemp, SceneName);
 }

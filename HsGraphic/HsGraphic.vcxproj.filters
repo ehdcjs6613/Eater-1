@@ -75,6 +75,9 @@
     <ClInclude Include="BufferData.h">
       <Filter>소스 파일\Shader\Data</Filter>
     </ClInclude>
+    <ClInclude Include="HsGraphicDLL.h">
+      <Filter>소스 파일\Helper</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
