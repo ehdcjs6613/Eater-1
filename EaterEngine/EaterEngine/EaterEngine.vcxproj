@@ -82,7 +82,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <TargetName>$(ProjectName)_x86r</TargetName>
+    <TargetName>$(ProjectName)_x64r</TargetName>
     <LibraryPath>$(SolutionDir)ShareData\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -149,11 +149,10 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)lib"</Command>
       <AdditionalDependencies>GraphicEngine.lib;KHParser_x64d.lib;libfbxsdk.lib;HsGraphic_x64d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy /Y "$(ProjectDir)GraphicsEngine.h" "$(SolutionDir)ShareData"
-copy /Y "$(ProjectDir)MainHeader.h" "$(SolutionDir)ShareData"
-copy /Y "$(ProjectDir)GameObject.h" "$(SolutionDir)ShareData"
-copy /Y "$(ProjectDir)Scene.h" "$(SolutionDir)ShareData"
-copy /Y "$(ProjectDir)ObjectManager.h" "$(SolutionDir)ShareData"
+      <Command>copy /Y "$(ProjectDir)GraphicsEngine.h" "$(SolutionDir)ShareData\Component"
+copy /Y "$(ProjectDir)MainHeader.h" "$(SolutionDir)ShareData\Component"
+copy /Y "$(ProjectDir)GameObject.h" "$(SolutionDir)ShareData\Component"
+copy /Y "$(ProjectDir)Scene.h" "$(SolutionDir)ShareData\Component"
 
 copy /Y "$(TargetDir)*.dll" "$(SolutionDir)ShareData\lib"
 copy /Y "$(TargetDir)*.lib" "$(SolutionDir)ShareData\lib"
@@ -187,11 +186,10 @@ copy /Y "$(ProjectDir)Camera.h" "$(SolutionDir)ShareData\Component"</Command>
       <AdditionalDependencies>HsGraphic_x64r.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy /Y "$(ProjectDir)GraphicsEngine.h" "$(SolutionDir)ShareData"
-copy /Y "$(ProjectDir)MainHeader.h" "$(SolutionDir)ShareData"
-copy /Y "$(ProjectDir)GameObject.h" "$(SolutionDir)ShareData"
-copy /Y "$(ProjectDir)Scene.h" "$(SolutionDir)ShareData"
-copy /Y "$(ProjectDir)ObjectManager.h" "$(SolutionDir)ShareData"
+      <Command>copy /Y "$(ProjectDir)GraphicsEngine.h" "$(SolutionDir)ShareData\Component"
+copy /Y "$(ProjectDir)MainHeader.h" "$(SolutionDir)ShareData\Component"
+copy /Y "$(ProjectDir)GameObject.h" "$(SolutionDir)ShareData\Component"
+copy /Y "$(ProjectDir)Scene.h" "$(SolutionDir)ShareData\Component"
 
 copy /Y "$(TargetDir)*.dll" "$(SolutionDir)ShareData\lib"
 copy /Y "$(TargetDir)*.lib" "$(SolutionDir)ShareData\lib"

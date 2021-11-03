@@ -1,4 +1,5 @@
 #include "GameObject.h"
+#include "ObjectManager.h"
 GameObject::GameObject()
 {
 	IsDelete = true;	//삭제 여부
@@ -39,4 +40,43 @@ Component* GameObject::GetDeleteComponent(int i)
 int GameObject::GetComponentCount()
 {
 	return ComponentList.size();
+}
+
+void GameObject::PushConponentFunction(Component* con, unsigned int type)
+{
+	switch (type)
+	{
+	case AWAKE:
+		ObjectManager::PushAwake(con);
+		con->FUNCTION_MASK |= AWAKE;
+		break;
+	case START:
+		ObjectManager::PushStart(con);
+		con->FUNCTION_MASK |= START;
+		break;
+	case START_UPDATE:
+		ObjectManager::PushStartUpdate(con);
+		con->FUNCTION_MASK |= START_UPDATE;
+		break;
+	case Transform_UPDATE:
+		ObjectManager::PushTransformUpdate(con);
+		con->FUNCTION_MASK |= Transform_UPDATE;
+		break;
+	case Physics_UPDATE:
+		ObjectManager::PushTransformUpdate(con);
+		con->FUNCTION_MASK |= Physics_UPDATE;
+		break;
+	case UPDATE:
+		ObjectManager::PushTransformUpdate(con);
+		con->FUNCTION_MASK |= UPDATE;
+		break;
+	case END_UPDATE:
+		ObjectManager::PushTransformUpdate(con);
+		con->FUNCTION_MASK |= END_UPDATE;
+		break;
+	}
+
+	//ObjectManager::PushAwake(con);
+
+
 }
