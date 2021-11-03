@@ -109,7 +109,8 @@
     <PostBuildEvent>
       <Command>copy/Y "$(TargetDir)*.lib"   "$(SolutionDir)Library\lib"
 copy/Y "$(TargetDir)*.dll"   "$(SolutionDir)Library\lib"
-copy /Y "$(ProjectDir)HsGraphic.h" "$(SolutionDir)Library\inc"</Command>
+copy /Y "$(ProjectDir)HsGraphic.h" "$(SolutionDir)Library\inc"
+copy /Y "$(ProjectDir)HsGraphicDLL.h" "$(SolutionDir)Library\inc"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -137,7 +138,8 @@ copy /Y "$(ProjectDir)HsGraphic.h" "$(SolutionDir)Library\inc"</Command>
     <PostBuildEvent>
       <Command>copy/Y "$(TargetDir)*.lib"   "$(SolutionDir)Library\lib"
 copy/Y "$(TargetDir)*.dll"   "$(SolutionDir)Library\lib"
-copy /Y "$(ProjectDir)HsGraphic.h" "$(SolutionDir)Library\inc"</Command>
+copy /Y "$(ProjectDir)HsGraphic.h" "$(SolutionDir)Library\inc"
+copy /Y "$(ProjectDir)HsGraphicDLL.h" "$(SolutionDir)Library\inc"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -151,22 +153,20 @@ copy /Y "$(ProjectDir)HsGraphic.h" "$(SolutionDir)Library\inc"</Command>
       <AdditionalIncludeDirectories>$(SolutionDir)Library\inc</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <AdditionalOptions>/Ylsymbol %(AdditionalOptions)</AdditionalOptions>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>
-      </AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)Library\lib</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Link>
     <PostBuildEvent>
       <Command>copy/Y "$(TargetDir)*.lib"   "$(SolutionDir)Library\lib"
 copy/Y "$(TargetDir)*.dll"   "$(SolutionDir)Library\lib"
-copy /Y "$(ProjectDir)HsGraphic.h" "$(SolutionDir)Library\inc"</Command>
+copy /Y "$(ProjectDir)HsGraphic.h" "$(SolutionDir)Library\inc"
+copy /Y "$(ProjectDir)HsGraphicDLL.h" "$(SolutionDir)Library\inc"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -196,7 +196,8 @@ copy /Y "$(ProjectDir)HsGraphic.h" "$(SolutionDir)Library\inc"</Command>
     <PostBuildEvent>
       <Command>copy/Y "$(TargetDir)*.lib"   "$(SolutionDir)Library\lib"
 copy/Y "$(TargetDir)*.dll"   "$(SolutionDir)Library\lib"
-copy /Y "$(ProjectDir)HsGraphic.h" "$(SolutionDir)Library\inc"</Command>
+copy /Y "$(ProjectDir)HsGraphic.h" "$(SolutionDir)Library\inc"
+copy /Y "$(ProjectDir)HsGraphicDLL.h" "$(SolutionDir)Library\inc"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

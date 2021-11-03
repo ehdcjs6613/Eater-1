@@ -1,6 +1,7 @@
 #include "Component.h"
 #include "Transform.h"
 #include "GameObject.h"
+#include "EngineData.h"
 #include "DebugManager.h"
 
 Transform::Transform()

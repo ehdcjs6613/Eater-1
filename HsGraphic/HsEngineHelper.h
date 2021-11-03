@@ -25,4 +25,4 @@
 #include <assert.h>
 #include <d3d11.h>
 #include <string>
-//#include "atlstr.h"
+#include "atlstr.h"

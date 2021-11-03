@@ -3,10 +3,9 @@
 #include <string>
 #include <vector>
 #include <functional>
-#include "Component.h"
-#include "EngineData.h"
-#include "EaterEngineDLL.h"
 
+#include "EaterEngineDLL.h"
+#include "Component.h"
 
 
 #define AWAKE				0x00000001
@@ -21,8 +20,7 @@
 /// <summary>
 /// 기본 게임 오브젝트
 /// </summary>
-
-class Component;
+class MeshData;
 class Transform;
 class GameObject
 {

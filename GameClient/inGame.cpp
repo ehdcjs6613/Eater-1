@@ -4,21 +4,21 @@
 #include "GameObject.h"
 #include "MeshFilter.h"
 #include "Transform.h"
-#include "KeyInput.h"
+//#include "KeyInput.h"
 #include "Camera.h"
 
 void InGame::Awake()
 {
 	//불러오는 매쉬의 경로 파악
 	///카메라
-	GameObject* testobj = Instance("카메라 오브젝트");
-	testobj->AddComponent<Keyinput>();
-	testobj->AddComponent<Camera>();
+	//GameObject* testobj = Instance("카메라 오브젝트");
+	//testobj->AddComponent<Keyinput>();
+	//testobj->AddComponent<Camera>();
 
 
-	testobj = Instance();
-	testobj->AddComponent<MeshFilter>()->SetMeshName("Table");
-	testobj->transform->Position = { 2, 0, 0 };
+	//testobj = Instance();
+	//testobj->AddComponent<MeshFilter>()->SetMeshName("Table");
+	//testobj->transform->Position = { 2, 0, 0 };
 	
 }
 

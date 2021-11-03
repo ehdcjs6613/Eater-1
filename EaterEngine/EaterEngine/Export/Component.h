@@ -13,7 +13,7 @@ class Component
 {
 public:
 	EATER_ENGINEDLL Component();
-	EATER_ENGINEDLL virtual ~Component();
+	virtual ~Component();
 
 	//시작 단계에 가장먼저 실행되는 함수
 	virtual void Awake() {};

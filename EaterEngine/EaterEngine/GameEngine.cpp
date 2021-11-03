@@ -69,6 +69,8 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 	mObjectManager->Initialize(mHwnd);
 	mLoadManager->Initialize(mGraphicManager);
 	
+	//처음시작하기전 엔진의 구조간략설명
+	mDebugManager->printStart();
 
 
 
@@ -85,8 +87,6 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 
 
 	mGraphicManager->Initialize(Hwnd, WinSizeWidth, WinSizeHeight);
-	//처음시작하기전 엔진의 구조간략설명
-	mDebugManager->printStart();
 }
 
 void GameEngine::Update()

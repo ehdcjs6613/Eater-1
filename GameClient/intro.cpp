@@ -2,8 +2,8 @@
 #include "intro.h";
 #include "GameObject.h"
 #include "MeshFilter.h"
-#include "Transform.h"
-#include "KeyInput.h"
+//#include "AI.h"
+//#include "KeyInput.h"
 #include "Camera.h"
 
 void intro::Awake()
@@ -18,13 +18,13 @@ void intro::Awake()
 
 	///Ä«¸Þ¶ó
 	testobj = Instance();
-	testobj->AddComponent<Keyinput>();
+	//testobj->AddComponent<AI>();
 	testobj->AddComponent<Camera>();
-	
-	
-	testobj = Instance("Table");
-	testobj->AddComponent<MeshFilter>()->SetMeshName("Table");
-	testobj->transform->Position = { 2, 0, 0 };
+	//
+	//
+	//testobj = Instance("Table");
+	//testobj->AddComponent<MeshFilter>()->SetMeshName("Table");
+	//testobj->transform->Position = { 2, 0, 0 };
 	//
 	//
 	//for (int i = 0; i < 5; i++) 
