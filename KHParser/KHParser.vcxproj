@@ -82,13 +82,13 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)FBX</IncludePath>
     <TargetName>$(ProjectName)_x64d</TargetName>
     <AllProjectIncludesArePublic>false</AllProjectIncludesArePublic>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)FBX</IncludePath>
     <TargetName>$(ProjectName)_x64</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -170,7 +170,7 @@ copy/Y "..\FBX\lib\86\r\libfbxsdk.dll"   "..\\Lib"</Command>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>PARSER_EXPORT;_WINDOWS;_USRDLL;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)inc;$(ProjectDir)Export;$(SolutionDir)FBX\include;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)ShareData\lib;$(ProjectDir)Export;$(SolutionDir)ShareData;$(SolutionDir)FBX\include;$(SolutionDir)FBX\Lib\64\d;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
@@ -179,6 +179,7 @@ copy/Y "..\FBX\lib\86\r\libfbxsdk.dll"   "..\\Lib"</Command>
       </SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\Lib;..\FBX\lib\64\d;</AdditionalLibraryDirectories>
+      <AdditionalDependencies>$(SolutionDir)FBX\Lib\64\d\libfbxsdk.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>md  "..\\Lib"
@@ -207,7 +208,7 @@ copy/Y "..\FBX\lib\64\d\libfbxsdk.dll"   "..\\Lib"</Command>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>PARSER_EXPORT;_WINDOWS;_USRDLL;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>..\Inc;.\Export;..\FBX\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\Export;..\FBX\include;$(SolutionDir)FBX\include;$(SolutionDir)FBX\lib;$(SolutionDir)ShareData;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -216,6 +217,7 @@ copy/Y "..\FBX\lib\64\d\libfbxsdk.dll"   "..\\Lib"</Command>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\Lib;..\FBX\lib\64\r;</AdditionalLibraryDirectories>
+      <AdditionalDependencies>$(SolutionDir)FBX\lib\64\r\libfbxsdk.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>md  "..\\Lib"

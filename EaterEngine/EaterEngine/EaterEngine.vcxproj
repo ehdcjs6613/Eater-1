@@ -79,6 +79,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <TargetName>$(ProjectName)_x64d</TargetName>
+    <LibraryPath>$(SolutionDir)ShareData\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -146,7 +147,7 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)lib"</Command>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalLibraryDirectories>$(SolutionDir)lib;$(SolutionDir)lib\DirectXTK2021_06_14;$(SolutionDir)lib\FX11_2021_06_14</AdditionalLibraryDirectories>
-      <AdditionalDependencies>GraphicEngine.lib;KHParser_x64d.lib;libfbxsdk.lib;HsGraphic_x64d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>KHParser_x64d.lib;HsGraphic_x64d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy /Y "$(ProjectDir)GraphicsEngine.h" "$(SolutionDir)ShareData\Component"
