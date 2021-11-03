@@ -11,7 +11,7 @@ void intro::Awake()
 	//불러오는 매쉬의 경로 파악
 	LoadMeshPath("../Resources/Mesh/");
 	LoadTesturePath("../Resources/Texture/");
-
+	
 	LoadMesh("Table");
 	LoadTesture("WoodCrate01");
 
@@ -20,11 +20,11 @@ void intro::Awake()
 	testobj = Instance();
 	testobj->AddComponent<Keyinput>();
 	testobj->AddComponent<Camera>();
-	//
-	//
-	//testobj = Instance("Table");
-	//testobj->AddComponent<MeshFilter>()->SetMeshName("Table");
-	//testobj->transform->Position = { 2, 0, 0 };
+	
+	
+	testobj = Instance("Table");
+	testobj->AddComponent<MeshFilter>()->SetMeshName("Table");
+	testobj->transform->Position = { 2, 0, 0 };
 	//
 	//
 	//for (int i = 0; i < 5; i++) 

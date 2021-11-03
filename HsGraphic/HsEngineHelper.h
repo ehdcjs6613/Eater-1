@@ -8,14 +8,15 @@
 #pragma comment(lib, "DirectXTK.lib")
 #endif
 #include "DDSTextureLoader.h"
+
 ////////////////////////////////////////////////
 
 
 //D3D 기본 라이브러리 
 ////////////////////////////////////////////////
-#pragma comment(lib, "d3d11.lib")
-#pragma comment(lib, "dxgi.lib")
-#pragma comment(lib, "d3dcompiler.lib") //쉐이더
+#pragma comment(lib, "d3d11")
+#pragma comment(lib, "dxgi")
+#pragma comment(lib, "d3dcompiler") //쉐이더
 ////////////////////////////////////////////////
 
 
@@ -24,4 +25,4 @@
 #include <assert.h>
 #include <d3d11.h>
 #include <string>
-#include "atlstr.h"
+//#include "atlstr.h"

@@ -68,13 +68,14 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 	mSceneManager->Initialize();
 	mObjectManager->Initialize(mHwnd);
 	mLoadManager->Initialize(mGraphicManager);
-	//mLoadManager->Initialize(pTest_Engine);
+	
 
 
 
 
 	/// <summary>
 	/// 여기 두부분만 해주면 그래픽엔진 매니저에서 알아서 해줄꺼임
+	/// 다만 그래픽엔진의 순수가상함수로된건 무조건다만들어놔야함
 	/// </summary>
 	/////////////////////////////////////////////////////////////////
 	mGraphicManager->PushEngine<HsGraphic>("형선");

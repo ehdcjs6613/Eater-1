@@ -1,5 +1,8 @@
 #pragma once
 #include "Scene.h"
+
+
+class GameObject;
 class  intro :public Scene
 {
 public:

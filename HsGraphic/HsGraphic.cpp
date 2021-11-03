@@ -77,7 +77,7 @@ Indexbuffer* HsGraphic::CreateIndexBuffer(ParserData::Model* mModel)
 	ibd.MiscFlags = 0;
 	D3D11_SUBRESOURCE_DATA iinitData;
 	iinitData.pSysMem = &IndexList[0];
-	HR(Device->CreateBuffer(&ibd, &iinitData, &mIB));
+	//HR(Device->CreateBuffer(&ibd, &iinitData, &mIB));
 
 	//인덱스버퍼를 보낼수있도록 변경
 	indexbuffer->IndexBufferPointer = mIB;
@@ -117,7 +117,7 @@ Vertexbuffer* HsGraphic::CreateVertexBuffer(ParserData::Model* mModel)
 	vbd.MiscFlags = 0;
 	D3D11_SUBRESOURCE_DATA vinitData;
 	vinitData.pSysMem = &temp[0];
-	HR(Device->CreateBuffer(&vbd, &vinitData, &mVB));
+	//HR(Device->CreateBuffer(&vbd, &vinitData, &mVB));
 	
 
 	vertexbuffer->VertexbufferPointer = mVB;
@@ -132,7 +132,7 @@ void HsGraphic::CreateRenderTarget()
 
 	ID3D11Texture2D* backBuffer;
 	mSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&backBuffer));
-	HR(Device->CreateRenderTargetView(backBuffer, 0, &mRenderTargetView));
+	//HR(Device->CreateRenderTargetView(backBuffer, 0, &mRenderTargetView));
 	backBuffer->Release();
 
 	ID3D11Texture2D* mDepthStencilBuffer = nullptr;
@@ -153,7 +153,7 @@ void HsGraphic::CreateRenderTarget()
 
 
 	Device->CreateTexture2D(&depthStencilDesc, 0, &mDepthStencilBuffer);
-	HR(Device->CreateDepthStencilView(mDepthStencilBuffer, 0, &mDepthStencilView));
+	//HR(Device->CreateDepthStencilView(mDepthStencilBuffer, 0, &mDepthStencilView));
 	DeviceContext->OMSetRenderTargets(1, &mRenderTargetView, mDepthStencilView);
 
 	//ViewPort
@@ -178,7 +178,7 @@ void HsGraphic::CreateRenderState()
 	solidDesc.FrontCounterClockwise = false;
 	solidDesc.DepthClipEnable = true;
 
-	HR(Device->CreateRasterizerState(&solidDesc, &mSolid));
+	//HR(Device->CreateRasterizerState(&solidDesc, &mSolid));
 
 
 	D3D11_RASTERIZER_DESC wireframeDesc;
@@ -188,7 +188,7 @@ void HsGraphic::CreateRenderState()
 	wireframeDesc.FrontCounterClockwise = false;
 	wireframeDesc.DepthClipEnable = true;
 
-	HR(Device->CreateRasterizerState(&wireframeDesc, &mWireframe));
+	//HR(Device->CreateRasterizerState(&wireframeDesc, &mWireframe));
 }
 
 void HsGraphic::CreateDevice()
@@ -219,7 +219,7 @@ void HsGraphic::CreateDevice()
 	//버전확인
 	if (featureLevel != D3D_FEATURE_LEVEL_11_0)
 	{
-		MessageBox(0, L"Direct3D LEVEL 11", 0, MB_OK);
+		//MessageBox(0, L"Direct3D LEVEL 11", 0, MB_OK);
 		return;
 	}
 
@@ -315,7 +315,7 @@ void HsGraphic::EngineRender()
 void HsGraphic::EndRender()
 {
 	//엔진 랜더링 종료
-	HR(mSwapChain->Present(0, 0));
+	//HR(mSwapChain->Present(0, 0));
 }
 
 int HsGraphic::GetAspectRatio()
@@ -331,18 +331,18 @@ TextureBuffer* HsGraphic::CreateTextureBuffer(std::string path)
 	ID3D11ShaderResourceView* Textures = nullptr;
 	ID3D11Resource* texResource = nullptr;
 
-	CString _path = path.c_str();
+	//CString _path = path.c_str();
 	 
-	if ( FAILED(DirectX::CreateDDSTextureFromFile(Device, _path, &texResource, &Textures, 0)))
-	{
-		return nullptr;
-	}
-	
+	//if ( FAILED(DirectX::CreateDDSTextureFromFile(Device, _path, &texResource, &Textures, 0)))
+	//{
+	//	return nullptr;
+	//}
+	//
 	TextureBuffer* buffer = new TextureBuffer();
-	buffer->TextureBufferPointer = Textures;
-	buffer->size = sizeof(ID3D11ShaderResourceView);
-
-	texResource->Release();
+	//buffer->TextureBufferPointer = Textures;
+	//buffer->size = sizeof(ID3D11ShaderResourceView);
+	//
+	//texResource->Release();
 
 	return buffer;
 }

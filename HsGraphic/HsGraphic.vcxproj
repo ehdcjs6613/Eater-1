@@ -81,32 +81,35 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <TargetName>$(ProjectName)_x64d</TargetName>
-    <LibraryPath>$(SolutionDir)ShareData\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <TargetName>$(ProjectName)_x64r</TargetName>
-    <LibraryPath>$(SolutionDir)ShareData\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;HSGRAPHIC_EXPORTS;_WINDOWS;_USRDLL;HSGRAPHIC_INTERFACE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>HSGRAPHIC_INTERFACE</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)lib\DirectXTK2021_06_14\;$(SolutionDir)lib;$(SolutionDir)inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Library\inc</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
+      <AdditionalLibraryDirectories>$(SolutionDir)Library\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies />
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>libci.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
     </Link>
     <PostBuildEvent>
-      <Command>copy/Y "$(TargetDir)*.lib"   "$(SolutionDir)ShareData\lib"
-copy/Y "$(TargetDir)*.dll"   "$(SolutionDir)ShareData\lib"
-copy /Y "$(ProjectDir)HsGraphic.h" "$(SolutionDir)inc"</Command>
+      <Command>copy/Y "$(TargetDir)*.lib"   "$(SolutionDir)Library\lib"
+copy/Y "$(TargetDir)*.dll"   "$(SolutionDir)Library\lib"
+copy /Y "$(ProjectDir)HsGraphic.h" "$(SolutionDir)Library\inc"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -115,10 +118,11 @@ copy /Y "$(ProjectDir)HsGraphic.h" "$(SolutionDir)inc"</Command>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;HSGRAPHIC_EXPORTS;_WINDOWS;_USRDLL;HSGRAPHIC_INTERFACE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>HSGRAPHIC_INTERFACE</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(SolutionDir)Library\inc</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -126,35 +130,43 @@ copy /Y "$(ProjectDir)HsGraphic.h" "$(SolutionDir)inc"</Command>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
+      <AdditionalLibraryDirectories>$(SolutionDir)Library\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies />
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Link>
     <PostBuildEvent>
-      <Command>copy/Y "$(TargetDir)*.lib"   "$(SolutionDir)ShareData\lib"
-copy/Y "$(TargetDir)*.dll"   "$(SolutionDir)ShareData\lib"
-copy /Y "$(ProjectDir)HsGraphic.h" "$(SolutionDir)inc"</Command>
+      <Command>copy/Y "$(TargetDir)*.lib"   "$(SolutionDir)Library\lib"
+copy/Y "$(TargetDir)*.dll"   "$(SolutionDir)Library\lib"
+copy /Y "$(ProjectDir)HsGraphic.h" "$(SolutionDir)Library\inc"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;HSGRAPHIC_EXPORTS;_WINDOWS;_USRDLL;HSGRAPHIC_INTERFACE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>HSGRAPHIC_INTERFACE</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)ShareData;$(SolutionDir)ShareData\lib</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Library\inc</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <AdditionalOptions>/Ylsymbol %(AdditionalOptions)</AdditionalOptions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>d3d11.lib;dxgi.lib;d3dcompiler.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Library\lib</AdditionalLibraryDirectories>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Link>
     <PostBuildEvent>
-      <Command>copy/Y "$(TargetDir)*.lib"   "$(SolutionDir)ShareData\lib"
-copy/Y "$(TargetDir)*.dll"   "$(SolutionDir)ShareData\lib"
-copy /Y "$(ProjectDir)HsGraphic.h" "$(SolutionDir)inc"</Command>
+      <Command>copy/Y "$(TargetDir)*.lib"   "$(SolutionDir)Library\lib"
+copy/Y "$(TargetDir)*.dll"   "$(SolutionDir)Library\lib"
+copy /Y "$(ProjectDir)HsGraphic.h" "$(SolutionDir)Library\inc"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -163,12 +175,12 @@ copy /Y "$(ProjectDir)HsGraphic.h" "$(SolutionDir)inc"</Command>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;HSGRAPHIC_INTERFACE;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>HSGRAPHIC_INTERFACE</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile />
-      <AdditionalIncludeDirectories>$(SolutionDir)ShareData;$(SolutionDir)ShareData\lib</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Library\inc</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -176,12 +188,15 @@ copy /Y "$(ProjectDir)HsGraphic.h" "$(SolutionDir)inc"</Command>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>d3d11.lib;dxgi.lib;d3dcompiler.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Library\lib</AdditionalLibraryDirectories>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Link>
     <PostBuildEvent>
-      <Command>copy/Y "$(TargetDir)*.lib"   "$(SolutionDir)ShareData\lib"
-copy/Y "$(TargetDir)*.dll"   "$(SolutionDir)ShareData\lib"
-copy /Y "$(ProjectDir)HsGraphic.h" "$(SolutionDir)inc"</Command>
+      <Command>copy/Y "$(TargetDir)*.lib"   "$(SolutionDir)Library\lib"
+copy/Y "$(TargetDir)*.dll"   "$(SolutionDir)Library\lib"
+copy /Y "$(ProjectDir)HsGraphic.h" "$(SolutionDir)Library\inc"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -192,6 +207,7 @@ copy /Y "$(ProjectDir)HsGraphic.h" "$(SolutionDir)inc"</Command>
     <ClInclude Include="HsDefine.h" />
     <ClInclude Include="HsEngineHelper.h" />
     <ClInclude Include="HsGraphic.h" />
+    <ClInclude Include="HsGraphicDLL.h" />
     <ClInclude Include="InputLayout.h" />
     <ClInclude Include="RenderingManager.h" />
     <ClInclude Include="ShaderManager.h" />
@@ -211,10 +227,18 @@ copy /Y "$(ProjectDir)HsGraphic.h" "$(SolutionDir)inc"</Command>
     <FxCompile Include="..\Resources\Shader\HS\texture_ps.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="..\Resources\Shader\HS\texture_vs.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
