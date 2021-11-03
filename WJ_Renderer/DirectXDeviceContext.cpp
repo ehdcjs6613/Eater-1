@@ -23,7 +23,7 @@ HRESULT DirectXDeviceContext::CreateDeviceContext(ID3D11Device* _pDevice)
 
 	D3D_FEATURE_LEVEL  D3DFeatureLevel = D3D_FEATURE_LEVEL_11_0;
 
-	UINT			   D3D4xMsaaQuality;
+	UINT			   D3D4xMsaaQuality  = 0;//false
 
 #ifdef DEBUG
 	CreateDeviceFlag |= D3D11_CREATE_DEVICE_DEBUG;
@@ -43,8 +43,7 @@ HRESULT DirectXDeviceContext::CreateDeviceContext(ID3D11Device* _pDevice)
 	);
 
 	//포인터가 널인지 검사.
-	assert(_pDevice);
-	assert(this->m_pDX11DeviceContext);
+	
 
 	
 	//FeatureLevel이 d3d11이 안된(지원하지 않는)경우.

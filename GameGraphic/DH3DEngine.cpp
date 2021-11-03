@@ -269,7 +269,8 @@ void DH3DEngine::CreateGraphicResource()
 	GetAdapterInfo();
 
 	// D2D 를 사용하기 위함.
-	m_pGraphics2D = new Grahpics2D(g_hWnd, DX11_Swap_Chain);
+	m_pGraphics2D = new Grahpics2D();
+	m_pGraphics2D->initialize(g_hWnd, DX11_Swap_Chain);
 	//m_D2DSupport = new D2DSupport(g_hWnd, DX11_Swap_Chain);
 	m_AxisGrid = new AxisGrid(DX11_Device, DX11_Device_Context, DX11_Raster_State);
 

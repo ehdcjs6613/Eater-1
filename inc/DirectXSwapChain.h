@@ -14,8 +14,10 @@ public:
 	DirectXSwapChain(ID3D11Device* _pDevice);
 	~DirectXSwapChain();
 public:
-	//Make  SwapChain 
+	//스왑체인을 만들자
 	bool MakeASwapChain(ID3D11Device* _pDevice, HWND _hWnd, int _iWidth, int _iHeight);
+	//리메이크된 스왑체인을 만들자
+	bool ReMakedASwapChain(int _iWidth, int _iHeight);
 
 public:
 	IDXGISwapChain* GetSwapChain();

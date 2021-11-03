@@ -22,8 +22,10 @@ class ObjectManager;
 class SceneManager;
 class KeyinputManager;
 class GraphicEngineManager;
-
-class HsGraphic;
+//형선이형꺼
+//class HsGraphic;
+//내꺼
+class X3Engine;
 class Scene;
 //게임 오브젝트
 class GameObject;
@@ -84,7 +86,7 @@ private:
 	
 	
 	//테스트용 엔진
-	//DH3DEngine*			pTest_Engine;
+	DH3DEngine*			pTest_Engine;
 	//OneFrameData*		pTest_OFD;
 	//SharedRenderData*	pTest_SRD;
 	//DHParser::Mesh*		pTest_Mesh;

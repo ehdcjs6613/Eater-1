@@ -1,23 +1,46 @@
 #include "Grahpics2D.h"
 
-Grahpics2D::Grahpics2D(HWND _hWnd, IDXGISwapChain* _3D_SwapChain, float _Font_Size /*= 24.f*/)
+Grahpics2D::Grahpics2D()
+{
+	
+
+}
+
+Grahpics2D::~Grahpics2D()
+{
+	m_TextLayOut->Release();
+	m_TextColor->Release();
+}
+
+
+
+
+void Grahpics2D::initialize(HWND _hWnd, IDXGISwapChain*& _3D_SwapChain, float _Font_Size)
 {
 	g_hWnd = _hWnd;
 	// 백버퍼 가져오기.
-	_3D_SwapChain->GetBuffer(0, IID_PPV_ARGS(&m_3D_BackBuffer));
+
+	HRESULT hr = CoInitialize(0);
+
+	hr =  _3D_SwapChain->GetBuffer(0, IID_PPV_ARGS(&m_3D_BackBuffer));
+
+	if (nullptr == this->m_3D_BackBuffer)
+	{
+		return;
+	}
+
 
 	// 화면의 dpi를 가져옴.
 	float dpi;
 	D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &m_2D_Factory);
 
 	// com 초기화
-	HRESULT hr = CoInitialize(0);
 
 	// Windows Imaging Component Factory를 생성한다. (WIC Factory 생성)
 	hr = CoCreateInstance(CLSID_WICImagingFactory, NULL, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&pWICFactory));
 	hr = CoCreateInstance(CLSID_WICBmpDecoder, NULL, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&pDecodePtr));
 
-	dpi = GetDpiForWindow(_hWnd);
+	dpi = GetDpiForWindow(g_hWnd);
 
 	// 생성할 RenderTarget 에 대한 정보 설정.
 	D2D1_RENDER_TARGET_PROPERTIES props =
@@ -44,13 +67,16 @@ Grahpics2D::Grahpics2D(HWND _hWnd, IDXGISwapChain* _3D_SwapChain, float _Font_Si
 	// FontCollection과 바꿔먹을 것.
 	IDWriteFontSet* pCustomFontSet;
 
-	m_WriteFactory->CreateFontFileReference(L"../Font/Font1.ttf", nullptr, &pFontFileReference);
 
-	m_WriteFactory->CreateFontSetBuilder(&pFontSetBuilder1);
+	hr = (m_WriteFactory->CreateFontFileReference(L"../Font/Font1.ttf", nullptr, &pFontFileReference));
 
-	pFontSetBuilder1->AddFontFile(pFontFileReference);
+	hr = m_WriteFactory->CreateFontSetBuilder(&pFontSetBuilder1);
 
-	pFontSetBuilder1->CreateFontSet(&pCustomFontSet);
+	if (nullptr == pFontFileReference) { return; }
+
+	hr = pFontSetBuilder1->AddFontFile(pFontFileReference);
+
+	hr = pFontSetBuilder1->CreateFontSet(&pCustomFontSet);
 
 	m_WriteFactory->CreateFontCollectionFromFontSet(pCustomFontSet, &m_FontCollection);
 
@@ -85,17 +111,7 @@ Grahpics2D::Grahpics2D(HWND _hWnd, IDXGISwapChain* _3D_SwapChain, float _Font_Si
 	// 좌상단 기준으로 텍스트 정렬.
 	m_TextFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING);
 	m_TextFormat->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_NEAR);
-
 }
-
-Grahpics2D::~Grahpics2D()
-{
-	m_TextLayOut->Release();
-	m_TextColor->Release();
-}
-
-
-
 
 void Grahpics2D::LoadBitMap(std::wstring _Image_Name, std::wstring _File_Path)
 {

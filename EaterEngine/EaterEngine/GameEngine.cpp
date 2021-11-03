@@ -19,7 +19,8 @@
 
 //테스트용
 #include "DH3DEngine.h"
-#include "HsGraphic.h";
+//#include "HsGraphic.h";
+#include "X3Engine.h"
 
 
 GameEngine::GameEngine()
@@ -78,8 +79,12 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 	/// 여기 두부분만 해주면 그래픽엔진 매니저에서 알아서 해줄꺼임
 	/// </summary>
 	/////////////////////////////////////////////////////////////////
-	mGraphicManager->PushEngine<HsGraphic>("형선");
-	mGraphicManager->ChoiceEngine("형선");
+	//mGraphicManager->PushEngine<HsGraphic>("형선");
+	//mGraphicManager->ChoiceEngine("형선");
+
+	mGraphicManager->PushEngine<X3Engine>("우진");
+	mGraphicManager->ChoiceEngine("우진");
+
 	/////////////////////////////////////////////////////////////////
 
 

@@ -42,7 +42,12 @@ bool DirectXSwapChain::MakeASwapChain(ID3D11Device* _pDevice, HWND _hWnd, int _i
 	DXGI_SWAP_CHAIN_DESC swapChain_Description;
 	swapChain_Description.BufferDesc.Width = _iWidth;
 	swapChain_Description.BufferDesc.Height = _iHeight;
-	swapChain_Description.BufferDesc.RefreshRate.Numerator = 60;
+	//// Vsync 지원
+	//swapChain_Description.BufferDesc.RefreshRate.Numerator = numerator;
+	//swapChain_Description.BufferDesc.RefreshRate.Denominator = denominator;
+
+	// Vsync 미지원
+	swapChain_Description.BufferDesc.RefreshRate.Numerator = 0;
 	swapChain_Description.BufferDesc.RefreshRate.Denominator = 1;
 	swapChain_Description.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	swapChain_Description.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
@@ -94,6 +99,22 @@ bool DirectXSwapChain::MakeASwapChain(ID3D11Device* _pDevice, HWND _hWnd, int _i
 	ReleaseCOM(dxgiDevice);
 	ReleaseCOM(dxgiAdapter);
 	ReleaseCOM(dxgiFactory);
+
+	return 0;
+}
+
+bool DirectXSwapChain::ReMakedASwapChain(int _iWidth, int _iHeight)
+{
+	HR(this->m_pSwapChain->ResizeBuffers
+	(
+		1,										//BufferCount
+		_iWidth,
+		_iHeight,
+		DXGI_FORMAT_R8G8B8A8_UNORM,
+		0										//SwapChainFLAG
+	));
+	
+
 
 	return 0;
 }

@@ -13,7 +13,7 @@ void intro::Awake()
 	LoadTesturePath("../Texture/");
 
 	LoadMesh("Table");
-	LoadTesture("WoodCrate01");
+	//LoadTesture("WoodCrate01.dds");
 
 
 	///Ä«¸Þ¶ó

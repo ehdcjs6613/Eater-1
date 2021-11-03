@@ -14,16 +14,16 @@
 class Graphics2D_DLL Grahpics2D
 {
 public:
-	Grahpics2D(HWND g_hWnd, IDXGISwapChain* _3D_SwapChain, float _Font_Size = 24.f);
+	Grahpics2D();
 	~Grahpics2D();
 
 public:
 
+	IDXGISwapChain* m_3D_SwapChain = nullptr;
 private:
 	// 메인 핸들
 	HWND g_hWnd;
 	// DX11에서 생성된 스왑체인.
-	IDXGISwapChain* m_3D_SwapChain = nullptr;
 	// 백버퍼
 	IDXGISurface* m_3D_BackBuffer = nullptr;
 	// Direct2D Factory
@@ -70,6 +70,8 @@ private:
 	std::queue<Image_Queue_Data*> Sprite_Queue;	// 스프라이트 이미지 데이터 큐	
 	std::map<std::wstring, ID2D1Bitmap*> Image_Resource;
 public:
+	void initialize(HWND g_hWnd, IDXGISwapChain*& _3D_SwapChain, float _Font_Size = 24.f);
+
 	void LoadBitMap(std::wstring _Image_Name, std::wstring _File_Path);
 
 	void thDrawBitmap(std::wstring _Image_Name, POINTF _Position, float _Alpha, float _Scale_X = 1.f, float _Scale_Y = 1.f, float _Angle = 0.f);

@@ -20,6 +20,13 @@ class SharedRenderData;
 
 class Grahpics2D;
 
+//그리기를 위한 포인터의  클래스
+class Vertexbuffer;
+class Indexbuffer;
+class TextureBuffer;
+class MeshData;
+class GlobalData;
+
 #if _DEBUG
 
 #ifdef _DEBUG
@@ -37,11 +44,14 @@ class Grahpics2D;
 
 #endif
 
-class __declspec(dllimport) GraphicEngine;
+//class __declspec(dllimport) GraphicEngine;
 
+#include "GraphicsEngine.h"
 #include <d3dcommon.h>
+#include <string>
+#include <queue>
 
-class X3Engine_DLL X3Engine : public  GraphicEngine
+class X3Engine : public  GraphicEngine
 {
 private:
 	//
@@ -50,7 +60,7 @@ private:
 ///------------------------------------------------	
 	DirectXDevice*			m_pDevice;			///
 	DirectXDeviceContext*	m_pDeviceContext;	///
-	DirectXSwapChain*		m_pSwapChain;		///
+	//DirectXSwapChain*		m_pSwapChain;		///
 ///---------------------------------------------///
 	DirectXRasterizerState* m_pRasterizerState; ///
 	DirectXRasterizerState* m_pRasterizerSolid; ///
@@ -64,36 +74,36 @@ private:
 	//렌더러 기능
 	XRenderer*				m_pRenderer;
 
-	Grahpics2D* m_pGraphics2D;
+	Grahpics2D*				m_pGraphics2D;
 	
 
 
 private:
-	int					  m_iWidth;
-	int					  m_iHeight;
+	//int					  m_iWidth;
+	//int					  m_iHeight;
 	int					  m_videoCardMemory;
 public:
 
 public:
 	//기본엔진 생성자
-	 X3Engine();
+	X3Engine_DLL X3Engine();
 	//이 엔진에 아래는 없다
-	virtual ~X3Engine() final;
+	X3Engine_DLL virtual ~X3Engine() final;
 public:
 #pragma region Parents Overriding Function List
 
 	///GraphicEngine class로부터 상속된 함수들
 	
 	///게임 엔진쪽에서 윈도우 핸들을 넘겨줄것임
-	virtual void Initialize(HWND _hWnd, int screenWidth, int screenHeight) override;
+	X3Engine_DLL virtual void Initialize(HWND _hWnd, int _iWidth, int _iHeight) override;
 
 
 	///그래픽 엔진과 게임엔진에서 주고받아야할 함수들
-	virtual Indexbuffer*  CreateIndexBuffer(ParserData::Model* mModel) override;	//인덱스 버퍼를 만들어준다
-	virtual Vertexbuffer* CreateVertexBuffer(ParserData::Model* mModel) override;	//버텍스 버퍼를 만들어준다
-	virtual void		  CreateTextureBuffer() override;									//텍스쳐를 만들어준다
-	virtual void		  OnReSize(float Change_Width, float Change_Height) override;			//리사이즈
-
+	virtual Indexbuffer*   CreateIndexBuffer(ParserData::Model* mModel) override;	//인덱스 버퍼를 만들어준다
+	virtual Vertexbuffer*  CreateVertexBuffer(ParserData::Model* mModel) override;	//버텍스 버퍼를 만들어준다
+	virtual TextureBuffer* CreateTextureBuffer(std::string path) override;									//텍스쳐를 만들어준다
+	virtual void		   OnReSize(int Change_Width, int Change_Height) override;			//리사이즈
+	virtual void		   Delete() override;
 
 	/// 랜더링을 한다 매쉬 랜더데이터 리스트, 글로벌 데이터
 	virtual void		  Render(std::queue<MeshData*>* meshList, GlobalData* global) override;
