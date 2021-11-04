@@ -2,8 +2,8 @@
 #include "intro.h";
 #include "GameObject.h"
 #include "MeshFilter.h"
-//#include "AI.h"
-//#include "KeyInput.h"
+#include "AI.h"
+#include "KeyInput.h"
 #include "Camera.h"
 
 void intro::Awake()
@@ -18,7 +18,7 @@ void intro::Awake()
 
 	///Ä«¸Þ¶ó
 	testobj = Instance();
-	//testobj->AddComponent<AI>();
+	testobj->AddComponent<AI>();
 	testobj->AddComponent<Camera>();
 	//
 	//

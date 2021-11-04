@@ -6,12 +6,14 @@
 /// 업데이트 함수 포인터 리스트에 넣어줌
 /// </summary>
 
+#include "EaterEngineDLL.h"
+
 class GameObject;
 class Component
 {
 public:
-	Component();
-	virtual ~Component();
+	EATER_ENGINEDLL Component();
+	virtual EATER_ENGINEDLL ~Component();
 
 	//시작 단계에 가장먼저 실행되는 함수
 	virtual void Awake() {};
@@ -34,11 +36,12 @@ public:
 	//클래스의 타입 GetComponent에서 쓸떄 사용
 public:
 	//컨퍼넌트 타입을 넣어준다
-	void SetConponentType(size_t type);
+	EATER_ENGINEDLL void SetComponentType(size_t type);
 	//컨퍼넌트 타입을 받아온다
-	size_t GetConponentType();
+	EATER_ENGINEDLL size_t GetComponentType();
 	//오브젝트를 넣어준다
-	void SetObject(GameObject* obj);
+	EATER_ENGINEDLL void SetObject(GameObject* obj);
+private:
 protected:
 	//이컨퍼넌트를 가지고 있는 게임오브젝트
 	GameObject* gameobject;
