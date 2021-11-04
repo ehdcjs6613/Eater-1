@@ -5,14 +5,12 @@
 //카메라 버퍼 
 struct CameraBuffer
 {
-	DirectX::XMMATRIX viewproj;
-	DirectX::XMMATRIX ViewMatrix;
-	DirectX::XMFLOAT3 CamPos;
+	DirectX::XMMATRIX view;
+	DirectX::XMMATRIX proj;
 };
 
 //오브젝트 버퍼
 struct ObjectBuffer
 {
 	DirectX::XMMATRIX world;
-	DirectX::XMMATRIX TexMatrix;
 };

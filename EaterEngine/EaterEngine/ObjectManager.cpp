@@ -152,7 +152,7 @@ void ObjectManager::PlayUpdate()
 
 
 	//글로벌 데이터
-	Global->mProj = Camera::GetMainView();
+	Global->mProj = Camera::GetProj();
 	Global->mViewMX = Camera::GetMainView();
 
 	///모든오브젝트의 데이터를 랜더큐에 담는다

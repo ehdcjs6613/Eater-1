@@ -1,5 +1,6 @@
 #include "GameObject.h"
 #include "EngineData.h"
+#include "DebugManager.h"
 #include "ObjectManager.h"
 GameObject::GameObject()
 {
@@ -30,6 +31,19 @@ GameObject* GameObject::GetChild(std::string Name)
 GameObject* GameObject::GetChild(int Number)
 {
 	return nullptr;
+}
+
+Transform* GameObject::GetTransform()
+{
+	if (transform != nullptr)
+	{
+		return  transform;
+	}
+	else
+	{
+		DebugManager::Print("현재 오브젝트 안에 Transform 컨퍼넌트가없음", DebugManager::MSG_TYPE::MSG_ERROR, true);
+		return nullptr;
+	}
 }
 
 Component* GameObject::GetDeleteComponent(int i)
@@ -64,15 +78,15 @@ void GameObject::PushComponentFunction(Component* con, unsigned int type)
 		con->FUNCTION_MASK |= Transform_UPDATE;
 		break;
 	case Physics_UPDATE:
-		ObjectManager::PushTransformUpdate(con);
+		ObjectManager::PushPhysicsUpdate(con);
 		con->FUNCTION_MASK |= Physics_UPDATE;
 		break;
 	case UPDATE:
-		ObjectManager::PushTransformUpdate(con);
+		ObjectManager::PushUpdate(con);
 		con->FUNCTION_MASK |= UPDATE;
 		break;
 	case END_UPDATE:
-		ObjectManager::PushTransformUpdate(con);
+		ObjectManager::PushEndUpdate(con);
 		con->FUNCTION_MASK |= END_UPDATE;
 		break;
 	}

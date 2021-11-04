@@ -1,11 +1,11 @@
 #pragma once
 #if defined(DEBUG) | defined(_DEBUG)
 #ifndef HR
-#define HR(x)									\
-	{									\
-		HRESULT hr = (x);						\
-		if(FAILED(hr))							\
-		{								\
+#define HR(x)\
+	{\
+		HRESULT hr = (x);\
+		if(FAILED(hr))\
+		{\
 			LPWSTR output;                                    	\
 			FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM |		\
 				FORMAT_MESSAGE_IGNORE_INSERTS 	 |		\
@@ -16,7 +16,7 @@
 				(LPTSTR) &output,				\
 				0,						\
 				NULL);					        \
-			MessageBox(NULL, output, L"Error", MB_OK);		\
+			MessageBox(NULL, output, L"Error", MB_OK);\
 		}								\
 	}
 #endif
