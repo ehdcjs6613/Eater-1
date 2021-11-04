@@ -2,10 +2,12 @@
 #include "DirectXRenderTargeter.h"
 #include "DirectXAdapter.h"
 #include "DirectXSwapChain.h"
+#include "XVertex.h"
 #include "XRenderer.h"
+#include <tchar.h>
 
 //기본생성자로 초기화	
-XRenderer::XRenderer() :m_ArrColor{ 0.1f,0.1f ,0.1f ,1 }, m_pRenderTargeter{} , m_pDepthStencil_State(nullptr), m_pDepthStencil_View(nullptr)
+XRenderer::XRenderer() :m_ArrColor{ 0.0f,0.0f ,0.5f ,1 }, m_pRenderTargeter{} , m_pDepthStencil_State(nullptr), m_pDepthStencil_View(nullptr)
 
 {
 	m_pRenderTargeter = new DirectXRenderTargeter();
@@ -41,11 +43,28 @@ bool XRenderer::Render_Begin(ID3D11DeviceContext* _pD3DeviceContext)
 		0
 	);
 
+
 	return 0;
 }
 
-bool XRenderer::Render_Update(ID3D11DeviceContext* _pD3DeviceContext)
+bool XRenderer::Render_Update(ID3D11Device* m_pDevice,ID3D11DeviceContext* _pD3DeviceContext , ID3D11VertexShader* _vs, ID3D11PixelShader* _ps , ID3D11InputLayout* _il, ID3D11Buffer* _vb)
 {
+	
+	_pD3DeviceContext->IASetInputLayout(_il);
+	_pD3DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_POINTLIST);
+
+	_pD3DeviceContext->VSSetShader(_vs, nullptr, 0);
+	_pD3DeviceContext->PSSetShader(_ps, nullptr, 0);
+
+	UINT stride = sizeof(XVertex);
+	UINT offset = 0;
+
+	_pD3DeviceContext->IASetVertexBuffers(0, 1, &_vb, &stride, &offset);
+
+	_pD3DeviceContext->Draw(4, 0);
+
+	
+
 
 	return 0;
 }
@@ -74,7 +93,18 @@ bool XRenderer::Render_2D(Grahpics2D* _pGrahpics2D, DirectXAdapter* _pAdapter)
 	_pGrahpics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 0, 1, 1, 20, (TCHAR*)L"SharedSysMemory: %lu MB", _pAdapter->GetAdapter().SharedSystemMemory / 1024 / 1024);
 	_pGrahpics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 1, 1, 0, 1, 20, (TCHAR*)L"AdpaterLuid: %u.%d", _pAdapter->GetAdapter().AdapterLuid.HighPart, _pAdapter->GetAdapter().AdapterLuid.LowPart);
 
-	
+	//_pGrahpics2D->Push_DrawImage
+	//(
+	//	L"../Image/apple_1.png", //name
+	//	{ 1000,1 },				//Image Position
+	//	{ 1,1 },				//Image Scale//
+	//	0,
+	//	1.0f,
+	//	{ 0,0 }, //POS
+	//	{ 0.1f, 0.1f }, //SCALE
+	//	0,
+	//	1.0f
+	//);
 
 	return false;
 }

@@ -22,15 +22,16 @@ class ObjectManager;
 class SceneManager;
 class KeyinputManager;
 class GraphicEngineManager;
-//형선이형꺼
-//class HsGraphic;
-//내꺼
-class X3Engine;
+
+class HsGraphic;
 class Scene;
 //게임 오브젝트
 class GameObject;
 
-class DH3DEngine;
+//테스트용 클래스
+class X3Engine;
+class Texture;
+class Grahpics2D;
 
 class GameEngine
 {
@@ -70,12 +71,22 @@ public:
 	float GetMousePosY();			//마우스 위치 Y
 private:
 	///각종 매니저들
+<<<<<<< HEAD
+	ObjectManager*		mObjectManager;		//오브젝트 관리 매니저
+	DebugManager*		mDebugManager;		//디버깅매니저
+	LoadManager*		mLoadManager;		//로드 관련 매니저
+	SceneManager*		mSceneManager;		//스크린 관리 매니저
+	KeyinputManager*	mKeyManager;		//키인풋 관련 매니저
+	Grahpics2D*			mUI;
+
+=======
 	ObjectManager*			mObjectManager;		//오브젝트 관리 매니저
 	DebugManager*			mDebugManager;		//디버깅매니저
 	LoadManager*			mLoadManager;		//로드 관련 매니저
 	SceneManager*			mSceneManager;		//스크린 관리 매니저
 	KeyinputManager*		mKeyManager;		//키인풋 관련 매니저
 	GraphicEngineManager*	mGraphicManager;	//그래픽엔진 관리 매니저
+>>>>>>> main
 private:
 	///클라쪽에서 받아야 하는 데이터
 	HWND mHwnd; //핸들
@@ -86,9 +97,22 @@ private:
 	
 	
 	//테스트용 엔진
-	DH3DEngine*			pTest_Engine;
+	//DH3DEngine*			pTest_Engine;
+<<<<<<< HEAD
+	X3Engine*			pX3Engine;
+
+	OneFrameData*		pTest_OFD;
+	SharedRenderData*	pTest_SRD;
+	DHParser::Mesh*		pTest_Mesh;
+
+private:
+	//테스트용 
+	IDXGISwapChain* DX11_Swap_Chain = nullptr;
+	Texture* m_pTexture = nullptr;
+=======
 	//OneFrameData*		pTest_OFD;
 	//SharedRenderData*	pTest_SRD;
 	//DHParser::Mesh*		pTest_Mesh;
+>>>>>>> main
 };
 

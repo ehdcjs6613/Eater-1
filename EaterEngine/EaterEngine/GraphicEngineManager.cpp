@@ -28,6 +28,7 @@ void GraphicEngineManager::EngineAllInitialize(HWND Hwnd, int WinSizeWidth, int 
 
 void GraphicEngineManager::Initialize(HWND Hwnd, int WinSizeWidth, int WinSizeHeight)
 {
+	//선택한 엔진 초기화
 	if (NowEngine == nullptr)
 	{
 		DebugManager::Print("선택한 그래픽엔진이 없습니다", DebugManager::MSG_TYPE::MSG_ERROR);
@@ -40,6 +41,7 @@ void GraphicEngineManager::Initialize(HWND Hwnd, int WinSizeWidth, int WinSizeHe
 
 void GraphicEngineManager::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 {
+	//선택한 엔진 랜더링
 	if (NowEngine == nullptr)
 	{
 		DebugManager::Print("선택한 그래픽엔진이 없습니다", DebugManager::MSG_TYPE::MSG_ERROR);
@@ -52,26 +54,31 @@ void GraphicEngineManager::Render(std::queue<MeshData*>* meshList, GlobalData* g
 
 Indexbuffer* GraphicEngineManager::CreateIndexBuffer(ParserData::Model* mModel)
 {
+	//인덱스버퍼 생성
 	return NowEngine->CreateIndexBuffer(mModel);
 }
 
 Vertexbuffer* GraphicEngineManager::CreateVertexBuffer(ParserData::Model* mModel)
 {
+	//버텍스 버퍼 생성
 	return NowEngine->CreateVertexBuffer(mModel);
 }
 
 TextureBuffer* GraphicEngineManager::CreateTextureBuffer(std::string Name)
 {
+	//텍스쳐 생성
 	return NowEngine->CreateTextureBuffer(Name);
 }
 
-void GraphicEngineManager::OnReSize(float Change_Width, float Change_Height)
+void GraphicEngineManager::OnReSize(int Change_Width, int Change_Height)
 {
+	//사이즈 변경
 	NowEngine->OnReSize(Change_Width, Change_Height);
 }
 
 void GraphicEngineManager::ChoiceEngine(std::string Name)
 {
+	//랜더링할 엔진 선택
 	if (GEngineList.find(Name) == GEngineList.end())
 	{
 		DebugManager::Print("그래픽엔진을 찾지못했습니다", DebugManager::MSG_TYPE::MSG_ERROR);
@@ -79,7 +86,7 @@ void GraphicEngineManager::ChoiceEngine(std::string Name)
 	else
 	{
 		std::string temp = "선택된 그래픽 엔진 :" + Name;
-		DebugManager::Print(temp, DebugManager::MSG_TYPE::MSG_ERROR);
+		DebugManager::Print(temp, DebugManager::MSG_TYPE::MSG_ENGINE);
 		NowEngine = GEngineList[Name];
 	}
 }

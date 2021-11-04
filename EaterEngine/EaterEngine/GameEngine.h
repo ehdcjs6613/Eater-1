@@ -1,14 +1,7 @@
 #pragma once
 #include <windows.h>
 #include <string>
-#include "SharedData.h"
-
-
-#ifdef ENGINE_INTERFACE
-#define EATER_ENGINEDLL __declspec(dllexport)
-#else
-#define EATER_ENGINEDLL __declspec(dllimport)
-#endif
+#include "EaterEngineDLL.h"
 
 /// <summary>
 /// 전체 게임 엔진을 총괄하는 게임엔진 클래스
@@ -23,14 +16,12 @@ class SceneManager;
 class KeyinputManager;
 class GraphicEngineManager;
 //형선이형꺼
-//class HsGraphic;
+class HsGraphic;
 //내꺼
-class X3Engine;
+//class X3Engine;
 class Scene;
 //게임 오브젝트
 class GameObject;
-
-class DH3DEngine;
 
 class GameEngine
 {
@@ -41,33 +32,32 @@ public:
 public:
 	///클라이언트 에서 만질 함수들
 	///게임 엔진 관련 함수들
-	void Initialize(HWND gHwnd,bool mConsoleDebug = true);//초기화
-	void Update();				//엔진 가동
-	void Finish();				//엔진 중지
-	void OnResize(int Change_Width, int Change_Height); //리사이즈
+	EATER_ENGINEDLL void Initialize(HWND gHwnd,bool mConsoleDebug = true);//초기화
+	EATER_ENGINEDLL void Update();				//엔진 가동
+	EATER_ENGINEDLL void Finish();				//엔진 중지
+	EATER_ENGINEDLL void OnResize(int Change_Width, int Change_Height); //리사이즈
 public:
 	///오브젝트 관련(오브젝트 매니저)
-	GameObject* Instance(std::string ObjName = "GameObject");	//obj 생성
-	void		Destroy(GameObject* obj);						//obj 삭제
+	EATER_ENGINEDLL GameObject* Instance(std::string ObjName = "GameObject");	//obj 생성
+	EATER_ENGINEDLL void		Destroy(GameObject* obj);						//obj 삭제
 public:
 	///스크린 관련
-	void PushScene(Scene* mScene, std::string name);	//씬 생성		
-	void ChoiceScene(std::string name);					//씬 선택
+	EATER_ENGINEDLL void PushScene(Scene* mScene, std::string name);	//씬 생성		
+	EATER_ENGINEDLL void ChoiceScene(std::string name);					//씬 선택
 public:
 	///로드 관련 
-	void LoadMeshPath(std::string mPath);
-	void LoadTexturePath(std::string mPath);
-	void LoadMesh(std::string mMeshName, bool Scale = true, bool LoadAnime = false);
-	void LoadTexture(std::string mMeshName);
-
+	EATER_ENGINEDLL void LoadMeshPath(std::string mPath);
+	EATER_ENGINEDLL void LoadTexturePath(std::string mPath);
+	EATER_ENGINEDLL void LoadMesh(std::string mMeshName, bool Scale = true, bool LoadAnime = false);
+	EATER_ENGINEDLL void LoadTexture(std::string mMeshName);
 public:
 	///키관련 
-	bool  GetKeyDown(byte number);	//키다운
-	bool  GetKeyUp(byte number);	//키업
-	bool  GetKey(byte number);		//키누르고있을때
-	bool  GetTogle(byte number);	//키 on/off
-	float GetMousePosX();			//마우스 위치 X
-	float GetMousePosY();			//마우스 위치 Y
+	EATER_ENGINEDLL bool  GetKeyDown(byte number);	//키다운
+	EATER_ENGINEDLL bool  GetKeyUp(byte number);	//키업
+	EATER_ENGINEDLL bool  GetKey(byte number);		//키누르고있을때
+	EATER_ENGINEDLL bool  GetTogle(byte number);	//키 on/off
+	EATER_ENGINEDLL float GetMousePosX();			//마우스 위치 X
+	EATER_ENGINEDLL float GetMousePosY();			//마우스 위치 Y
 private:
 	///각종 매니저들
 	ObjectManager*			mObjectManager;		//오브젝트 관리 매니저
@@ -83,12 +73,13 @@ private:
 	int WinSizeHeight;	//윈도우 사이즈 세로
 	bool ConsoleDebug;
 private:
-	
+
 	
 	//테스트용 엔진
-	DH3DEngine*			pTest_Engine;
+	//DH3DEngine*			pTest_Engine;
 	//OneFrameData*		pTest_OFD;
 	//SharedRenderData*	pTest_SRD;
 	//DHParser::Mesh*		pTest_Mesh;
+
 };
 

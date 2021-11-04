@@ -1,5 +1,6 @@
 #include "OneCompile.h"
-#include "DDSTextureLoader11.h"
+#include "XVertex.h"
+
 #include "DirectXDefine.h"
 #include "DirectXDevice.h"
 #include "DirectXDeviceContext.h"
@@ -8,12 +9,12 @@
 #include "DirectXAdapter.h"
 #include "DirectXRenderTargeter.h"
 
-#include "SharedData.h"
 #include "XRenderer.h"
-#include "EngineData.h"
 #include "X3Engine.h"
 #include "Grahpics2D.h"
 
+//스마트포인터 인클르드
+#include <wrl/client.h>
 
 // 초기화 부분.
 X3Engine::X3Engine() : m_pDevice(nullptr), m_pDeviceContext(nullptr) 
@@ -29,6 +30,7 @@ X3Engine::X3Engine() : m_pDevice(nullptr), m_pDeviceContext(nullptr)
 	m_pRasterizerWire = new DirectXRasterizerState();
 	m_pAdapter = new DirectXAdapter();
 	m_pGraphics2D = new Grahpics2D();
+	
 }
 
 X3Engine::~X3Engine()
@@ -39,6 +41,8 @@ X3Engine::~X3Engine()
 void X3Engine::Initialize(HWND _hWnd, int _iWidth, int _iHeight)
 {
 
+	
+	
 
 
 	m_hWnd		= _hWnd;
@@ -60,7 +64,7 @@ void X3Engine::Initialize(HWND _hWnd, int _iWidth, int _iHeight)
 		&m_FeatureLevel, 1,
 		D3D11_SDK_VERSION, 
 		&swapChainDesc, 
-		&m_pGraphics2D->m_3D_SwapChain,
+		&m_pRenderer->m_pDirectXSwapChain->m_pSwapChain,
 		&m_pDevice->m_pDX11Device,
 		NULL,
 		&m_pDeviceContext->m_pDX11DeviceContext
@@ -69,9 +73,16 @@ void X3Engine::Initialize(HWND _hWnd, int _iWidth, int _iHeight)
 	// Get the pointer to the back buffer.
 	//포인터를 뒤쪽 버퍼로 가져갑니다.
 
-	m_pRenderer->m_pRenderTargeter->Create(m_pDevice->m_pDX11Device, m_pGraphics2D->m_3D_SwapChain);
+	m_pRenderer->m_pRenderTargeter->Create
+	(
+		m_pDevice->m_pDX11Device, 
+		m_pRenderer->m_pDirectXSwapChain->m_pSwapChain
+	);
 
-	m_pDevice->CreateDepthBuffer(m_pRenderer->m_pDepthStencil_Buffer);
+	m_pDevice->CreateDepthBuffer
+	(
+		m_pRenderer->m_pDepthStencil_Buffer
+	);
 	m_pDevice->CreateDepthStencilState
 	(
 		m_pDeviceContext->m_pDX11DeviceContext, 
@@ -84,8 +95,15 @@ void X3Engine::Initialize(HWND _hWnd, int _iWidth, int _iHeight)
 		m_pRenderer->m_pDepthStencil_Buffer,
 		m_pRenderer->m_pRenderTargeter->m_pRenderTarget
 	);
-	m_pDevice->CreateResterize(m_pDeviceContext->m_pDX11DeviceContext, m_pRasterizerState->m_pFrameRS);
-	m_pDevice->CreateViewPort(m_pDeviceContext->m_pDX11DeviceContext);
+	m_pDevice->CreateResterize
+	(
+		m_pDeviceContext->m_pDX11DeviceContext,
+		m_pRasterizerState->m_pFrameRS
+	);
+	m_pDevice->CreateViewPort
+	(
+		m_pDeviceContext->m_pDX11DeviceContext
+	);
 
 	///
 
@@ -99,11 +117,16 @@ void X3Engine::Initialize(HWND _hWnd, int _iWidth, int _iHeight)
 	m_pAdapter->GetAdapterInfo();
 
 	
-	m_pGraphics2D->initialize(m_hWnd, m_pGraphics2D->m_3D_SwapChain);
-	if (nullptr == m_pGraphics2D->m_3D_SwapChain)
+	m_pGraphics2D->initialize(m_hWnd, m_pRenderer->m_pDirectXSwapChain->m_pSwapChain);
+
+	if (nullptr == m_pRenderer->m_pDirectXSwapChain->m_pSwapChain)
 	{
-		std::cout << "ㅅㅂ" << std::endl;
+		
 	}
+	InitializeShaders();
+
+	TestScene();
+
 	//OnReSize(this->m_iWidth, m_iHeight);
 }
 
@@ -133,70 +156,24 @@ void X3Engine::OnReSize(int Change_Width, int Change_Height)
 	
 
 	/// 재구성 하는데 필요한 정보들 => 랜더타겟의 뷰, 스탠실 뷰,버퍼
-	m_pRenderer->GetRenderTargetView()[0].Release();
-	ReleaseCOM(m_pRenderer->m_pDepthStencil_View);
-	ReleaseCOM(m_pRenderer->m_pDepthStencil_Buffer);
 
-	HR(m_pRenderer->m_pDirectXSwapChain->m_pSwapChain->ResizeBuffers(1, m_pDevice->GetWidth(), m_pDevice->GetHeight(), DXGI_FORMAT_R8G8B8A8_UNORM, 0));
-	ID3D11Texture2D* backBuffer;
-	HR(m_pRenderer->m_pDirectXSwapChain->m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&backBuffer)));
-	HR(m_pDevice->m_pDX11Device->CreateRenderTargetView(backBuffer, 0, &m_pRenderer->m_pRenderTargeter->m_pRenderTarget));
-	ReleaseCOM(backBuffer);
 
 	// Create the depth/stencil buffer and view.
 
-	D3D11_TEXTURE2D_DESC depthStencilDesc;
-
-	depthStencilDesc.Width = m_pDevice->GetWidth();
-	depthStencilDesc.Height = m_pDevice->GetHeight();
-	depthStencilDesc.MipLevels = 1;
-	depthStencilDesc.ArraySize = 1;
-	depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 
 	/// 4X MSAA 모드를 사용하지 않음.
-	depthStencilDesc.SampleDesc.Count = 1;
-	depthStencilDesc.SampleDesc.Quality = 0;
-
-	depthStencilDesc.Usage = D3D11_USAGE_DEFAULT;
-	depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-	depthStencilDesc.CPUAccessFlags = 0;
-	depthStencilDesc.MiscFlags = 0;
+	
 
 	/// 스탠실 Desc를 기반으로 하여 스탠실 버퍼와 뷰를 재생성한다.
-	HR(m_pDevice->m_pDX11Device->CreateTexture2D
-	(
-		&depthStencilDesc, 
-		0,
-		&m_pRenderer->m_pDepthStencil_Buffer)
-	);
-	if (nullptr == m_pRenderer->m_pDepthStencil_Buffer){	return;	}
-
-	HR(m_pDevice->m_pDX11Device->CreateDepthStencilView
-	(
-		m_pRenderer->m_pDepthStencil_Buffer, 
-		0, &m_pRenderer->m_pDepthStencil_View)
-	);
 
 
 	/// 렌더타겟뷰, 뎁스/스탠실뷰를 파이프라인에 바인딩한다.
-	m_pDeviceContext->m_pDX11DeviceContext->OMSetRenderTargets
-	(
-		1,
-		&m_pRenderer->m_pRenderTargeter->m_pRenderTarget,		//장치에 바인딩할 렌더 대상을 나타내는		  렌더타겟
-		m_pRenderer->m_pDepthStencil_View		//장치에 바인딩할 깊이 스텐실 보기를 나타내는 스텐실 뷰
-	);
+
 
 
 	// Set the viewport transform.
 	/// 뷰포트 변환을 셋팅한다.
-	m_pRenderer->m_D3D11_ViewPort[0].TopLeftX = 0;
-	m_pRenderer->m_D3D11_ViewPort[0].TopLeftY = 0;
-	m_pRenderer->m_D3D11_ViewPort[0].Width = static_cast<float>(m_pDevice->GetWidth());
-	m_pRenderer->m_D3D11_ViewPort[0].Height = static_cast<float>(m_pDevice->GetHeight());
-	m_pRenderer->m_D3D11_ViewPort[0].MinDepth = 0.0f;
-	m_pRenderer->m_D3D11_ViewPort[0].MaxDepth = 1.0f;
 
-	m_pDeviceContext->m_pDX11DeviceContext->RSSetViewports(1, &m_pRenderer->m_D3D11_ViewPort[0]);
 
 }
 
@@ -210,14 +187,31 @@ void X3Engine::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 	//나중에 렌더 큐? 같은걸로 해보자,
 	m_pRenderer->Render_Begin(m_pDeviceContext->m_pDX11DeviceContext);
 	
-	m_pRenderer->Render_Update(m_pDeviceContext->m_pDX11DeviceContext);
-
-	m_pRenderer->Render_LateUpdate(m_pDeviceContext->m_pDX11DeviceContext);
-	m_pRenderer->Render_2D(m_pGraphics2D,this->m_pAdapter);
-
-	m_pRenderer->Render_End(m_pGraphics2D->m_3D_SwapChain);
 
 	
+
+	m_pRenderer->Render_Update(this->m_pDevice->m_pDX11Device, 
+		m_pDeviceContext->m_pDX11DeviceContext,m_XVertexShader.GetShader(),
+		m_XPexelShader.GetShader(),m_XVertexShader.GetInputLayout(),m_pVertexBuffer);
+
+	m_pRenderer->Render_LateUpdate(m_pDeviceContext->m_pDX11DeviceContext);
+
+	m_pRenderer->Render_End(m_pRenderer->m_pDirectXSwapChain->m_pSwapChain);
+
+	//m_pRenderer->Render_2D(m_pRenderer->m_pDirectXSwapChain->m_pSwapChain, this->m_pAdapter);
+	
+	int _yPos = 50;
+	int _Text_Offset = 21;
+
+	m_pGraphics2D->Push_DrawText({ 10, _yPos }, 500, 1, 0, 0, 1, 20, (TCHAR*)L"Description: %s", m_pAdapter->GetAdapter().Description);
+	m_pGraphics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 1, 0, 1, 20, (TCHAR*)L"VendorID: %u", m_pAdapter->GetAdapter().VendorId);
+	m_pGraphics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 1, 0, 1, 20, (TCHAR*)L"DeviceID: %u", m_pAdapter->GetAdapter().DeviceId);
+	m_pGraphics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 1, 0, 1, 20, (TCHAR*)L"SubSysID: %u", m_pAdapter->GetAdapter().SubSysId);
+	m_pGraphics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 1, 0, 1, 20, (TCHAR*)L"Revision: %u", m_pAdapter->GetAdapter().Revision);
+	m_pGraphics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 0, 1, 1, 20, (TCHAR*)L"VideoMemory: %lu MB",  m_pAdapter->GetAdapter().DedicatedVideoMemory / 1024 / 1024);
+	m_pGraphics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 0, 1, 1, 20, (TCHAR*)L"SystemMemory: %lu MB", m_pAdapter->GetAdapter().DedicatedSystemMemory / 1024 / 1024);
+	m_pGraphics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 0, 1, 1, 20, (TCHAR*)L"SharedSysMemory: %lu MB", m_pAdapter->GetAdapter().SharedSystemMemory / 1024 / 1024);
+	m_pGraphics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 1, 1, 0, 1, 20, (TCHAR*)L"AdpaterLuid: %u.%d", m_pAdapter->GetAdapter().AdapterLuid.HighPart, m_pAdapter->GetAdapter().AdapterLuid.LowPart);
 
 	
 
@@ -322,4 +316,81 @@ void X3Engine::Release()
 {
 	delete m_pGraphics2D;
 	m_pGraphics2D = nullptr;
+}
+
+void X3Engine::InitializeShaders()
+{
+	std::wstring shaderFoler;
+
+
+#pragma region DetermineShaderPath
+#ifdef _DEBUG //Debug
+	#ifdef _WIN64 //x64
+		shaderFoler = L"../x64/Debug/";
+	#else		  //x86
+		shaderFoler = L"../Debug/";
+	#endif // _WIN64
+#else	//Release
+	#ifdef _WIN64 //x64
+		shaderFoler = L"../x64/Release/";
+	#else
+		shaderFoler = L"../Release/";
+#endif // _WIN64 //x64
+
+
+
+#endif // _DEBUG
+
+#pragma endregion
+
+
+
+	D3D11_INPUT_ELEMENT_DESC layout[] =
+	{
+		{ "POSITION",0,DXGI_FORMAT::DXGI_FORMAT_R32G32_FLOAT,0,0, D3D11_INPUT_CLASSIFICATION::D3D11_INPUT_PER_VERTEX_DATA } ,
+	};
+	UINT numElements = ARRAYSIZE(layout, numElements);
+
+	if (false == m_XVertexShader.Initialize(m_pDevice->m_pDX11Device, shaderFoler + L"vertexShaders.cso",layout,numElements ))
+	{
+		return;
+	}
+	if (false == m_XPexelShader.Initialize(m_pDevice->m_pDX11Device, shaderFoler + L"vertexShaders.cso", layout, numElements))
+	{
+		return;
+	}
+
+
+}
+
+bool X3Engine::TestScene()
+{
+	//XVertex v[] =
+	//{
+	//	XVertex(0.0f,0.0f),
+	//};
+
+	XVertex v[] =
+	{
+		XVertex(0.0f, -0.1f), //Center Point
+		XVertex(-0.1f, 0.0f), //Left Point
+		XVertex(0.1f, 0.0f), //Right Point
+	};
+
+	D3D11_BUFFER_DESC vertexBufferDESC;
+	ZeroMemory(&vertexBufferDESC, sizeof(D3D11_BUFFER_DESC));
+
+	vertexBufferDESC.Usage = D3D11_USAGE_DEFAULT;
+	vertexBufferDESC.ByteWidth = sizeof(XVertex) * ARRAYSIZE(v);
+	vertexBufferDESC.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	vertexBufferDESC.CPUAccessFlags = 0;
+	vertexBufferDESC.MiscFlags = 0;
+
+	D3D11_SUBRESOURCE_DATA vertexBufferData;
+	ZeroMemory(&vertexBufferData, sizeof(D3D11_SUBRESOURCE_DATA));
+	vertexBufferData.pSysMem = v;
+
+	HRESULT hr = m_pDevice->m_pDX11Device->CreateBuffer(&vertexBufferDESC, &vertexBufferData, &m_pVertexBuffer);
+
+	return false;
 }

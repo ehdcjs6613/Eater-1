@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -160,6 +160,7 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)lib"
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="DirectXAdapter.cpp" />
     <ClCompile Include="DirectXDevice.cpp" />
     <ClCompile Include="DirectXDeviceContext.cpp" />
@@ -168,11 +169,17 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)lib"
     <ClCompile Include="DirectXSwapChain.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="RenderQueue.cpp" />
+    <ClCompile Include="ViewGrid.cpp" />
     <ClCompile Include="X3Engine.cpp" />
     <ClCompile Include="XRenderer.cpp" />
+    <ClCompile Include="XShader.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="XVertex.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AlignedAllocationPolicy.h" />
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="DirectXAdapter.h" />
     <ClInclude Include="DirectXDefine.h" />
     <ClInclude Include="DirectXDevice.h" />
@@ -182,8 +189,28 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)lib"
     <ClInclude Include="DirectXSwapChain.h" />
     <ClInclude Include="OneCompile.h" />
     <ClInclude Include="RenderQueue.h" />
+    <ClInclude Include="ViewGrid.h" />
     <ClInclude Include="X3Engine.h" />
     <ClInclude Include="XRenderer.h" />
+    <ClInclude Include="XShader.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="XVertex.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="vertexShaders.hlsli">
+      <FileType>Document</FileType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="pixelShaders.hlsli">
+      <FileType>Document</FileType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+    </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

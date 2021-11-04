@@ -29,7 +29,7 @@ private:
 	// Direct2D Factory
 	ID2D1Factory* m_2D_Factory = nullptr;
 	// 3D로 부터 생성된 2D RenderTarget
-	ID2D1RenderTarget* m_2D_RenderTarget = nullptr;
+	ID2D1RenderTarget* m_2D_RenderTarget;
 	// 커스텀 폰드 로드를 위한 팩토리
 	IDWriteFactory5* m_WriteFactory = nullptr;
 	// 커스텀 폰트 정보.
@@ -70,7 +70,7 @@ private:
 	std::queue<Image_Queue_Data*> Sprite_Queue;	// 스프라이트 이미지 데이터 큐	
 	std::map<std::wstring, ID2D1Bitmap*> Image_Resource;
 public:
-	void initialize(HWND g_hWnd, IDXGISwapChain*& _3D_SwapChain, float _Font_Size = 24.f);
+	void initialize(HWND g_hWnd, IDXGISwapChain* _3D_SwapChain, float _Font_Size = 24.f);
 
 	void LoadBitMap(std::wstring _Image_Name, std::wstring _File_Path);
 

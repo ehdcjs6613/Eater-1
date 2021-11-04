@@ -12,16 +12,17 @@
 #include <string>
 #include <map>
 #include "ParserData.h"
-#include "SharedData.h"
+namespace ParserData
+{
+	struct Model;
+}
 
-struct ParserData::Model;
-struct Model;
 class LoadData;
 class ModelParser;
 class FBXParser;
 class FBXModel;
-class DH3DEngine;
 class GraphicEngine;
+class TextureBuffer;
 class GraphicEngineManager;
 
 class LoadManager
@@ -34,14 +35,12 @@ public:
 
 	//초기화 및 경로 설정
 	void Initialize(GraphicEngineManager* Graphic);
-	//테스트용
-	void Initialize(DH3DEngine* Graphic);
 public:
 	///GET
 	//매쉬 가져오기
 	static LoadData* GetMesh(std::string Name);
 	//텍스쳐 가져오기
-	void GetTexture(std::string Name);
+	TextureBuffer* GetTexture(std::string Name);
 
 	///Load
 	//모델 로드(스크린 이름,모델의 이름,스케일 여부,애니메이션 여부)
@@ -69,7 +68,8 @@ private:
 	std::string TexturePath;
 	
 	///리스트
-	static std::map<std::string,LoadData*> MeshList;
+	static std::map<std::string,LoadData*>			MeshList;
+	static std::map<std::string, TextureBuffer*>	TextureList;
 private:
 	//규황이 파서
 	ModelParser* EaterParser;
@@ -78,16 +78,4 @@ private:
 
 	//그래픽엔진을 통해서 인덱스버퍼와 버텍스 버퍼를 생성
 	void CreateBuffer(ParserData::Model* mesh);
-
-
-
-
-	///여기부터는 동혁이꺼 테스트용
-	DH3DEngine*			DHEngine;
-	OneFrameData*		pTest_OFD;
-	SharedRenderData*	pTest_SRD;
-	DHParser::Mesh*		pTest_Mesh;
-
-
-	void Test_DHData(ParserData::Model* mModel, std::string Name);
 };

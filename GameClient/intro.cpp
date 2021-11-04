@@ -2,24 +2,29 @@
 #include "intro.h";
 #include "GameObject.h"
 #include "MeshFilter.h"
-#include "Transform.h"
-#include "KeyInput.h"
+//#include "AI.h"
+//#include "KeyInput.h"
 #include "Camera.h"
 
 void intro::Awake()
 {
 	//불러오는 매쉬의 경로 파악
-	LoadMeshPath("../FBXFile/");
-	LoadTesturePath("../Texture/");
-
+	LoadMeshPath("../Resources/Mesh/");
+	LoadTesturePath("../Resources/Texture/");
+	
 	LoadMesh("Table");
 	//LoadTesture("WoodCrate01.dds");
 
 
 	///카메라
 	testobj = Instance();
-	testobj->AddComponent<Keyinput>();
-	testobj->AddComponent<Camera>();
+	//testobj->AddComponent<AI>();
+	testobj->AddComponent<Camera>(true);
+
+
+	
+
+
 	//
 	//
 	//testobj = Instance("Table");

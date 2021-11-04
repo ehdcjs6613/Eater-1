@@ -22,8 +22,14 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
-    <Filter Include="R">
+    <Filter Include="ViewGird">
       <UniqueIdentifier>{266f6d07-0979-46a3-afd2-affccb8d17ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="XVertex">
+      <UniqueIdentifier>{0525076a-b428-4225-aae4-efc19a128994}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{87a9eaa0-cb08-44a3-a269-81079e98a4d1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -56,6 +62,18 @@
     </ClCompile>
     <ClCompile Include="DirectXRenderTargeter.cpp">
       <Filter>DirectX</Filter>
+    </ClCompile>
+    <ClCompile Include="ViewGrid.cpp">
+      <Filter>ViewGird</Filter>
+    </ClCompile>
+    <ClCompile Include="XVertex.cpp">
+      <Filter>XVertex</Filter>
+    </ClCompile>
+    <ClCompile Include="XShader.cpp">
+      <Filter>Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -95,5 +113,25 @@
     <ClInclude Include="AlignedAllocationPolicy.h">
       <Filter>DirectX\Define</Filter>
     </ClInclude>
+    <ClInclude Include="ViewGrid.h">
+      <Filter>ViewGird</Filter>
+    </ClInclude>
+    <ClInclude Include="XVertex.h">
+      <Filter>XVertex</Filter>
+    </ClInclude>
+    <ClInclude Include="XShader.h">
+      <Filter>Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="vertexShaders.hlsli">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="pixelShaders.hlsli">
+      <Filter>Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

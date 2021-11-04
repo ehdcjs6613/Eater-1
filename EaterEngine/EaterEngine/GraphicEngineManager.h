@@ -7,15 +7,15 @@
 /// <summary>
 ///	여러개의 그래픽엔진을 쉽게 사용하기위해 만든 그래픽엔진 관리 매니저
 /// </summary>
- 
 
 class MeshData;
-class GlobalData;
+struct GlobalData;
 class GraphicEngine;
 
 class Indexbuffer;
 class Vertexbuffer;
 class TextureBuffer;
+class Grahpics2D;
 
 namespace ParserData
 {
@@ -51,10 +51,11 @@ public:
 	//선택한 그래픽 엔진으로 버텍스 버퍼를 생성함
 	Vertexbuffer* CreateVertexBuffer(ParserData::Model* mModel);
 
+	//선택한 그래픽엔진으로 텍스쳐 생성
 	TextureBuffer* CreateTextureBuffer(std::string Name);
 
 	//선택한 그래픽 엔진으로 Resize
-	void OnReSize(float Change_Width, float Change_Height);
+	void OnReSize(int Change_Width, int Change_Height);
 
 	//모든 엔진 삭제
 	void Delete();

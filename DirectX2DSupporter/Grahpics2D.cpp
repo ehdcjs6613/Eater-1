@@ -15,11 +15,12 @@ Grahpics2D::~Grahpics2D()
 
 
 
-void Grahpics2D::initialize(HWND _hWnd, IDXGISwapChain*& _3D_SwapChain, float _Font_Size)
+void Grahpics2D::initialize(HWND _hWnd, IDXGISwapChain* _3D_SwapChain, float _Font_Size)
 {
 	g_hWnd = _hWnd;
 	// 백버퍼 가져오기.
 
+	m_3D_SwapChain = _3D_SwapChain;
 	HRESULT hr = CoInitialize(0);
 
 	hr =  _3D_SwapChain->GetBuffer(0, IID_PPV_ARGS(&m_3D_BackBuffer));
@@ -273,7 +274,7 @@ void Grahpics2D::Push_DrawText(POINT _Pos, float _Width,
 	va_start(args, _Input_String);
 
 	// 우리가 준비한 버퍼에 완성된 결과를 저장.
-	vswprintf(pStr, 128, _Input_String, args);
+	vswprintf(pStr, sizeof(pStr), _Input_String, args);
 	va_end(args);
 
 	Text_Queue_Data* Queue_Data = Text_Data_Pool.GetObject();
@@ -292,6 +293,8 @@ void Grahpics2D::Push_DrawText(POINT _Pos, float _Width,
 
 	Msg_Queue.push(Queue_Data);
 }
+
+
 
 void Grahpics2D::Draw_AllText()
 {

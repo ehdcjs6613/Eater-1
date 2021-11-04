@@ -1,4 +1,6 @@
 #pragma once
+#include "d3d11.h"
+#include <SimpleMath.h>
 #include <DirectXMath.h>
 struct Deferred32
 {
@@ -10,4 +12,13 @@ struct Deferred32
 	DirectX::SimpleMath::Vector3 Nomal;
 	//탄젠트
 	DirectX::SimpleMath::Vector3 Tangent;
+};
+
+//코레일 번호 2173406236
+//쉐이더들을 보관할 데이터
+struct ShaderData
+{
+	ID3D11VertexShader* VertexShader	= nullptr;
+	ID3D11PixelShader* PixelShader		= nullptr;
+	ID3D11InputLayout* Layout			= nullptr;
 };

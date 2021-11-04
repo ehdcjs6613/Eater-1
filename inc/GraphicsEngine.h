@@ -1,14 +1,32 @@
 #pragma once
+
+#include "framework.h"
+#include "EngineData.h"
+#include "ParserData.h"
+
 #include "windows.h"
 #include <string>
 #include <queue>
+
 /// <summary>
 /// 게임 엔진에서 제공하는 그래픽 엔진 최상위 클래스
 /// 이클래스를 상속받은 그래픽 엔진을 제작하면 된다 
 /// </summary>
 
 class MeshData;
+//class Model;
 class GlobalData;
+
+//class Indexbuffer;
+//class Vertexbuffer;
+
+
+#ifdef ENGINE_INTERFACE
+#define EATER_ENGINEDLL __declspec(dllexport)
+#else
+#define EATER_ENGINEDLL __declspec(dllimport)
+#endif
+
 class Indexbuffer;
 class Vertexbuffer;
 class TextureBuffer;
@@ -17,6 +35,7 @@ namespace ParserData
 {
 	struct Model;
 }
+
 
 
 class GraphicEngine
