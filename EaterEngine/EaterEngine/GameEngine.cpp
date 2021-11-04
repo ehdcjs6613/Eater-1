@@ -124,9 +124,21 @@ void GameEngine::OnResize(int Change_Width, int Change_Height)
 	WinSizeWidth	= Change_Width;
 	WinSizeHeight	= Change_Height;
 		
-	//그래픽 엔진의 리사이즈 함수를 넣으면 될듯
+	
+
+	//카메라의 변화할 사이즈를 넣어준다
+	Camera::SetSize(Change_Width, Change_Height);
+
+	//그래픽쪽에 랜더타겟을 변경해야하기때문에 
 	mGraphicManager->OnReSize(Change_Width, Change_Height);
-	mDebugManager->Print("윈도우 사이즈 변경",DebugManager::MSG_TYPE::MSG_ENGINE);
+	Camera::CreateProj(Change_Width, Change_Height);
+
+	std::string Width = std::to_string(Change_Width);
+	std::string Height = std::to_string(Change_Height);;
+	std::string temp = "윈도우 사이즈 변경:"+ Width+","+ Height;
+	Camera::SetSize(Change_Width, Change_Height);
+
+	mDebugManager->Print(temp,DebugManager::MSG_TYPE::MSG_ENGINE);
 }
 
 ///오브젝트 생성 삭제

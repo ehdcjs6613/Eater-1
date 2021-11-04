@@ -39,7 +39,7 @@ private:
 	void BeginRender();			//랜더링 시작
 	void EngineRender();		//엔진 랜더링
 	void EndRender();			//랜더링 종료
-	int GetAspectRatio();		//화면비율 종횡비를 설정
+	int GetAspectRatio();		//화면 비율 종횡비를 설정
 private:
 
 	///엔진 데이터
