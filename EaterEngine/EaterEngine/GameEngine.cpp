@@ -84,8 +84,6 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 	mGraphicManager->ChoiceEngine("형선");
 	/////////////////////////////////////////////////////////////////
 
-
-
 	mGraphicManager->Initialize(Hwnd, WinSizeWidth, WinSizeHeight);
 }
 
@@ -99,10 +97,8 @@ void GameEngine::Update()
 	//컨퍼넌트 업데이트 끝
 	//그래픽엔진으로 넘겨줄 랜더큐도 생성완료
 
-
 	//랜더큐 넘겨줌
 	mGraphicManager->Render(mObjectManager->GetRenderQueue(), mObjectManager->GetGlobalData());
-
 
 	//랜더링이 끝나고 오브젝트 Delete
 	mObjectManager->DeleteObject();
