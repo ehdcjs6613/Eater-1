@@ -382,11 +382,20 @@ void HsGraphic::OnReSize(int Change_Width, int Change_Height)
 	assert(Device);
 	assert(mSwapChain);
 
-	mRenderTargetView->Release();	//랜더타겟 삭제
-	mDepthStencilView->Release();	//뎁스스텐실 삭제
+	//랜더타겟 삭제
+	if (mRenderTargetView != nullptr)
+	{
+		mRenderTargetView->Release();
+		mRenderTargetView = nullptr;
+	}
 
-	mRenderTargetView = nullptr;
-	mDepthStencilView = nullptr;
+	//뎁스스텐실 삭제
+	if (mDepthStencilView != nullptr)
+	{
+		mDepthStencilView->Release();	
+		mDepthStencilView = nullptr;
+	}
+
 
 	//스왑체인 재설정
 	mSwapChain->ResizeBuffers(1, WinSizeX, WinSizeY, DXGI_FORMAT_R8G8B8A8_UNORM, 0);
