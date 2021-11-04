@@ -43,7 +43,7 @@ int GameObject::GetComponentCount()
 	return ComponentList.size();
 }
 
-void GameObject::PushConponentFunction(Component* con, unsigned int type)
+void GameObject::PushComponentFunction(Component* con, unsigned int type)
 {
 	switch (type)
 	{

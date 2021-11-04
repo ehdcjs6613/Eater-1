@@ -13,12 +13,12 @@ Component::~Component()
 }
 
 
-void Component::SetConponentType(size_t type)
+void Component::SetComponentType(size_t type)
 {
 	ComponentType = type;
 }
 
-size_t Component::GetConponentType()
+size_t Component::GetComponentType()
 {
 	return ComponentType;
 }
