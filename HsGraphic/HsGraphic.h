@@ -4,9 +4,8 @@
 #include "GraphicsEngine.h"
 #include "d3d11.h"
 
-//class ShaderManager;
-//class RenderingManager;
-
+class ShaderManager;
+class RenderingManager;
 
 class TextureBuffer;
 class Indexbuffer;
@@ -16,7 +15,7 @@ class HsGraphic : public GraphicEngine
 {
 public:
 	HS_GRAPHICDLL HsGraphic();
-	virtual ~HsGraphic();
+	virtual HS_GRAPHICDLL ~HsGraphic();
 
 
 	virtual HS_GRAPHICDLL void Initialize(HWND _hWnd, int screenWidth, int screenHeight) override;
@@ -30,6 +29,9 @@ public:
 	virtual HS_GRAPHICDLL Indexbuffer*	CreateIndexBuffer(ParserData::Model* mModel) override;
 	//버텍스 버퍼를 생성
 	virtual HS_GRAPHICDLL Vertexbuffer* CreateVertexBuffer(ParserData::Model* mModel) override;
+
+	ID3D11RenderTargetView* GetEngineRTV();
+	ID3D11DepthStencilView* GetEngineDSV();
 private:
 	void CreateRenderTarget();	//랜더타겟 뎁스스텐실 뷰포트를 생성한다
 	void CreateRenderState();	//랜더타겟 상태를 생성해준다
@@ -60,6 +62,6 @@ private:
 	ID3D11RasterizerState* mSolid;
 
 	//매니저들
-	//ShaderManager*		mShaderManager;
-	//RenderingManager*	mRenderManager;
+	ShaderManager*		mShaderManager;
+	RenderingManager*	mRenderManager;
 };

@@ -1,5 +1,6 @@
 #include "Camera.h"
 #include "GameObject.h"
+#include "EngineData.h"
 #include "Transform.h"
 
 using namespace DirectX;
@@ -32,6 +33,7 @@ void Camera::Awake()
 	//오브젝트의 컨퍼넌트 가져오기
 	tranform = gameobject->transform;
 	CreateProj();
+	gameobject->OneMeshData->ObjType = OBJECT_TYPE::Camera;
 }
 
 void Camera::Update()

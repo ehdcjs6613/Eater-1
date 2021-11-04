@@ -212,17 +212,19 @@ copy /Y "$(ProjectDir)HsGraphicDLL.h" "$(SolutionDir)Library\inc"</Command>
     <ClInclude Include="InputLayout.h" />
     <ClInclude Include="RenderingManager.h" />
     <ClInclude Include="ShaderManager.h" />
-    <ClInclude Include="SimpleMath.h" />
+    <ClInclude Include="TextureBase.h" />
+    <ClInclude Include="TextureMap.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="HsGraphic.cpp" />
     <ClCompile Include="RenderingManager.cpp" />
     <ClCompile Include="ShaderManager.cpp" />
+    <ClCompile Include="TextureBase.cpp" />
+    <ClCompile Include="TextureMap.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Resources\Shader\HS\MainHeader.hlsli" />
-    <None Include="SimpleMath.inl" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Resources\Shader\HS\texture_ps.hlsl">

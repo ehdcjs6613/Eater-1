@@ -72,7 +72,7 @@ void LoadManager::LoadMesh( std::string Name, bool Scale, bool LoadAnime)
 
 	data->IB = IB;
 	data->VB = VB;
-	data->indexCount = (int)temp->m_MeshList[0]->m_IndexList.size();
+	data->indexCount = (int)temp->m_MeshList[0]->m_IndexList.size()*3;
 	data->vertexCount = (int)temp->m_MeshList[0]->m_VertexList.size();
 
 
