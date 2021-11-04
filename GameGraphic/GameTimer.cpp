@@ -84,6 +84,7 @@ void GameTimer::Tick()
 		return;
 	}
 
+	//이전시간과 현재 카운트의 시간을.. 계산한다.
 	__int64 Current_Time;
 	QueryPerformanceCounter((LARGE_INTEGER*)&Current_Time);
 	
