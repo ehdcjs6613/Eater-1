@@ -35,9 +35,6 @@
     <Filter Include="Helper\AxisGrid">
       <UniqueIdentifier>{2cce36d4-0759-468d-a427-49ce0984c5e1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DHEngine\SkyBox">
-      <UniqueIdentifier>{5c20090f-c1c3-416e-ac09-9052155df6bb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Helper\GeometryGenerator">
       <UniqueIdentifier>{6522a3f6-49f7-4a1e-be82-8054d44cbe2b}</UniqueIdentifier>
     </Filter>
@@ -82,9 +79,6 @@
     <ClInclude Include="GeometryGenerator.h">
       <Filter>Helper\GeometryGenerator</Filter>
     </ClInclude>
-    <ClInclude Include="SkyBox.h">
-      <Filter>DHEngine\SkyBox</Filter>
-    </ClInclude>
     <ClInclude Include="LightHelper.h">
       <Filter>Helper\LightHelper</Filter>
     </ClInclude>
@@ -111,24 +105,9 @@
     <ClCompile Include="GeometryGenerator.cpp">
       <Filter>Helper\GeometryGenerator</Filter>
     </ClCompile>
-    <ClCompile Include="SkyBox.cpp">
-      <Filter>DHEngine\SkyBox</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="..\FX\wire.fx">
-      <Filter>FX</Filter>
-    </FxCompile>
-    <FxCompile Include="..\FX\color.fx">
-      <Filter>FX</Filter>
-    </FxCompile>
-    <FxCompile Include="..\FX\Basic.hlsl">
-      <Filter>FX</Filter>
-    </FxCompile>
-    <FxCompile Include="..\FX\BasicTex.fx">
-      <Filter>FX</Filter>
-    </FxCompile>
-    <FxCompile Include="..\FX\Sky.fx">
+    <FxCompile Include="..\..\Resources\Shader\CDH\Basic.fx">
       <Filter>FX</Filter>
     </FxCompile>
   </ItemGroup>

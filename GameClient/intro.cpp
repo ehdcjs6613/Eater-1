@@ -12,19 +12,18 @@ void intro::Awake()
 	LoadMeshPath("../Resources/Mesh/");
 	LoadTesturePath("../Resources/Texture/");
 	
-	LoadMesh("Table");
+	LoadMesh("box");
 	LoadTesture("WoodCrate01");
 
 
 	///Ä«¸Þ¶ó
 	testobj = Instance();
-	testobj->AddComponent<AI>();
+	testobj->AddComponent<Keyinput>();
 	testobj->AddComponent<Camera>();
 	//
 	//
-	//testobj = Instance("Table");
-	//testobj->AddComponent<MeshFilter>()->SetMeshName("Table");
-	//testobj->transform->Position = { 2, 0, 0 };
+	testobj = Instance("box");
+	testobj->AddComponent<MeshFilter>()->SetMeshName("box");
 	//
 	//
 	//for (int i = 0; i < 5; i++) 

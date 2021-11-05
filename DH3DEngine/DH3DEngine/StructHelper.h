@@ -1,7 +1,6 @@
 
 #include "DH3DEngineDefine.h"
 #include "DH3DEngineHeader.h"
-#include "DataStructHelper.h"
 #include "Effects.h"
 
 class InputLayoutDesc

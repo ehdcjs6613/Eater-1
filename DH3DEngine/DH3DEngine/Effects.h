@@ -9,7 +9,6 @@
 #define EFFECTS_H
 
 #include "DH3DEngineDefine.h"
-#include "DataStructHelper.h"
 #include "DH3DEngineHeader.h"
 
 #pragma region Effect
@@ -39,13 +38,7 @@ public:
 	void SetWorld(CXMMATRIX M)                          { World->SetMatrix(reinterpret_cast<const float*>(&M)); }
 	void SetWorldInvTranspose(CXMMATRIX M)              { WorldInvTranspose->SetMatrix(reinterpret_cast<const float*>(&M)); }
 	void SetEyePosW(const XMFLOAT3& v)                  { EyePosW->SetRawValue(&v, 0, sizeof(XMFLOAT3)); }
-	void SetDirLights(std::vector<DirectionalLight> lights)   
-	{ 
-		for (auto _Light : lights)
-		{
-			DirLights->SetRawValue(&_Light, 0, sizeof(DirectionalLight));
-		}
-	}
+	void SetDirLights(DirectionalLight lights)		{ DirLights->SetRawValue(&lights, 0, sizeof(DirectionalLight));}
 	void SetMaterial(const Material& mat)               { Mat->SetRawValue(&mat, 0, sizeof(Material)); }
 	void SetTexTransform(CXMMATRIX M) { TexTransform->SetMatrix(reinterpret_cast<const float*>(&M)); }
 	void SetDiffuseMap(ID3D11ShaderResourceView* tex) { DiffuseMap->SetResource(tex); }

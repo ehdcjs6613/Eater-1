@@ -1,7 +1,9 @@
 
 #include "DH3DEngine.h"
-#include "SkyBox.h"
-#include "D2DSupport.h"
+#include "ParserData.h"
+#include "EngineData.h"
+#include "Effects.h"
+#include "StructHelper.h"
 #include "AxisGrid.h"
 
 DH3DEngine::DH3DEngine()
@@ -264,12 +266,9 @@ void DH3DEngine::CreateGraphicResource()
 	// Render State
 	CreateRenderStates();
 
-	// 어댑터 정보를 얻는다.
-	GetAdapterInfo();
-
-	// D2D 를 사용하기 위함.
-	m_D2DSupport = new D2DSupport(g_hWnd, DX11_Swap_Chain);
 	m_AxisGrid = new AxisGrid(DX11_Device, DX11_Device_Context, DX11_Raster_State);
+
+	SetDebug(true, 50);
 }
 
 void DH3DEngine::SetDebug(bool _Is_Debug, int _Grid_Num)
@@ -279,11 +278,6 @@ void DH3DEngine::SetDebug(bool _Is_Debug, int _Grid_Num)
 	// 해당 디버그 모드에서의 Grid 개수지정. default = 50
 	_Grid_Num = 150;
 	m_AxisGrid->Initialize(_Grid_Num);
-}
-
-void DH3DEngine::SetSkyBox(ATL::CString _Sky_Box_Path)
-{
-	Sky_Box_Path = _Sky_Box_Path;
 }
 
 void DH3DEngine::BeginDraw()
@@ -304,97 +298,49 @@ void DH3DEngine::BeginDraw()
 
 }
 
-void DH3DEngine::Update(float DTime)
+void DH3DEngine::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 {
-	m_Delta_Time = DTime;
+	BeginDraw();
+	View_Mat = DirectX::SimpleMath::Matrix(*global->mViewMX);
+	Proj_Mat = DirectX::SimpleMath::Matrix(*global->mProj);
 
-	// view TM을 만든다.
-	//m_DHCamera->UpdateViewMatrix();
-}
-
-
-void DH3DEngine::RenderDraw(OneFrameData* _OFD, SharedRenderData* _SRD)
-{
-	/// 그릴 메시가 존재하지 않으면 리턴..
-	if (_SRD->Render_Mesh_List == nullptr)
-	{
-		return;
-	}
-
-	if (!_SRD->Texture_SetUp)
-	{
-		SetTextureSRV(_SRD);
-		_SRD->Texture_SetUp = true;
-	}
-
-	if (Is_Debug)
-	{
-		// 갱신주기
-		static float _addedTime = 0;
-		static float _FPS = 0;
-		static float _deltaTimeMS = 0;
-
-		// 갱신주기는 0.2초
-		if (0.2f < _addedTime)
-		{
-			_FPS = (1.0f / m_Delta_Time);
-			_deltaTimeMS = m_Delta_Time * 1000.0f;
-
-			_addedTime = 0;
-		}
-
-		_addedTime += (m_Delta_Time);
-		// FPS, deltaTime을 그린다.
-		m_D2DSupport->Push_DrawText({ 10, 8 }, 500, 1, 0, 0, 1, 20, (TCHAR*)L"FPS : %.2f", _FPS);
-		m_D2DSupport->Push_DrawText({ 10, 29 }, 500, 1, 0, 0, 1, 20, (TCHAR*)L"DTime : %.4f ms", _deltaTimeMS);
-		m_D2DSupport->Push_DrawText({ 510, 29 }, 500, 1, 0, 0, 1, 20, (TCHAR*)L"카메라 위치 : %f, %f, %f", _OFD->World_Eye_Position.x, _OFD->World_Eye_Position.y, _OFD->World_Eye_Position.z);
-		m_D2DSupport->Push_DrawText({ 510, 50 }, 500, 1, 0, 0, 1, 20, (TCHAR*)L"캐릭터 위치 : %f, %f, %f", _OFD->Main_Position.x, _OFD->Main_Position.y, _OFD->Main_Position.z);
-
-		// 피쳐레벨, 어댑터 등의 상태를 그린다.
-		this->Draw_Status();
-
-		/// AxisGrid를 그린적이 없다면 그려줌! 만약 Begin 과 End 사이에 한번이라도 그렸으면 다시는 안그림.
-		if (!Is_Draw_AxisGrid)
-		{
-			m_AxisGrid->Render(&_OFD->View_Matrix, &_OFD->Projection_Matrix);
-
-			Is_Draw_AxisGrid = true;
-		}
-	}
-
+	/// AxisGrid를 그린적이 없다면 그려줌! 만약 Begin 과 End 사이에 한번이라도 그렸으면 다시는 안그림.
+	m_AxisGrid->Render(&View_Mat, &Proj_Mat);
 
 	/// 그릴 메시가 존재하면 메시리스트를 순회하며 그린다.
-	for (auto& _Render_Mesh : *_SRD->Render_Mesh_List)
+ 	while (!meshList->empty())
 	{
-		/// 아직 인덱스, 버텍스 버퍼가 생성되어있지 않다면
-		if ((_Render_Mesh.Index_Buffer == nullptr) && (_Render_Mesh.Vertex_Buffer == nullptr))
+		// 메시 데이터를 하나 꺼내옴.
+		MeshData* _Mesh_Data = meshList->front();
+		meshList->pop();
+
+		/// 오브젝트들을 그린다. (Draw Primitive)
+		if (_Mesh_Data->ObjType == OBJECT_TYPE::Camera)
 		{
-			CreateVertexBuffer(&_Render_Mesh);
-			CreateIndexBuffer(&_Render_Mesh);
+			continue;
 		}
 
-		///----------------------------------------------------------------------------------------------------
-		/// 오브젝트들을 그린다. (Draw Primitive)
-
-		mVB = reinterpret_cast<ID3D11Buffer*>(_Render_Mesh.Vertex_Buffer);
-		mIB = reinterpret_cast<ID3D11Buffer*>(_Render_Mesh.Index_Buffer);
+		// 해당 메시의 VB,IB 를 받아옴.
+		Render_VB = reinterpret_cast<ID3D11Buffer*>(_Mesh_Data->VB);
+		Render_IB = reinterpret_cast<ID3D11Buffer*>(_Mesh_Data->IB);
 
 		// 입력 배치 객체 셋팅
 		DX11_Device_Context->IASetInputLayout(InputLayouts::PosNormalTexBiNormalTangent);
 		DX11_Device_Context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-		// 렌더 스테이트
+		
+		//// 렌더 스테이트
 		DX11_Device_Context->RSSetState(DX11_Raster_State);
 
 		// 버텍스버퍼와 인덱스버퍼 셋팅
-		Vertex_Buffer_Stride = sizeof(DHParser::Vertex);
+		Vertex_Buffer_Stride = sizeof(DHVertex);
 		Vertex_Buffer_Offset = 0;
 
 		/// WVP TM등을 셋팅
-		Mul_WVP = _Render_Mesh.World_TM * _SRD->SRT_Matrix  * _OFD->View_Matrix * _OFD->Projection_Matrix;
+		World_Mat = DirectX::SimpleMath::Matrix(*(_Mesh_Data->mWorld));
+		Mul_WVP = World_Mat * View_Mat * Proj_Mat;
 
 		// 월드의 역행렬
-		World_Inverse = _Render_Mesh.World_TM.Invert();
+		World_Inverse = World_Mat.Invert();
 
 		// Set per frame constants.
 		DirectionalLight _temp_Dir;
@@ -406,119 +352,53 @@ void DH3DEngine::RenderDraw(OneFrameData* _OFD, SharedRenderData* _SRD)
 		_temp_Dir.Diffuse = _Diffuse;
 		_temp_Dir.Specular = _Specular;
 		_temp_Dir.Direction = _Direction;
-		
-		_OFD->DirLight_List.push_back(_temp_Dir);
 
-		Effects::BasicFX->SetDirLights(_OFD->DirLight_List);
-		Effects::BasicFX->SetEyePosW(_OFD->World_Eye_Position);
+		Effects::BasicFX->SetDirLights(_temp_Dir);
+
+		// 월드 Eye 포지션.
+		DirectX::SimpleMath::Vector3 _Camera_Vec(View_Mat._41, View_Mat._42, View_Mat._43);
+		Effects::BasicFX->SetEyePosW(_Camera_Vec);
 
 		ID3DX11EffectTechnique* mTech = nullptr;
 
-		if (_Render_Mesh.Texture_Key != -1 && _SRD->Diffuse_Texture[_Render_Mesh.Texture_Key] != nullptr)
-		{
-			/// 텍스쳐 사용
-			mTech = Effects::BasicFX->Light1Tech;
-		}
-		else
-		{
-			/// 텍스쳐 미사용
-			mTech = Effects::BasicFX->Light2Tech;
-		}
+		/// 텍스쳐 사용
+		//mTech = Effects::BasicFX->Light1Tech;
+		/// 텍스쳐 미사용
+		mTech = Effects::BasicFX->Light2Tech;
 
-		// 테크닉은...
 		D3DX11_TECHNIQUE_DESC techDesc;
 		mTech->GetDesc(&techDesc);
 
-		// 랜더패스는...
 		for (UINT p = 0; p < techDesc.Passes; ++p)
 		{
-			DX11_Device_Context->IASetVertexBuffers(0, 1, &mVB, &Vertex_Buffer_Stride, &Vertex_Buffer_Offset);
-			DX11_Device_Context->IASetIndexBuffer(mIB, DXGI_FORMAT_R32_UINT, 0);
+			DX11_Device_Context->IASetVertexBuffers(0, 1, &Render_VB, &Vertex_Buffer_Stride, &Vertex_Buffer_Offset);
+			DX11_Device_Context->IASetIndexBuffer(Render_IB, DXGI_FORMAT_R32_UINT, 0);
 
-			World_Inverse_Transpose = MathHelper::InverseTranspose(_Render_Mesh.World_TM);
-			Effects::BasicFX->SetWorld(_Render_Mesh.World_TM);
+			World_Inverse_Transpose = MathHelper::InverseTranspose(World_Mat);
+			Effects::BasicFX->SetWorld(World_Mat);
 			Effects::BasicFX->SetWorldInvTranspose(World_Inverse_Transpose);
 			Effects::BasicFX->SetWorldViewProj(Mul_WVP);
-			Effects::BasicFX->SetMaterial(_Render_Mesh.Mesh_Material);
-
-			if (mTech == Effects::BasicFX->Light1Tech)
-			{
-				Effects::BasicFX->SetTexTransform(DirectX::SimpleMath::Matrix::Identity);
-				Effects::BasicFX->SetDiffuseMap(reinterpret_cast<ID3D11ShaderResourceView*>(_SRD->Diffuse_Texture[_Render_Mesh.Texture_Key]->Texture_SRV));
-			}
+			//Effects::BasicFX->SetMaterial(_Render_Mesh.Mesh_Material);
 
 			mTech->GetPassByIndex(p)->Apply(0, DX11_Device_Context);
-			DX11_Device_Context->DrawIndexed(_Render_Mesh.Tcount * 3, 0, 0);
+			//DX11_Device_Context->DrawIndexed(_Mesh_Data->indexCount, 0, 0);
 		}
 
 	}
-
-	DrawSkyBox(_OFD);
-
-	_OFD->DirLight_List.clear();
 
 	// Restore default.
 	DX11_Device_Context->RSSetState(0);
-}
 
-void DH3DEngine::UIDraw(Shared2DRenderData* _S2DRD)
-{
-	// 텍스트 데이터가 있다면 그려줌
-	if (_S2DRD->Is_Text)
-	{
-		m_D2DSupport->Push_DrawText(POINT{ (int)_S2DRD->Play_Text_Att.Position.x, (int)_S2DRD->Play_Text_Att.Position.y },
-			1200, _S2DRD->Play_Text_Att.Color.x, _S2DRD->Play_Text_Att.Color.y, _S2DRD->Play_Text_Att.Color.z,
-			_S2DRD->Play_Text_Att.Alpha, _S2DRD->Play_Text_Att.Size, _S2DRD->Play_Text_String);
-	}
-
-	if (!_S2DRD->Is_Img_Load)
-	{
-		// 이미지 로드.
-		for (auto Img_Data : _S2DRD->Img_Path_List)
-		{
-			m_D2DSupport->LoadBitMap(Img_Data.first, Img_Data.second);
-		}
-
-		_S2DRD->Is_Img_Load = true;
-	}
-
-	// 그릴 이미지 Queue에 추가.
-	for (auto Img_Data : _S2DRD->Img_List)
-	{
-		DHRENDER::ImageTRSA* TRSA_Data = Img_Data.second;
-
-		m_D2DSupport->Push_DrawImage(Img_Data.first,
-			POINTF{ TRSA_Data->Position.x, TRSA_Data->Position.y }, POINTF{ TRSA_Data->Scale.x, TRSA_Data->Scale.y }, TRSA_Data->Rotate_Angle, TRSA_Data->Alpha,
-			POINTF{ _S2DRD->UI_TRSA.Position.x, _S2DRD->UI_TRSA.Position.y }, POINTF{ _S2DRD->UI_TRSA.Scale.x, _S2DRD->UI_TRSA.Scale.y }, _S2DRD->UI_TRSA.Rotate_Angle, _S2DRD->UI_TRSA.Alpha);
-	}
-
-}
-
-void DH3DEngine::TextDraw(POINT _Pos, float _Width, float r, float g, float b, float a, float _Size, const wchar_t* _Input_String)
-{
-	m_D2DSupport->Push_DrawText(_Pos, _Width, r, g, b, a, _Size, _Input_String);
-}
-
-void DH3DEngine::LoadingDraw(ATL::CString _Loading_Path)
-{
-	m_D2DSupport->LoadLoadingImage(_Loading_Path);
-
-	m_D2DSupport->DrawLoadingImage();
+	EndDraw();
 }
 
 void DH3DEngine::EndDraw()
 {
-	// 이미지 그리기
-	m_D2DSupport->Draw_AllImage();
-	// 텍스트 그리기.
-	m_D2DSupport->Draw_AllText();
-	// 다음 프레임에 다시 Axis_Grid를 그릴 수 있도록..
-	Is_Draw_AxisGrid = false;
 	// Present as fast as possible.
 	DX11_Swap_Chain->Present(0, 0);
 }
 
-void DH3DEngine::Finalize()
+void DH3DEngine::Delete()
 {
 	/// 일련의 작업 후..
 		// Before shutting down set to windowed mode or when you release the swap chain it will throw an exception.
@@ -576,117 +456,34 @@ void DH3DEngine::Finalize()
 	}
 }
 
-void DH3DEngine::DrawSkyBox(OneFrameData* _OFD)
-{
-	// 스카이박스가 설정되어 있지 않다면.. return
-	if (Sky_Box_Path == "" && m_SkyBox == nullptr)
-	{
-		return;
-	}
-
-	// 스카이박스가 이미 로드되어 있는경우 그려줌.
-	if (m_SkyBox != nullptr)
-	{
-		m_SkyBox->Draw(DX11_Device_Context, _OFD);
-	}
-	// 스카이박스가 로드되어 있지 않으면 새로 만들고 그려줌.
-	else
-	{
-		m_SkyBox = new SkyBox(DX11_Device, Sky_Box_Path, 5000.0f);
-		m_SkyBox->Draw(DX11_Device_Context, _OFD);
-	}
-}
-
 float DH3DEngine::GetAspectRatio() const
 {
 	return static_cast<float>(g_Screen_Width) / g_Screen_Height;
 }
 
-void DH3DEngine::SetTextureSRV(SharedRenderData* _SRD)
+TextureBuffer* DH3DEngine::CreateTextureBuffer(std::string path)
 {
+	// string to wstring
+	std::wstring W_Path;
+	W_Path.assign(path.begin(), path.end());
 
-	if (!_SRD->Ambient_Texture.empty())
-	{
-		for (auto k : _SRD->Ambient_Texture)
-		{
-			// 텍스쳐 생성을 위한 임시 객체
-			ID3D11Resource* Texture_Resource = nullptr;
-			// 텍스쳐 SRV
-			ID3D11ShaderResourceView* DX11_SRV = nullptr;
-			// 텍스쳐 정보 셋팅.
-			CreateWICTextureFromFile(DX11_Device, k.second->Texture_Path, &Texture_Resource, &DX11_SRV);
-			ReleaseCOM(Texture_Resource);
+	TextureBuffer* _TextureBuffer = new TextureBuffer();
+	
+	// 텍스쳐 생성을 위한 임시 객체
+	ID3D11Resource* Texture_Resource = nullptr;
+	// 텍스쳐 SRV
+	ID3D11ShaderResourceView* DX11_SRV = nullptr;
+	// 텍스쳐 정보 셋팅.
+	CreateWICTextureFromFile(DX11_Device, W_Path.c_str(), &Texture_Resource, &DX11_SRV);
+	ReleaseCOM(Texture_Resource);
 
-			k.second->Texture_SRV = DX11_SRV;
-		}
-	}
+	_TextureBuffer->TextureBufferPointer = _TextureBuffer;
+	
+	return _TextureBuffer;
 
-	if (!_SRD->Emissive_Texture.empty())
-	{
-		for (auto k : _SRD->Emissive_Texture)
-		{
-			// 텍스쳐 생성을 위한 임시 객체
-			ID3D11Resource* Texture_Resource = nullptr;
-			// 텍스쳐 SRV
-			ID3D11ShaderResourceView* DX11_SRV = nullptr;
-			// 텍스쳐 정보 셋팅.
-			CreateWICTextureFromFile(DX11_Device, k.second->Texture_Path, &Texture_Resource, &DX11_SRV);
-			ReleaseCOM(Texture_Resource);
-
-			k.second->Texture_SRV = DX11_SRV;
-		}
-	}
-
-	if (!_SRD->Diffuse_Texture.empty())
-	{
-		for (auto k : _SRD->Diffuse_Texture)
-		{
-			// 텍스쳐 생성을 위한 임시 객체
-			ID3D11Resource* Texture_Resource = nullptr;
-			// 텍스쳐 SRV
-			ID3D11ShaderResourceView* DX11_SRV = nullptr;
-			// 텍스쳐 정보 셋팅.
-			CreateWICTextureFromFile(DX11_Device, k.second->Texture_Path, &Texture_Resource, &DX11_SRV);
-			ReleaseCOM(Texture_Resource);
-
-			k.second->Texture_SRV = DX11_SRV;
-		}
-	}
-
-	if (!_SRD->Specular_Texture.empty())
-	{
-		for (auto k : _SRD->Specular_Texture)
-		{
-			// 텍스쳐 생성을 위한 임시 객체
-			ID3D11Resource* Texture_Resource = nullptr;
-			// 텍스쳐 SRV
-			ID3D11ShaderResourceView* DX11_SRV = nullptr;
-			// 텍스쳐 정보 셋팅.
-			CreateWICTextureFromFile(DX11_Device, k.second->Texture_Path, &Texture_Resource, &DX11_SRV);
-			ReleaseCOM(Texture_Resource);
-
-			k.second->Texture_SRV = DX11_SRV;
-		}
-	}
-
-	if (!_SRD->NormalMap_Texture.empty())
-	{
-		for (auto k : _SRD->NormalMap_Texture)
-		{
-			// 텍스쳐 생성을 위한 임시 객체
-			ID3D11Resource* Texture_Resource = nullptr;
-			// 텍스쳐 SRV
-			ID3D11ShaderResourceView* DX11_SRV = nullptr;
-			// 텍스쳐 정보 셋팅.
-			CreateWICTextureFromFile(DX11_Device, k.second->Texture_Path, &Texture_Resource, &DX11_SRV);
-			ReleaseCOM(Texture_Resource);
-
-			k.second->Texture_SRV = DX11_SRV;
-		}
-	}
 }
 
-void DH3DEngine::On_Resize(float Change_Width, float Change_Height)
+void DH3DEngine::OnReSize(int Change_Width, int Change_Height)
 {
 
 	/// 바뀐 화면의 사이즈를 저장해 준뒤에
@@ -754,91 +551,80 @@ void DH3DEngine::On_Resize(float Change_Width, float Change_Height)
 	//m_DHCamera->SetLens(0.25f * MathHelper::Pi, GetAspectRatio(), 1.0f, 1000.0f);
 }
 
-void DH3DEngine::Draw_Status()
+Indexbuffer* DH3DEngine::CreateIndexBuffer(ParserData::Model* mModel)
 {
-	DirectX::SimpleMath::Vector4 _white(1.f, 1.f, 1.f, 1.f);	// white
+	ID3D11Buffer* mIB = nullptr;
+	Indexbuffer* indexbuffer = new Indexbuffer();
 
-	// 피쳐레벨
-	int _yPos = 50;
-	int _Text_Offset = 21;
-	//m_DXTKFont->DrawTextColor(0, _yPos, _white, (TCHAR*)L"Feature Level : %x", featureLevel);
+	//모델의 계수
+	int ModelCount = (int)mModel[0].m_MeshList[0]->m_IndexList.size();
+	int Icount = (int)mModel[0].m_MeshList[0]->m_IndexList.size();
 
-	//// 어댑터 정보
-	m_D2DSupport->Push_DrawText({ 10, _yPos }, 500, 1, 0, 0, 1, 20, (TCHAR*)L"Description: %s", m_Adapter_Desc1.Description);
-	m_D2DSupport->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 1, 0, 1, 20, (TCHAR*)L"VendorID: %u", m_Adapter_Desc1.VendorId);
-	m_D2DSupport->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 1, 0, 1, 20, (TCHAR*)L"DeviceID: %u", m_Adapter_Desc1.DeviceId);
-	m_D2DSupport->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 1, 0, 1, 20, (TCHAR*)L"SubSysID: %u", m_Adapter_Desc1.SubSysId);
-	m_D2DSupport->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 1, 0, 1, 20, (TCHAR*)L"Revision: %u", m_Adapter_Desc1.Revision);
-	m_D2DSupport->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 0, 1, 1, 20, (TCHAR*)L"VideoMemory: %lu MB", m_Adapter_Desc1.DedicatedVideoMemory / 1024 / 1024);
-	m_D2DSupport->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 0, 1, 1, 20, (TCHAR*)L"SystemMemory: %lu MB", m_Adapter_Desc1.DedicatedSystemMemory / 1024 / 1024);
-	m_D2DSupport->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 0, 1, 1, 20, (TCHAR*)L"SharedSysMemory: %lu MB", m_Adapter_Desc1.SharedSystemMemory / 1024 / 1024);
-	m_D2DSupport->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 1, 1, 0, 1, 20, (TCHAR*)L"AdpaterLuid: %u.%d", m_Adapter_Desc1.AdapterLuid.HighPart, m_Adapter_Desc1.AdapterLuid.LowPart);
+	std::vector<UINT> index;
+	index.resize(Icount * 3);
 
-	//// 카메라 정보
-	//m_DXTKFont->DrawTextColor(0, _yPos += 28, _white, (TCHAR*)L"Camera Pos : %.2f / %.2f / %.2f", m_DHCamera->GetPosition().x, m_DHCamera->GetPosition().y, m_DHCamera->GetPosition().z);
-}
-
-void DH3DEngine::CreateIndexBuffer(DHParser::Mesh* _Mesh)
-{
-	ID3D11Buffer* mIB;
+	int j = 0;
+	for (int i = 0; i < Icount; i++)
+	{
+		index[j] = mModel[0].m_MeshList[0]->m_IndexList[i]->m_Index[0];
+		j++;
+		index[j] = mModel[0].m_MeshList[0]->m_IndexList[i]->m_Index[1];
+		j++;
+		index[j] = mModel[0].m_MeshList[0]->m_IndexList[i]->m_Index[2];
+		j++;
+	}
 
 	D3D11_BUFFER_DESC ibd;
 	ibd.Usage = D3D11_USAGE_IMMUTABLE;
-	ibd.ByteWidth = sizeof(UINT) * _Mesh->Tcount * 3;
+	ibd.ByteWidth = sizeof(UINT) * Icount * 3;
 	ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	ibd.CPUAccessFlags = 0;
 	ibd.MiscFlags = 0;
 	D3D11_SUBRESOURCE_DATA iinitData;
-	iinitData.pSysMem = &_Mesh->Optimize_Index[0];
+	iinitData.pSysMem = &index[0];
 
 	HR(DX11_Device->CreateBuffer(&ibd, &iinitData, &mIB));
 
-	_Mesh->Index_Buffer = mIB;
+	indexbuffer->IndexBufferPointer = mIB;
+	indexbuffer->size = Icount * 3;
+
+	return indexbuffer;
 }
 
-void DH3DEngine::CreateVertexBuffer(DHParser::Mesh* _Mesh)
+Vertexbuffer* DH3DEngine::CreateVertexBuffer(ParserData::Model* mModel)
 {
-	ID3D11Buffer* mVB;
+	ID3D11Buffer* mVB = nullptr;
+	Vertexbuffer* vertexbuffer = new Vertexbuffer();
+
+	//모델의 계수
+	int ModelCount = (int)mModel->m_MeshList.size();
+	int Vcount = (int)mModel->m_MeshList[0]->m_VertexList.size();
+	std::vector<ParserData::Vertex*> VertexList = mModel->m_MeshList[0]->m_VertexList;
+
+	std::vector<DHVertex> temp;
+	temp.resize(Vcount);
+	for (int i = 0; i < Vcount; i++)
+	{
+		temp[i].Pos = mModel->m_MeshList[0]->m_VertexList[i]->m_Pos;
+		temp[i].Normal = mModel->m_MeshList[0]->m_VertexList[i]->m_Normal;
+		temp[i].Tex = { mModel->m_MeshList[0]->m_VertexList[i]->m_U ,mModel->m_MeshList[0]->m_VertexList[i]->m_V };
+	}
 
 	D3D11_BUFFER_DESC vbd;
 	vbd.Usage = D3D11_USAGE_IMMUTABLE;
-	vbd.ByteWidth = sizeof(DHParser::Vertex) * _Mesh->Vcount;
+	vbd.ByteWidth = sizeof(DHVertex) * Vcount;
 	vbd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vbd.CPUAccessFlags = 0;
 	vbd.MiscFlags = 0;
 	D3D11_SUBRESOURCE_DATA vinitData;
-	vinitData.pSysMem = &_Mesh->Optimize_Vertex[0];
+	vinitData.pSysMem = &temp[0];
 
 	HR(DX11_Device->CreateBuffer(&vbd, &vinitData, &mVB));
 
-	_Mesh->Vertex_Buffer = mVB;
-}
+	vertexbuffer->VertexbufferPointer = mVB;
+	vertexbuffer->size = Vcount;
 
-HRESULT DH3DEngine::GetAdapterInfo()
-{
-	// DXGI버전별로 다름
-	IDXGIAdapter1* pAdapter;
-	IDXGIFactory1* pFactory = NULL;
-
-	HRESULT hr = S_OK;
-
-	// DXGIFactory 개체 생성(DXGI.lib 필요)
-	if (FAILED(CreateDXGIFactory1(__uuidof(IDXGIFactory1), (void**)&pFactory)))
-	{
-		return E_FAIL;
-	}
-
-	hr = pFactory->EnumAdapters1(0, &pAdapter);
-
-	if (hr != DXGI_ERROR_NOT_FOUND)
-	{
-		pAdapter->GetDesc1(&m_Adapter_Desc1);
-	}
-
-	SAFE_RELEASE(pAdapter);
-	SAFE_RELEASE(pFactory);
-
-	return S_OK;
+	return vertexbuffer;
 }
 
 void DH3DEngine::CreateRenderStates()
@@ -861,56 +647,4 @@ void DH3DEngine::CreateRenderStates()
 	wireframeDesc.DepthClipEnable = true;
 
 	HR(DX11_Device->CreateRasterizerState(&wireframeDesc, &mWireframeRS));
-}
-
-/// 이미 빌드되어있는 FX파일을 빌드해서 실행하는 버전. ( 현재 사용 안하는중.. )
-void DH3DEngine::BuildFX()
-{
-	std::ifstream fin("../fx/color.fxo", std::ios::binary);
-
-	fin.seekg(0, std::ios_base::end);
-	int size = (int)fin.tellg();
-	fin.seekg(0, std::ios_base::beg);
-	std::vector<char> compiledShader(size);
-
-	fin.read(&compiledShader[0], size);
-	fin.close();
-
-	HR(D3DX11CreateEffectFromMemory(&compiledShader[0], size,
-		0, DX11_Device, &mFX));
-
-	// 이펙트 객체를 통해서 테크닉을 얻어온다.
-	mTech = mFX->GetTechniqueByName("ColorTech");
-
-	// 이펙트 객체를 통해서 상수버퍼의 변수를 가져온다.
-	mfxWorldViewProj = mFX->GetVariableByName("gWorldViewProj")->AsMatrix();
-}
-
-/// 실시간으로 FX파일을 빌드해서 실행하는 버전.
-void DH3DEngine::BuildFX_Create()
-{
-	DWORD shaderFlags = 0;
-#if defined( DEBUG ) || defined( _DEBUG )
-	shaderFlags |= D3D10_SHADER_DEBUG;
-	shaderFlags |= D3D10_SHADER_SKIP_OPTIMIZATION;
-#endif
-
-	ID3D10Blob* compiledShader = 0;
-	ID3D10Blob* compilationMsgs = 0;
-	HRESULT hr = D3DCompileFromFile(L"../FX/color.fx", 0, 0, 0, "fx_5_0", shaderFlags, 0, &compiledShader, &compilationMsgs);
-
-	if (compilationMsgs != 0)
-	{
-		///MessageBoxA(0, (char*)compilationMsgs->GetBufferPointer(), 0, 0);
-		ReleaseCOM(compilationMsgs);
-	}
-
-	HR(D3DX11CreateEffectFromMemory(compiledShader->GetBufferPointer(), compiledShader->GetBufferSize(),
-		0, DX11_Device, &mFX));
-
-	// Done with compiled shader.
-	ReleaseCOM(compiledShader);
-
-	mTech = mFX->GetTechniqueByName("ColorTech");
-	mfxWorldViewProj = mFX->GetVariableByName("gWorldViewProj")->AsMatrix();
 }

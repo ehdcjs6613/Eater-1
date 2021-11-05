@@ -64,15 +64,15 @@ void GameObject::PushComponentFunction(Component* con, unsigned int type)
 		con->FUNCTION_MASK |= Transform_UPDATE;
 		break;
 	case Physics_UPDATE:
-		ObjectManager::PushTransformUpdate(con);
+		ObjectManager::PushPhysicsUpdate(con);
 		con->FUNCTION_MASK |= Physics_UPDATE;
 		break;
 	case UPDATE:
-		ObjectManager::PushTransformUpdate(con);
+		ObjectManager::PushUpdate(con);
 		con->FUNCTION_MASK |= UPDATE;
 		break;
 	case END_UPDATE:
-		ObjectManager::PushTransformUpdate(con);
+		ObjectManager::PushEndUpdate(con);
 		con->FUNCTION_MASK |= END_UPDATE;
 		break;
 	}
