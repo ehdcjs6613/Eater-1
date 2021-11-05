@@ -21,11 +21,14 @@ void MeshFilter::Start()
 	{
 		LoadData* data = LoadManager::GetMesh(MeshName);
 
+		if (data != nullptr && data != nullptr)
+		{
+			gameobject->OneMeshData->IB = data->IB;
+			gameobject->OneMeshData->VB = data->VB;
+			gameobject->OneMeshData->indexCount = data->IB->Count;
+			gameobject->OneMeshData->vertexCount = data->VB->Count;;
+		}
 
-		gameobject->OneMeshData->IB = data->IB;
-		gameobject->OneMeshData->VB = data->VB;
-		gameobject->OneMeshData->indexCount = data->indexCount;
-		gameobject->OneMeshData->vertexCount = data->vertexCount;
 	}
 }
 

@@ -68,6 +68,8 @@ ID3D11Buffer* ShaderManager::GetConstantBuffer(std::string name)
 
 bool ShaderManager::CreateSampler()
 {
+	//기본 샘플러
+
 	ID3D11SamplerState* sampler;
 	D3D11_SAMPLER_DESC samplerDesc;
 	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
@@ -118,7 +120,6 @@ bool ShaderManager::CreateConstantBuffer()
 		}
 
 		//총 전체의 사이즈
-
 		UINT size = buffer_Desc.Size;
 		UINT plags = buffer_Desc.uFlags;
 		//변수의 개수

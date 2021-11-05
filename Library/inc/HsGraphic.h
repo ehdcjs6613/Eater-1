@@ -26,9 +26,9 @@ public:
 	//텍스쳐 버퍼를생성
 	virtual HS_GRAPHICDLL TextureBuffer* CreateTextureBuffer(std::string path) override;
 	//인덱스 버퍼를 생성
-	virtual HS_GRAPHICDLL Indexbuffer*	CreateIndexBuffer(ParserData::Model* mModel) override;
+	virtual HS_GRAPHICDLL Indexbuffer*	CreateIndexBuffer(ParserData::Mesh* mModel) override;
 	//버텍스 버퍼를 생성
-	virtual HS_GRAPHICDLL Vertexbuffer* CreateVertexBuffer(ParserData::Model* mModel) override;
+	virtual HS_GRAPHICDLL Vertexbuffer* CreateVertexBuffer(ParserData::Mesh* mModel) override;
 
 	ID3D11RenderTargetView* GetEngineRTV();
 	ID3D11DepthStencilView* GetEngineDSV();

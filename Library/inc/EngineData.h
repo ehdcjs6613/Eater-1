@@ -58,25 +58,36 @@ public:
 	DirectX::XMFLOAT3 Pos;		//매쉬의 위치값
 };
 
+//파서에서 읽어오고 변경해주는 데이터
 class LoadData
 {
 public:
-	LoadData() 
-	{
-		indexCount	= 0;
-		vertexCount = 0;
-	};
 	~LoadData()
 	{
 		delete IB;
 		delete VB;
 	};
 
+	Indexbuffer*	IB = nullptr;
+	Vertexbuffer*	VB = nullptr;
+};
 
-	int indexCount;
-	int vertexCount;
-	Indexbuffer* IB;
-	Vertexbuffer* VB;
+//저장할 한개매쉬의 데이터
+class SaveOneMeshData
+{
+public:
+	//스키닝 데이터
+	//std::vector<ParserData::Mesh*>* BoneList;
+	//std::vector<DirectX::SimpleMath::Matrix>* m_BoneTMList;
+	////애니메이션
+	//ParserData::OneAnimation* Animation;
+	//ParserData::CMaterial*	MaterialD;
+
+
+
+	LoadData* BufferData;
+
+
 };
 
 

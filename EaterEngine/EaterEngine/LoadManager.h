@@ -17,6 +17,8 @@ namespace ParserData
 	struct Model;
 }
 
+class Mesh;
+class Bone;
 class LoadData;
 class ModelParser;
 class FBXParser;
@@ -60,8 +62,18 @@ public:
 	void DeleteMesh(std::string mMeshName);
 	//모든 매쉬정보를 삭제
 	void DeleteMeshAll();
-	
 private:
+	//본데이터를 저장할 구조체만든다
+	Bone* CreateBone(ParserData::Mesh* mesh);
+	//매쉬 데이터를 저장할 구조체를 만든다
+	LoadData* CreateMesh(ParserData::Mesh* mesh);
+
+	
+
+
+
+
+
 	//모델이 들어있는 경로
 	std::string MeshPath;
 	//텍스쳐가 들어있는 경로
@@ -75,7 +87,4 @@ private:
 	ModelParser* EaterParser;
 	//누군가의 그래픽 엔진
 	GraphicEngineManager* GEngine;
-
-	//그래픽엔진을 통해서 인덱스버퍼와 버텍스 버퍼를 생성
-	void CreateBuffer(ParserData::Model* mesh);
 };

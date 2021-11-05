@@ -65,9 +65,9 @@ void Camera::CreateProj(int winsizeX, int WinSizeY, bool ViewPoint)
 	///XMMatrixPerspectiveFovLH 함수 검색하면됨
 
 	//시야각
-	float mFovY	= 0.25f * 3.141592f;
+	float mFovY	= 0.5f * 3.141592f;
 	//뷰 공간 X:Y 가로세로비율
-	float mAspect = winsizeX / WinSizeY;
+	float mAspect = (float)winsizeX / (float)WinSizeY;
 	//근접평면 까지의 거리 0보다 커야됨
 	float mNearZ	= 0.1f;
 	//먼 평면 까지의 거리 0보다 커야됨
