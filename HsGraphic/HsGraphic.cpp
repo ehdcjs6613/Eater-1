@@ -9,10 +9,8 @@
 #include "DirectXDefine.h"
 #include "Grahpics2D.h"
 #include "HsDefine.h"
-#include <vector>
 #include "Data.h"
-#include <Windows.h>
-#include <tchar.h>
+#include <vector>
 
 using namespace DirectX;
 
@@ -55,10 +53,11 @@ void HsGraphic::Initialize(HWND _hWnd, int screenWidth, int screenHeight)
 	CreateRenderState();
 
 	
-	m_pGrahpics2D = new Grahpics2D();
-	m_pGrahpics2D->initialize(hwnd, mSwapChain);
+	m_p2DSupport = new Grahpics2D();
+	m_p2DSupport->initialize(hwnd, mSwapChain);
 
-	m_pGrahpics2D->LoadBitMap(L"../Image/apple_1.png",L"../Image/apple_1.png");
+	m_p2DSupport->LoadBitMap(L"../Image/apple_1.png",L"../Image/apple_1.png");
+	m_p2DSupport->LoadBitMap(L"../Image/atk_1.png",L"../Image/atk_1.png");
 	//매니저들 생성
 ;	//mShaderManager = new ShaderManager();
 	//mRenderManager = new RenderingManager();
@@ -205,10 +204,6 @@ void HsGraphic::CreateRenderState()
 
 void HsGraphic::CreateDevice()
 {
-	hwnd ;
-	WinSizeX ;
-	WinSizeY ;
-
 	IDXGIFactory* factory;
 	IDXGIAdapter* adapter;
 	IDXGIOutput* adapterOutput;
@@ -491,18 +486,18 @@ void HsGraphic::CreateDevice()
 	GetAdapterInfo();
 
 
-	m_pGrahpics2D = new Grahpics2D();
-	m_pGrahpics2D->initialize(hwnd, mSwapChain);
+	m_p2DSupport = new Grahpics2D();
+	m_p2DSupport->initialize(hwnd, mSwapChain);
 
-	m_pGrahpics2D->LoadBitMap(L"../Image/apple_1.png", L"../Image/apple_1.png");
-	m_pGrahpics2D->LoadBitMap(L"../Image/atk_1.png", L"../Image/atk_1.png");
+	m_p2DSupport->LoadBitMap(L"../Image/apple_1.png", L"../Image/apple_1.png");
+	m_p2DSupport->LoadBitMap(L"../Image/atk_1.png", L"../Image/atk_1.png");
 	
 }
 
 void HsGraphic::BeginRender()
 {
 	//엔진 랜더링 시작
-	float Color[4] = { 1.0f, 0.0f, 0.0f, 1.0f };
+	float Color[4] = { 0.5f, 0.0f, 0.0f, 1.0f };
 	DeviceContext->OMSetRenderTargets(1, &mRenderTargetView, mDepthStencilView);
 	DeviceContext->ClearRenderTargetView(mRenderTargetView, Color);
 	DeviceContext->ClearDepthStencilView(mDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
@@ -514,17 +509,17 @@ void HsGraphic::EngineRender()
 	int _yPos = 50;
 	int _Text_Offset = 21;
 	//엔진 랜더링
-	m_pGrahpics2D->Push_DrawText({ 10, _yPos }, 500, 1, 0, 0, 1, 20,				 (TCHAR*)L"Description: %s");
-	m_pGrahpics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 1, 0, 1, 20, (TCHAR*)L"VendorID: %u");
-	m_pGrahpics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 1, 0, 1, 20, (TCHAR*)L"DeviceID: %u");
-	m_pGrahpics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 1, 0, 1, 20, (TCHAR*)L"SubSysID: %u");
-	m_pGrahpics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 1, 0, 1, 20, (TCHAR*)L"Revision: %u");
-	m_pGrahpics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 0, 1, 1, 20, (TCHAR*)L"VideoMemory: %lu MB");
-	m_pGrahpics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 0, 1, 1, 20, (TCHAR*)L"SystemMemory: %lu MB");
-	m_pGrahpics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 0, 1, 1, 20, (TCHAR*)L"SharedSysMemory: %lu MB");
-	m_pGrahpics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 1, 1, 0, 1, 20, (TCHAR*)L"AdpaterLuid: %u.%d");
+	m_p2DSupport->Push_DrawText({ 10, _yPos }, 500, 1, 0, 0, 1, 20, L"Description: %s", m_AdapterDesc.Description);
+	m_p2DSupport->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 1, 0, 1, 20,L"VendorID: %u", m_AdapterDesc.VendorId);
+	m_p2DSupport->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 1, 0, 1, 20,L"DeviceID: %u", m_AdapterDesc.DeviceId);
+	m_p2DSupport->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 1, 0, 1, 20,L"SubSysID: %u", m_AdapterDesc.SubSysId);
+	m_p2DSupport->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 1, 0, 1, 20,L"Revision: %u", m_AdapterDesc.Revision);
+	m_p2DSupport->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 0, 1, 1, 20,L"VideoMemory: %lu MB",	 m_AdapterDesc.DedicatedVideoMemory / 1024 / 1024);
+	m_p2DSupport->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 0, 1, 1, 20,L"SystemMemory: %lu MB",	 m_AdapterDesc.DedicatedSystemMemory / 1024 / 1024);
+	m_p2DSupport->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 0, 1, 1, 20,L"SharedSysMemory: %lu MB", m_AdapterDesc.SharedSystemMemory / 1024 / 1024);
+	m_p2DSupport->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 1, 1, 0, 1, 20,L"AdpaterLuid: %u.%d",      m_AdapterDesc.AdapterLuid.HighPart, m_AdapterDesc.AdapterLuid.LowPart);
 
-	m_pGrahpics2D->Push_DrawImage
+	m_p2DSupport->Push_DrawImage
 	(
 		L"../Image/apple_1.png", //name
 		{ 1000,1 },				//Image Position
@@ -536,11 +531,29 @@ void HsGraphic::EngineRender()
 		0,
 		1.0f
 	);
+	m_p2DSupport->Push_DrawSprite
+	(
+		L"../Image/atk_1.png", //name
+		{ 1000,400 },				//Image Position
+		{ 1,1 },				//Image Scale//
+		0,
+		1.0f,
+		{ 0,0 }, //POS
+		{ 1.0f, 1.0f }, //SCALE/
+		0,
+		1.0f,
+		6,
+		171,
+		144
+	);
 
 }
 
 void HsGraphic::EndRender()
 {
+	m_p2DSupport->Draw_AllImage();
+	m_p2DSupport->Draw_AllSprite();
+	m_p2DSupport->Draw_AllText();
 	//엔진 랜더링 종료
 	mSwapChain->Present(0, 0);
 }
@@ -562,7 +575,7 @@ DXGI_ADAPTER_DESC1 HsGraphic::GetAdapter()
 HRESULT HsGraphic::GetAdapterInfo()
 {
 	// DXGI버전별로 다름
-	IDXGIAdapter1* pAdapter;
+	IDXGIAdapter1* pAdapter = NULL;
 	IDXGIFactory1* pFactory = NULL;
 
 	HRESULT hr = S_OK;

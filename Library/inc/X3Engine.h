@@ -1,6 +1,7 @@
 #pragma once
 
 
+
 //    DirectX관련 클래스
 //	  장치의 관리의 D		evice클래스
 class DirectXDevice;
@@ -46,12 +47,14 @@ class GlobalData;
 
 //class __declspec(dllimport) GraphicEngine;
 
-#include "GraphicsEngine.h"
 #include <d3dcommon.h>
 #include <string>
 #include <queue>
 
-class X3Engine : public  GraphicEngine
+#include "GraphicsEngine.h"
+#include "XShader.h"
+
+class X3Engine : public  GraphicEngine 
 {
 private:
 	//
@@ -70,20 +73,20 @@ private:
 ///---------------------------------------------///
 	
 	D3D_FEATURE_LEVEL	    m_FeatureLevel;
+
+
 private:
 	//렌더러 기능
 	XRenderer*				m_pRenderer;
-
-	Grahpics2D*				m_pGraphics2D;
 	
 
-	DirectX::XMMATRIX m_ProjectionMatrix;
-	DirectX::XMMATRIX m_WorldMatrix;
-	DirectX::XMMATRIX m_OtherMatrix;
+	DirectX::XMMATRIX		m_ProjectionMatrix;
+	DirectX::XMMATRIX		m_WorldMatrix;
+	DirectX::XMMATRIX		m_OtherMatrix;
 private:
 	//int					  m_iWidth;
 	//int					  m_iHeight;
-	int					  m_videoCardMemory;
+	int						m_videoCardMemory;
 public:
 
 public:
@@ -120,5 +123,30 @@ public:
 	void SetTextureSRV(SharedRenderData* _SRD);
 
 	void Release();
+
+public:
+	void InitializeShaders();
+
+
+private:
+	////정점셰이더를 저장하기 위한 변수를 추가
+	//Microsoft::WRL::ComPtr<ID3D10Blob> m_pVertexShaderBuffer;
+	IDXGISwapChain* m_pSwapChain;
+	XVertexShader m_XVertexShader;
+	XPixelShader  m_XPexelShader;
+public:
+	//test
+	ID3D11Buffer* m_pVertexBuffer;
+	bool TestScene();
+private:
+	// 폰트때문에 뎁스스탠실 스테이트가 강제.
+	ID3D11DepthStencilState* NormalDSS = nullptr;
+
+	ID3D11RasterizerState* mWireframeRS = nullptr;
+	ID3D11RasterizerState* mSolidRS = nullptr;
+	//-----------------------------------
+
+public:
+
 };
 

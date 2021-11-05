@@ -15,8 +15,6 @@ class Grahpics2D;
 
 class HsGraphic : public GraphicEngine
 {
-private:
-	Grahpics2D* m_pGrahpics2D;
 public:
 	
 	HS_GRAPHICDLL HsGraphic();
@@ -56,6 +54,7 @@ private:
 	D3D_FEATURE_LEVEL		m_FeatureLevel;		//피쳐레벨
 	UINT					m_videoCardMemory;  //비디오(그래픽) 카드 메모리
 	DXGI_ADAPTER_DESC1		m_AdapterDesc;
+
 	//윈도우 사이즈
 	int WinSizeX;	//윈도우 사이즈 가로
 	int WinSizeY;	//윈도우 사이즈 세로

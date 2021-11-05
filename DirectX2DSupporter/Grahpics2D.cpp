@@ -173,7 +173,7 @@ void Grahpics2D::thDrawBitmap(std::wstring _Image_Name, POINTF _Position, float 
 
 void Grahpics2D::thDrawSprite(std::wstring _Image_Name, POINTF _Position, float _Alpha, float _Scale_X, float _Scale_Y, int _Angle, int _Accross, int _maxindex, float _StartOneSpace, float _EndOneSpace)
 {
-	auto _map_data = Image_Resource.find(_Image_Name);
+	std::map<std::wstring, ID2D1Bitmap*>::iterator _map_data = Image_Resource.find(_Image_Name);
 	ID2D1Bitmap* _Img_Data = _map_data->second;
 
 	m_2D_RenderTarget->SetTransform(D2D1::Matrix3x2F::Rotation(_Angle, D2D1::Point2F(_Position.x, _Position.y)));
@@ -267,14 +267,15 @@ void Grahpics2D::Push_DrawText(POINT _Pos, float _Width,
 	float _Size, const wchar_t* _Input_String, ...)
 {
 	// 버퍼 준비 최대 글자수 128
-	wchar_t* pStr = new wchar_t[128];
+	wchar_t* pStr = nullptr;
+	pStr =new wchar_t[128];
 
 	va_list args;
 	// 가변인자의 위치를 처음으로 셋팅하기 위함.
 	va_start(args, _Input_String);
 
 	// 우리가 준비한 버퍼에 완성된 결과를 저장.
-	vswprintf(pStr, sizeof(pStr), _Input_String, args);
+	vswprintf(pStr, wcslen(pStr), _Input_String, args);
 	va_end(args);
 
 	Text_Queue_Data* Queue_Data = Text_Data_Pool.GetObject();
@@ -323,9 +324,13 @@ void Grahpics2D::Draw_AllText()
 		m_TextLayOut->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING);
 		m_TextLayOut->SetFontSize(Queue_Data->Text_Size, textRange);
 
+
 		// 폰트별 차지하는 영역 계산 필요
-		m_2D_RenderTarget->DrawTextLayout(D2D1::Point2F(Queue_Data->Position_X, Queue_Data->Position_Y),
-			m_TextLayOut, m_TextColor);
+		m_2D_RenderTarget->DrawTextLayout
+		(
+			D2D1::Point2F(Queue_Data->Position_X, Queue_Data->Position_Y),
+			m_TextLayOut, m_TextColor
+		);
 
 		m_TextLayOut->Release();
 		m_TextColor->Release();

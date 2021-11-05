@@ -64,7 +64,7 @@ ID3D11Texture2D* DirectXDevice::CreateInitFactory(int& _vedioCard)
 	float fieldOfView, screenAspect;
 
 	// DXGI 팩토리 생성.
-	HR(CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&factory));
+ 	HR(CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&factory));
 
 	// Use the factory to create an adapter for the primary graphics interface (video card).
 	//팩토리 객체를 사용해서 에서 기본 그래픽 인터페이스용 어댑터(비디오 카드)를 만듭니다.

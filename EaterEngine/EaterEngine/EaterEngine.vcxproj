@@ -185,6 +185,7 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\lib"
 copy /Y "$(ProjectDir)GraphicsEngine.h" "$(SolutionDir)Library\inc"
 copy /Y "$(ProjectDir)ResourcesData.h" "$(SolutionDir)Library\inc"
 copy /Y "$(ProjectDir)EngineData.h" "$(SolutionDir)Library\inc"
+copy /Y "$(ProjectDir)Transform.h" "$(SolutionDir)Library\inc"
 
 copy /Y "$(TargetDir)*.dll" "$(SolutionDir)Library\lib"
 copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\lib"

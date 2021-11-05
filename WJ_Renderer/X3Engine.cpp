@@ -9,9 +9,10 @@
 #include "DirectXAdapter.h"
 #include "DirectXRenderTargeter.h"
 
+#include "Grahpics2D.h"
+#include "GraphicsEngine.h"
 #include "XRenderer.h"
 #include "X3Engine.h"
-#include "Grahpics2D.h"
 
 //스마트포인터 인클르드
 #include <wrl/client.h>
@@ -29,7 +30,8 @@ X3Engine::X3Engine() : m_pDevice(nullptr), m_pDeviceContext(nullptr)
 	m_pRasterizerSolid = new DirectXRasterizerState();
 	m_pRasterizerWire = new DirectXRasterizerState();
 	m_pAdapter = new DirectXAdapter();
-	m_pGraphics2D = new Grahpics2D();
+	m_p2DSupport = new Grahpics2D();
+
 	
 }
 
@@ -40,11 +42,6 @@ X3Engine::~X3Engine()
 
 void X3Engine::Initialize(HWND _hWnd, int _iWidth, int _iHeight)
 {
-
-	
-	
-
-
 	m_hWnd		= _hWnd;
 	m_pDevice->CreateSize(_iWidth, _iHeight);
 	
@@ -117,7 +114,10 @@ void X3Engine::Initialize(HWND _hWnd, int _iWidth, int _iHeight)
 	m_pAdapter->GetAdapterInfo();
 
 	
-	m_pGraphics2D->initialize(m_hWnd, m_pRenderer->m_pDirectXSwapChain->m_pSwapChain);
+	m_p2DSupport->initialize(m_hWnd, m_pRenderer->m_pDirectXSwapChain->m_pSwapChain);
+
+	m_p2DSupport->LoadBitMap(L"../Image/apple_1.png", L"../Image/apple_1.png");
+	m_p2DSupport->LoadBitMap(L"../Image/atk_1.png", L"../Image/atk_1.png");
 
 	if (nullptr == m_pRenderer->m_pDirectXSwapChain->m_pSwapChain)
 	{
@@ -196,23 +196,9 @@ void X3Engine::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 
 	m_pRenderer->Render_LateUpdate(m_pDeviceContext->m_pDX11DeviceContext);
 
-	m_pRenderer->Render_End(m_pRenderer->m_pDirectXSwapChain->m_pSwapChain);
+	m_pRenderer->Render_2D(m_p2DSupport, this->m_pAdapter);
 
-	//m_pRenderer->Render_2D(m_pRenderer->m_pDirectXSwapChain->m_pSwapChain, this->m_pAdapter);
-	
-	int _yPos = 50;
-	int _Text_Offset = 21;
-
-	m_pGraphics2D->Push_DrawText({ 10, _yPos }, 500, 1, 0, 0, 1, 20, (TCHAR*)L"Description: %s", m_pAdapter->GetAdapter().Description);
-	m_pGraphics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 1, 0, 1, 20, (TCHAR*)L"VendorID: %u", m_pAdapter->GetAdapter().VendorId);
-	m_pGraphics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 1, 0, 1, 20, (TCHAR*)L"DeviceID: %u", m_pAdapter->GetAdapter().DeviceId);
-	m_pGraphics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 1, 0, 1, 20, (TCHAR*)L"SubSysID: %u", m_pAdapter->GetAdapter().SubSysId);
-	m_pGraphics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 1, 0, 1, 20, (TCHAR*)L"Revision: %u", m_pAdapter->GetAdapter().Revision);
-	m_pGraphics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 0, 1, 1, 20, (TCHAR*)L"VideoMemory: %lu MB",  m_pAdapter->GetAdapter().DedicatedVideoMemory / 1024 / 1024);
-	m_pGraphics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 0, 1, 1, 20, (TCHAR*)L"SystemMemory: %lu MB", m_pAdapter->GetAdapter().DedicatedSystemMemory / 1024 / 1024);
-	m_pGraphics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 0, 1, 1, 20, (TCHAR*)L"SharedSysMemory: %lu MB", m_pAdapter->GetAdapter().SharedSystemMemory / 1024 / 1024);
-	m_pGraphics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 1, 1, 0, 1, 20, (TCHAR*)L"AdpaterLuid: %u.%d", m_pAdapter->GetAdapter().AdapterLuid.HighPart, m_pAdapter->GetAdapter().AdapterLuid.LowPart);
-
+	m_pRenderer->Render_End(m_p2DSupport,m_pRenderer->m_pDirectXSwapChain->m_pSwapChain);
 	
 
 }
@@ -314,8 +300,7 @@ void X3Engine::SetTextureSRV(SharedRenderData* _SRD)
 
 void X3Engine::Release()
 {
-	delete m_pGraphics2D;
-	m_pGraphics2D = nullptr;
+
 }
 
 void X3Engine::InitializeShaders()

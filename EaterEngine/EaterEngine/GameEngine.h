@@ -18,7 +18,7 @@ class GraphicEngineManager;
 //형선이형꺼
 class HsGraphic;
 //내꺼
-//class X3Engine;
+class X3Engine;
 class Scene;
 //게임 오브젝트
 class GameObject;

@@ -78,7 +78,7 @@ private:
 	//·»´õ·¯ ±â´É
 	XRenderer*				m_pRenderer;
 
-	Grahpics2D*				m_pGraphics2D;
+	
 	
 
 	DirectX::XMMATRIX		m_ProjectionMatrix;

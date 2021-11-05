@@ -1,7 +1,7 @@
-#include "Transform.h"
+//#include "Transform.h"
 #include "ViewGrid.h"
 
-ViewGrid::ViewGrid() : m_pTransform(nullptr)
+ViewGrid::ViewGrid() 
 {
 	
 

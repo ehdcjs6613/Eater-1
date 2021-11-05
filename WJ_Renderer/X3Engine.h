@@ -1,6 +1,7 @@
 #pragma once
 
 
+
 //    DirectX관련 클래스
 //	  장치의 관리의 D		evice클래스
 class DirectXDevice;
@@ -46,14 +47,14 @@ class GlobalData;
 
 //class __declspec(dllimport) GraphicEngine;
 
-#include "GraphicsEngine.h"
 #include <d3dcommon.h>
 #include <string>
 #include <queue>
 
+#include "GraphicsEngine.h"
 #include "XShader.h"
 
-class X3Engine : public  GraphicEngine
+class X3Engine : public  GraphicEngine 
 {
 private:
 	//
@@ -77,8 +78,6 @@ private:
 private:
 	//렌더러 기능
 	XRenderer*				m_pRenderer;
-
-	Grahpics2D*				m_pGraphics2D;
 	
 
 	DirectX::XMMATRIX		m_ProjectionMatrix;

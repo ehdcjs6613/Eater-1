@@ -22,10 +22,17 @@ namespace ParserData
 
 class GraphicEngine
 {
+protected:
+	//인터페이스에서 2d를 상속 받아서 모든 엔진에 적용할 2d supporter
+	Grahpics2D* m_p2DSupport;
+
 public:
 	GraphicEngine() {};
-	virtual ~GraphicEngine() {};
-	Grahpics2D* m_pGrahpics2D;
+	virtual ~GraphicEngine() 
+	{
+		delete m_p2DSupport;
+		m_p2DSupport = nullptr;
+	};
 
 	/// <summary>
 	/// 무조건 그래픽 엔진쪽에서 만들어야 하는것들

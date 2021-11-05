@@ -85,8 +85,8 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 	//mGraphicManager->PushEngine<HsGraphic>("형선");
 	//mGraphicManager->ChoiceEngine("형선");
 
-	mGraphicManager->PushEngine<HsGraphic>("형선");
-	mGraphicManager->ChoiceEngine("형선");
+	mGraphicManager->PushEngine<X3Engine>("우진");
+	mGraphicManager->ChoiceEngine("우진");
 
 	/////////////////////////////////////////////////////////////////
 

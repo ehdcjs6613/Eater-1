@@ -222,7 +222,9 @@ copy /Y "$(ProjectDir)HsGraphicDLL.h" "$(SolutionDir)Library\inc"</Command>
     <ClCompile Include="ShaderManager.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Resources\Shader\HS\MainHeader.hlsli" />
+    <None Include="..\Resources\Shader\HS\MainHeader.hlsli">
+      <FileType>Document</FileType>
+    </None>
     <None Include="SimpleMath.inl" />
   </ItemGroup>
   <ItemGroup>

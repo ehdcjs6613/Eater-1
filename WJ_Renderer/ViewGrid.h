@@ -3,7 +3,7 @@
 /// <summary>
 /// 씬 안에서 보여줄 그리드를 그려주는 클래스이다.
 /// </summary>
-class Transform;
+//class Transform;
 
 class ViewGrid
 {
@@ -13,7 +13,7 @@ public:
 	~ViewGrid();
 	
 private:
-	Transform* m_pTransform;
+	//Transform* m_pTransform;
 
 public:
 

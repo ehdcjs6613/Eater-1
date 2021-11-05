@@ -16,7 +16,7 @@ __interface IRenderableFunc
 	bool Render_Update		(ID3D11Device* m_pDevice,  ID3D11DeviceContext* _pD3DeviceContext, ID3D11VertexShader* _vs, ID3D11PixelShader* _ps, ID3D11InputLayout* _il, ID3D11Buffer* _vb) = 0;
 	bool Render_LateUpdate	(ID3D11DeviceContext* _pAdapter) = 0;
 	bool Render_2D			(Grahpics2D* _pGrahpics2D, DirectXAdapter* _pAdapter) = 0;
-	bool Render_End			(IDXGISwapChain* _pSwapChain) = 0;
+	bool Render_End			(Grahpics2D* _pGrahpics2D, IDXGISwapChain* _pSwapChain) = 0;
 };
 /// <summary>
 /// 이제 어떻게 그릴것인가..
@@ -52,7 +52,7 @@ public:
 	bool Render_Update		 (ID3D11Device* m_pDevice, ID3D11DeviceContext* _pD3DeviceContext , ID3D11VertexShader* _vs, ID3D11PixelShader* _ps, ID3D11InputLayout* _il, ID3D11Buffer* _vb)override;
 	bool Render_LateUpdate   (ID3D11DeviceContext* _pD3DeviceContext)override;
 	bool Render_2D			 (Grahpics2D* _pGrahpics2D, DirectXAdapter* _pAdapter)override;
-	bool Render_End			 (IDXGISwapChain* _pSwapChain)override;
+	bool Render_End			 (Grahpics2D* _pGrahpics2D, IDXGISwapChain* _pSwapChain)override;
 	
 public:
 	void DrawState();

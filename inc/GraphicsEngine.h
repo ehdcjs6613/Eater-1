@@ -15,7 +15,7 @@
 
 class MeshData;
 //class Model;
-class GlobalData;
+struct GlobalData;
 
 //class Indexbuffer;
 //class Vertexbuffer;
