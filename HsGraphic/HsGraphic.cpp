@@ -58,15 +58,15 @@ void HsGraphic::Initialize(HWND _hWnd, int screenWidth, int screenHeight)
 	mShaderManager->Initialize(Device, DeviceContext);
 }
 
-Indexbuffer* HsGraphic::CreateIndexBuffer(ParserData::Model* mModel)
+Indexbuffer* HsGraphic::CreateIndexBuffer(ParserData::Mesh* mModel)
 {
 
 	ID3D11Buffer* mIB = nullptr;
 	Indexbuffer* indexbuffer = new Indexbuffer();
 
 	//모델의 계수
-	int ModelCount = (int)mModel->m_MeshList.size();
-	int Icount =  (int)mModel->m_MeshList[0]->m_IndexList.size();
+	int ModelCount = (int)mModel->m_IndexList.size();
+	int Icount =  (int)mModel->m_IndexList.size();
 
 	std::vector<UINT> index;
 	index.resize(Icount * 3);
@@ -74,11 +74,11 @@ Indexbuffer* HsGraphic::CreateIndexBuffer(ParserData::Model* mModel)
 	int j = 0;
 	for (int i = 0 ;i < Icount; i++)
 	{
-		index[j] = mModel->m_MeshList[0]->m_IndexList[i]->m_Index[0];
+		index[j] = mModel->m_IndexList[i]->m_Index[0];
 		j++;
-		index[j] = mModel->m_MeshList[0]->m_IndexList[i]->m_Index[1];
+		index[j] = mModel->m_IndexList[i]->m_Index[1];
 		j++;
-		index[j] = mModel->m_MeshList[0]->m_IndexList[i]->m_Index[2];
+		index[j] = mModel->m_IndexList[i]->m_Index[2];
 		j++;
 	}
 
@@ -101,25 +101,26 @@ Indexbuffer* HsGraphic::CreateIndexBuffer(ParserData::Model* mModel)
 	return indexbuffer;
 }
 
-Vertexbuffer* HsGraphic::CreateVertexBuffer(ParserData::Model* mModel)
+Vertexbuffer* HsGraphic::CreateVertexBuffer(ParserData::Mesh* mModel)
 {
 	ID3D11Buffer* mVB = nullptr;
 	Vertexbuffer* vertexbuffer = new Vertexbuffer();
 
+	
+
 	//모델의 계수
-	int ModelCount = (int)mModel->m_MeshList.size();
-	int Vcount = (int)mModel->m_MeshList[0]->m_VertexList.size();
-	std::vector<ParserData::Vertex*> VertexList = mModel->m_MeshList[0]->m_VertexList;
+	int Vcount = mModel->m_VertexList.size();
+	mModel->m_VertexList;
 	
 
 	std::vector<Deferred32> temp;
 	temp.resize(Vcount);
 	for (int i = 0; i < Vcount; i++)
 	{
-		temp[i].Pos			= VertexList[i]->m_Pos;
-		temp[i].Nomal		= VertexList[i]->m_Normal;
-		temp[i].Tex			={ VertexList[i]->m_U ,VertexList[i]->m_V};
-		temp[i].Tangent		= VertexList[i]->m_Tanget;
+		temp[i].Pos			= mModel->m_VertexList[i]->m_Pos;
+		temp[i].Nomal		= mModel->m_VertexList[i]->m_Normal;
+		temp[i].Tex			={ mModel->m_VertexList[i]->m_U ,mModel->m_VertexList[i]->m_V};
+		temp[i].Tangent		= mModel->m_VertexList[i]->m_Tanget;
 	}
 
 
@@ -461,7 +462,7 @@ void HsGraphic::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 		DeviceContext->IASetIndexBuffer(IBuffer, DXGI_FORMAT_R32_UINT, 0);
 
 		DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		DeviceContext->RSSetState(mSolid);
+		DeviceContext->RSSetState(mWireframe);
 
 		//ps,vs쉐이더,Layout 데이터 가져오기
 		ShaderData Sdata = mShaderManager->GetShader("texture");
@@ -485,7 +486,6 @@ void HsGraphic::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 
 	
 
-
 	EndRender();
 }
 
@@ -494,7 +494,7 @@ void HsGraphic::Delete()
 	mWireframe->Release();
 	mSolid->Release();
 
-	//mShaderManager;
+	//
 	//mRenderManager;
 }
 

@@ -30,10 +30,10 @@ public:
 public:
 	///클라이언트 에서 만질 함수들
 	///게임 엔진 관련 함수들
-	EATER_ENGINEDLL void Initialize(HWND gHwnd,bool mConsoleDebug = true);//초기화
-	EATER_ENGINEDLL void Update();				//엔진 가동
-	EATER_ENGINEDLL void Finish();				//엔진 중지
-	EATER_ENGINEDLL void OnResize(int Change_Width, int Change_Height); //리사이즈
+	EATER_ENGINEDLL void Initialize(HWND gHwnd,bool mConsoleDebug = true);	//초기화
+	EATER_ENGINEDLL void Update();											//엔진 가동
+	EATER_ENGINEDLL void Finish();											//엔진 중지
+	EATER_ENGINEDLL void OnResize(int Change_Width, int Change_Height);		//리사이즈
 public:
 	///오브젝트 관련(오브젝트 매니저)
 	EATER_ENGINEDLL GameObject* Instance(std::string ObjName = "GameObject");	//obj 생성

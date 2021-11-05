@@ -62,36 +62,44 @@ void LoadManager::LoadMesh( std::string Name, bool Scale, bool LoadAnime)
 	std::string Strtemp = ".fbx";
 	std::string FullName = MeshPath + Name + Strtemp;
 
+	LoadData* Data = new LoadData();
+
+	//일단 로드 한 데이터를 순서상관없이 리스트에 담아둔다
+	std::vector<ParserData::Bone*> Temp_Bone_List;
+	std::vector<ParserData::Mesh*> Temp_Mesh_List;
+
+	
 	//파서를 통해서 매쉬를 로드
-	 ParserData::Model* temp = EaterParser->LoadModel(FullName,Scale,LoadAnime);
+	ParserData::Model* temp = EaterParser->LoadModel(FullName,Scale,LoadAnime);
+	//매쉬 개수
+	int MeshCount = (int)temp->m_MeshList.size();
+	
+	//한개의 매쉬에 대한 데이터를 저장
+	for (int i = 0; i < MeshCount; i++)
+	{
+		ParserData::Mesh* OneMesh = temp->m_MeshList[i];
+		//본 매쉬라면
+
+		//OneMesh->m_BoneMeshList[0];
+		if (OneMesh->m_IsBone == true)
+		{
+			//Temp_Bone_List.push_back(OneMesh->m_BoneMeshList)
+		}
+		else //아니라면 그냥매쉬를
+		{
+			LoadData* data = new LoadData();
+			data = CreateMesh(OneMesh);
+
+
+			MeshList.insert({ Name,data });
+		}
+	}
+
+
 	
 
-	LoadData* data = new LoadData();
-	Indexbuffer*	IB = GEngine->CreateIndexBuffer(temp);
-	Vertexbuffer*	VB = GEngine->CreateVertexBuffer(temp);
 
-	data->IB = IB;
-	data->VB = VB;
-	data->indexCount = (int)temp->m_MeshList[0]->m_IndexList.size()*3;
-	data->vertexCount = (int)temp->m_MeshList[0]->m_VertexList.size();
-
-
-	if (data->IB == nullptr)
-	{
-		std::string strtemp = FullName + "[인덱스버퍼]";
-		DebugManager::Print(strtemp, DebugManager::MSG_TYPE::MSG_LOAD, true);
-		return;
-	}
-	else if (data->VB == nullptr) 
-	{
-		std::string strtemp = FullName + "[버텍스버퍼]";
-		DebugManager::Print(FullName, DebugManager::MSG_TYPE::MSG_LOAD, true);
-		return;
-	}
-	else
-	{
-		MeshList.insert({Name,data});
-	}
+	int num = 0;
 }
 
 void LoadManager::LoadTexture(std::string Name)
@@ -150,15 +158,51 @@ void LoadManager::DeleteMeshAll()
 	MeshList.clear();
 }
 
-void LoadManager::CreateBuffer(ParserData::Model* mesh)
+Bone* LoadManager::CreateBone(ParserData::Mesh* mesh)
 {
-	LoadData* data = new LoadData();
-	Indexbuffer*	IB		= GEngine->CreateIndexBuffer(mesh);
-	Vertexbuffer*	VB		= GEngine->CreateVertexBuffer(mesh);
+	Bone* bone = new Bone();
 
-	data->IB = IB;
-	data->VB = VB;
+	bone->ParentName	= mesh->m_ParentName;
+	bone->MyName		= mesh->m_NodeName;
+	bone->isTop			= mesh->m_TopNode;
+
+
+	return bone;
 }
+
+LoadData* LoadManager::CreateMesh(ParserData::Mesh* mesh)
+{
+	LoadData* box = new LoadData();
+
+	//box->ParentName = mesh->m_ParentName;
+	//box->MyName		= mesh->m_NodeName;
+	//box->isTop		= mesh->m_TopNode;
+
+	//버퍼 넣어줌
+	box->IB = GEngine->CreateIndexBuffer(mesh);
+	box->VB = GEngine->CreateVertexBuffer(mesh);
+	box->IB->Count = (int)mesh->m_IndexList.size() * 3;
+	box->VB->Count = (int)mesh->m_VertexList.size();
+
+	if (box->IB == nullptr)
+	{
+		DebugManager::Print("인덱스 버퍼", DebugManager::MSG_TYPE::MSG_LOAD, true);
+		delete box;
+		return nullptr;
+	}
+	else if (box->VB == nullptr)
+	{
+		DebugManager::Print("버텍스 버퍼", DebugManager::MSG_TYPE::MSG_LOAD, true);
+		delete box;
+		return nullptr;
+	}
+	else 
+	{
+		return box;
+	}
+}
+
+
 
 
 
