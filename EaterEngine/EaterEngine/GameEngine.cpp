@@ -16,6 +16,7 @@
 //컨퍼넌트
 #include "Transform.h"
 #include "Camera.h"
+#include "MeshFilter.h"
 
 //테스트용
 #include "HsGraphic.h";
@@ -69,6 +70,7 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 	mObjectManager->Initialize(mHwnd);
 	mLoadManager->Initialize(mGraphicManager);
 	
+	MeshFilter::SetObjMananager(mObjectManager);
 	//처음시작하기전 엔진의 구조간략설명
 	mDebugManager->printStart();
 
@@ -148,7 +150,7 @@ GameObject* GameEngine::Instance(std::string ObjName)
 	GameObject* temp = new GameObject();
 	mObjectManager->PushCreateObject(temp);
 	temp->Name = ObjName;
-
+	
 	//Transform 은 기본으로 넣어준다
 	Transform* Tr = temp->AddComponent<Transform>();
 	temp->transform = Tr;
@@ -156,6 +158,14 @@ GameObject* GameEngine::Instance(std::string ObjName)
 
 	mDebugManager->Print(ObjName, DebugManager::MSG_TYPE::MSG_CREATE);
 	return temp;
+}
+
+GameObject* GameEngine::InstanceModel(std::string ObjName)
+{
+	ModelData* mModel =	mLoadManager->GetMesh(ObjName);
+	
+
+	return nullptr;
 }
 
 void GameEngine::Destroy(GameObject* obj)

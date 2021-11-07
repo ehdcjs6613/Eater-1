@@ -439,7 +439,7 @@ void HsGraphic::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 		//매쉬 데이터 삽입
 		ID3D11Buffer* buffer = mShaderManager->GetConstantBuffer("ObjectBuffer");
 		ObjectBuffer temp;
-		temp.world = XMMatrixTranspose(*Mesh->mWorld);
+		temp.world = XMMatrixTranspose(Mesh->mWorld);
 
 		DeviceContext->UpdateSubresource(buffer, 0, nullptr, &temp, 0, 0);
 		DeviceContext->VSSetConstantBuffers(1, 1, &buffer);

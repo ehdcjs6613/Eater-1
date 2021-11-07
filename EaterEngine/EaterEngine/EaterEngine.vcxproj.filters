@@ -79,6 +79,9 @@
     <Filter Include="소스 파일\Component\Transform">
       <UniqueIdentifier>{85e0042f-5eda-4ce6-9cac-7a212ad26da6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Component\SkinningFilter">
+      <UniqueIdentifier>{0db28258-c4dd-46c9-b56d-fa34d7f861c0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -98,9 +101,6 @@
     </ClInclude>
     <ClInclude Include="ComponentHeader.h">
       <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="MeshFilter.h">
-      <Filter>소스 파일\Component\MeshFilter</Filter>
     </ClInclude>
     <ClInclude Include="EnumClass.h">
       <Filter>소스 파일\EnumClass</Filter>
@@ -149,6 +149,12 @@
     </ClInclude>
     <ClInclude Include="GraphicsEngine.h">
       <Filter>소스 파일\Engine\GraphicsClass</Filter>
+    </ClInclude>
+    <ClInclude Include="Export\MeshFilter.h">
+      <Filter>소스 파일\Component\MeshFilter</Filter>
+    </ClInclude>
+    <ClInclude Include="SkinningFilter.h">
+      <Filter>소스 파일\Component\SkinningFilter</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -205,6 +211,9 @@
     </ClCompile>
     <ClCompile Include="GraphicEngineManager.cpp">
       <Filter>소스 파일\Manager\GraphicManager</Filter>
+    </ClCompile>
+    <ClCompile Include="SkinningFilter.cpp">
+      <Filter>소스 파일\Component\SkinningFilter</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

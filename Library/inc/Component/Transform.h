@@ -1,7 +1,7 @@
 #pragma once
 
 #include "EaterEngineDLL.h"
-
+#include "SimpleMath.h"
 #include <DirectXMath.h>
 #include "Component.h"
 
@@ -59,6 +59,11 @@ public:
 
 	//로컬좌표들을 매프레임 업데이트 해줄것인가 여부
 	EATER_ENGINEDLL void SetLocalUpdate(bool isUpdate);
+
+	void SetLoadXM(DirectX::SimpleMath::Matrix* world, DirectX::SimpleMath::Matrix* local);
+	void SetChild(Transform* Child);
+	void SetParent(Transform* mParent);
+
 private:
 	//현재 위치 회전 크기값을 가져와 행렬을 구한다
 	DirectX::XMMATRIX CreateXMPos4x4();
@@ -91,4 +96,12 @@ private:
 
 	//게임 오브젝트의 위치 회전 크기값을 모두곱한 월드 행렬
 	DirectX::XMMATRIX World_M;
+
+
+	//로드했을때의 로컬과 월드
+	DirectX::SimpleMath::Matrix* Load_World;
+	DirectX::SimpleMath::Matrix* Load_Local;
+
+	Transform* Parent;
+	std::vector<Transform*> ChildList;
 };
