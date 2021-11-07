@@ -7,11 +7,12 @@
 
 
 
-std::map<std::string, LoadData*> LoadManager::MeshList;
+std::map<std::string, ModelData*> LoadManager::ModelList;
 std::map<std::string, TextureBuffer*> LoadManager::TextureList;
 LoadManager::LoadManager()
 {
-	GEngine = nullptr;
+	GEngine		= nullptr;
+	EaterParser = nullptr;
 }
 
 LoadManager::~LoadManager()
@@ -27,10 +28,10 @@ void LoadManager::Initialize(GraphicEngineManager* Graphic)
 	EaterParser->Initialize();
 }
 
-LoadData* LoadManager::GetMesh(std::string Name)
+ModelData* LoadManager::GetMesh(std::string Name)
 {
-	std::map<std::string, LoadData*>::iterator temp = MeshList.find(Name);
-	if (temp == MeshList.end())
+	std::map<std::string, ModelData*>::iterator temp = ModelList.find(Name);
+	if (temp == ModelList.end())
 	{
 		DebugManager::Print(Name, DebugManager::MSG_TYPE::MSG_LOAD, true);
 		return nullptr;
@@ -62,15 +63,14 @@ void LoadManager::LoadMesh( std::string Name, bool Scale, bool LoadAnime)
 	std::string Strtemp = ".fbx";
 	std::string FullName = MeshPath + Name + Strtemp;
 
-	LoadData* Data = new LoadData();
+	ModelData* SaveMesh = new ModelData();
 
-	//일단 로드 한 데이터를 순서상관없이 리스트에 담아둔다
-	std::vector<ParserData::Bone*> Temp_Bone_List;
-	std::vector<ParserData::Mesh*> Temp_Mesh_List;
 
-	
 	//파서를 통해서 매쉬를 로드
 	ParserData::Model* temp = EaterParser->LoadModel(FullName,Scale,LoadAnime);
+
+
+
 	//매쉬 개수
 	int MeshCount = (int)temp->m_MeshList.size();
 	
@@ -80,26 +80,33 @@ void LoadManager::LoadMesh( std::string Name, bool Scale, bool LoadAnime)
 		ParserData::Mesh* OneMesh = temp->m_MeshList[i];
 		//본 매쉬라면
 
-		//OneMesh->m_BoneMeshList[0];
-		if (OneMesh->m_IsBone == true)
+
+		LoadMeshData* data = nullptr;
+		//최상위 오브젝트는 따로 관리
+		data = CreateMesh(OneMesh);
+
+		if (data->Bone_Object == true)
 		{
-			//Temp_Bone_List.push_back(OneMesh->m_BoneMeshList)
+			if (data->Top_Object == true)
+			{
+				SaveMesh->TopBoneCount++;
+			}
+
+			SaveMesh->BoneList.push_back(data);
 		}
-		else //아니라면 그냥매쉬를
+		else
 		{
-			LoadData* data = new LoadData();
-			data = CreateMesh(OneMesh);
+			if (data->Top_Object == true)
+			{
+				SaveMesh->TopObjCount++;
+			}
 
 
-			MeshList.insert({ Name,data });
+			SaveMesh->MeshList.push_back(data);
 		}
 	}
 
-
-	
-
-
-	int num = 0;
+	ModelList.insert({Name,SaveMesh});
 }
 
 void LoadManager::LoadTexture(std::string Name)
@@ -140,8 +147,8 @@ void LoadManager::DeleteMesh(std::string mMeshName)
 {
 	//메모리에 할당한 매쉬의 정보를 삭제시킴
 
-	std::map<std::string, LoadData*>::iterator temp = MeshList.find(mMeshName);
-	if (temp == MeshList.end())
+	std::map<std::string, ModelData*>::iterator temp = ModelList.find(mMeshName);
+	if (temp == ModelList.end())
 	{
 		DebugManager::Print(mMeshName, DebugManager::MSG_TYPE::MSG_DELETE,true);
 		return;
@@ -149,58 +156,63 @@ void LoadManager::DeleteMesh(std::string mMeshName)
 	else
 	{
 		DebugManager::Print(mMeshName, DebugManager::MSG_TYPE::MSG_DELETE);
-		MeshList.erase(mMeshName);
+		ModelList.erase(mMeshName);
 	}
 }
 
 void LoadManager::DeleteMeshAll()
 {
-	MeshList.clear();
+	ModelList.clear();
 }
 
-Bone* LoadManager::CreateBone(ParserData::Mesh* mesh)
+
+LoadMeshData* LoadManager::CreateMesh(ParserData::Mesh* mesh)
 {
-	Bone* bone = new Bone();
+	LoadMeshData* box = new LoadMeshData();
 
-	bone->ParentName	= mesh->m_ParentName;
-	bone->MyName		= mesh->m_NodeName;
-	bone->isTop			= mesh->m_TopNode;
+	//계층정보 받기
+	box->Name		= mesh->m_NodeName;
+	box->ParentName = mesh->m_ParentName;
+	box->Top_Object = mesh->m_TopNode;
+	box->Bone_Object = mesh->m_IsBone;
 
 
-	return bone;
-}
-
-LoadData* LoadManager::CreateMesh(ParserData::Mesh* mesh)
-{
-	LoadData* box = new LoadData();
-
-	//box->ParentName = mesh->m_ParentName;
-	//box->MyName		= mesh->m_NodeName;
-	//box->isTop		= mesh->m_TopNode;
-
-	//버퍼 넣어줌
-	box->IB = GEngine->CreateIndexBuffer(mesh);
-	box->VB = GEngine->CreateVertexBuffer(mesh);
-	box->IB->Count = (int)mesh->m_IndexList.size() * 3;
-	box->VB->Count = (int)mesh->m_VertexList.size();
-
-	if (box->IB == nullptr)
-	{
-		DebugManager::Print("인덱스 버퍼", DebugManager::MSG_TYPE::MSG_LOAD, true);
-		delete box;
-		return nullptr;
-	}
-	else if (box->VB == nullptr)
-	{
-		DebugManager::Print("버텍스 버퍼", DebugManager::MSG_TYPE::MSG_LOAD, true);
-		delete box;
-		return nullptr;
-	}
-	else 
+	//매트릭스 정보 받기
+	box->WorldTM =  &mesh->m_WorldTM;
+	box->LocalTM =  &mesh->m_LocalTM;
+	
+	//본정보 여부
+	if(mesh->m_IsBone == true)
 	{
 		return box;
 	}
+	else
+	{
+		//각종 버퍼 생성해서 받기
+		box->IB = GEngine->CreateIndexBuffer(mesh);
+		box->VB = GEngine->CreateVertexBuffer(mesh);
+		box->IB->Count = (int)mesh->m_IndexList.size() * 3;
+		box->VB->Count = (int)mesh->m_VertexList.size();
+
+		if (box->IB == nullptr)
+		{
+			DebugManager::Print("인덱스 버퍼", DebugManager::MSG_TYPE::MSG_LOAD, true);
+			delete box;
+			return nullptr;
+		}
+		else if (box->VB == nullptr)
+		{
+			DebugManager::Print("버텍스 버퍼", DebugManager::MSG_TYPE::MSG_LOAD, true);
+			delete box;
+			return nullptr;
+		}
+		else 
+		{
+			return box;
+		}
+	}
 }
+
 
 
 

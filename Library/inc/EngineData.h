@@ -1,5 +1,6 @@
 #pragma once
 #include "ResourcesData.h"
+#include "ParserData.h"
 
 enum class OBJECT_TYPE
 {
@@ -37,8 +38,8 @@ public:
 		indexCount	= 0;
 		vertexCount = 0;
 
-		mWorld = nullptr;
-		mLocal = nullptr;
+		mWorld;
+		mLocal;
 		Pos = { 0,0,0 };
 		ObjType = OBJECT_TYPE::Default;
 	}
@@ -53,41 +54,45 @@ public:
 	int indexCount;		//인덱스 카운터
 	int vertexCount;	//버텍스 카운터
 
-	DirectX::XMMATRIX* mWorld;	//매쉬의 월드 행렬
-	DirectX::XMMATRIX* mLocal;	//매쉬의 로컬행렬
+	DirectX::XMMATRIX mWorld;	//매쉬의 월드 행렬
+	DirectX::XMMATRIX mLocal;	//매쉬의 로컬행렬
 	DirectX::XMFLOAT3 Pos;		//매쉬의 위치값
 };
 
 //파서에서 읽어오고 변경해주는 데이터
-class LoadData
+class LoadMeshData
 {
 public:
-	~LoadData()
+	~LoadMeshData()
 	{
 		delete IB;
 		delete VB;
 	};
 
-	Indexbuffer*	IB = nullptr;
-	Vertexbuffer*	VB = nullptr;
+	bool Top_Object;			//가장 최상위 오브젝트인지 여부
+	bool Bone_Object;
+
+	std::string ParentName;		//부모의 이름
+	std::string	Name;			//자기자신의 이름
+
+	DirectX::SimpleMath::Matrix* WorldTM;	//월드 매트릭스
+	DirectX::SimpleMath::Matrix* LocalTM;	//로컬 매트릭스
+	
+
+	Indexbuffer*	IB = nullptr;	//인덱스 버퍼
+	Vertexbuffer*	VB = nullptr;	//버텍스 버퍼
+
 };
 
 //저장할 한개매쉬의 데이터
-class SaveOneMeshData
+class ModelData
 {
 public:
-	//스키닝 데이터
-	//std::vector<ParserData::Mesh*>* BoneList;
-	//std::vector<DirectX::SimpleMath::Matrix>* m_BoneTMList;
-	////애니메이션
-	//ParserData::OneAnimation* Animation;
-	//ParserData::CMaterial*	MaterialD;
+	std::vector<LoadMeshData*> MeshList;
+	std::vector<LoadMeshData*> BoneList;
 
-
-
-	LoadData* BufferData;
-
-
+	int TopObjCount		= 0;	//최상위 매쉬객체 개수
+	int TopBoneCount	= 0;	//최상위 본 객체 개수
 };
 
 
