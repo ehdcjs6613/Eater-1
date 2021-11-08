@@ -79,9 +79,21 @@ public:
 	DirectX::SimpleMath::Matrix* LocalTM;	//로컬 매트릭스
 	
 
+
 	Indexbuffer*	IB = nullptr;	//인덱스 버퍼
 	Vertexbuffer*	VB = nullptr;	//버텍스 버퍼
 
+	
+	ParserData::CMaterial* Material;	 //메테리얼 정보
+	ParserData::OneAnimation* Animation; //애니메이션 정보
+
+	
+	std::vector<DirectX::SimpleMath::Matrix>* BoneTMList;	//본 매트릭스
+	std::vector<ParserData::Mesh*>* BoneList;				//본 매쉬
+
+
+	LoadMeshData* Parent;				//부모 매쉬
+	std::vector<LoadMeshData*> Child;	//자식 매쉬 리스트
 };
 
 //저장할 한개매쉬의 데이터
@@ -94,7 +106,39 @@ public:
 	int TopObjCount		= 0;	//최상위 매쉬객체 개수
 	int TopBoneCount	= 0;	//최상위 본 객체 개수
 
+	
+	LoadMeshData* Top;
+	//받은 매쉬들을 부모 자식관계로 변환
+	void MeshLink()
+	{
+		int MeshCount = MeshList.size();
 
+		for (int i = 0; i < MeshCount; i++)
+		{
+			for (int j = 0; j < MeshCount; j++)
+			{
+				LoadMeshData* Now  = MeshList[i];
+				LoadMeshData* Back = MeshList[j];
+				
+				//가장 위에있는 오브젝트인지
+				if (Now->Top_Object == true){Top = Now;}
+
+				//자기 자신은 검사하지않음
+				if (i == j) { continue; }
+			
+
+				//현재 매쉬의 부모이름과 자기이름이 같다면 연결
+				if (Now->ParentName == Back->Name)
+				{
+					Back->Child.push_back(Now);
+					Now->Parent = Back;
+					continue;
+				}
+
+
+			}
+		}
+	}
 };
 
 

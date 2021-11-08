@@ -15,6 +15,7 @@ void intro::Awake()
 	
 	//LoadMesh("Player");
 	//LoadMesh("Table");
+	LoadMesh("Dome_v03");
 	LoadMesh("box");
 	LoadTesture("WoodCrate01");
 
@@ -26,9 +27,8 @@ void intro::Awake()
 
 	///테스트 오브젝트
 	testobj = Instance("box");
-	testobj->AddComponent<MeshFilter>()->SetMeshName("box");
-	testobj->GetTransform()->Position = {0,1,0 };
-	testobj->GetTransform()->Scale = { 0.5f,0.5f,0.5f };
+	testobj->AddComponent<MeshFilter>()->SetMeshName("Dome_v03");
+	testobj->GetTransform()->Position = { 0,0,0 };
 }
 
 void intro::Start()

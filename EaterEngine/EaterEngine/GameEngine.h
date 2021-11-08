@@ -15,6 +15,7 @@ class ObjectManager;
 class SceneManager;
 class KeyinputManager;
 class GraphicEngineManager;
+class GameTimer;
 
 class HsGraphic;
 class Scene;
@@ -65,6 +66,7 @@ private:
 	SceneManager*			mSceneManager;		//스크린 관리 매니저
 	KeyinputManager*		mKeyManager;		//키인풋 관련 매니저
 	GraphicEngineManager*	mGraphicManager;	//그래픽엔진 관리 매니저
+	GameTimer*				mTime;
 private:
 	///클라쪽에서 받아야 하는 데이터
 	HWND mHwnd; //핸들

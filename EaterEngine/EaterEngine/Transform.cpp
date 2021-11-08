@@ -16,6 +16,9 @@ Transform::Transform()
 	Local_Look	= { 0,0,0 };
 
 	LocalUpdate = false;
+
+	Load_World = DirectX::XMMatrixIdentity();
+	Load_Local = DirectX::XMMatrixIdentity();
 }
 
 Transform::~Transform()
@@ -146,20 +149,31 @@ void Transform::SetLocalUpdate(bool isUpdate)
 	LocalUpdate = isUpdate;
 }
 
-void Transform::SetLoadXM(DirectX::SimpleMath::Matrix* world, DirectX::SimpleMath::Matrix* local)
+void Transform::LinkHierarchy(Transform* mChild, Transform* mParent)
 {
-	Load_World = world;
-	Load_Local = local;
+	//부모 Transform에 링크
+	mParent->ChildList.push_back(mChild);
+
+	//자식 Transform에 링크
+	mChild->Parent = mParent;
 }
 
-void Transform::SetChild(Transform* Child)
+void Transform::Child_Local_Updata()
 {
-	ChildList.push_back(Child);
-}
+	if (Parent == nullptr)
+	{
+		Load_Local = Load_World;
+	}
+	else
+	{
+		DirectX::XMMATRIX TM2_1 = DirectX::XMMatrixInverse(nullptr, Parent->Load_World);
+		Load_Local = Load_World * TM2_1;
+	}
 
-void Transform::SetParent(Transform* mParent)
-{
-	Parent = mParent;
+	for (int i = 0; i < ChildList.size(); i++) 
+	{
+		ChildList[i]->Child_Local_Updata();
+	}
 }
 
 DirectX::XMMATRIX Transform::CreateXMPos4x4()
@@ -204,7 +218,15 @@ void Transform::UpdateWorldXM()
 	RotationXM	= CreateXMRot4x4();
 	ScaleXM		= CreateXMScl4x4();
 
-	World_M = ScaleXM * RotationXM * PositionXM;
+	DirectX::XMMATRIX Master = (ScaleXM * RotationXM * PositionXM);
+	if (Parent != nullptr)
+	{
+		World_M = Load_Local * Master * Parent->World_M;
+	}
+	else
+	{
+		World_M = Load_Local*  Master;
+	}
 }
 
 void Transform::UpdateLocalPosition()

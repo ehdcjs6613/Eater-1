@@ -60,10 +60,13 @@ public:
 	//로컬좌표들을 매프레임 업데이트 해줄것인가 여부
 	EATER_ENGINEDLL void SetLocalUpdate(bool isUpdate);
 
-	void SetLoadXM(DirectX::SimpleMath::Matrix* world, DirectX::SimpleMath::Matrix* local);
-	void SetChild(Transform* Child);
-	void SetParent(Transform* mParent);
 
+
+	DirectX::XMMATRIX Load_World; //로드된 월드
+	DirectX::XMMATRIX Load_Local; //로드된 로컬
+	static void LinkHierarchy(Transform* mChild,Transform* mParent);
+
+	void Child_Local_Updata();
 private:
 	//현재 위치 회전 크기값을 가져와 행렬을 구한다
 	DirectX::XMMATRIX CreateXMPos4x4();
@@ -98,10 +101,8 @@ private:
 	DirectX::XMMATRIX World_M;
 
 
-	//로드했을때의 로컬과 월드
-	DirectX::SimpleMath::Matrix* Load_World;
-	DirectX::SimpleMath::Matrix* Load_Local;
 
+	//계층 구조 여부
 	Transform* Parent;
 	std::vector<Transform*> ChildList;
 };

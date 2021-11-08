@@ -21,12 +21,19 @@ public:
 	virtual ~MeshFilter();
 
 	virtual void Start() override;
+
+
+
 	static void SetObjMananager(ObjectManager* obj);
 public:
 	//메쉬의 이름을 넣으면 데이터 로드
 	EATER_ENGINEDLL void SetMeshName(std::string mMeshName);
+
 	//게임오브젝트의 LoadData를 합쳐준다
 	void PushModelData(LoadMeshData* mModel);
+
+	//LoadMeshData를 게임에 사용할 오브젝트로 생성하면서 값을 넣어준다
+	void ChangeLoadMeshData(LoadMeshData* data,Transform* parent);
 private:
 	
 

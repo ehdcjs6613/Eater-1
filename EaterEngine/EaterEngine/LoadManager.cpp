@@ -68,44 +68,22 @@ void LoadManager::LoadMesh( std::string Name, bool Scale, bool LoadAnime)
 
 	//파서를 통해서 매쉬를 로드
 	ParserData::Model* temp = EaterParser->LoadModel(FullName,Scale,LoadAnime);
-
-
-
+	
 	//매쉬 개수
 	int MeshCount = (int)temp->m_MeshList.size();
 	
-	//한개의 매쉬에 대한 데이터를 저장
 	for (int i = 0; i < MeshCount; i++)
 	{
-		ParserData::Mesh* OneMesh = temp->m_MeshList[i];
-		//본 매쉬라면
+		//리스트에 매쉬 조사
+		ParserData::Mesh* mesh = temp->m_MeshList[i];
 
+		//최상위 매쉬가 아니라면 아무것도 하지않음
+		if (mesh->m_TopNode != true){continue;}
 
-		LoadMeshData* data = nullptr;
-		//최상위 오브젝트는 따로 관리
-		data = CreateMesh(OneMesh);
-
-		if (data->Bone_Object == true)
-		{
-			if (data->Top_Object == true)
-			{
-				SaveMesh->TopBoneCount++;
-			}
-
-			SaveMesh->BoneList.push_back(data);
-		}
-		else
-		{
-			if (data->Top_Object == true)
-			{
-				SaveMesh->TopObjCount++;
-			}
-
-
-			SaveMesh->MeshList.push_back(data);
-		}
+		//최상위 오브젝트를 만났다면 데이터 변환을해줌
+		LoadMeshData* data = CreateMesh(mesh);
+		SaveMesh->MeshList.push_back(data);
 	}
-
 	ModelList.insert({Name,SaveMesh});
 }
 
@@ -170,20 +148,28 @@ LoadMeshData* LoadManager::CreateMesh(ParserData::Mesh* mesh)
 {
 	LoadMeshData* box = new LoadMeshData();
 
+
+	//이매쉬에 자식객체 개수
+	int ChildCount = mesh->m_ChildList.size();
+
 	//계층정보 받기
 	box->Name		= mesh->m_NodeName;
 	box->ParentName = mesh->m_ParentName;
 	box->Top_Object = mesh->m_TopNode;
 	box->Bone_Object = mesh->m_IsBone;
 
-
 	//매트릭스 정보 받기
 	box->WorldTM =  &mesh->m_WorldTM;
 	box->LocalTM =  &mesh->m_LocalTM;
 	
+	//메터리얼 정보
+	box->Material	= mesh->m_MaterialData;
+
 	//본정보 여부
 	if(mesh->m_IsBone == true)
 	{
+		box->BoneList	= &(mesh->m_BoneMeshList);
+		box->BoneTMList = &(mesh->m_BoneTMList);
 		return box;
 	}
 	else
@@ -194,23 +180,15 @@ LoadMeshData* LoadManager::CreateMesh(ParserData::Mesh* mesh)
 		box->IB->Count = (int)mesh->m_IndexList.size() * 3;
 		box->VB->Count = (int)mesh->m_VertexList.size();
 
-		if (box->IB == nullptr)
+		//자식객체가 있다면 정보읽어옴
+		for (int i = 0; i < ChildCount; i++)
 		{
-			DebugManager::Print("인덱스 버퍼", DebugManager::MSG_TYPE::MSG_LOAD, true);
-			delete box;
-			return nullptr;
-		}
-		else if (box->VB == nullptr)
-		{
-			DebugManager::Print("버텍스 버퍼", DebugManager::MSG_TYPE::MSG_LOAD, true);
-			delete box;
-			return nullptr;
-		}
-		else 
-		{
-			return box;
+			LoadMeshData* temp = CreateMesh(mesh->m_ChildList[i]);
+			box->Child.push_back(temp);
+			temp->Parent = box;
 		}
 	}
+	return box;
 }
 
 
