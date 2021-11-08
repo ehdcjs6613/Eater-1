@@ -239,8 +239,27 @@ void DirectXDevice::CreateDepthStencilState(ID3D11DeviceContext* _pDeviceContext
 	// 스텐실의 상태를 설정합니다.
 	depthStencilDesc.DepthEnable = true;
 	depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-	depthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS;
 
+	///뎁스 설정하는 스테이트
+	depthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
+	/*
+		D3D11_COMPARISON_NEVER
+		절대 비교를 통과하지 마십시오.
+		D3D11_COMPARISON_LESS
+		원본 데이터가 대상 데이터보다 작으면 비교가 통과됩니다.
+		D3D11_COMPARISON_EQUAL
+		원본 데이터가 대상 데이터와 같으면 비교가 통과됩니다.
+		D3D11_COMPARISON_LESS_EQUAL
+		원본 데이터가 대상 데이터보다 작거나 같으면 비교가 통과됩니다.
+		D3D11_COMPARISON_GREATER
+		원본 데이터가 대상 데이터보다 크면 비교가 통과됩니다.
+		D3D11_COMPARISON_NOT_EQUAL
+		원본 데이터가 대상 데이터와 같지 않으면 비교가 통과됩니다.
+		D3D11_COMPARISON_GREATER_EQUAL
+		원본 데이터가 대상 데이터보다 크거나 같으면 비교가 통과됩니다.
+		D3D11_COMPARISON_ALWAYS
+		항상 비교를 통과하십시오.
+	*/
 	depthStencilDesc.StencilEnable = true;
 	depthStencilDesc.StencilReadMask = 0xFF;
 	depthStencilDesc.StencilWriteMask = 0xFF;
@@ -264,7 +283,7 @@ void DirectXDevice::CreateDepthStencilState(ID3D11DeviceContext* _pDeviceContext
 	m_pDX11Device->CreateDepthStencilState(&depthStencilDesc, &_pDepthStencilState);
 
 	//깊이 스텐실 상태를 설정합니다.
-	_pDeviceContext->OMSetDepthStencilState(_pDepthStencilState, 1);
+	_pDeviceContext->OMSetDepthStencilState(_pDepthStencilState, true);
 }
 
 void DirectXDevice::CreateDepthStencilView

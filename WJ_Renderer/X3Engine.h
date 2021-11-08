@@ -129,16 +129,16 @@ private:
 public:
 	//test
 	ID3D11Buffer* m_pVertexBuffer;
+	ID3D11Buffer* m_pVertexBuffer2;
 	bool TestScene();
 private:
-	// 폰트때문에 뎁스스탠실 스테이트가 강제.
-	ID3D11DepthStencilState* NormalDSS = nullptr;
-
-	ID3D11RasterizerState* mWireframeRS = nullptr;
-	ID3D11RasterizerState* mSolidRS = nullptr;
+	
 	//-----------------------------------
 
 public:
+	ID3D11SamplerState* m_pSamplerState;
+	ID3D11SamplerState* CreateDXSamplerState();
+
 
 };
 

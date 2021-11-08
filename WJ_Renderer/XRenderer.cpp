@@ -33,27 +33,35 @@ bool XRenderer::Render_Initialize(ID3D11Device* _pDevice)
 bool XRenderer::Render_Begin(ID3D11DeviceContext* _pD3DeviceContext)
 {
 	//·»´õÅ¸°Ù (¹é¹öÆÛ)¸¦ ÃÊ±âÈ­ÇÑ´Ù.
-	_pD3DeviceContext->OMSetRenderTargets(1, &m_pRenderTargeter->m_pRenderTarget,m_pDepthStencil_View);
 	_pD3DeviceContext->ClearRenderTargetView(m_pRenderTargeter->m_pRenderTarget, this->m_ArrColor);
 	
 	//µª½º, ½ºÅÙ½Ç ºäÃÊ±âÈ­
 	_pD3DeviceContext->ClearDepthStencilView
 	(
-		this->m_pDepthStencil_View, 
-		D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 
-		1.0f, 
+		this->m_pDepthStencil_View,
+		D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
+		1.0f,
 		0
 	);
-
+	_pD3DeviceContext->OMSetRenderTargets(1, &m_pRenderTargeter->m_pRenderTarget,m_pDepthStencil_View);
+	
+	
 
 
 
 	return 0;
 }
 
-bool XRenderer::Render_Update(ID3D11Device* m_pDevice,ID3D11DeviceContext* _pD3DeviceContext , ID3D11VertexShader* _vs, ID3D11PixelShader* _ps , ID3D11InputLayout* _il, ID3D11Buffer* _vb)
+bool XRenderer::Render_Update(
+	ID3D11Device* m_pDevice,
+	ID3D11DeviceContext* _pD3DeviceContext , 
+	ID3D11VertexShader* _vs, ID3D11PixelShader* _ps ,
+	ID3D11InputLayout* _il, ID3D11Buffer* _vb, ID3D11Buffer* _vb2,
+	ID3D11SamplerState* _pSampler
+)
 {
-	
+	HRESULT hr = S_OK;
+
 	_pD3DeviceContext->IASetInputLayout(_il);
 	_pD3DeviceContext->IASetPrimitiveTopology
 	(D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -62,14 +70,21 @@ bool XRenderer::Render_Update(ID3D11Device* m_pDevice,ID3D11DeviceContext* _pD3D
 	_pD3DeviceContext->VSSetShader(_vs, nullptr, 0);
 	_pD3DeviceContext->PSSetShader(_ps, nullptr, 0);
 	
+	
+	//=======================================================================
+	///»ï°¢Çü ±×¸®±â 1
+	//=======================================================================
 	XVertex v[] =
 	{
-		XVertex(-0.5f,  -0.5f , 1.0f,	0.0f,	0.0f),//B L
-		XVertex(0.0f, +0.5f, 0.0f,+1.0f,0.0f),  //T M
-		XVertex(+0.5f, -0.5f, 0.0f,0.0f,+1.0f),  //B R
+		XVertex(-0.5f,  -0.5f,   0.0f,1.0f,  0.0f,   0.0f),//B L
+		XVertex(0.0f,   +0.5f,	 0.0f,1.0f, +0.0f,   0.0f),  //T M
+		XVertex(+0.5f,  -0.5f,	 0.0f,1.0f,  0.0f,  +0.0f),  //B R
 		//XVertex(0.0f,  +0.1f),	 //T
 	};
-	HRESULT hr = S_OK;
+
+
+	UINT stride = sizeof(XVertex);
+	UINT offset = 0;
 
 	D3D11_BUFFER_DESC vertexBufferDESC;
 	ZeroMemory(&vertexBufferDESC, sizeof(D3D11_BUFFER_DESC));
@@ -88,16 +103,91 @@ bool XRenderer::Render_Update(ID3D11Device* m_pDevice,ID3D11DeviceContext* _pD3D
 
 	hr = m_pDevice->CreateBuffer(&vertexBufferDESC, &vertexBufferData, &_vb);
 
+
+	_pD3DeviceContext->IASetVertexBuffers(0, 1, &_vb, &stride, &offset);
+
+	_pD3DeviceContext->Draw(3, 0);
+	//=======================================================================
+	///»ï°¢Çü ±×¸®±â 2
+	//=======================================================================
 	
+	//XVertex v2[] =
+	//{
+	//	XVertex(-0.250f,  -0.250f,  0.0f, 0.0f,  1.0f,   0.0f),//B L
+	//	XVertex(0.000f,   +0.250f,	0.0f, 0.0f, +1.0f,   0.0f),  //T M
+	//	XVertex(+0.250f,  -0.250f,	0.0f, 0.0f,  1.0f,  +0.0f),  //B R
+	//	//XVertex(0.0f,  +0.1f),	 //T
+	//};
+	//
+	//
+	//
+	//
+	//D3D11_BUFFER_DESC vertexBufferDESC2;
+	//ZeroMemory(&vertexBufferDESC2, sizeof(D3D11_BUFFER_DESC));
+	//
+	//vertexBufferDESC2.Usage = D3D11_USAGE_DEFAULT;
+	//vertexBufferDESC2.ByteWidth = sizeof(XVertex) * ARRAYSIZE(v2);//* ARRAYSIZE(v);
+	//vertexBufferDESC2.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	//vertexBufferDESC2.CPUAccessFlags = 0;
+	//vertexBufferDESC2.MiscFlags = 0;
+	//
+	//D3D11_SUBRESOURCE_DATA vertexBufferData2;
+	//ZeroMemory(&vertexBufferData2, sizeof(D3D11_SUBRESOURCE_DATA));
+	//vertexBufferData2.pSysMem = v2;
+	//vertexBufferData2.SysMemPitch = 0;
+	//vertexBufferData2.SysMemSlicePitch = 0;
+	//
+	//hr = m_pDevice->CreateBuffer(&vertexBufferDESC2, &vertexBufferData2, &_vb2);
+	//=======================================================================
+	
+	
+	
+	//_pD3DeviceContext->IASetVertexBuffers(0, 1, &_vb2, &stride, &offset);
+	//
+	//_pD3DeviceContext->Draw(3, 0);
+	// 
+	//=======================================================================
+	///»ï°¢Çü ±×¸®±â 3
+	//=======================================================================
+	XVertexTex v[] =
+	{
+		XVertexTex(-0.5f,  -0.5f,    1.f, 0.0f,1.0f),//B L
+		XVertexTex(0.0f,   +0.5f,	 1.f, 0.5f,0.0f),  //T M
+		XVertexTex(+0.5f,  -0.5f,	 1.f, 1.0f,1.0f),  //B R
+		//XVertex(0.0f,  +0.1f),	 //T
+	};
+
+
 	UINT stride = sizeof(XVertex);
 	UINT offset = 0;
-	
+
+	D3D11_BUFFER_DESC vertexBufferDESC;
+	ZeroMemory(&vertexBufferDESC, sizeof(D3D11_BUFFER_DESC));
+
+	vertexBufferDESC.Usage = D3D11_USAGE_DEFAULT;
+	vertexBufferDESC.ByteWidth = sizeof(XVertex) * ARRAYSIZE(v);//* ARRAYSIZE(v);
+	vertexBufferDESC.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	vertexBufferDESC.CPUAccessFlags = 0;
+	vertexBufferDESC.MiscFlags = 0;
+
+	D3D11_SUBRESOURCE_DATA vertexBufferData;
+	ZeroMemory(&vertexBufferData, sizeof(D3D11_SUBRESOURCE_DATA));
+	vertexBufferData.pSysMem = v;
+	vertexBufferData.SysMemPitch = 0;
+	vertexBufferData.SysMemSlicePitch = 0;
+
+	//DirectX::CreateWICTextureFromFile
+
+	hr = m_pDevice->CreateBuffer(&vertexBufferDESC, &vertexBufferData, &_vb);
+
+	_pD3DeviceContext->PSSetSamplers(1, 0, &_pSampler);
+
+
 	_pD3DeviceContext->IASetVertexBuffers(0, 1, &_vb, &stride, &offset);
-	
+
 	_pD3DeviceContext->Draw(3, 0);
 	
-
-
+	
 	return 0;
 }
 

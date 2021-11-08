@@ -129,6 +129,7 @@ private:
 public:
 	//test
 	ID3D11Buffer* m_pVertexBuffer;
+	ID3D11Buffer* m_pVertexBuffer2;
 	bool TestScene();
 private:
 	// 폰트때문에 뎁스스탠실 스테이트가 강제.

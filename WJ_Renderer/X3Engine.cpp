@@ -268,7 +268,8 @@ void X3Engine::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 	TestScene();
 	m_pRenderer->Render_Update(this->m_pDevice->m_pDX11Device, 
 		m_pDeviceContext->m_pDX11DeviceContext,m_XVertexShader.GetShader(),
-		m_XPexelShader.GetShader(),m_XVertexShader.GetInputLayout(),m_pVertexBuffer);
+		m_XPexelShader.GetShader(),m_XVertexShader.GetInputLayout(),m_pVertexBuffer, 
+		m_pVertexBuffer2, m_pSamplerState);
 
 	m_pRenderer->Render_LateUpdate(m_pDeviceContext->m_pDX11DeviceContext, m_pRasterizerSolid->m_pFrameRS);
 
@@ -327,13 +328,20 @@ void X3Engine::InitializeShaders()
 #pragma endregion
 
 
+	/*
+	// Color Shader
 
 	D3D11_INPUT_ELEMENT_DESC layout[] =
 	{
-		{ "POSITION",	0,DXGI_FORMAT::DXGI_FORMAT_R32G32_FLOAT,0,0, D3D11_INPUT_CLASSIFICATION::D3D11_INPUT_PER_VERTEX_DATA,0 } ,
+		{ "POSITION",	0,DXGI_FORMAT::DXGI_FORMAT_R32G32B32_FLOAT,0,0, D3D11_INPUT_CLASSIFICATION::D3D11_INPUT_PER_VERTEX_DATA,0 } ,
 		{ "COLOR",		0,DXGI_FORMAT::DXGI_FORMAT_R32G32B32_FLOAT,0,D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_CLASSIFICATION::D3D11_INPUT_PER_VERTEX_DATA,0 } ,
 	};
-
+	*/
+	D3D11_INPUT_ELEMENT_DESC layout[] =
+	{
+		{ "POSITION",	0,DXGI_FORMAT::DXGI_FORMAT_R32G32_FLOAT,0,0, D3D11_INPUT_CLASSIFICATION::D3D11_INPUT_PER_VERTEX_DATA,0 } ,
+		{ "TEXCOORD",		0,DXGI_FORMAT::DXGI_FORMAT_R32G32_FLOAT,0,D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_CLASSIFICATION::D3D11_INPUT_PER_VERTEX_DATA,0 } ,
+	};
 
 
 	UINT numElements = ARRAYSIZE(layout, numElements);
@@ -354,4 +362,28 @@ bool X3Engine::TestScene()
 {
 	
 	return false;
+}
+
+ID3D11SamplerState* X3Engine::CreateDXSamplerState()
+{
+	HRESULT hr = S_OK;
+
+	ID3D11SamplerState* _pSampler = nullptr;
+	
+	D3D11_SAMPLER_DESC samplerdesc;
+	ZeroMemory(&samplerdesc, sizeof(D3D11_SAMPLER_DESC));
+	samplerdesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	samplerdesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerdesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerdesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerdesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+	samplerdesc.MinLOD = 0;
+	samplerdesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+	hr = m_pDevice->m_pDX11Device->CreateSamplerState(&samplerdesc, &_pSampler);
+
+	if (FAILED(hr)) { return nullptr; }
+
+
+	return _pSampler;
 }
