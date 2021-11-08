@@ -1,27 +1,21 @@
 #include "Camera.h"
 #include "GameObject.h"
+#include "EngineData.h"
 #include "Transform.h"
 
+using namespace DirectX;
 std::vector<Camera*> Camera::CamList;
 Camera* Camera::MainCam = nullptr;
 
 DirectX::XMMATRIX Camera::mProj_M;
 Camera::Camera()
 {
-	tranform = nullptr;
-	mFovY = 0.5f * 3.141592f;
-	mAspect = 1;
-	mNearZ = 0.1f;
-	mFarZ = 4000.0f;
-	mNearWindowHeight = 2.0f * mNearZ * tanf(0.5f * mFovY);
-	mFarWindowHeight = 2.0f * mFarZ * tanf(0.5f * mFovY);
-
 	PushCamList();
 }
 
 Camera::~Camera()
 {
-	if (MainCam == this) { MainCam == nullptr; }
+	if (MainCam == this) { MainCam = nullptr; }
 
 	CamList[MyIndex] = nullptr;
 }
@@ -29,8 +23,9 @@ Camera::~Camera()
 void Camera::Awake()
 {
 	//오브젝트의 컨퍼넌트 가져오기
-	tranform = gameobject->GetComponent<Transform>();
-	CreateProj();
+	tranform = gameobject->transform;
+	CreateProj(1920,1080);
+	gameobject->OneMeshData->ObjType = OBJECT_TYPE::Camera;
 }
 
 void Camera::Update()
@@ -41,6 +36,12 @@ void Camera::Update()
 DirectX::XMMATRIX* Camera::GetProj()
 {
 	return &mProj_M;
+}
+
+void Camera::SetSize(int Change_Width, int Change_Height)
+{
+	float Ratio = Change_Width / Change_Height;
+
 }
 
 void Camera::ChoiceMainCam()
@@ -58,25 +59,25 @@ DirectX::XMMATRIX* Camera::GetMainView()
 	return MainCam->GetView();
 }
 
-void Camera::CreateProj(float fovY, float aspect, float zn, float zf,bool viewPoint)
+void Camera::CreateProj(int winsizeX, int WinSizeY, bool ViewPoint)
 {
 	///모르면 MSDN 참고 
 	///XMMatrixPerspectiveFovLH 함수 검색하면됨
 
 	//시야각
-	mFovY	= fovY;
+	float mFovY	= 0.5f * 3.141592f;
 	//뷰 공간 X:Y 가로세로비율
-	mAspect = aspect;
+	float mAspect = (float)winsizeX / (float)WinSizeY;
 	//근접평면 까지의 거리 0보다 커야됨
-	mNearZ	= zn;
+	float mNearZ	= 0.1f;
 	//먼 평면 까지의 거리 0보다 커야됨
-	mFarZ	= zf;
+	float mFarZ	= 4000.0f;
 
 
-	mNearWindowHeight = 2.0f * mNearZ * tanf(0.5f * mFovY);
-	mFarWindowHeight = 2.0f * mFarZ * tanf(0.5f * mFovY);
+	float mNearWindowHeight = 2.0f * mNearZ * tanf(0.5f * mFovY);
+	float mFarWindowHeight = 2.0f * mFarZ * tanf(0.5f * mFovY);
 	
-	if (viewPoint == false)
+	if (ViewPoint == false)
 	{
 		//원근 투영
 		mProj_M = DirectX::XMMatrixPerspectiveFovLH(mFovY, mAspect, mNearZ, mFarZ);
@@ -86,7 +87,6 @@ void Camera::CreateProj(float fovY, float aspect, float zn, float zf,bool viewPo
 		//직교 투영
 		mProj_M = DirectX::XMMatrixOrthographicLH(mFovY, mAspect, mNearZ, mFarZ);
 	}
-	XMStoreFloat4x4(&mProj, mProj_M);
 }
 
 void Camera::CreateView()

@@ -6,29 +6,31 @@
 #include "ObjectManager.h"
 #include "SceneManager.h"
 #include "DebugManager.h"
-#include "Camera.h"
+#include "GraphicEngineManager.h"
+#include "TimeManager.h"
+
+#include "ParserData.h"
+#include "EngineData.h"
 //오브젝트
 #include "GameObject.h"
 
 //컨퍼넌트
 #include "Transform.h"
+#include "Camera.h"
+#include "MeshFilter.h"
 
 //테스트용
-#include "DH3DEngine.h"
-#include "GraphicsEngine.h"
+#include "HsGraphic.h";
 
 
 GameEngine::GameEngine()
 {
-	//디버깅 매니저
 	mDebugManager	= nullptr;
 	mLoadManager	= nullptr;
 	mObjectManager	= nullptr;
 	mSceneManager	= nullptr;
 	mKeyManager		= nullptr;
 
-	//그래픽 엔진 테스트용
-	NowGraphicEngine = nullptr;
 
 	//기본 윈도우 사이즈 설정
 	WinSizeWidth	= 1920;
@@ -55,10 +57,11 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 	mObjectManager	= new ObjectManager();
 	mSceneManager	= new SceneManager();
 	mDebugManager	= new DebugManager();
+	mGraphicManager = new GraphicEngineManager();
+	mTime			= new GameTimer();
 
 	//그래픽 엔진 생성
-	pTest_Engine = new DH3DEngine();
-
+	//pTest_Engine = new DH3DEngine();
 
 
 
@@ -67,16 +70,27 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 	mDebugManager->Initialize(mKeyManager,mConsoleDebug);
 	mSceneManager->Initialize();
 	mObjectManager->Initialize(mHwnd);
-	//테스트용 이곳에 그래픽엔진을 넘겨주면된다
-	mLoadManager->Initialize(pTest_Engine);
-	pTest_OFD = new OneFrameData();
-	pTest_SRD = new SharedRenderData();
-
-	pTest_Engine->Initialize(Hwnd, WinSizeWidth, WinSizeHeight);
-	pTest_Engine->SetDebug(true);
-
+	mLoadManager->Initialize(mGraphicManager);
 	
+	MeshFilter::SetObjMananager(mObjectManager);
+	//처음시작하기전 엔진의 구조간략설명
 	mDebugManager->printStart();
+
+
+
+
+	/// <summary>
+	/// 여기 두부분만 해주면 그래픽엔진 매니저에서 알아서 해줄꺼임
+	/// 다만 그래픽엔진의 순수가상함수로된건 무조건다만들어놔야함
+	/// </summary>
+	/////////////////////////////////////////////////////////////////
+	mGraphicManager->PushEngine<HsGraphic>("형선");
+	mGraphicManager->ChoiceEngine("형선");
+	/////////////////////////////////////////////////////////////////
+
+
+
+	mGraphicManager->Initialize(Hwnd, WinSizeWidth, WinSizeHeight);
 }
 
 void GameEngine::Update()
@@ -86,31 +100,39 @@ void GameEngine::Update()
 	mSceneManager->Update();
 	mObjectManager->PlayUpdate();
 	mDebugManager->Update();
-	
+	//컨퍼넌트 업데이트 끝
+	//그래픽엔진으로 넘겨줄 랜더큐도 생성완료
 
+	mTime->Tick();
 
+	static float _addedTime = 0;
+	static float _FPS = 0;
+	static float _deltaTimeMS = 0;
 
+	float deltaTime = mTime->DeltaTime();
 
-	/// 테스트용
-	////////////////////////////////////////////////////////////////////////////////////
-	pTest_OFD->World_Eye_Position	= DirectX::SimpleMath::Vector3(10.f, 8.f, -10.f);
-	pTest_OFD->Main_Position		= DirectX::SimpleMath::Vector3(0.f, 0.f, 0.f);
-	pTest_OFD->View_Matrix			= *Camera::GetMainView();
-	pTest_OFD->Projection_Matrix	= *Camera::GetProj();
-	pTest_SRD->Render_Mesh_List		= mObjectManager->GetDHRenderQueue();
-	//업데이트가 끝나고 랜더링 테스트용
-	pTest_Engine->BeginDraw();
-	pTest_Engine->TextDraw({ (int)(1920 - 350), 10 }, 500, 0, 1, 0, 1, 30, L"카메라 모드 변경 : C");
-	pTest_Engine->RenderDraw(pTest_OFD, pTest_SRD);
-	pTest_Engine->EndDraw();
-	////////////////////////////////////////////////////////////////////////////////////
-	
+	// 갱신주기는 0.2초
+	if (0.2f < _addedTime)
+	{
+		_FPS = (1.0f / deltaTime);
+		_deltaTimeMS = deltaTime * 1000.0f;
 
+		_addedTime = 0;
+	}
+
+	std::string temp =  std::to_string(_FPS);
+
+	DebugManager::Print(temp, DebugManager::MSG_TYPE::MSG_ENGINE);
+
+	_addedTime += (deltaTime);
+
+	//랜더큐 넘겨줌
+	mGraphicManager->Render(mObjectManager->GetRenderQueue(), mObjectManager->GetGlobalData());
 
 
 	//랜더링이 끝나고 오브젝트 Delete
 	mObjectManager->DeleteObject();
-	mObjectManager->DeleteRenderQueue();
+	//mObjectManager->DeleteRenderQueue();
 }
 
 void GameEngine::Finish()
@@ -122,15 +144,27 @@ void GameEngine::Finish()
 	mSceneManager->Delete();
 }
 
-void GameEngine::OnResize(float Change_Width, float Change_Height)
+void GameEngine::OnResize(int Change_Width, int Change_Height)
 {
 	//윈도우 크기 재설정
 	WinSizeWidth	= Change_Width;
 	WinSizeHeight	= Change_Height;
 		
-	//그래픽 엔진의 리사이즈 함수를 넣으면 될듯
-	pTest_Engine->On_Resize(WinSizeWidth, WinSizeHeight);
-	mDebugManager->Print("윈도우 사이즈 변경",DebugManager::MSG_TYPE::MSG_ENGINE);
+	
+
+	//카메라의 변화할 사이즈를 넣어준다
+	Camera::SetSize(Change_Width, Change_Height);
+
+	//그래픽쪽에 랜더타겟을 변경해야하기때문에 
+	mGraphicManager->OnReSize(Change_Width, Change_Height);
+	Camera::CreateProj(Change_Width, Change_Height);
+
+	std::string Width = std::to_string(Change_Width);
+	std::string Height = std::to_string(Change_Height);;
+	std::string temp = "윈도우 사이즈 변경:"+ Width+","+ Height;
+	Camera::SetSize(Change_Width, Change_Height);
+
+	mDebugManager->Print(temp,DebugManager::MSG_TYPE::MSG_ENGINE);
 }
 
 ///오브젝트 생성 삭제
@@ -140,6 +174,7 @@ GameObject* GameEngine::Instance(std::string ObjName)
 	GameObject* temp = new GameObject();
 	mObjectManager->PushCreateObject(temp);
 	temp->Name = ObjName;
+	
 	//Transform 은 기본으로 넣어준다
 	Transform* Tr = temp->AddComponent<Transform>();
 	temp->transform = Tr;
@@ -147,6 +182,14 @@ GameObject* GameEngine::Instance(std::string ObjName)
 
 	mDebugManager->Print(ObjName, DebugManager::MSG_TYPE::MSG_CREATE);
 	return temp;
+}
+
+GameObject* GameEngine::InstanceModel(std::string ObjName)
+{
+	ModelData* mModel =	mLoadManager->GetMesh(ObjName);
+	
+
+	return nullptr;
 }
 
 void GameEngine::Destroy(GameObject* obj)
@@ -180,13 +223,24 @@ void GameEngine::ChoiceScene(std::string name)
 ///로드 관련 함수들
 void GameEngine::LoadMesh(std::string mMeshName, bool Scale, bool LoadAnime)
 {
+	std::string temp = "매쉬를 로드합니다 : " + mMeshName;
 	mLoadManager->LoadMesh(mMeshName, Scale, LoadAnime);
-	mDebugManager->Print(mMeshName, DebugManager::MSG_TYPE::MSG_LOAD);
+	mDebugManager->Print(temp, DebugManager::MSG_TYPE::MSG_LOAD);
+}
+
+void GameEngine::LoadTexture(std::string mTextureName)
+{
+	mLoadManager->LoadTexture(mTextureName);
 }
 
 void GameEngine::LoadMeshPath(std::string mPath)
 {
 	mLoadManager->LoadMeshPath(mPath);
+}
+
+void GameEngine::LoadTexturePath(std::string mPath)
+{
+	mLoadManager->LoadTexturePath(mPath);
 }
 
 ///키인풋 함수들
@@ -217,11 +271,11 @@ bool GameEngine::GetTogle(byte number)
 float GameEngine::GetMousePosX()
 {
 	//마우스 위치 X좌표
-	return mKeyManager->GetMousePos()->x;
+	return (float)mKeyManager->GetMousePos()->x;
 }
 
 float GameEngine::GetMousePosY()
 {
 	//마우스 위치 y좌표
-	return mKeyManager->GetMousePos()->y;
+	return (float)mKeyManager->GetMousePos()->y;
 }

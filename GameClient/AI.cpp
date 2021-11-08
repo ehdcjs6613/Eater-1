@@ -1,7 +1,6 @@
-#include "Component.h"
 #include "Transform.h"
-#include "GameObject.h"
 #include "AI.h"
+#include "GameObject.h"
 
 AI::AI()
 {
@@ -15,12 +14,12 @@ AI::~AI()
 
 void AI::Awake()
 {
-	trans = gameobject->GetComponent<Transform>();
-
+	
+	gameobject->transform->SetRotate(90, 0, 0);
 }
 
 void AI::Update()
 {
-	trans->SetRotate(1, 0, 1);
+	gameobject->transform->SetRotate(0, 0.01f, 0);
 }
 

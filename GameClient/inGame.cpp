@@ -18,7 +18,7 @@ void InGame::Awake()
 
 	testobj = Instance();
 	testobj->AddComponent<MeshFilter>()->SetMeshName("Table");
-	testobj->transform->Position = { 2, 0, 0 };
+	testobj->GetTransform()->Position = { 0,1,1 };
 	
 }
 

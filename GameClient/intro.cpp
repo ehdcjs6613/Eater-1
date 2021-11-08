@@ -3,42 +3,45 @@
 #include "GameObject.h"
 #include "MeshFilter.h"
 #include "Transform.h"
+#include "AI.h"
 #include "KeyInput.h"
 #include "Camera.h"
 
 void intro::Awake()
 {
 	//불러오는 매쉬의 경로 파악
-	LoadMeshPath("../FBXFile/");
-	LoadMesh("Table");
+	LoadMeshPath("../Resources/Mesh/");
+	LoadTesturePath("../Resources/Texture/");
+
+	//LoadMesh("Player");
+	//LoadMesh("Table");
+	LoadMesh("Dome_v03");
+	LoadMesh("box");
+	LoadTesture("WoodCrate01");
+
 
 	///카메라
 	testobj = Instance();
 	testobj->AddComponent<Keyinput>();
 	testobj->AddComponent<Camera>();
 
-	
-	testobj = Instance("Table");
-	testobj->AddComponent<MeshFilter>()->SetMeshName("Table");
-	testobj->transform->Position = { 2, 0, 0 };
-
-	
-	for (int i = 0; i < 5; i++) 
+	///테스트 오브젝트
+	for (int i = 0; i < 1000; i++)
 	{
-		testobj = Instance("Table");
-		testobj->AddComponent<MeshFilter>()->SetMeshName("Table");
-		testobj->transform->Position = {i*2.0f,0,0};
+		testobj = Instance("box");
+		testobj->AddComponent<MeshFilter>()->SetMeshName("Dome_v03");
+		testobj->GetTransform()->Position = {(float)( i * 50),0,0 };
 	}
 }
 
 void intro::Start()
 {
-	
+
 }
 
 void intro::Update()
 {
-	
+
 }
 
 void intro::End()

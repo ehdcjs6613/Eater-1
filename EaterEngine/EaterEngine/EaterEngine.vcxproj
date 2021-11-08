@@ -72,15 +72,22 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <TargetName>$(ProjectName)_x86d</TargetName>
+    <IncludePath>$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <TargetName>$(ProjectName)_x86r</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <TargetName>$(ProjectName)_x64d</TargetName>
+    <IncludePath>$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <TargetName>$(ProjectName)_x64r</TargetName>
+    <IncludePath>$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -90,16 +97,29 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(SolutionDir)Library\inc;$(ProjectDir)Export</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
+      <AdditionalLibraryDirectories>$(SolutionDir)Library\lib</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>copy /Y "$(ProjectDir)*.h" "$(SolutionDir)inc"
-copy /Y "$(TargetDir)*.dll" "$(SolutionDir)lib"
-copy /Y "$(TargetDir)*.lib" "$(SolutionDir)lib"</Command>
+      <Command>copy /Y "$(ProjectDir)Export\*.h" "$(SolutionDir)Library\inc\Component"
+
+
+copy /Y "$(ProjectDir)GraphicsEngine.h" "$(SolutionDir)Library\inc"
+copy /Y "$(ProjectDir)ResourcesData.h" "$(SolutionDir)Library\inc"
+copy /Y "$(ProjectDir)EngineData.h" "$(SolutionDir)Library\inc"
+
+copy /Y "$(TargetDir)*.dll" "$(SolutionDir)Library\lib"
+copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\lib"
+
+
+
+
+</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -110,8 +130,9 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)lib"</Command>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>ENGINE_INTERFACE</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(SolutionDir)Library\inc;$(ProjectDir)Export</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -119,11 +140,23 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)lib"</Command>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
+      <AdditionalLibraryDirectories>$(SolutionDir)Library\lib</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>copy /Y "$(ProjectDir)*.h" "$(SolutionDir)inc"
-copy /Y "$(TargetDir)*.dll" "$(SolutionDir)lib"
-copy /Y "$(TargetDir)*.lib" "$(SolutionDir)lib"</Command>
+      <Command>copy /Y "$(ProjectDir)Export\*.h" "$(SolutionDir)Library\inc\Component"
+
+
+copy /Y "$(ProjectDir)GraphicsEngine.h" "$(SolutionDir)Library\inc"
+copy /Y "$(ProjectDir)ResourcesData.h" "$(SolutionDir)Library\inc"
+copy /Y "$(ProjectDir)EngineData.h" "$(SolutionDir)Library\inc"
+
+copy /Y "$(TargetDir)*.dll" "$(SolutionDir)Library\lib"
+copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\lib"
+
+
+
+
+</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -134,7 +167,7 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)lib"</Command>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)inc;$(SolutionDir)lib;$(SolutionDir)FBX\include;$(SolutionDir)lib\DirectXTK2021_06_14</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Library\inc;$(ProjectDir)Export</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
@@ -142,13 +175,23 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)lib"</Command>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib;$(SolutionDir)lib\DirectXTK2021_06_14;$(SolutionDir)lib\FX11_2021_06_14</AdditionalLibraryDirectories>
-      <AdditionalDependencies>GraphicEngine.lib;KHParser_x64d.lib;libfbxsdk.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Library\lib</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>copy /Y "$(ProjectDir)*.h" "$(SolutionDir)inc"
-copy /Y "$(TargetDir)*.dll" "$(SolutionDir)lib"
-copy /Y "$(TargetDir)*.lib" "$(SolutionDir)lib"</Command>
+      <Command>copy /Y "$(ProjectDir)Export\*.h" "$(SolutionDir)Library\inc\Component"
+
+
+copy /Y "$(ProjectDir)GraphicsEngine.h" "$(SolutionDir)Library\inc"
+copy /Y "$(ProjectDir)ResourcesData.h" "$(SolutionDir)Library\inc"
+copy /Y "$(ProjectDir)EngineData.h" "$(SolutionDir)Library\inc"
+
+copy /Y "$(TargetDir)*.dll" "$(SolutionDir)Library\lib"
+copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\lib"
+
+
+
+
+</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -161,7 +204,7 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)lib"</Command>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)inc;$(SolutionDir)lib\FX11_2021_06_14;$(SolutionDir);$(SolutionDir)lib\DirectXTK2021_06_14;$(SolutionDir)FBX\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Library\inc;$(ProjectDir)Export</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -170,37 +213,50 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)lib"</Command>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib;$(SolutionDir)lib\FX11_2021_06_14;$(SolutionDir)lib\DirectXTK2021_06_14</AdditionalLibraryDirectories>
-      <AdditionalDependencies>DH3DEngine.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Library\lib</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>copy /Y "$(ProjectDir)*.h" "$(SolutionDir)inc"
-copy /Y "$(TargetDir)*.dll" "$(SolutionDir)lib"
-copy /Y "$(TargetDir)*.lib" "$(SolutionDir)lib"</Command>
+      <Command>copy /Y "$(ProjectDir)Export\*.h" "$(SolutionDir)Library\inc\Component"
+
+
+copy /Y "$(ProjectDir)GraphicsEngine.h" "$(SolutionDir)Library\inc"
+copy /Y "$(ProjectDir)ResourcesData.h" "$(SolutionDir)Library\inc"
+copy /Y "$(ProjectDir)EngineData.h" "$(SolutionDir)Library\inc"
+
+copy /Y "$(TargetDir)*.dll" "$(SolutionDir)Library\lib"
+copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\lib"
+
+
+
+
+</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Camera.h" />
-    <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentHeader.h" />
     <ClInclude Include="DebugManager.h" />
     <ClInclude Include="Delegate.h" />
     <ClInclude Include="EngineData.h" />
     <ClInclude Include="EnumClass.h" />
+    <ClInclude Include="Export\Camera.h" />
+    <ClInclude Include="Export\Component.h" />
+    <ClInclude Include="Export\EaterEngineDLL.h" />
+    <ClInclude Include="Export\GameObject.h" />
+    <ClInclude Include="Export\MainHeader.h" />
+    <ClInclude Include="Export\MeshFilter.h" />
+    <ClInclude Include="Export\Scene.h" />
+    <ClInclude Include="Export\Transform.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="GameEngine.h" />
-    <ClInclude Include="GameObject.h" />
+    <ClInclude Include="GraphicEngineManager.h" />
     <ClInclude Include="GraphicsEngine.h" />
     <ClInclude Include="KeyinputManager.h" />
-    <ClInclude Include="MainHeader.h" />
-    <ClInclude Include="MeshFilter.h" />
     <ClInclude Include="ObjectManager.h" />
     <ClInclude Include="LoadManager.h" />
     <ClInclude Include="ResourcesData.h" />
-    <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="SkinningFilter.h" />
     <ClInclude Include="TimeManager.h" />
-    <ClInclude Include="Transform.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
@@ -210,6 +266,7 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)lib"</Command>
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="GameEngine.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="GraphicEngineManager.cpp" />
     <ClCompile Include="GraphicsEngine.cpp" />
     <ClCompile Include="KeyinputManager.cpp" />
     <ClCompile Include="MainHeader.cpp" />
@@ -218,6 +275,7 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)lib"</Command>
     <ClCompile Include="LoadManager.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="SkinningFilter.cpp" />
     <ClCompile Include="TimeManager.cpp" />
     <ClCompile Include="Transform.cpp" />
   </ItemGroup>
