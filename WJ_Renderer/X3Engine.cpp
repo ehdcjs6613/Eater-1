@@ -102,6 +102,7 @@ void X3Engine::Initialize(HWND _hWnd, int _iWidth, int _iHeight)
 		m_pDeviceContext->m_pDX11DeviceContext
 	);
 
+
 	///
 
 	
@@ -264,14 +265,15 @@ void X3Engine::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 
 	
 
+	TestScene();
 	m_pRenderer->Render_Update(this->m_pDevice->m_pDX11Device, 
 		m_pDeviceContext->m_pDX11DeviceContext,m_XVertexShader.GetShader(),
 		m_XPexelShader.GetShader(),m_XVertexShader.GetInputLayout(),m_pVertexBuffer);
 
-	m_pRenderer->Render_LateUpdate(m_pDeviceContext->m_pDX11DeviceContext);
+	m_pRenderer->Render_LateUpdate(m_pDeviceContext->m_pDX11DeviceContext, m_pRasterizerSolid->m_pFrameRS);
 
 	m_pRenderer->Render_2D(m_p2DSupport, this->m_pAdapter);
-
+	
 	m_pRenderer->Render_End(m_p2DSupport,m_pRenderer->m_pDirectXSwapChain->m_pSwapChain);
 	
 
@@ -291,85 +293,7 @@ void X3Engine::DrawSystemStatus()
 
 void X3Engine::SetTextureSRV(SharedRenderData* _SRD)
 {
-	//if (!_SRD->Ambient_Texture.empty())
-	//{
-	//	for (auto k : _SRD->Ambient_Texture)
-	//	{
-	//		// 텍스쳐 생성을 위한 임시 객체
-	//		ID3D11Resource* Texture_Resource = nullptr;
-	//		// 텍스쳐 SRV
-	//		ID3D11ShaderResourceView* DX11_SRV = nullptr;
-	//		// 텍스쳐 정보 셋팅.
-	//		CreateWICTextureFromFile(m_pDevice->GetDevice(), k.second->Texture_Path.c_str(), &Texture_Resource, &DX11_SRV);
-	//		ReleaseCOM(Texture_Resource);
-	//
-	//		k.second->Texture_SRV = DX11_SRV;
-	//	}
-	//}
-	//
-	//if (!_SRD->Emissive_Texture.empty())
-	//{
-	//	for (auto k : _SRD->Emissive_Texture)
-	//	{
-	//		// 텍스쳐 생성을 위한 임시 객체
-	//		ID3D11Resource* Texture_Resource = nullptr;
-	//		// 텍스쳐 SRV
-	//		ID3D11ShaderResourceView* DX11_SRV = nullptr;
-	//		// 텍스쳐 정보 셋팅.
-	//		CreateWICTextureFromFile(m_pDevice->GetDevice(), k.second->Texture_Path.c_str(), &Texture_Resource, &DX11_SRV);
-	//		ReleaseCOM(Texture_Resource);
-	//
-	//		k.second->Texture_SRV = DX11_SRV;
-	//	}
-	//}
-	//
-	//if (!_SRD->Diffuse_Texture.empty())
-	//{
-	//	for (auto k : _SRD->Diffuse_Texture)
-	//	{
-	//		// 텍스쳐 생성을 위한 임시 객체
-	//		ID3D11Resource* Texture_Resource = nullptr;
-	//		// 텍스쳐 SRV
-	//		ID3D11ShaderResourceView* DX11_SRV = nullptr;
-	//		// 텍스쳐 정보 셋팅.
-	//		CreateWICTextureFromFile(m_pDevice->GetDevice(), k.second->Texture_Path.c_str(), &Texture_Resource, &DX11_SRV);
-	//		ReleaseCOM(Texture_Resource);
-	//
-	//		k.second->Texture_SRV = DX11_SRV;
-	//	}
-	//}
-	//
-	//if (!_SRD->Specular_Texture.empty())
-	//{
-	//	for (auto k : _SRD->Specular_Texture)
-	//	{
-	//		// 텍스쳐 생성을 위한 임시 객체
-	//		ID3D11Resource* Texture_Resource = nullptr;
-	//		// 텍스쳐 SRV
-	//		ID3D11ShaderResourceView* DX11_SRV = nullptr;
-	//		// 텍스쳐 정보 셋팅.
-	//		CreateWICTextureFromFile(m_pDevice->GetDevice(), k.second->Texture_Path.c_str(), &Texture_Resource, &DX11_SRV);
-	//		ReleaseCOM(Texture_Resource);
-	//
-	//		k.second->Texture_SRV = DX11_SRV;
-	//	}
-	//}
-	//
-	//if (!_SRD->NormalMap_Texture.empty())
-	//{
-	//	for (auto k : _SRD->NormalMap_Texture)
-	//	{
-	//		// 텍스쳐 생성을 위한 임시 객체
-	//		ID3D11Resource* Texture_Resource = nullptr;
-	//		// 텍스쳐 SRV
-	//		ID3D11ShaderResourceView* DX11_SRV = nullptr;
-	//		// 텍스쳐 정보 셋팅.
-	//		CreateWICTextureFromFile(m_pDevice->GetDevice(), k.second->Texture_Path.c_str(), &Texture_Resource, &DX11_SRV);
-	//		ReleaseCOM(Texture_Resource);
-	//
-	//		k.second->Texture_SRV = DX11_SRV;
-	//	}
-	//}
+	
 }
 
 void X3Engine::Release()
@@ -406,15 +330,19 @@ void X3Engine::InitializeShaders()
 
 	D3D11_INPUT_ELEMENT_DESC layout[] =
 	{
-		{ "POSITION",0,DXGI_FORMAT::DXGI_FORMAT_R32G32_FLOAT,0,0, D3D11_INPUT_CLASSIFICATION::D3D11_INPUT_PER_VERTEX_DATA } ,
+		{ "POSITION",	0,DXGI_FORMAT::DXGI_FORMAT_R32G32_FLOAT,0,0, D3D11_INPUT_CLASSIFICATION::D3D11_INPUT_PER_VERTEX_DATA,0 } ,
+		{ "COLOR",		0,DXGI_FORMAT::DXGI_FORMAT_R32G32B32_FLOAT,0,D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_CLASSIFICATION::D3D11_INPUT_PER_VERTEX_DATA,0 } ,
 	};
+
+
+
 	UINT numElements = ARRAYSIZE(layout, numElements);
 
-	if (false == m_XVertexShader.Initialize(m_pDevice->m_pDX11Device, shaderFoler + L"vertexShaders.cso",layout,numElements ))
+	if (0 != m_XVertexShader.Initialize(m_pDevice->m_pDX11Device, shaderFoler + L"vertexShaders.cso",layout,numElements ))
 	{
 		return;
 	}
-	if (false == m_XPexelShader.Initialize(m_pDevice->m_pDX11Device, shaderFoler + L"vertexShaders.cso", layout, numElements))
+	if (0 != m_XPexelShader.Initialize(m_pDevice->m_pDX11Device, shaderFoler + L"pixelShaders.cso", layout, numElements))
 	{
 		return;
 	}
@@ -424,32 +352,6 @@ void X3Engine::InitializeShaders()
 
 bool X3Engine::TestScene()
 {
-	//XVertex v[] =
-	//{
-	//	XVertex(0.0f,0.0f),
-	//};
-
-	XVertex v[] =
-	{
-		XVertex(0.0f, -0.1f), //Center Point
-		XVertex(-0.1f, 0.0f), //Left Point
-		XVertex(0.1f, 0.0f), //Right Point
-	};
-
-	D3D11_BUFFER_DESC vertexBufferDESC;
-	ZeroMemory(&vertexBufferDESC, sizeof(D3D11_BUFFER_DESC));
-
-	vertexBufferDESC.Usage = D3D11_USAGE_DEFAULT;
-	vertexBufferDESC.ByteWidth = sizeof(XVertex) * ARRAYSIZE(v);
-	vertexBufferDESC.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	vertexBufferDESC.CPUAccessFlags = 0;
-	vertexBufferDESC.MiscFlags = 0;
-
-	D3D11_SUBRESOURCE_DATA vertexBufferData;
-	ZeroMemory(&vertexBufferData, sizeof(D3D11_SUBRESOURCE_DATA));
-	vertexBufferData.pSysMem = v;
-
-	HRESULT hr = m_pDevice->m_pDX11Device->CreateBuffer(&vertexBufferDESC, &vertexBufferData, &m_pVertexBuffer);
-
+	
 	return false;
 }

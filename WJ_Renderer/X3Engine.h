@@ -40,9 +40,9 @@ class GlobalData;
 #include <queue>
 #include <string>
 
+#include "WJDefine.h"
 #include "GraphicsEngine.h"
 #include "XShader.h"
-#include "WJDefine.h"
 
 class X3Engine : public  GraphicEngine 
 {

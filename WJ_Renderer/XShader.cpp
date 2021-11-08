@@ -1,5 +1,9 @@
 #include "OneCompile.h"
 #include "XShader.h"
+#include <d3d11.h>
+
+#include <d3dcompiler.h>
+
 /// <summary>
 /// 버텍스 셰이더이다.
 /// </summary>
@@ -35,7 +39,7 @@ bool XVertexShader::Initialize(ID3D11Device* _pDevice, std::wstring _wShaderPath
 
 	if (FAILED(hr))
 	{
-		return 0;
+		return -1;
 	}
 
 	return 0;
@@ -76,13 +80,19 @@ bool XPixelShader::Initialize(ID3D11Device* _pDevice, std::wstring _wShaderPath,
 
 	hr = _pDevice->CreatePixelShader
 	(
-		(this->m_pPixelShaderBuffer)->GetBufferPointer(),
-		(this->m_pPixelShaderBuffer)->GetBufferSize(),
+		this->m_pPixelShaderBuffer->GetBufferPointer(),
+		this->m_pPixelShaderBuffer->GetBufferSize(),
 		nullptr,
-		&(this->m_pShader)
+		&this->m_pShader
 	);
 
 
+	if (FAILED(hr))
+	{
+		MessageBox(NULL,
+			L"NO SHADER", L"Error", MB_OK);
+		return -1;
+	}
 
 	return false;
 }

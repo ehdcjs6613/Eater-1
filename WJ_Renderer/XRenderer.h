@@ -14,7 +14,7 @@ __interface IRenderableFunc
 	bool Render_Initialize	(ID3D11Device* _pDevice) =0;
 	bool Render_Begin		(ID3D11DeviceContext* _pD3DeviceContext) = 0;
 	bool Render_Update		(ID3D11Device* m_pDevice,  ID3D11DeviceContext* _pD3DeviceContext, ID3D11VertexShader* _vs, ID3D11PixelShader* _ps, ID3D11InputLayout* _il, ID3D11Buffer* _vb) = 0;
-	bool Render_LateUpdate	(ID3D11DeviceContext* _pAdapter) = 0;
+	bool Render_LateUpdate	(ID3D11DeviceContext* _pD3DeviceContext , ID3D11RasterizerState* _pRasterizerState) = 0;
 	bool Render_2D			(Grahpics2D* _pGrahpics2D, DirectXAdapter* _pAdapter) = 0;
 	bool Render_End			(Grahpics2D* _pGrahpics2D, IDXGISwapChain* _pSwapChain) = 0;
 };
@@ -50,7 +50,7 @@ public:
 	bool Render_Initialize   (ID3D11Device* _pDevice) override;
 	bool Render_Begin		 (ID3D11DeviceContext* _pD3DeviceContext)override;
 	bool Render_Update		 (ID3D11Device* m_pDevice, ID3D11DeviceContext* _pD3DeviceContext , ID3D11VertexShader* _vs, ID3D11PixelShader* _ps, ID3D11InputLayout* _il, ID3D11Buffer* _vb)override;
-	bool Render_LateUpdate   (ID3D11DeviceContext* _pD3DeviceContext)override;
+	bool Render_LateUpdate   (ID3D11DeviceContext* _pD3DeviceContext,  ID3D11RasterizerState* _pRasterizerState)override;
 	bool Render_2D			 (Grahpics2D* _pGrahpics2D, DirectXAdapter* _pAdapter)override;
 	bool Render_End			 (Grahpics2D* _pGrahpics2D, IDXGISwapChain* _pSwapChain)override;
 	

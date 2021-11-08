@@ -131,12 +131,13 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>DirectX2DSupporter.lib; %(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>DirectX2DSupporter.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)Library\lib</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>copy /Y "$(ProjectDir)X3Engine.h" "$(SolutionDir)Library\inc"
 copy /Y "$(ProjectDir)XShader.h" "$(SolutionDir)Library\inc"
+copy /Y "$(ProjectDir)WJDefine.h" "$(SolutionDir)Library\inc"
 copy /Y "$(TargetDir)*.dll" "$(SolutionDir)Library/lib"
 copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library/lib"
 copy /Y "$(TargetDir)*.lib" "$(SolutionDir)lib"
@@ -165,6 +166,7 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)lib"
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="DirectXAdapter.cpp" />
+    <ClCompile Include="DirectXDefine.cpp" />
     <ClCompile Include="DirectXDevice.cpp" />
     <ClCompile Include="DirectXDeviceContext.cpp" />
     <ClCompile Include="DirectXRasterizerState.cpp" />

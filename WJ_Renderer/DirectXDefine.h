@@ -1,5 +1,6 @@
 #pragma once
 
+
 /// 사용자 화면에 대한 기본적인 정의.
 #define SCREEN_WIDTH 1920
 #define SCREEN_HEIGHT 1080
@@ -36,3 +37,4 @@
 #define HR(x) (x)
 #endif
 #endif 
+

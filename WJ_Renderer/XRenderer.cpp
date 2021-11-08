@@ -33,6 +33,7 @@ bool XRenderer::Render_Initialize(ID3D11Device* _pDevice)
 bool XRenderer::Render_Begin(ID3D11DeviceContext* _pD3DeviceContext)
 {
 	//·»´õÅ¸°Ù (¹é¹öÆÛ)¸¦ ÃÊ±âÈ­ÇÑ´Ù.
+	_pD3DeviceContext->OMSetRenderTargets(1, &m_pRenderTargeter->m_pRenderTarget,m_pDepthStencil_View);
 	_pD3DeviceContext->ClearRenderTargetView(m_pRenderTargeter->m_pRenderTarget, this->m_ArrColor);
 	
 	//µª½º, ½ºÅÙ½Ç ºäÃÊ±âÈ­
@@ -45,36 +46,64 @@ bool XRenderer::Render_Begin(ID3D11DeviceContext* _pD3DeviceContext)
 	);
 
 
+
+
 	return 0;
 }
 
 bool XRenderer::Render_Update(ID3D11Device* m_pDevice,ID3D11DeviceContext* _pD3DeviceContext , ID3D11VertexShader* _vs, ID3D11PixelShader* _ps , ID3D11InputLayout* _il, ID3D11Buffer* _vb)
 {
 	
-	//_pD3DeviceContext->IASetInputLayout(_il);
-	//_pD3DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_POINTLIST);
-	//
-	//_pD3DeviceContext->VSSetShader(_vs, nullptr, 0);
-	//_pD3DeviceContext->PSSetShader(_ps, nullptr, 0);
-	//
-	//UINT stride = sizeof(XVertex);
-	//UINT offset = 0;
-	//
-	//_pD3DeviceContext->IASetVertexBuffers(0, 1, &_vb, &stride, &offset);
-	//
-	//_pD3DeviceContext->Draw(4, 0);
+	_pD3DeviceContext->IASetInputLayout(_il);
+	_pD3DeviceContext->IASetPrimitiveTopology
+	(D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	//(D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_POINTLIST);
+	
+	_pD3DeviceContext->VSSetShader(_vs, nullptr, 0);
+	_pD3DeviceContext->PSSetShader(_ps, nullptr, 0);
+	
+	XVertex v[] =
+	{
+		XVertex(-0.5f,  -0.5f , 1.0f,	0.0f,	0.0f),//B L
+		XVertex(0.0f, +0.5f, 0.0f,+1.0f,0.0f),  //T M
+		XVertex(+0.5f, -0.5f, 0.0f,0.0f,+1.0f),  //B R
+		//XVertex(0.0f,  +0.1f),	 //T
+	};
+	HRESULT hr = S_OK;
 
+	D3D11_BUFFER_DESC vertexBufferDESC;
+	ZeroMemory(&vertexBufferDESC, sizeof(D3D11_BUFFER_DESC));
+
+	vertexBufferDESC.Usage = D3D11_USAGE_DEFAULT;
+	vertexBufferDESC.ByteWidth = sizeof(XVertex) * ARRAYSIZE(v);//* ARRAYSIZE(v);
+	vertexBufferDESC.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	vertexBufferDESC.CPUAccessFlags = 0;
+	vertexBufferDESC.MiscFlags = 0;
+
+	D3D11_SUBRESOURCE_DATA vertexBufferData;
+	ZeroMemory(&vertexBufferData, sizeof(D3D11_SUBRESOURCE_DATA));
+	vertexBufferData.pSysMem = v;
+	vertexBufferData.SysMemPitch = 0;
+	vertexBufferData.SysMemSlicePitch = 0;
+
+	hr = m_pDevice->CreateBuffer(&vertexBufferDESC, &vertexBufferData, &_vb);
+
+	
+	UINT stride = sizeof(XVertex);
+	UINT offset = 0;
+	
+	_pD3DeviceContext->IASetVertexBuffers(0, 1, &_vb, &stride, &offset);
+	
+	_pD3DeviceContext->Draw(3, 0);
 	
 
 
 	return 0;
 }
 
-bool XRenderer::Render_LateUpdate(ID3D11DeviceContext* _pD3DeviceContext)
+bool XRenderer::Render_LateUpdate(ID3D11DeviceContext* _pD3DeviceContext, ID3D11RasterizerState* _pRasterizerState)
 {
-
-
-	_pD3DeviceContext->RSSetState(0);
+	_pD3DeviceContext->RSSetState(_pRasterizerState);
 
 	return 0;
 }
@@ -110,7 +139,7 @@ bool XRenderer::Render_2D(Grahpics2D* _pGrahpics2D, DirectXAdapter* _pAdapter)
 	_pGrahpics2D->Push_DrawSprite
 	(
 		L"../Image/atk_1.png", //name
-		{ 1000,400 },				//Image Position
+		{ 1000,800 },				//Image Position
 		{ 1,1 },				//Image Scale//
 		0,
 		1.0f,

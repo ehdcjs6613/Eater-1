@@ -31,6 +31,9 @@
     <Filter Include="Shaders">
       <UniqueIdentifier>{87a9eaa0-cb08-44a3-a269-81079e98a4d1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\HLSL">
+      <UniqueIdentifier>{e1333fe0-808f-4b47-90d0-abace7ccd1d0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -74,6 +77,9 @@
     </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXDefine.cpp">
+      <Filter>DirectX\Define</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -131,10 +137,10 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="vertexShaders.hlsli">
-      <Filter>Shaders</Filter>
+      <Filter>Shaders\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="pixelShaders.hlsli">
-      <Filter>Shaders</Filter>
+      <Filter>Shaders\HLSL</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>
