@@ -24,17 +24,13 @@ void MeshFilter::Start()
 	{
 		//최상위 객체를 가져왔다
 		ModelData* data	= LoadManager::GetMesh(MeshName);
+		Transform* MyTr = gameobject->transform;
 
-		//탑오브젝트가 한개면 그냥 자기자신을 내보내면되고
-		//여러개면 자기자신을 최상위로두고 아래로 오브젝트를 생성한다
-		if (data->TopObjCount > 1)
+		for (int i = 0; i < data->MeshList.size(); i++)
 		{
-
+			ChangeLoadMeshData(data->MeshList[i], MyTr);
 		}
-		else
-		{
-			PushModelData(data->MeshList[0]);
-		}
+		MyTr->Child_Local_Updata();
 	}
 	
 }
@@ -62,6 +58,36 @@ void MeshFilter::PushModelData(LoadMeshData* mModel)
 
 	data->indexCount	= mModel->IB->Count;
 	data->vertexCount	= mModel->VB->Count;
+}
+
+void MeshFilter::ChangeLoadMeshData(LoadMeshData* data, Transform* parent)
+{
+	int ChildCount = data->Child.size();
+
+	GameObject* OBJ		= new GameObject();
+	Transform* Tr		= OBJ->AddComponent<Transform>();
+	MeshFilter* Filter	= OBJ->AddComponent<MeshFilter>();
+
+	//Transform 연결
+	OBJ->transform = Tr;
+	Filter->PushModelData(data);
+
+	Tr->Load_Local = *data->LocalTM;
+	Tr->Load_World = *data->WorldTM;
+	
+	//부모와 자식을 링크
+	Transform::LinkHierarchy(Tr, parent);
+
+	//오브젝트 매니저에서 관리할수있도록 넣어준다
+	OBJ_Manager->PushCreateObject(OBJ);
+
+
+	//자식객체 개수만큼 실행
+	for (int i = 0; i < ChildCount; i++)
+	{
+		//재귀 호출
+		Filter->ChangeLoadMeshData(data->Child[i],Tr);
+	}
 }
 
 

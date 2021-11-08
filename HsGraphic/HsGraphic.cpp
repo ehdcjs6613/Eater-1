@@ -24,7 +24,6 @@ HsGraphic::HsGraphic()
 	mScreenViewport		= D3D11_VIEWPORT();
 	mSwapChain			= nullptr;
 
-
 	//윈도우 사이즈
 	WinSizeX = 0;
 	WinSizeY = 0;
@@ -462,7 +461,7 @@ void HsGraphic::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 		DeviceContext->IASetIndexBuffer(IBuffer, DXGI_FORMAT_R32_UINT, 0);
 
 		DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		DeviceContext->RSSetState(mWireframe);
+		DeviceContext->RSSetState(mSolid);
 
 		//ps,vs쉐이더,Layout 데이터 가져오기
 		ShaderData Sdata = mShaderManager->GetShader("texture");

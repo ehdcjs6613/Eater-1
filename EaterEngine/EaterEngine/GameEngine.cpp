@@ -7,6 +7,7 @@
 #include "SceneManager.h"
 #include "DebugManager.h"
 #include "GraphicEngineManager.h"
+#include "TimeManager.h"
 
 #include "ParserData.h"
 #include "EngineData.h"
@@ -57,6 +58,7 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 	mSceneManager	= new SceneManager();
 	mDebugManager	= new DebugManager();
 	mGraphicManager = new GraphicEngineManager();
+	mTime			= new GameTimer();
 
 	//그래픽 엔진 생성
 	//pTest_Engine = new DH3DEngine();
@@ -101,6 +103,28 @@ void GameEngine::Update()
 	//컨퍼넌트 업데이트 끝
 	//그래픽엔진으로 넘겨줄 랜더큐도 생성완료
 
+	mTime->Tick();
+
+	static float _addedTime = 0;
+	static float _FPS = 0;
+	static float _deltaTimeMS = 0;
+
+	float deltaTime = mTime->DeltaTime();
+
+	// 갱신주기는 0.2초
+	if (0.2f < _addedTime)
+	{
+		_FPS = (1.0f / deltaTime);
+		_deltaTimeMS = deltaTime * 1000.0f;
+
+		_addedTime = 0;
+	}
+
+	std::string temp =  std::to_string(_FPS);
+
+	DebugManager::Print(temp, DebugManager::MSG_TYPE::MSG_ENGINE);
+
+	_addedTime += (deltaTime);
 
 	//랜더큐 넘겨줌
 	mGraphicManager->Render(mObjectManager->GetRenderQueue(), mObjectManager->GetGlobalData());
