@@ -9,8 +9,8 @@ class KeyinputManager;
 class DebugManager
 {
 public:
-	~DebugManager();
 	DebugManager();
+	~DebugManager();
 
 	enum class MSG_TYPE
 	{
@@ -23,11 +23,20 @@ public:
 
 	void Initialize(KeyinputManager* mkeyManager,bool mDebugOn);
 	void printStart();
-	static void Print(std::string Msg, MSG_TYPE type,bool Error = false);
+	static void Print(std::string Msg,int X,int Y, MSG_TYPE type,bool Error = false);
+
+	
+	void Begin();	//콘솔창 그리기 시작
+	void End();		//콘솔창 그리기 종료
+	void Clear();	//콘솔창 클리어
+
 	void Update();
 	void Delete();
 private:
-	static HANDLE hConsole;
+	static HANDLE hConsole[2];
+	
+	static int ConsoleIndex;
+	bool Front = false;
 	KeyinputManager* KeyManager;
 	static bool DebugON;
 };

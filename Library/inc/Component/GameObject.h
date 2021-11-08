@@ -39,6 +39,8 @@ public:
 
 	//오브젝트의 컨퍼넌트 갯수를 가져옴
 	int GetComponentCount();
+
+	void PushChildList(GameObject* obj);
 	
 	MeshData* OneMeshData;
 	Transform* transform;
@@ -65,7 +67,7 @@ private:
 
 	//컨퍼넌트 리스트
 	std::vector<Component*> ComponentList;
-
+	std::vector<GameObject*> ChildList;
 	EATER_ENGINEDLL void PushComponentFunction(Component* con, unsigned int type);
 };
 

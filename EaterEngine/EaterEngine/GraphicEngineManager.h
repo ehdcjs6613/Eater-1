@@ -33,6 +33,7 @@ public:
 	template<typename T>
 	void PushEngine(std::string Name);
 
+	void Update();
 	//모든 그래픽 엔진 초기화
 	void EngineAllInitialize(HWND Hwnd,int WinSizeWidth,int WinSizeHeight);
 	//사용할 그래픽엔진 선택
@@ -62,6 +63,7 @@ private:
 	//현재 선택된 그래픽 엔진
 	GraphicEngine* NowEngine;
 
+	std::string EngineName;
 	//그래픽 엔진들을 관리할 리스트
 	std::map<std::string,GraphicEngine*> GEngineList;
 };

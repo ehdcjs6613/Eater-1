@@ -5,12 +5,15 @@
 /// 나중에 제작할예정
 /// </summary>
 
-class GameTimer
+class TimeManager
 {
 public:
-	GameTimer();
-	~GameTimer();
+	TimeManager();
+	~TimeManager();
 
+
+	void Initialize();
+	void Update();
 	float TotalTime()const;  // in seconds
 	float DeltaTime()const; // in seconds
 

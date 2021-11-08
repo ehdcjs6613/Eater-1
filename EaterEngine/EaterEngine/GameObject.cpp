@@ -41,7 +41,6 @@ Transform* GameObject::GetTransform()
 	}
 	else
 	{
-		DebugManager::Print("현재 오브젝트 안에 Transform 컨퍼넌트가없음", DebugManager::MSG_TYPE::MSG_ERROR, true);
 		return nullptr;
 	}
 }
@@ -55,6 +54,11 @@ Component* GameObject::GetDeleteComponent(int i)
 int GameObject::GetComponentCount()
 {
 	return ComponentList.size();
+}
+
+void GameObject::PushChildList(GameObject* obj)
+{
+	ChildList.push_back(obj);
 }
 
 void GameObject::PushComponentFunction(Component* con, unsigned int type)
