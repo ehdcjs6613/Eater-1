@@ -58,7 +58,7 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 	mSceneManager	= new SceneManager();
 	mDebugManager	= new DebugManager();
 	mGraphicManager = new GraphicEngineManager();
-	mTime			= new GameTimer();
+	mTimeManager	= new TimeManager();
 
 	//그래픽 엔진 생성
 	//pTest_Engine = new DH3DEngine();
@@ -71,12 +71,11 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 	mSceneManager->Initialize();
 	mObjectManager->Initialize(mHwnd);
 	mLoadManager->Initialize(mGraphicManager);
-	
+	mTimeManager->Initialize();
+
 	MeshFilter::SetObjMananager(mObjectManager);
 	//처음시작하기전 엔진의 구조간략설명
-	mDebugManager->printStart();
-
-
+	
 
 
 	/// <summary>
@@ -95,37 +94,22 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 
 void GameEngine::Update()
 {
+	mDebugManager->Clear();
+	mDebugManager->printStart();
 	//매니저들 업데이트 (컨퍼넌트 업데이트후 변경된 사항을 각각의 게임오브젝트 OneMeshData에 전달)
 	mKeyManager->Update();
 	mSceneManager->Update();
 	mObjectManager->PlayUpdate();
 	mDebugManager->Update();
+	mTimeManager->Update();
+	mGraphicManager->Update();
+
+
+	mDebugManager->End();
 	//컨퍼넌트 업데이트 끝
 	//그래픽엔진으로 넘겨줄 랜더큐도 생성완료
 
-	mTime->Tick();
-
-	static float _addedTime = 0;
-	static float _FPS = 0;
-	static float _deltaTimeMS = 0;
-
-	float deltaTime = mTime->DeltaTime();
-
-	// 갱신주기는 0.2초
-	if (0.2f < _addedTime)
-	{
-		_FPS = (1.0f / deltaTime);
-		_deltaTimeMS = deltaTime * 1000.0f;
-
-		_addedTime = 0;
-	}
-
-	std::string temp =  std::to_string(_FPS);
-
-	DebugManager::Print(temp, DebugManager::MSG_TYPE::MSG_ENGINE);
-
-	_addedTime += (deltaTime);
-
+	
 	//랜더큐 넘겨줌
 	mGraphicManager->Render(mObjectManager->GetRenderQueue(), mObjectManager->GetGlobalData());
 
@@ -164,7 +148,7 @@ void GameEngine::OnResize(int Change_Width, int Change_Height)
 	std::string temp = "윈도우 사이즈 변경:"+ Width+","+ Height;
 	Camera::SetSize(Change_Width, Change_Height);
 
-	mDebugManager->Print(temp,DebugManager::MSG_TYPE::MSG_ENGINE);
+	mDebugManager->Print(temp,0,0, DebugManager::MSG_TYPE::MSG_ENGINE);
 }
 
 ///오브젝트 생성 삭제
@@ -180,7 +164,7 @@ GameObject* GameEngine::Instance(std::string ObjName)
 	temp->transform = Tr;
 
 
-	mDebugManager->Print(ObjName, DebugManager::MSG_TYPE::MSG_CREATE);
+	mDebugManager->Print(ObjName,0,1,DebugManager::MSG_TYPE::MSG_CREATE);
 	return temp;
 }
 
@@ -201,14 +185,14 @@ void GameEngine::Destroy(GameObject* obj)
 void GameEngine::PushScene(Scene* mScene, std::string name)
 {
 	std::string mStr = "씬 생성 :" + name;
-	mDebugManager->Print(mStr,DebugManager::MSG_TYPE::MSG_ENGINE);
+	mDebugManager->Print(mStr,0,0,DebugManager::MSG_TYPE::MSG_ENGINE);
 	mSceneManager->PushScene(mScene,name);
 }
 
 void GameEngine::ChoiceScene(std::string name)
 {
 	std::string mStr = "현재 씬 선택 :" + name;
-	mDebugManager->Print(mStr, DebugManager::MSG_TYPE::MSG_ENGINE);
+	mDebugManager->Print(mStr, 0, 0 ,DebugManager::MSG_TYPE::MSG_ENGINE);
 	
 	//씬 선택후 이전 씬 의 정보들을 모두지움
 	mObjectManager->AllDeleteObject();
@@ -225,7 +209,7 @@ void GameEngine::LoadMesh(std::string mMeshName, bool Scale, bool LoadAnime)
 {
 	std::string temp = "매쉬를 로드합니다 : " + mMeshName;
 	mLoadManager->LoadMesh(mMeshName, Scale, LoadAnime);
-	mDebugManager->Print(temp, DebugManager::MSG_TYPE::MSG_LOAD);
+	mDebugManager->Print(temp,0,0, DebugManager::MSG_TYPE::MSG_LOAD);
 }
 
 void GameEngine::LoadTexture(std::string mTextureName)
@@ -278,4 +262,9 @@ float GameEngine::GetMousePosY()
 {
 	//마우스 위치 y좌표
 	return (float)mKeyManager->GetMousePos()->y;
+}
+
+float GameEngine::GetdeltaTime()
+{
+	return mTimeManager->DeltaTime();
 }

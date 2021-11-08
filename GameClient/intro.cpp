@@ -14,9 +14,9 @@ void intro::Awake()
 	LoadTesturePath("../Resources/Texture/");
 	
 	//LoadMesh("Player");
-	//LoadMesh("Table");
-	LoadMesh("Dome_v03");
-	LoadMesh("box");
+	LoadMesh("Table");
+	//LoadMesh("Dome_v03");
+	//LoadMesh("EnemyB");
 	LoadTesture("WoodCrate01");
 
 
@@ -25,10 +25,17 @@ void intro::Awake()
 	testobj->AddComponent<Keyinput>();
 	testobj->AddComponent<Camera>();
 
-	///테스트 오브젝트
-	testobj = Instance("box");
-	testobj->AddComponent<MeshFilter>()->SetMeshName("Dome_v03");
-	testobj->GetTransform()->Position = { 0,0,0 };
+	//testobj = Instance("box");
+	//testobj->AddComponent<MeshFilter>()->SetMeshName("EnemyB");
+	//testobj->GetTransform()->Position = { 0 ,0,0 };
+	//testobj->GetTransform()->Scale = { 1000 ,1000,1000 };
+	//testobj->GetTransform()->Rotation = { 90 ,0,0 };
+
+
+
+	testobj = Instance("Table");
+	testobj->AddComponent<MeshFilter>()->SetMeshName("Table");
+	testobj->GetTransform()->Position = { 0 ,0,0 };
 }
 
 void intro::Start()

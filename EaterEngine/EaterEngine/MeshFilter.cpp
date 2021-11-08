@@ -65,6 +65,8 @@ void MeshFilter::ChangeLoadMeshData(LoadMeshData* data, Transform* parent)
 	int ChildCount = data->Child.size();
 
 	GameObject* OBJ		= new GameObject();
+	OBJ->Name			= data->Name;
+
 	Transform* Tr		= OBJ->AddComponent<Transform>();
 	MeshFilter* Filter	= OBJ->AddComponent<MeshFilter>();
 
@@ -80,7 +82,7 @@ void MeshFilter::ChangeLoadMeshData(LoadMeshData* data, Transform* parent)
 
 	//오브젝트 매니저에서 관리할수있도록 넣어준다
 	OBJ_Manager->PushCreateObject(OBJ);
-
+	gameobject->PushChildList(OBJ);
 
 	//자식객체 개수만큼 실행
 	for (int i = 0; i < ChildCount; i++)

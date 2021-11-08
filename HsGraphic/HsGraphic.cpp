@@ -461,7 +461,7 @@ void HsGraphic::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 		DeviceContext->IASetIndexBuffer(IBuffer, DXGI_FORMAT_R32_UINT, 0);
 
 		DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		DeviceContext->RSSetState(mSolid);
+		DeviceContext->RSSetState(mWireframe);
 
 		//ps,vs쉐이더,Layout 데이터 가져오기
 		ShaderData Sdata = mShaderManager->GetShader("texture");
