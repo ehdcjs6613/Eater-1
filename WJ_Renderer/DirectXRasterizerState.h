@@ -5,6 +5,8 @@ enum class StateRS
 	eSolid
 };
 
+
+
 __interface RasterizerState
 {
 	//인터페이스로 레스터라이져 를 만들어주는 인터페이스를 제공

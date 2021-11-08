@@ -176,7 +176,6 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\lib"
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalLibraryDirectories>$(SolutionDir)lib;$(SolutionDir)lib\DirectXTK2021_06_14;$(SolutionDir)lib\FX11_2021_06_14</AdditionalLibraryDirectories>
-      <AdditionalDependencies>GraphicEngine.lib;KHParser_x64d.lib;libfbxsdk.lib;HsGraphic_x64d.lib;WJ_Renderer.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy /Y "$(ProjectDir)Export\*.h" "$(SolutionDir)Library\inc\Component"
@@ -185,7 +184,7 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\lib"
 copy /Y "$(ProjectDir)GraphicsEngine.h" "$(SolutionDir)Library\inc"
 copy /Y "$(ProjectDir)ResourcesData.h" "$(SolutionDir)Library\inc"
 copy /Y "$(ProjectDir)EngineData.h" "$(SolutionDir)Library\inc"
-copy /Y "$(ProjectDir)Transform.h" "$(SolutionDir)Library\inc"
+
 
 copy /Y "$(TargetDir)*.dll" "$(SolutionDir)Library\lib"
 copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\lib"

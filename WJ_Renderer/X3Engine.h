@@ -45,11 +45,13 @@ class GlobalData;
 
 #endif
 
-//class __declspec(dllimport) GraphicEngine;
 
+#include <d3d11.h>
 #include <d3dcommon.h>
-#include <string>
+#include <DirectXMath.h>
+
 #include <queue>
+#include <string>
 
 #include "GraphicsEngine.h"
 #include "XShader.h"
@@ -106,14 +108,14 @@ public:
 	///그래픽 엔진과 게임엔진에서 주고받아야할 함수들
 
 
-	virtual Indexbuffer* CreateIndexBuffer(ParserData::Mesh* mModel)	override;	//인덱스 버퍼를 만들어준다
-	virtual Vertexbuffer* CreateVertexBuffer(ParserData::Mesh* mModel) override;	//버텍스 버퍼를 만들어준다
-	virtual TextureBuffer* CreateTextureBuffer(std::string path) override;									//텍스쳐를 만들어준다
-	virtual void		   OnReSize(int Change_Width, int Change_Height) override;			//리사이즈
-	virtual void		   Delete() override;
+	X3Engine_DLL virtual Indexbuffer* CreateIndexBuffer(ParserData::Mesh* mModel)	override;	//인덱스 버퍼를 만들어준다
+	X3Engine_DLL virtual Vertexbuffer* CreateVertexBuffer(ParserData::Mesh* mModel) override;	//버텍스 버퍼를 만들어준다
+	X3Engine_DLL virtual TextureBuffer* CreateTextureBuffer(std::string path) override;									//텍스쳐를 만들어준다
+	X3Engine_DLL virtual void		   OnReSize(int Change_Width, int Change_Height) override;			//리사이즈
+	X3Engine_DLL virtual void		   Delete() override;
 
 	/// 랜더링을 한다 매쉬 랜더데이터 리스트, 글로벌 데이터
-	virtual void		  Render(std::queue<MeshData*>* meshList, GlobalData* global) override;
+	X3Engine_DLL virtual void		  Render(std::queue<MeshData*>* meshList, GlobalData* global) override;
 
 #pragma endregion Parents Overriding Function List
 public:

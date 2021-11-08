@@ -1,6 +1,7 @@
 #pragma once
 #include "OneCompile.h"
 
+
 class DirectXRenderTargeter
 {
 public:

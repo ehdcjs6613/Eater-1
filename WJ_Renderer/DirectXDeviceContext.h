@@ -3,6 +3,8 @@
 /// <summary>
 /// 장치의 그림을 담당하는 DC
 /// </summary>
+/// 
+/// 
 class DirectXDeviceContext
 {
 public:

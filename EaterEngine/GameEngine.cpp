@@ -19,9 +19,9 @@
 #include "MeshFilter.h"
 
 //테스트용
-//#include "X3Engine.h"
 #include "HsGraphic.h";
 #include "X3Engine.h"
+//#include "X3Engine.h"
 
 
 GameEngine::GameEngine()
@@ -51,7 +51,7 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 {
 	//클라쪽에서 넘겨준 데이터 받기
 	mHwnd = Hwnd;
-
+	
 	//매니저들 생성
 	mKeyManager		= new KeyinputManager();
 	mLoadManager	= new LoadManager();
@@ -59,12 +59,12 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 	mSceneManager	= new SceneManager();
 	mDebugManager	= new DebugManager();
 	mGraphicManager = new GraphicEngineManager();
-
+	
 	//그래픽 엔진 생성
 	//pTest_Engine = new DH3DEngine();
-
-
-
+	
+	
+	
 	//매니저들 초기화
 	mKeyManager->Initialize(mHwnd);
 	mDebugManager->Initialize(mKeyManager,mConsoleDebug);
@@ -74,7 +74,7 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 	
 	MeshFilter::SetObjMananager(mObjectManager);
 	//처음시작하기전 엔진의 구조간략설명
-	mDebugManager->printStart();
+	//mDebugManager->printStart();
 
 
 

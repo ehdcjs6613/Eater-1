@@ -1,12 +1,20 @@
 #include "MainHeader.h"
-#include "GameObject.h"
 #include "MeshFilter.h"
 #include "Transform.h"
 #include "AI.h"
 #include "KeyInput.h"
 #include "Camera.h"
+#include "GameObject.h"
 #include "intro.h";
 
+
+intro::intro()
+{
+
+	
+	//testobj = new GameObject();
+	
+}
 
 void intro::Awake()
 {

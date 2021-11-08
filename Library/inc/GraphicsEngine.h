@@ -30,8 +30,8 @@ public:
 	GraphicEngine() {};
 	virtual ~GraphicEngine() 
 	{
-		delete m_p2DSupport;
-		m_p2DSupport = nullptr;
+		//delete m_p2DSupport;
+		//m_p2DSupport = nullptr;
 	};
 
 	/// <summary>

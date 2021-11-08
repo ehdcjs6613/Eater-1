@@ -1,12 +1,13 @@
 #include "MainHeader.h"
 #include "GameEngine.h"
-GameEngine* gGameEngine;
 
+GameEngine* gGameEngine;
 ///엔진 관련
  void EngineInitialize(HWND _g_hWnd)
 {
 	gGameEngine = new GameEngine();
 	gGameEngine->Initialize(_g_hWnd);
+	int num = 0;
 }
 
 void EndEngine()

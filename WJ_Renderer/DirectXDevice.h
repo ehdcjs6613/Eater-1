@@ -17,6 +17,8 @@
 ///  
 /// </summary>
 
+
+
 class DirectXDevice
 {
 public:
