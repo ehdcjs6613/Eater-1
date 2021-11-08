@@ -21,7 +21,9 @@
 //테스트용
 #include "HsGraphic.h";
 #include "X3Engine.h"
+
 //#include "X3Engine.h"
+
 
 
 GameEngine::GameEngine()

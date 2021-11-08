@@ -137,7 +137,8 @@
     <PostBuildEvent>
       <Command>copy /Y "$(ProjectDir)X3Engine.h" "$(SolutionDir)Library\inc"
 copy /Y "$(ProjectDir)XShader.h" "$(SolutionDir)Library\inc"
-copy /Y "$(TargetDir)*.dll" "$(SolutionDir)lib"
+copy /Y "$(TargetDir)*.dll" "$(SolutionDir)Library/lib"
+copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library/lib"
 copy /Y "$(TargetDir)*.lib" "$(SolutionDir)lib"
 </Command>
     </PostBuildEvent>
@@ -192,6 +193,7 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)lib"
     <ClInclude Include="OneCompile.h" />
     <ClInclude Include="RenderQueue.h" />
     <ClInclude Include="ViewGrid.h" />
+    <ClInclude Include="WJDefine.h" />
     <ClInclude Include="X3Engine.h" />
     <ClInclude Include="XRenderer.h" />
     <ClInclude Include="XShader.h">

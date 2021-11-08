@@ -9,8 +9,6 @@
 #include <iostream>
 #include <string>
 
-//#pragma comment(lib,"../x64/Debug/DirectX2DSupporter.lib")
-
 
 #ifdef ENGINE_INTERFACE
 #define EATER_ENGINEDLL __declspec(dllexport)

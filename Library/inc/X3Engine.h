@@ -28,23 +28,9 @@ class TextureBuffer;
 class MeshData;
 class GlobalData;
 
-#if _DEBUG
 
-#ifdef _DEBUG
 
-#define X3Engine_DLL __declspec(dllexport)
-#else 
-#define X3Engine_DLL __declspec(dllimport)
-#endif // X3Engine_DLL __declspec(dllimport)
 
-#else
-#ifdef 1
-#define X3Engine_DLL __declspec(dllexport)
-#else 
-#define X3Engine_DLL __declspec(dllimport)
-#endif // X3Engine_DLL __declspec(dllimport)
-
-#endif
 
 
 #include <d3d11.h>
@@ -56,6 +42,7 @@ class GlobalData;
 
 #include "GraphicsEngine.h"
 #include "XShader.h"
+#include "WJDefine.h"
 
 class X3Engine : public  GraphicEngine 
 {

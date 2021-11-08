@@ -6,6 +6,7 @@
 #include "XRenderer.h"
 #include <tchar.h>
 
+//
 //기본생성자로 초기화	
 XRenderer::XRenderer() :m_ArrColor{ 0.5f, 0.0f, 0.35f, 1.0f }, m_pRenderTargeter{} , m_pDepthStencil_State(nullptr), m_pDepthStencil_View(nullptr)
 

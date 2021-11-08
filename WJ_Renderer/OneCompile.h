@@ -354,3 +354,14 @@ struct OneFrameData
 	DirectX::SimpleMath::Vector3 Main_Position;	// 월드상의 시선 ( 시선벡터 구하기용 )
 };
 
+struct Deferred32
+{
+	//위치
+	DirectX::SimpleMath::Vector3 Pos;
+	//텍스쳐
+	DirectX::SimpleMath::Vector2 Tex;
+	//노말
+	DirectX::SimpleMath::Vector3 Nomal;
+	//탄젠트
+	DirectX::SimpleMath::Vector3 Tangent;
+};

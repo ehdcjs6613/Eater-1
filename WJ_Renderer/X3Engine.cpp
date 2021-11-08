@@ -12,8 +12,8 @@
 #include "XRenderer.h"
 #include "ParserData.h"
 #include "Grahpics2D.h"
+#include "ResourcesData.h"
 #include "X3Engine.h"
-
 //스마트포인터 인클르드
 #include <wrl/client.h>
 
@@ -132,16 +132,90 @@ void X3Engine::Initialize(HWND _hWnd, int _iWidth, int _iHeight)
 
 Indexbuffer* X3Engine::CreateIndexBuffer(ParserData::Mesh* mModel)
 {
-	return nullptr;
+	ID3D11Buffer* mIB = nullptr;
+	Indexbuffer* indexbuffer = new Indexbuffer();
+
+	//모델의 계수
+	int ModelCount = (int)mModel->m_IndexList.size();
+	int Icount = (int)mModel->m_IndexList.size();
+
+	std::vector<UINT> index;
+	index.resize(Icount * 3);
+
+	int j = 0;
+	for (int i = 0; i < Icount; i++)
+	{
+		index[j] = mModel->m_IndexList[i]->m_Index[0];
+		j++;
+		index[j] = mModel->m_IndexList[i]->m_Index[1];
+		j++;
+		index[j] = mModel->m_IndexList[i]->m_Index[2];
+		j++;
+	}
+
+
+	//인덱스 버퍼를 생성한다
+	D3D11_BUFFER_DESC ibd;
+	ibd.Usage = D3D11_USAGE_IMMUTABLE;
+	ibd.ByteWidth = sizeof(UINT) * index.size();
+	ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	ibd.CPUAccessFlags = 0;
+	ibd.MiscFlags = 0;
+	D3D11_SUBRESOURCE_DATA iinitData;
+	iinitData.pSysMem = &index[0];
+	m_pDevice->m_pDX11Device->CreateBuffer(&ibd, &iinitData, &mIB);
+
+	//인덱스버퍼를 보낼수있도록 변경
+	indexbuffer->IndexBufferPointer = mIB;
+	indexbuffer->size = sizeof(ID3D11Buffer);
+
+	return indexbuffer;
 }
 
 Vertexbuffer* X3Engine::CreateVertexBuffer(ParserData::Mesh* mModel)
 {
-	return nullptr;
+	ID3D11Buffer* mVB = nullptr;
+	Vertexbuffer* vertexbuffer = new Vertexbuffer();
+
+
+
+	//모델의 계수
+	int Vcount = mModel->m_VertexList.size();
+	mModel->m_VertexList;
+
+
+	std::vector<Deferred32> temp;
+	temp.resize(Vcount);
+	for (int i = 0; i < Vcount; i++)
+	{
+		temp[i].Pos = mModel->m_VertexList[i]->m_Pos;
+		temp[i].Nomal = mModel->m_VertexList[i]->m_Normal;
+		temp[i].Tex = { mModel->m_VertexList[i]->m_U ,mModel->m_VertexList[i]->m_V };
+		temp[i].Tangent = mModel->m_VertexList[i]->m_Tanget;
+	}
+
+
+
+	D3D11_BUFFER_DESC vbd;
+	vbd.Usage = D3D11_USAGE_IMMUTABLE;
+	vbd.ByteWidth = sizeof(Deferred32) * Vcount;
+	vbd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	vbd.CPUAccessFlags = 0;
+	vbd.MiscFlags = 0;
+	D3D11_SUBRESOURCE_DATA vinitData;
+	vinitData.pSysMem = &temp[0];
+	m_pDevice->m_pDX11Device->CreateBuffer(&vbd, &vinitData, &mVB);
+
+
+	vertexbuffer->VertexbufferPointer = mVB;
+	vertexbuffer->size = sizeof(ID3D11Buffer);
+
+	return vertexbuffer;
 }
 
 TextureBuffer* X3Engine::CreateTextureBuffer(std::string path)
 {
+	
 	return nullptr;
 }
 
