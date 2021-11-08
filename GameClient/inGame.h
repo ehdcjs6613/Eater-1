@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Scene.h"
+
 class InGame : public Scene
 {
 public:

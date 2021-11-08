@@ -1,6 +1,7 @@
-#include "RenderingManager.h"
 #include "HsGraphic.h"
 #include "TextureBase.h"
+#include "RenderingManager.h"
+
 RenderingManager::RenderingManager()
 {
 	Device			= nullptr;

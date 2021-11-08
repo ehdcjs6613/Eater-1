@@ -1,6 +1,6 @@
 #pragma once
 class Texture;
-
+class GameObject;
 #include "Scene.h"
 
 

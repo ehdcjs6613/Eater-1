@@ -9,9 +9,10 @@
 #include "DirectXAdapter.h"
 #include "DirectXRenderTargeter.h"
 
-#include "Grahpics2D.h"
-#include "GraphicsEngine.h"
 #include "XRenderer.h"
+#include "ParserData.h"
+#include "GraphicsEngine.h"
+#include "Grahpics2D.h"
 #include "X3Engine.h"
 
 //스마트포인터 인클르드
@@ -130,12 +131,12 @@ void X3Engine::Initialize(HWND _hWnd, int _iWidth, int _iHeight)
 	//OnReSize(this->m_iWidth, m_iHeight);
 }
 
-Indexbuffer* X3Engine::CreateIndexBuffer(ParserData::Model* mModel)
+Indexbuffer* X3Engine::CreateIndexBuffer(ParserData::Mesh* mModel)
 {
 	return nullptr;
 }
 
-Vertexbuffer* X3Engine::CreateVertexBuffer(ParserData::Model* mModel)
+Vertexbuffer* X3Engine::CreateVertexBuffer(ParserData::Mesh* mModel)
 {
 	return nullptr;
 }

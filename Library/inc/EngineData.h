@@ -93,6 +93,8 @@ public:
 
 	int TopObjCount		= 0;	//최상위 매쉬객체 개수
 	int TopBoneCount	= 0;	//최상위 본 객체 개수
+
+
 };
 
 

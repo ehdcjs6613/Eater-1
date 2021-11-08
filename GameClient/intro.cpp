@@ -1,11 +1,12 @@
 #include "MainHeader.h"
-#include "intro.h";
 #include "GameObject.h"
 #include "MeshFilter.h"
 #include "Transform.h"
 #include "AI.h"
 #include "KeyInput.h"
 #include "Camera.h"
+#include "intro.h";
+
 
 void intro::Awake()
 {

@@ -9,7 +9,7 @@ class Transform :public Component
 {
 public:
 	EATER_ENGINEDLL Transform();
-	virtual ~Transform();
+	EATER_ENGINEDLL virtual ~Transform();
 	
 	//생성될때 한번
 	void Awake();

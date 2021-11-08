@@ -1,6 +1,6 @@
+#include "GameObject.h"
 #include "Transform.h"
 #include "AI.h"
-#include "GameObject.h"
 
 AI::AI()
 {

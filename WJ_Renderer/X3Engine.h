@@ -104,8 +104,10 @@ public:
 
 
 	///그래픽 엔진과 게임엔진에서 주고받아야할 함수들
-	virtual Indexbuffer*   CreateIndexBuffer(ParserData::Model* mModel) override;	//인덱스 버퍼를 만들어준다
-	virtual Vertexbuffer*  CreateVertexBuffer(ParserData::Model* mModel) override;	//버텍스 버퍼를 만들어준다
+
+
+	virtual Indexbuffer* CreateIndexBuffer(ParserData::Mesh* mModel)	override;	//인덱스 버퍼를 만들어준다
+	virtual Vertexbuffer* CreateVertexBuffer(ParserData::Mesh* mModel) override;	//버텍스 버퍼를 만들어준다
 	virtual TextureBuffer* CreateTextureBuffer(std::string path) override;									//텍스쳐를 만들어준다
 	virtual void		   OnReSize(int Change_Width, int Change_Height) override;			//리사이즈
 	virtual void		   Delete() override;

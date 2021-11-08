@@ -124,14 +124,14 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)lib\FX11_2021_06_14\;$(SolutionDir)lib\DirectXTexture\;$(SolutionDir)lib\DirectXTK2021_06_14\;$(SolutionDir)FX\;$(SolutionDir)Library\inc\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Library\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>../lib/GraphicEngine.lib;../lib/KHParser_x64d.lib;../lib/libfbxsdk.lib;../lib/DirectX2DSupporter.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>DirectX2DSupporter.lib; %(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)Library\lib</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
