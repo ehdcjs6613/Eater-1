@@ -36,7 +36,7 @@ void Transform::TransformUpdate()
 	UpdateLocalPosition();
 
 	//업데이트가 끝난후 오브젝트 안에 매쉬데이터를 업데이트
-	gameobject->OneMeshData->mWorld = GetWorld();
+	gameobject->OneMeshData->mWorld = *(GetWorld());
 }
 
 DirectX::XMFLOAT3 Transform::GetLocalPosition_UP()
@@ -144,6 +144,22 @@ DirectX::XMMATRIX* Transform::GetWorld()
 void Transform::SetLocalUpdate(bool isUpdate)
 {
 	LocalUpdate = isUpdate;
+}
+
+void Transform::SetLoadXM(DirectX::SimpleMath::Matrix* world, DirectX::SimpleMath::Matrix* local)
+{
+	Load_World = world;
+	Load_Local = local;
+}
+
+void Transform::SetChild(Transform* Child)
+{
+	ChildList.push_back(Child);
+}
+
+void Transform::SetParent(Transform* mParent)
+{
+	Parent = mParent;
 }
 
 DirectX::XMMATRIX Transform::CreateXMPos4x4()

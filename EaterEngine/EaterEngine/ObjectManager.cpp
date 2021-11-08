@@ -19,7 +19,7 @@ Delegate_Map<Component> ObjectManager::EndUpdate;
 
 ObjectManager::ObjectManager()
 {
-	Global = new GlobalData();
+	Global = nullptr;
 }
 
 ObjectManager::~ObjectManager()
@@ -88,10 +88,7 @@ void ObjectManager::AllDeleteObject()
 
 void ObjectManager::Initialize(HWND _g_hWnd)
 {
-
-	//pTest_Engine = new DH3DEngine();
-	//pTest_Engine->Initialize(_g_hWnd, 1920, 1080);
-	//pTest_Engine->SetDebug(true);
+	Global = new GlobalData();
 }
 
 void ObjectManager::PushStartUpdate(Component* mComponent)
@@ -153,7 +150,7 @@ void ObjectManager::PlayUpdate()
 
 
 	//글로벌 데이터
-	Global->mProj = Camera::GetMainView();
+	Global->mProj = Camera::GetProj();
 	Global->mViewMX = Camera::GetMainView();
 
 	///모든오브젝트의 데이터를 랜더큐에 담는다

@@ -146,7 +146,7 @@ copy /Y "$(ProjectDir)HsGraphicDLL.h" "$(SolutionDir)Library\inc"</Command>
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>HSGRAPHIC_INTERFACE;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>HSGRAPHIC_INTERFACE</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -161,7 +161,6 @@ copy /Y "$(ProjectDir)HsGraphicDLL.h" "$(SolutionDir)Library\inc"</Command>
       <EnableUAC>false</EnableUAC>
       <AdditionalLibraryDirectories>$(SolutionDir)Library\lib</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
-      <AdditionalDependencies>../lib/DirectX2DSupporter.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy/Y "$(TargetDir)*.lib"   "$(SolutionDir)Library\lib"
@@ -213,19 +212,19 @@ copy /Y "$(ProjectDir)HsGraphicDLL.h" "$(SolutionDir)Library\inc"</Command>
     <ClInclude Include="InputLayout.h" />
     <ClInclude Include="RenderingManager.h" />
     <ClInclude Include="ShaderManager.h" />
-    <ClInclude Include="SimpleMath.h" />
+    <ClInclude Include="TextureBase.h" />
+    <ClInclude Include="TextureMap.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="HsGraphic.cpp" />
     <ClCompile Include="RenderingManager.cpp" />
     <ClCompile Include="ShaderManager.cpp" />
+    <ClCompile Include="TextureBase.cpp" />
+    <ClCompile Include="TextureMap.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Resources\Shader\HS\MainHeader.hlsli">
-      <FileType>Document</FileType>
-    </None>
-    <None Include="SimpleMath.inl" />
+    <None Include="..\Resources\Shader\HS\MainHeader.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Resources\Shader\HS\texture_ps.hlsl">

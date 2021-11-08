@@ -6,17 +6,6 @@
 /// 업데이트 함수 포인터 리스트에 넣어줌
 /// </summary>
 
-#include <iostream>
-#include <string>
-
-//#pragma comment(lib,"../x64/Debug/DirectX2DSupporter.lib")
-
-
-#ifdef ENGINE_INTERFACE
-#define EATER_ENGINEDLL __declspec(dllexport)
-#else
-#define EATER_ENGINEDLL __declspec(dllimport)
-#endif
 #include "EaterEngineDLL.h"
 
 class GameObject;
@@ -24,7 +13,7 @@ class Component
 {
 public:
 	EATER_ENGINEDLL Component();
-	virtual ~Component();
+	virtual EATER_ENGINEDLL ~Component();
 
 	//시작 단계에 가장먼저 실행되는 함수
 	virtual void Awake() {};
@@ -47,9 +36,9 @@ public:
 	//클래스의 타입 GetComponent에서 쓸떄 사용
 public:
 	//컨퍼넌트 타입을 넣어준다
-	EATER_ENGINEDLL void SetConponentType(size_t type);
+	EATER_ENGINEDLL void SetComponentType(size_t type);
 	//컨퍼넌트 타입을 받아온다
-	EATER_ENGINEDLL size_t GetConponentType();
+	EATER_ENGINEDLL size_t GetComponentType();
 	//오브젝트를 넣어준다
 	EATER_ENGINEDLL void SetObject(GameObject* obj);
 private:

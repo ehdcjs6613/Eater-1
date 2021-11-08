@@ -1,16 +1,12 @@
 #pragma once
 #include <DirectXMath.h>
+#include <string>
 //리소스 최상위 클래스
 class  Resources
 {
 public:
 	Resources() {};
 	virtual ~Resources() {};
-
-	///데이터를 넣었다면 true 바꿔주세요
-	bool Use = false;
-
-	virtual void Delete() = 0;
 };
 
 //인덱스 버퍼를 받을 클래스
@@ -21,14 +17,11 @@ public:
 	{
 		delete IndexBufferPointer;
 	};
-	Indexbuffer()
-	{
-		IndexBufferPointer = nullptr;
-		size = 0;
-	};
-	virtual void Delete() {};
-	void* IndexBufferPointer;
-	unsigned int size;
+	
+	void* IndexBufferPointer = nullptr;
+
+	unsigned int Count	= 0;	//버텍스 개수
+	unsigned int size	= 0;	//바꾸려는 자료형의 사이즈
 };
 
 
@@ -40,14 +33,11 @@ public:
 	{
 		delete VertexbufferPointer;
 	};
-	Vertexbuffer()
-	{
-		VertexbufferPointer = nullptr;
-		size = 0;
-	};
-	virtual void Delete() {};
-	void* VertexbufferPointer;
-	unsigned int size;
+
+	void* VertexbufferPointer = nullptr;
+
+	unsigned int Count	= 0;	//버텍스 개수
+	unsigned int size	= 0;	//바꾸려는 자료형의 사이즈
 };
 
 //텍스쳐를 받을 클래스
@@ -58,16 +48,47 @@ public:
 	{
 		delete TextureBufferPointer;
 	};
-	TextureBuffer()
-	{
-		TextureBufferPointer = nullptr;
-		size = 0;
-	};
-	virtual void Delete() {};
 
-	void* TextureBufferPointer;
-	unsigned int size;
+	void* TextureBufferPointer = nullptr;
+	unsigned int size = 0;
 };
+
+//본 데이터 (본은 인덱스 버퍼와 버텍스버퍼가 필요없음)
+class Bone : Resources
+{
+public:
+	bool isTop;
+	std::string ParentName;
+	std::string MyName;
+
+
+
+	
+	Bone* ParentBone;					//부모객체
+	std::vector<Bone*> ChildBoneList;	//자식객체
+};
+
+//매쉬 데이터
+class Mesh : Resources
+{
+public:
+	bool isTop;
+	std::string ParentName;	//부모 이름
+	std::string MyName;		//나의 이름
+
+
+
+	Mesh* ParentMesh;					//부모 객체
+	std::vector<Mesh*> ChildMeshList;	//자식 객체
+
+	
+	Indexbuffer*  IB;	//인덱스 버퍼
+	Vertexbuffer* VB;	//버텍스 버퍼
+};
+
+
+
+
 
 
 

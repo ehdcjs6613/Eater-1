@@ -19,7 +19,7 @@ class Grahpics2D;
 
 namespace ParserData
 {
-	struct Model;
+	struct Mesh;
 }
 
 
@@ -46,10 +46,10 @@ public:
 	void Render(std::queue<MeshData*>* meshList, GlobalData* global);
 
 	//선택한 그래픽엔진으로 인덱스버퍼를 생성함
-	Indexbuffer* CreateIndexBuffer(ParserData::Model* mModel);
+	Indexbuffer* CreateIndexBuffer(ParserData::Mesh* mModel);
 
 	//선택한 그래픽 엔진으로 버텍스 버퍼를 생성함
-	Vertexbuffer* CreateVertexBuffer(ParserData::Model* mModel);
+	Vertexbuffer* CreateVertexBuffer(ParserData::Mesh* mModel);
 
 	//선택한 그래픽엔진으로 텍스쳐 생성
 	TextureBuffer* CreateTextureBuffer(std::string Name);

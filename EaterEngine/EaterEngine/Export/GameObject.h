@@ -32,6 +32,7 @@ public:
 
 	EATER_ENGINEDLL GameObject* GetChild(std::string Name);	//자식객체를 가져옴
 	EATER_ENGINEDLL GameObject* GetChild(int Number);		//자식객체를 가져옴
+	EATER_ENGINEDLL	Transform* GetTransform();				//기본 컨퍼넌트인 Transform을 가져옴
 
 	//삭제할 컨퍼넌트를 가져옴
 	Component* GetDeleteComponent(int i);
@@ -65,7 +66,7 @@ private:
 	//컨퍼넌트 리스트
 	std::vector<Component*> ComponentList;
 
-	EATER_ENGINEDLL void PushConponentFunction(Component* con, unsigned int type);
+	EATER_ENGINEDLL void PushComponentFunction(Component* con, unsigned int type);
 };
 
 template<typename T>
@@ -80,47 +81,47 @@ inline T* GameObject::AddComponent(typename std::enable_if<std::is_base_of<Compo
 	ConponentBox->SetObject(this);
 	
 	//나중에 이타입으로 찾아서 가져올수있도록 타입 설정
-	ConponentBox->SetConponentType(typeid(T).hash_code());
+	ConponentBox->SetComponentType(typeid(T).hash_code());
 
 	///오버라이딩 확인 각각에맞는 함수포인터 리스트에 넣는다 
 	//Awake
 	if (&Component::Awake != &T::Awake)
 	{
-		PushConponentFunction(ConponentBox, AWAKE);
+		PushComponentFunction(ConponentBox, AWAKE);
 	}
 
 	//Start
 	if (&Component::Start != &T::Start)
 	{
-		PushConponentFunction(ConponentBox, START);
+		PushComponentFunction(ConponentBox, START);
 	}
 
 	//StartUpdate
 	if (&Component::StartUpdate != &T::StartUpdate)
 	{
-		PushConponentFunction(ConponentBox, START_UPDATE);
+		PushComponentFunction(ConponentBox, START_UPDATE);
 	}
 	//이동 행렬
 	if (&Component::TransformUpdate != &T::TransformUpdate)
 	{
-		PushConponentFunction(ConponentBox, Transform_UPDATE);
+		PushComponentFunction(ConponentBox, Transform_UPDATE);
 	}
 	//물리 
 	if (&Component::PhysicsUpdate != &T::PhysicsUpdate)
 	{
-		PushConponentFunction(ConponentBox, Physics_UPDATE);
+		PushComponentFunction(ConponentBox, Physics_UPDATE);
 	}
 
 	//DefaultUpdate
 	if (&Component::Update != &T::Update)
 	{
-		PushConponentFunction(ConponentBox, UPDATE);
+		PushComponentFunction(ConponentBox, UPDATE);
 	}
 
 	//EndUpdate
 	if (&Component::EndUpdate != &T::EndUpdate)
 	{
-		PushConponentFunction(ConponentBox, END_UPDATE);
+		PushComponentFunction(ConponentBox, END_UPDATE);
 	}
 
 	return ConponentBox;
@@ -136,7 +137,7 @@ inline T* GameObject::GetComponent(typename std::enable_if<std::is_base_of<Compo
 	for (int i = 0; i < count; i++)
 	{
 		//현재 컨퍼넌트와 찾고자하는 컨퍼넌트의 타입 비교
-		if (ComponentList[i]->GetConponentType() == typeid(T).hash_code())
+		if (ComponentList[i]->GetComponentType() == typeid(T).hash_code())
 		{
 			//찾은 컨퍼넌트를 타입변환
 			T* temp = dynamic_cast<T*>(ComponentList[i]);

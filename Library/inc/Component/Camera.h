@@ -27,19 +27,14 @@ public:
 	//프로젝션 행렬을 가져온다
 	static DirectX::XMMATRIX* GetProj();
 	
+	//OnResize 에서 실행될 함수
+	static void SetSize(int Change_Width, int Change_Height);
+	static void CreateProj(int winsizeX,int WinSizeY, bool ViewPoint = false);
 private:
 	Transform* tranform;
 
 	//프로젝션 행렬 생성하기
-	void CreateProj(float fovY = 0.5f * 3.141592f,float aspect = 1,float zn = 0.1f,float zf = 4000.0f,bool viewPoint = false);
 	void CreateView();
-
-	float mNearZ;
-	float mFarZ;
-	float mAspect;
-	float mFovY;
-	float mNearWindowHeight;
-	float mFarWindowHeight;
 
 	//프로젝션
 	DirectX::XMFLOAT4X4 mProj;

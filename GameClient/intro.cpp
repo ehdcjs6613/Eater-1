@@ -2,8 +2,9 @@
 #include "intro.h";
 #include "GameObject.h"
 #include "MeshFilter.h"
-//#include "AI.h"
-//#include "KeyInput.h"
+#include "Transform.h"
+#include "AI.h"
+#include "KeyInput.h"
 #include "Camera.h"
 
 void intro::Awake()
@@ -12,32 +13,22 @@ void intro::Awake()
 	LoadMeshPath("../Resources/Mesh/");
 	LoadTesturePath("../Resources/Texture/");
 	
-	LoadMesh("Table");
-	//LoadTesture("WoodCrate01.dds");
+	//LoadMesh("Player");
+	//LoadMesh("Table");
+	LoadMesh("box");
+	LoadTesture("WoodCrate01");
 
 
 	///카메라
 	testobj = Instance();
-	//testobj->AddComponent<AI>();
-	testobj->AddComponent<Camera>(true);
+	testobj->AddComponent<Keyinput>();
+	testobj->AddComponent<Camera>();
 
-
-	
-
-
-	//
-	//
-	//testobj = Instance("Table");
-	//testobj->AddComponent<MeshFilter>()->SetMeshName("Table");
-	//testobj->transform->Position = { 2, 0, 0 };
-	//
-	//
-	//for (int i = 0; i < 5; i++) 
-	//{
-	//	testobj = Instance("Table");
-	//	testobj->AddComponent<MeshFilter>()->SetMeshName("Table");
-	//	testobj->transform->Position = {i*2.0f,0,0};
-	//}
+	///테스트 오브젝트
+	testobj = Instance("box");
+	testobj->AddComponent<MeshFilter>()->SetMeshName("box");
+	testobj->GetTransform()->Position = {0,1,0 };
+	testobj->GetTransform()->Scale = { 0.5f,0.5f,0.5f };
 }
 
 void intro::Start()

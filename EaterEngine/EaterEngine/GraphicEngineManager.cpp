@@ -52,13 +52,13 @@ void GraphicEngineManager::Render(std::queue<MeshData*>* meshList, GlobalData* g
 	}
 }
 
-Indexbuffer* GraphicEngineManager::CreateIndexBuffer(ParserData::Model* mModel)
+Indexbuffer* GraphicEngineManager::CreateIndexBuffer(ParserData::Mesh* mModel)
 {
 	//인덱스버퍼 생성
 	return NowEngine->CreateIndexBuffer(mModel);
 }
 
-Vertexbuffer* GraphicEngineManager::CreateVertexBuffer(ParserData::Model* mModel)
+Vertexbuffer* GraphicEngineManager::CreateVertexBuffer(ParserData::Mesh* mModel)
 {
 	//버텍스 버퍼 생성
 	return NowEngine->CreateVertexBuffer(mModel);

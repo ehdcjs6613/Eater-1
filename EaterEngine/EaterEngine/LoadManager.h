@@ -17,7 +17,8 @@ namespace ParserData
 	struct Model;
 }
 
-class LoadData;
+class LoadMeshData;
+class ModelData;
 class ModelParser;
 class FBXParser;
 class FBXModel;
@@ -38,7 +39,7 @@ public:
 public:
 	///GET
 	//매쉬 가져오기
-	static LoadData* GetMesh(std::string Name);
+	static ModelData* GetMesh(std::string Name);
 	//텍스쳐 가져오기
 	TextureBuffer* GetTexture(std::string Name);
 
@@ -60,22 +61,21 @@ public:
 	void DeleteMesh(std::string mMeshName);
 	//모든 매쉬정보를 삭제
 	void DeleteMeshAll();
-	
 private:
+	//매쉬 데이터를 저장할 구조체를 만든다
+	LoadMeshData* CreateMesh(ParserData::Mesh* mesh);
+
 	//모델이 들어있는 경로
 	std::string MeshPath;
 	//텍스쳐가 들어있는 경로
 	std::string TexturePath;
 	
 	///리스트
-	static std::map<std::string,LoadData*>			MeshList;
+	static std::map<std::string, ModelData*>		ModelList;
 	static std::map<std::string, TextureBuffer*>	TextureList;
 private:
 	//규황이 파서
 	ModelParser* EaterParser;
 	//누군가의 그래픽 엔진
 	GraphicEngineManager* GEngine;
-
-	//그래픽엔진을 통해서 인덱스버퍼와 버텍스 버퍼를 생성
-	void CreateBuffer(ParserData::Model* mesh);
 };

@@ -245,6 +245,7 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\lib"
     <ClInclude Include="Export\EaterEngineDLL.h" />
     <ClInclude Include="Export\GameObject.h" />
     <ClInclude Include="Export\MainHeader.h" />
+    <ClInclude Include="Export\MeshFilter.h" />
     <ClInclude Include="Export\Scene.h" />
     <ClInclude Include="Export\Transform.h" />
     <ClInclude Include="framework.h" />
@@ -252,11 +253,11 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\lib"
     <ClInclude Include="GraphicEngineManager.h" />
     <ClInclude Include="GraphicsEngine.h" />
     <ClInclude Include="KeyinputManager.h" />
-    <ClInclude Include="MeshFilter.h" />
     <ClInclude Include="ObjectManager.h" />
     <ClInclude Include="LoadManager.h" />
     <ClInclude Include="ResourcesData.h" />
     <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="SkinningFilter.h" />
     <ClInclude Include="TimeManager.h" />
   </ItemGroup>
   <ItemGroup>
@@ -276,6 +277,7 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\lib"
     <ClCompile Include="LoadManager.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="SkinningFilter.cpp" />
     <ClCompile Include="TimeManager.cpp" />
     <ClCompile Include="Transform.cpp" />
   </ItemGroup>

@@ -16,6 +16,7 @@
 //컨퍼넌트
 #include "Transform.h"
 #include "Camera.h"
+#include "MeshFilter.h"
 
 //테스트용
 //#include "X3Engine.h"
@@ -71,6 +72,7 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 	mObjectManager->Initialize(mHwnd);
 	mLoadManager->Initialize(mGraphicManager);
 	
+	MeshFilter::SetObjMananager(mObjectManager);
 	//처음시작하기전 엔진의 구조간략설명
 	mDebugManager->printStart();
 
@@ -130,9 +132,21 @@ void GameEngine::OnResize(int Change_Width, int Change_Height)
 	WinSizeWidth	= Change_Width;
 	WinSizeHeight	= Change_Height;
 		
-	//그래픽 엔진의 리사이즈 함수를 넣으면 될듯
+	
+
+	//카메라의 변화할 사이즈를 넣어준다
+	Camera::SetSize(Change_Width, Change_Height);
+
+	//그래픽쪽에 랜더타겟을 변경해야하기때문에 
 	mGraphicManager->OnReSize(Change_Width, Change_Height);
-	mDebugManager->Print("윈도우 사이즈 변경",DebugManager::MSG_TYPE::MSG_ENGINE);
+	Camera::CreateProj(Change_Width, Change_Height);
+
+	std::string Width = std::to_string(Change_Width);
+	std::string Height = std::to_string(Change_Height);;
+	std::string temp = "윈도우 사이즈 변경:"+ Width+","+ Height;
+	Camera::SetSize(Change_Width, Change_Height);
+
+	mDebugManager->Print(temp,DebugManager::MSG_TYPE::MSG_ENGINE);
 }
 
 ///오브젝트 생성 삭제
@@ -142,7 +156,7 @@ GameObject* GameEngine::Instance(std::string ObjName)
 	GameObject* temp = new GameObject();
 	mObjectManager->PushCreateObject(temp);
 	temp->Name = ObjName;
-
+	
 	//Transform 은 기본으로 넣어준다
 	Transform* Tr = temp->AddComponent<Transform>();
 	temp->transform = Tr;
@@ -150,6 +164,14 @@ GameObject* GameEngine::Instance(std::string ObjName)
 
 	mDebugManager->Print(ObjName, DebugManager::MSG_TYPE::MSG_CREATE);
 	return temp;
+}
+
+GameObject* GameEngine::InstanceModel(std::string ObjName)
+{
+	ModelData* mModel =	mLoadManager->GetMesh(ObjName);
+	
+
+	return nullptr;
 }
 
 void GameEngine::Destroy(GameObject* obj)
