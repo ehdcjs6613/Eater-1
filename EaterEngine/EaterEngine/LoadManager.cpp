@@ -163,10 +163,12 @@ LoadMeshData* LoadManager::CreateMesh(ParserData::Mesh* mesh)
 	int ChildCount = mesh->m_ChildList.size();
 
 	//계층정보 받기
-	box->Name		= mesh->m_NodeName;
-	box->ParentName = mesh->m_ParentName;
-	box->Top_Object = mesh->m_TopNode;
-	box->Bone_Object = mesh->m_IsBone;
+	box->Name				= mesh->m_NodeName;
+	box->ParentName			= mesh->m_ParentName;
+	box->Top_Object			= mesh->m_TopNode;
+	box->Bone_Object		= mesh->m_IsBone;
+	box->Skinning_Object	= mesh->m_IsSkinningObject;
+	box->Animation			= mesh->m_Animation;
 
 	//매트릭스 정보 받기
 	box->WorldTM =  &mesh->m_WorldTM;
@@ -176,20 +178,26 @@ LoadMeshData* LoadManager::CreateMesh(ParserData::Mesh* mesh)
 	box->Material	= mesh->m_MaterialData;
 
 	
-	if(mesh->m_IsBone == true)
-	{
-		//본이라면 본 정보만 읽어온다
-		box->BoneList	= &(mesh->m_BoneMeshList);
-		box->BoneTMList = &(mesh->m_BoneTMList);
-	}
-	else
+	if(mesh->m_IsBone == false)
 	{
 		//매쉬라면 랜더링할 인덱스버퍼와 버텍스버퍼를 읽어온다
 		box->IB = GEngine->CreateIndexBuffer(mesh);
 		box->VB = GEngine->CreateVertexBuffer(mesh);
 		box->IB->Count = (int)mesh->m_IndexList.size() * 3;
 		box->VB->Count = (int)mesh->m_VertexList.size();
+		
+
+		if (mesh->m_IsSkinningObject == true)
+		{
+			//스키닝 오브젝트라면 본정보도 읽는다
+			box->BoneList	= &(mesh->m_BoneMeshList);
+			box->BoneTMList = &(mesh->m_BoneTMList);
+			mesh->m_Animation;
+		}
 	}
+	
+	
+
 
 	//자식객체가 있다면 정보읽어옴
 	for (int i = 0; i < ChildCount; i++)

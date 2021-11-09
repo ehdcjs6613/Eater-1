@@ -3,6 +3,7 @@
 #include "LoadManager.h"
 #include "Transform.h"
 #include "EngineData.h"
+#include "Animation.h"
 #include "ObjectManager.h"
 
 
@@ -18,7 +19,7 @@ MeshFilter::~MeshFilter()
 	
 }
 
-void MeshFilter::Start()
+void MeshFilter::Awake()
 {
 	if (isLoad == true)
 	{
@@ -26,13 +27,12 @@ void MeshFilter::Start()
 		ModelData* data	= LoadManager::GetMesh(MeshName);
 		Transform* MyTr = gameobject->transform;
 
+		//매쉬 오브젝트 만들기
 		for (int i = 0; i < data->MeshList.size(); i++)
 		{
 			ChangeLoadMeshData(data->MeshList[i], MyTr);
 		}
-		MyTr->Child_Local_Updata();
 	}
-	
 }
 
 void MeshFilter::SetObjMananager(ObjectManager* obj)
@@ -66,19 +66,22 @@ void MeshFilter::ChangeLoadMeshData(LoadMeshData* data, Transform* parent)
 
 	GameObject* OBJ		= new GameObject();
 	OBJ->Name			= data->Name;
+	OBJ->OneMeshData->ObjType = OBJECT_TYPE::Base;
+	
 
-	Transform* Tr		= OBJ->AddComponent<Transform>();
+	Transform*	Tr		= OBJ->AddComponent<Transform>();
 	MeshFilter* Filter	= OBJ->AddComponent<MeshFilter>();
 
 	//Transform 연결
 	OBJ->transform = Tr;
+
 	Filter->PushModelData(data);
 
 	Tr->Load_Local = *data->LocalTM;
 	Tr->Load_World = *data->WorldTM;
 	
-	//부모와 자식을 링크
-	Transform::LinkHierarchy(Tr, parent);
+
+	LinkHierarchy(Tr, parent);
 
 	//오브젝트 매니저에서 관리할수있도록 넣어준다
 	OBJ_Manager->PushCreateObject(OBJ);
@@ -90,6 +93,12 @@ void MeshFilter::ChangeLoadMeshData(LoadMeshData* data, Transform* parent)
 		//재귀 호출
 		Filter->ChangeLoadMeshData(data->Child[i],Tr);
 	}
+}
+
+void MeshFilter::LinkHierarchy(Transform* my, Transform* parent)
+{
+	my->SetParnet(parent);
+	parent->SetChild(my);
 }
 
 

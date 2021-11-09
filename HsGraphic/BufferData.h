@@ -14,3 +14,10 @@ struct ObjectBuffer
 {
 	DirectX::XMMATRIX world;
 };
+
+//스키닝 버퍼
+struct SkinningBuffer
+{
+	DirectX::XMMATRIX world;
+	DirectX::XMMATRIX BoneOffset[96];
+};

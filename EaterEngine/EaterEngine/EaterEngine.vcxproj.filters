@@ -82,6 +82,9 @@
     <Filter Include="소스 파일\Component\SkinningFilter">
       <UniqueIdentifier>{0db28258-c4dd-46c9-b56d-fa34d7f861c0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Component\Animation">
+      <UniqueIdentifier>{5d4d878e-6e04-41e7-a1e6-ee77e43803d7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -109,9 +112,6 @@
       <Filter>소스 파일\Manager\LoadManager</Filter>
     </ClInclude>
     <ClInclude Include="EngineData.h">
-      <Filter>소스 파일\Data</Filter>
-    </ClInclude>
-    <ClInclude Include="ResourcesData.h">
       <Filter>소스 파일\Data</Filter>
     </ClInclude>
     <ClInclude Include="GameEngine.h">
@@ -153,8 +153,14 @@
     <ClInclude Include="Export\MeshFilter.h">
       <Filter>소스 파일\Component\MeshFilter</Filter>
     </ClInclude>
-    <ClInclude Include="SkinningFilter.h">
+    <ClInclude Include="Export\SkinningFilter.h">
       <Filter>소스 파일\Component\SkinningFilter</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation.h">
+      <Filter>소스 파일\Component\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Export\ResourcesData.h">
+      <Filter>소스 파일\Data</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -214,6 +220,9 @@
     </ClCompile>
     <ClCompile Include="SkinningFilter.cpp">
       <Filter>소스 파일\Component\SkinningFilter</Filter>
+    </ClCompile>
+    <ClCompile Include="Animation.cpp">
+      <Filter>소스 파일\Component\Animation</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

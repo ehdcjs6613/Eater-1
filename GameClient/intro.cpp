@@ -2,6 +2,7 @@
 #include "intro.h";
 #include "GameObject.h"
 #include "MeshFilter.h"
+#include "SkinningFilter.h"
 #include "Transform.h"
 #include "AI.h"
 #include "KeyInput.h"
@@ -14,9 +15,9 @@ void intro::Awake()
 	LoadTesturePath("../Resources/Texture/");
 	
 	//LoadMesh("Player");
-	LoadMesh("Table");
+	//LoadMesh("Table");
 	//LoadMesh("Dome_v03");
-	//LoadMesh("EnemyB");
+	LoadMesh("EnemyB");
 	LoadTesture("WoodCrate01");
 
 
@@ -25,17 +26,22 @@ void intro::Awake()
 	testobj->AddComponent<Keyinput>();
 	testobj->AddComponent<Camera>();
 
-	//testobj = Instance("box");
-	//testobj->AddComponent<MeshFilter>()->SetMeshName("EnemyB");
-	//testobj->GetTransform()->Position = { 0 ,0,0 };
-	//testobj->GetTransform()->Scale = { 1000 ,1000,1000 };
+	
+
+	//매쉬 필터로 매쉬의 정보만 읽은 오브젝트
+	testobj = Instance("EnemyB");
+	testobj->AddComponent<SkinningFilter>()->SetMeshName("EnemyB");
+	testobj->GetTransform()->Position = { 3 ,0,0 };
+	testobj->GetTransform()->Scale = { 100 ,100,100 };
+	testobj->GetTransform()->Rotation = { 90 ,0,0 };
+	//
+	//
+	////스키닝필터로 본과 매쉬정보 둘다 읽은 오브젝트
+	//testobj = Instance("Table");
+	//testobj->AddComponent<SkinningFilter>()->SetMeshName("EnemyB");
+	//testobj->GetTransform()->Position = { 1 ,0,0 };
+	//testobj->GetTransform()->Scale = { 100 ,100,100 };
 	//testobj->GetTransform()->Rotation = { 90 ,0,0 };
-
-
-
-	testobj = Instance("Table");
-	testobj->AddComponent<MeshFilter>()->SetMeshName("Table");
-	testobj->GetTransform()->Position = { 0 ,0,0 };
 }
 
 void intro::Start()

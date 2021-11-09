@@ -34,12 +34,13 @@ public:
 	ID3D11DepthStencilView* GetEngineDSV();
 private:
 	void CreateRenderTarget();	//랜더타겟 뎁스스텐실 뷰포트를 생성한다
-	void CreateRenderState();	//랜더타겟 상태를 생성해준다
 	void CreateDevice();		//엔진의 디바이스를 생성해준다
 	void BeginRender();			//랜더링 시작
 	void EngineRender();		//엔진 랜더링
 	void EndRender();			//랜더링 종료
-	int GetAspectRatio();		//화면 비율 종횡비를 설정
+	
+	Vertexbuffer* CreateBasicVertexBuffer(ParserData::Mesh* mModel);
+	Vertexbuffer* CreateSkinngingVertexBuffer(ParserData::Mesh* mModel);
 private:
 
 	///엔진 데이터

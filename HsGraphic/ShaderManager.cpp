@@ -26,6 +26,7 @@ void ShaderManager::Initialize(ID3D11Device* mDevice, ID3D11DeviceContext* mDevi
 	CreateSampler();
 
 	LoadShader("texture_vs.hlsl","texture_ps.hlsl","texture");
+	LoadShader("Skinning_vs.hlsl","Skinning_ps.hlsl","Skinning");
 
 
 	ReFlector->Release();

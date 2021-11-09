@@ -9,8 +9,6 @@
 /// </summary>
 
 class LoadMeshData;
-class ModelData;
-class MeshData;
 class Transform;
 class ObjectManager;
 
@@ -20,9 +18,7 @@ public:
 	EATER_ENGINEDLL MeshFilter();
 	virtual ~MeshFilter();
 
-	virtual void Start() override;
-
-
+	virtual void Awake() override;
 
 	static void SetObjMananager(ObjectManager* obj);
 public:
@@ -34,14 +30,17 @@ public:
 
 	//LoadMeshData를 게임에 사용할 오브젝트로 생성하면서 값을 넣어준다
 	void ChangeLoadMeshData(LoadMeshData* data,Transform* parent);
+
+	//Transform을 연결한다
+	void LinkHierarchy(Transform* my,Transform*parent);
 private:
-	
-
-
 	//매쉬 로드여부
 	bool isLoad;
+
 	std::string MeshName;
 
 	static ObjectManager* OBJ_Manager;
+
+	
 };
 
