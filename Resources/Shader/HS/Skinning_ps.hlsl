@@ -6,9 +6,9 @@
 
 struct PixelInputType
 {
-    float4 posH			: SV_POSITION;
-    float3 PosL			: POSITION;
-    float2 Tex			: TEXCOORD0;
+    float4 posH : SV_POSITION;
+    float3 PosL : POSITION;
+    float2 Tex : TEXCOORD0;
 };
 
 
@@ -18,9 +18,9 @@ struct PixeloutputType
 };
 
 PixeloutputType main(PixelInputType input)
-{ 
+{
     PixeloutputType output;
-	output.color = float4(1, 0, 0, 1);
+    output.color = float4(1, 0, 0, 1);
 
-	return output;
+    return output;
 }

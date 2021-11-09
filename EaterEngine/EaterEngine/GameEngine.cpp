@@ -18,6 +18,7 @@
 #include "Transform.h"
 #include "Camera.h"
 #include "MeshFilter.h"
+#include "SkinningFilter.h"
 
 //테스트용
 #include "HsGraphic.h";
@@ -74,6 +75,7 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 	mTimeManager->Initialize();
 
 	MeshFilter::SetObjMananager(mObjectManager);
+	SkinningFilter::SetObjMananager(mObjectManager);
 	//처음시작하기전 엔진의 구조간략설명
 	
 
@@ -95,7 +97,7 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 void GameEngine::Update()
 {
 	mDebugManager->Clear();
-	mDebugManager->printStart();
+	//mDebugManager->printStart();
 	//매니저들 업데이트 (컨퍼넌트 업데이트후 변경된 사항을 각각의 게임오브젝트 OneMeshData에 전달)
 	mKeyManager->Update();
 	mSceneManager->Update();
