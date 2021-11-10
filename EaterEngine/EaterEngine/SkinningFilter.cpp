@@ -6,11 +6,9 @@
 #include "Animation.h"
 #include "ObjectManager.h"
 
-ObjectManager* SkinningFilter::OBJ_Manager = nullptr;
 SkinningFilter::SkinningFilter()
 {
-	isLoad = false;
-	MeshName = "";
+
 }
 
 SkinningFilter::~SkinningFilter()
@@ -18,130 +16,38 @@ SkinningFilter::~SkinningFilter()
 
 }
 
-void SkinningFilter::Awake()
+void SkinningFilter::Update()
 {
-	if (isLoad == true)
-	{
-		//최상위 객체를 가져왔다
-		ModelData* data = LoadManager::GetMesh(MeshName);
-		Transform* MyTr = gameobject->transform;
-
-		//매쉬 오브젝트 만들기
-		for (int i = 0; i < data->MeshList.size(); i++)
-		{
-			ChangeLoadMeshData(data->MeshList[i], MyTr);
-		}
-
-		//본 오브젝트 만들기
-		for (int i = 0; i < data->BoneList.size(); i++)
-		{
-			ChangeLoadBoneData(data->BoneList[i], MyTr);
-		}
-	}
-}
-
-void SkinningFilter::SetMeshName(std::string mMeshName)
-{
-	isLoad = true;
-	MeshName = mMeshName;
-}
-
-void SkinningFilter::SetObjMananager(ObjectManager* obj)
-{
-	OBJ_Manager = obj;
-}
-
-void SkinningFilter::PushModelData(LoadMeshData* mModel)
-{
+	//데이터를 넣기전 이전 값들은 삭제
 	MeshData* data = gameobject->OneMeshData;
+	(*data->BoneOffsetTM).clear();
 
-	data->IB = mModel->IB;
-	data->VB = mModel->VB;
+	//사이즈 잡기
+	int BoneSize =  (int)BoneList->size();
+	(*data->BoneOffsetTM).resize(BoneSize);
 
-	data->mLocal = *(mModel->LocalTM);
-	data->mWorld = *(mModel->WorldTM);
-
-	data->indexCount = mModel->IB->Count;
-	data->vertexCount = mModel->VB->Count;
-}
-
-void SkinningFilter::ChangeLoadBoneData(LoadMeshData* data, Transform* parent)
-{
-	int ChildCount = data->Child.size();
-
-	GameObject* OBJ = new GameObject();
-	OBJ->Name = data->Name;
-
-	Transform*		Tr			= OBJ->AddComponent<Transform>();
-	SkinningFilter* Filter		= OBJ->AddComponent<SkinningFilter>();
-	Animation*		Anime		= OBJ->AddComponent<Animation>();
-
-	//Transform 연결
-	OBJ->transform = Tr;
-	gameobject->OneMeshData->ObjType = OBJECT_TYPE::Bone;
-
-
-	Tr->Load_Local = *data->LocalTM;
-	Tr->Load_World = *data->WorldTM;
-
-
-	LinkHierarchy(Tr, parent);
-
-	//오브젝트 매니저에서 관리할수있도록 넣어준다
-	OBJ_Manager->PushCreateObject(OBJ);
-	gameobject->PushChildList(OBJ);
-	for (int i = 0; i < ChildCount; i++)
+	//데이터 넣어주기
+	for (int i = 0; i < BoneList->size(); i++)
 	{
-		//재귀 호출
-		Filter->ChangeLoadBoneData(data->Child[i], Tr);
+		//본의 월드
+		DirectX::XMMATRIX BoneWorld = (*BoneList)[i]->Load_World;
+
+		//본의 오프셋
+		DirectX::XMFLOAT4X4 temp = (*BoneOffsetTM)[i];
+		DirectX::XMMATRIX Offset = DirectX::XMLoadFloat4x4(&temp);
+
+		//그래픽 랜더링쪽으로 넘겨줄수있도록 값을 넣어줌
+		(*data->BoneOffsetTM).push_back(Offset * BoneWorld);
 	}
 }
 
-void SkinningFilter::ChangeLoadMeshData(LoadMeshData* data, Transform* parent)
+void SkinningFilter::PushBoneList(std::vector<Transform*>* mBoneList)
 {
-	int ChildCount = data->Child.size();
-
-	GameObject* OBJ = new GameObject();
-	OBJ->Name = data->Name;
-
-	//스키닝 오브젝트가 나왔다면
-	if (data->Skinning_Object == true)
-	{
-		BoneList		= data->BoneList;
-		SkinningObject	= OBJ;
-		OBJ->OneMeshData->BoneOffsetTM = data->BoneTMList;
-		OBJ->OneMeshData->ObjType = OBJECT_TYPE::Skinning;
-	}
-
-	Transform*		Tr	   = OBJ->AddComponent<Transform>();
-	SkinningFilter* Filter = OBJ->AddComponent<SkinningFilter>();
-
-	//Transform 연결
-	OBJ->transform = Tr;
-
-	Filter->PushModelData(data);
-
-	Tr->Load_Local = *data->LocalTM;
-	Tr->Load_World = *data->WorldTM;
-
-
-	LinkHierarchy(Tr, parent);
-
-	//오브젝트 매니저에서 관리할수있도록 넣어준다
-	OBJ_Manager->PushCreateObject(OBJ);
-	gameobject->PushChildList(OBJ);
-
-	//자식객체 개수만큼 실행
-	for (int i = 0; i < ChildCount; i++)
-	{
-		//재귀 호출
-		Filter->ChangeLoadMeshData(data->Child[i], Tr);
-	}
+	// BoneList 와 BoneOffsetTM 은 1:1 매칭이 되어야한다
+	BoneList = mBoneList;
 }
 
-void SkinningFilter::LinkHierarchy(Transform* my, Transform* parent)
+void SkinningFilter::PushBone_OffsetList(std::vector<DirectX::SimpleMath::Matrix>* mBoneOffsetTM)
 {
-	my->SetParnet(parent);
-	parent->SetChild(my);
+	BoneOffsetTM = mBoneOffsetTM;
 }
-

@@ -352,8 +352,9 @@ Vertexbuffer* HsGraphic::CreateSkinngingVertexBuffer(ParserData::Mesh* mModel)
 		int Count =  (int)One->m_BoneIndices.size();
 		for (int j = 0; j < Count; j++)
 		{
-			temp[i].BoneIndex0[j]	= One->m_BoneIndices[j];
-			temp[i].BoneWeights0[j] = One->m_BoneWeights[j];
+			temp[i].BoneWeights[j] = One->m_BoneWeights[j];
+			temp[i].BoneIndex[j] = One->m_BoneIndices[j];
+
 		}
 	}
 

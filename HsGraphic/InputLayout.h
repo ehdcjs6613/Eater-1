@@ -25,6 +25,7 @@ struct Skinning32
 	//ÅºÁ¨Æ®
 	DirectX::SimpleMath::Vector3 Tangent;
 
-	float BoneIndex0[10];
-	UINT BoneWeights0[10];
+
+	UINT BoneIndex[4];
+	float BoneWeights[4];
 };

@@ -51,7 +51,7 @@ void RenderingManager::CameraUpdate(GlobalData* data)
 void RenderingManager::SkinningUpdate(MeshData* data)
 {
 	///스키닝 오브젝트 버퍼 업데이트
-	ID3D11Buffer* buffer = mShaderManager->GetConstantBuffer("ObjectBuffer");
+	ID3D11Buffer* buffer = mShaderManager->GetConstantBuffer("SkinningBuffer");
 	//버퍼 업데이트
 	SkinningBuffer mbuffer;
 	mbuffer.world = DirectX::XMMatrixTranspose(data->mWorld); //HLSL에서만
@@ -99,7 +99,7 @@ void RenderingManager::Rendering(MeshData* data, ShaderType type)
 
 	///그리는 방식 설정
 	DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	DeviceContext->RSSetState(mSolid);
+	DeviceContext->RSSetState(mWireframe);
 
 	
 	ShaderData Shaderdata;

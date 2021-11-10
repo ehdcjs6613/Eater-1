@@ -17,7 +17,8 @@ void intro::Awake()
 	//LoadMesh("Player");
 	//LoadMesh("Table");
 	//LoadMesh("Dome_v03");
-	LoadMesh("Table");
+	LoadMesh("EnemyB");
+	//LoadMesh("box");
 	LoadTesture("WoodCrate01");
 
 
@@ -30,10 +31,11 @@ void intro::Awake()
 
 	//매쉬 필터로 매쉬의 정보만 읽은 오브젝트
 	testobj = Instance("EnemyB");
-	testobj->AddComponent<MeshFilter>()->SetMeshName("Table");
-	testobj->GetTransform()->Position = { 3 ,0,0 };
-	testobj->GetTransform()->Scale = { 2 ,2,2 };
-	testobj->GetTransform()->Rotation = { 90 ,0,0 };
+	testobj->AddComponent<MeshFilter>()->SetMeshName("EnemyB");
+	testobj->AddComponent<AI>();
+	testobj->GetTransform()->Position = { 0 ,0,0 };
+	testobj->GetTransform()->Scale = { 500 ,500,500 };
+	testobj->GetTransform()->Rotation = { 0 ,0,0 };
 	//
 	//
 	////스키닝필터로 본과 매쉬정보 둘다 읽은 오브젝트

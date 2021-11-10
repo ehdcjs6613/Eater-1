@@ -492,7 +492,7 @@ bool FBXParser::ProcessBoneWeights(fbxsdk::FbxNode* node, std::vector<BoneWeight
 					int m_Index = cluster->GetControlPointIndices()[j];
 					double weight = cluster->GetControlPointWeights()[j];
 
-					if (weight == 0) continue;
+					//if (weight == 0) continue;
 
 					skinBoneWeights[m_Index].AddBoneWeight(clusterIndex, (float)weight);
 				}
