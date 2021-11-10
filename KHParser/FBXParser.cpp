@@ -293,6 +293,7 @@ void FBXParser::ProcessSkeleton(fbxsdk::FbxNode* node)
 	Mesh* parentMesh = FindMesh(parentName);
 	m_OneMesh->m_ParentName = parentName;
 
+	// 부모의 Mesh가 존재한다면 ChildList에 추가..
 	if (parentMesh == nullptr)
 	{
 		m_OneMesh->m_TopNode = true;
@@ -328,7 +329,7 @@ void FBXParser::ProcessSkeleton(fbxsdk::FbxNode* node)
 	const char* boneName = node->GetName();
 	newBone.m_BoneName = boneName;
 	newBone.m_parent_bone_number = parentBoneIndex;
-	newBone.m_BoneNumber = m_AllBoneList.size();
+	newBone.m_BoneNumber = (int)m_AllBoneList.size();
 	m_AllBoneList.push_back(BonePair(boneName, newBone));
 }
 
@@ -345,9 +346,7 @@ void FBXParser::ProcessMesh(fbxsdk::FbxNode* node)
 	if (m_OnlyAni) return;
 
 	// 현 Node Parent 찾기..
-	
 	const char* parentName = node->GetParent()->GetName();
-
 	Mesh* parentMesh = FindMesh(parentName);
 	m_OneMesh->m_ParentName = parentName;
 
@@ -602,7 +601,7 @@ void FBXParser::OptimizeVertex(ParserData::Mesh* pMesh)
 	if (pMesh->m_VertexList.empty()) return;
 
 	bool new_VertexSet = false;
-	unsigned int resize_VertexIndex = pMesh->m_VertexList.size();
+	size_t resize_VertexIndex = pMesh->m_VertexList.size();
 
 	// 각각 Face마다 존재하는 3개의 Vertex 비교..
 	for (unsigned int i = 0; i < pMesh->m_MeshFace.size(); i++)
@@ -643,9 +642,9 @@ void FBXParser::OptimizeVertex(ParserData::Mesh* pMesh)
 			if (new_VertexSet)
 			{
 				// 추가된 Vertex가 있다면 체크..
-				if (resize_VertexIndex > (int)pMesh->m_VertexList.size())
+				if (resize_VertexIndex > pMesh->m_VertexList.size())
 				{
-					for (unsigned int k = pMesh->m_VertexList.size(); k < resize_VertexIndex; k++)
+					for (size_t k = pMesh->m_VertexList.size(); k < resize_VertexIndex; k++)
 					{
 						// 새로 추가한 Vertex와 동일한 데이터를 갖고있는 Face 내의 Vertex Index 수정..
 						if ((pMesh->m_VertexList[k]->m_Indices == pMesh->m_MeshFace[i]->m_VertexIndex[j]) &&
@@ -679,7 +678,7 @@ void FBXParser::OptimizeVertex(ParserData::Mesh* pMesh)
 				newVertex->m_IsTextureSet = true;
 
 				pMesh->m_VertexList.push_back(newVertex);
-				pMesh->m_MeshFace[i]->m_VertexIndex[j] = resize_VertexIndex;
+				pMesh->m_MeshFace[i]->m_VertexIndex[j] = (int)resize_VertexIndex;
 				resize_VertexIndex++;
 				new_VertexSet = false;
 			}
@@ -971,14 +970,6 @@ void FBXParser::SetTransform(fbxsdk::FbxNode* node)
 	m_OneMesh->m_LocalTM = local;
 }
 
-DirectX::SimpleMath::Matrix FBXParser::GetGlobalAnimationTransform(fbxsdk::FbxNode* node, fbxsdk::FbxTime time)
-{
-	if (node == nullptr) return DirectX::SimpleMath::Matrix();
-
-	FbxAMatrix matrix = node->EvaluateGlobalTransform(time);
-	return ConvertMatrix(matrix);
-}
-
 int FBXParser::GetMaterialIndex(fbxsdk::FbxSurfaceMaterial* material)
 {
 	for (unsigned int m_Index = 0; m_Index < fbxMaterials.size(); m_Index++)
@@ -1126,12 +1117,7 @@ void FBXParser::CreateVertex(fbxsdk::FbxMesh* mesh, std::vector<BoneWeights>& bo
 
 		fbxPos = mesh->GetControlPointAt(vertexIndex);
 
-		DirectX::SimpleMath::Vector3 pos = ConvertVector3(fbxPos);
-
-		// Bounding Box 체크용 Position
-		DirectX::SimpleMath::Vector3 nowPos = NoConvertVector3(fbxPos);
-
-		m_OneMesh->m_VertexList[vertexIndex]->m_Pos = pos;
+		m_OneMesh->m_VertexList[vertexIndex]->m_Pos = ConvertVector3(fbxPos);
 		m_OneMesh->m_VertexList[vertexIndex]->m_Indices = vertexIndex;
 
 		// Bone Weight Data
