@@ -6,16 +6,8 @@ struct VertexInputType
     float2 Tex : TEXCOORD;
     float3 Nomal : NORMAL;
     float3 Tangent : TANGENT;
-    
     uint4 BoneIndex0 : BONEINDEX;
-    uint4 BoneIndex1 : BONEINDEX;
-    uint4 BoneIndex2 : BONEINDEX;
-    
     float4 BoneWeights0 : BONEWEIGHT;
-    float4 BoneWeights1 : BONEWEIGHT;
-    float4 BoneWeights2 : BONEWEIGHT;
-    
-    
 };
 
 struct PixelInputType
@@ -32,8 +24,23 @@ PixelInputType main(VertexInputType input)
     PixelInputType output;
    
 	//월드변환
-	
-    output.posH = mul(float4(input.PosL.xyz, 1.0f), world);
+    float weights[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+    weights[0] = input.BoneWeights0.x;
+    weights[1] = input.BoneWeights0.y;
+    weights[2] = input.BoneWeights0.z;
+    weights[3] = 1.0f - weights[0] - weights[1] - weights[2];
+    
+    float3 posL = float3(0.0f, 0.0f, 0.0f);
+    float3 normalL = float3(0.0f, 0.0f, 0.0f);
+    
+    for (int i = 0; i < 4; i++)
+    {
+        posL += weights[i] * mul(float4(input.PosL, 1.0f), BoneOffset[input.BoneIndex0[i]]).xyz;
+        normalL += weights[i] * mul(input.Nomal, (float3x3) BoneOffset[input.BoneIndex0[i]]);
+    }
+    
+    
+    output.posH = mul(float4(posL, 1.0f), Skinning_world).xyzw;
     output.posH = mul(float4(output.posH.xyz, 1.0f), view);
     output.posH = mul(float4(output.posH.xyz, 1.0f), proj);
     

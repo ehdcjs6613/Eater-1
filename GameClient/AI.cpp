@@ -19,6 +19,6 @@ void AI::Awake()
 
 void AI::Update()
 {
-	gameobject->transform->SetRotate(0, 0.01f, 0);
+	gameobject->transform->SetRotate(0.01f, 0.01f, 0);
 }
 

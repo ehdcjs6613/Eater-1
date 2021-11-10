@@ -75,7 +75,6 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 	mTimeManager->Initialize();
 
 	MeshFilter::SetObjMananager(mObjectManager);
-	SkinningFilter::SetObjMananager(mObjectManager);
 	//처음시작하기전 엔진의 구조간략설명
 	
 

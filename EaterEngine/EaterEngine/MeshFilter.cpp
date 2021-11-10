@@ -1,4 +1,5 @@
 #include "MeshFilter.h"
+#include "SkinningFilter.h"
 #include "GameObject.h"
 #include "LoadManager.h"
 #include "Transform.h"
@@ -23,14 +24,20 @@ void MeshFilter::Awake()
 {
 	if (isLoad == true)
 	{
-		//최상위 객체를 가져왔다
+		//최상위 객체를 가져옴
 		ModelData* data	= LoadManager::GetMesh(MeshName);
 		Transform* MyTr = gameobject->transform;
+
+		//본 오브젝트 만들기
+		for (int i = 0; i < data->BoneList.size(); i++)
+		{
+			CreateChild_Bone(data->BoneList[i], MyTr, &BoneList);
+		}
 
 		//매쉬 오브젝트 만들기
 		for (int i = 0; i < data->MeshList.size(); i++)
 		{
-			ChangeLoadMeshData(data->MeshList[i], MyTr);
+			CreateChild_Mesh(data->MeshList[i], MyTr);
 		}
 	}
 }
@@ -60,7 +67,7 @@ void MeshFilter::PushModelData(LoadMeshData* mModel)
 	data->vertexCount	= mModel->VB->Count;
 }
 
-void MeshFilter::ChangeLoadMeshData(LoadMeshData* data, Transform* parent)
+void MeshFilter::CreateChild_Mesh(LoadMeshData* data, Transform* parent)
 {
 	int ChildCount = data->Child.size();
 
@@ -68,30 +75,78 @@ void MeshFilter::ChangeLoadMeshData(LoadMeshData* data, Transform* parent)
 	OBJ->Name			= data->Name;
 	OBJ->OneMeshData->ObjType = OBJECT_TYPE::Base;
 	
-
+	//컨퍼넌트 생성
 	Transform*	Tr		= OBJ->AddComponent<Transform>();
 	MeshFilter* Filter	= OBJ->AddComponent<MeshFilter>();
+
 
 	//Transform 연결
 	OBJ->transform = Tr;
 
-	Filter->PushModelData(data);
+	//스키닝 매쉬라면
+	if (data->Skinning_Object == true)
+	{
+		SkinningFilter* SF = OBJ->AddComponent<SkinningFilter>();
+		//본 리스트 넘겨주기
+		SF->PushBoneList(&BoneList);
+		//본 오프셋 넘겨주기
+		SF->PushBone_OffsetList(data->BoneTMList);
+	}
+	
 
+	//데이터를 넘겨준다 
+	Filter->PushModelData(data);
 	Tr->Load_Local = *data->LocalTM;
 	Tr->Load_World = *data->WorldTM;
 	
 
-	LinkHierarchy(Tr, parent);
 
+	//Transform 끼리 연결
+	LinkHierarchy(Tr, parent);
 	//오브젝트 매니저에서 관리할수있도록 넣어준다
 	OBJ_Manager->PushCreateObject(OBJ);
-	gameobject->PushChildList(OBJ);
+	
+
 
 	//자식객체 개수만큼 실행
 	for (int i = 0; i < ChildCount; i++)
 	{
 		//재귀 호출
-		Filter->ChangeLoadMeshData(data->Child[i],Tr);
+		Filter->CreateChild_Mesh(data->Child[i],Tr);
+	}
+}
+
+void MeshFilter::CreateChild_Bone(LoadMeshData* data, Transform* parent, std::vector<Transform*>* mBoneList)
+{
+	int ChildCount = data->Child.size();
+
+	GameObject* OBJ = new GameObject();
+	OBJ->Name = data->Name;
+	OBJ->OneMeshData->ObjType = OBJECT_TYPE::Bone;
+
+	//컨퍼넌트 생성
+	Transform* Tr		= OBJ->AddComponent<Transform>();
+	MeshFilter* Filter	= OBJ->AddComponent<MeshFilter>();
+
+
+	//Transform 연결
+	OBJ->transform = Tr;
+
+	Tr->Load_Local = *data->LocalTM;
+	Tr->Load_World = *data->WorldTM;
+
+	//Transform 끼리 연결
+	LinkHierarchy(Tr, parent);
+	//오브젝트 매니저에서 관리할수있도록 넣어준다
+	OBJ_Manager->PushCreateObject(OBJ);
+
+	mBoneList->push_back(Tr);
+
+	//자식객체 개수만큼 실행
+	for (int i = 0; i < ChildCount; i++)
+	{
+		//재귀 호출
+		Filter->CreateChild_Bone(data->Child[i], Tr, mBoneList);
 	}
 }
 
