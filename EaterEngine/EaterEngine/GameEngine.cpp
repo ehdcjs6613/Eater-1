@@ -86,8 +86,8 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 	/// </summary>
 	/////////////////////////////////////////////////////////////////
 	mGraphicManager->PushEngine<HsGraphic>("Çü¼±");
-	mGraphicManager->PushEngine<DH3DEngine>("µ¿Çõ");
-	mGraphicManager->ChoiceEngine("µ¿Çõ");
+	//mGraphicManager->PushEngine<DH3DEngine>("µ¿Çõ");
+	mGraphicManager->ChoiceEngine("Çü¼±");
 	/////////////////////////////////////////////////////////////////
 
 

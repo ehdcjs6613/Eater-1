@@ -27,18 +27,23 @@ void MeshFilter::Awake()
 		//최상위 객체를 가져옴
 		ModelData* data	= LoadManager::GetMesh(MeshName);
 		Transform* MyTr = gameobject->transform;
+		
+
 
 		//본 오브젝트 만들기
 		for (int i = 0; i < data->BoneList.size(); i++)
 		{
-			CreateChild_Bone(data->BoneList[i], MyTr, &BoneList);
+			int size = (data->MeshList[0]->BoneList)->size();
+			CreateChild_Bone(data->BoneList[i], MyTr, &BoneList, size);
 		}
+
 
 		//매쉬 오브젝트 만들기
 		for (int i = 0; i < data->MeshList.size(); i++)
 		{
 			CreateChild_Mesh(data->MeshList[i], MyTr);
 		}
+		int num = 0;
 	}
 }
 
@@ -73,7 +78,7 @@ void MeshFilter::CreateChild_Mesh(LoadMeshData* data, Transform* parent)
 
 	GameObject* OBJ		= new GameObject();
 	OBJ->Name			= data->Name;
-	OBJ->OneMeshData->ObjType = OBJECT_TYPE::Base;
+	
 	
 	//컨퍼넌트 생성
 	Transform*	Tr		= OBJ->AddComponent<Transform>();
@@ -91,6 +96,12 @@ void MeshFilter::CreateChild_Mesh(LoadMeshData* data, Transform* parent)
 		SF->PushBoneList(&BoneList);
 		//본 오프셋 넘겨주기
 		SF->PushBone_OffsetList(data->BoneTMList);
+
+		OBJ->OneMeshData->ObjType = OBJECT_TYPE::Skinning;
+	}
+	else
+	{
+		OBJ->OneMeshData->ObjType = OBJECT_TYPE::Base;
 	}
 	
 
@@ -116,9 +127,13 @@ void MeshFilter::CreateChild_Mesh(LoadMeshData* data, Transform* parent)
 	}
 }
 
-void MeshFilter::CreateChild_Bone(LoadMeshData* data, Transform* parent, std::vector<Transform*>* mBoneList)
+void MeshFilter::CreateChild_Bone(LoadMeshData* data, Transform* parent, std::vector<Transform*>* mBoneList, int BoneSize)
 {
-	int ChildCount = data->Child.size();
+	if (mBoneList->size() == BoneSize)
+	{
+		return;
+	}
+
 
 	GameObject* OBJ = new GameObject();
 	OBJ->Name = data->Name;
@@ -143,10 +158,11 @@ void MeshFilter::CreateChild_Bone(LoadMeshData* data, Transform* parent, std::ve
 	mBoneList->push_back(Tr);
 
 	//자식객체 개수만큼 실행
+	int ChildCount = data->Child.size();
 	for (int i = 0; i < ChildCount; i++)
 	{
 		//재귀 호출
-		Filter->CreateChild_Bone(data->Child[i], Tr, mBoneList);
+		Filter->CreateChild_Bone(data->Child[i], Tr, mBoneList, BoneSize);
 	}
 }
 
