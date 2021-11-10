@@ -1,14 +1,14 @@
 #pragma once
+#include <d3d11shader.h>
 #include <string>
 #include "d3dcommon.h"
-#include "d3d11shader.h"
-#include "dxgiformat.h"
 #include "Data.h"
 #include <map>
 
+
 struct ID3D11Device;
 struct ID3D11DeviceContext;
-
+struct ID3D11ShaderReflection;
 class ShaderManager 
 {
 public:

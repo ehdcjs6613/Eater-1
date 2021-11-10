@@ -56,10 +56,10 @@ void RenderingManager::SkinningUpdate(MeshData* data)
 	SkinningBuffer mbuffer;
 	mbuffer.world = DirectX::XMMatrixTranspose(data->mWorld); //HLSL¿¡¼­¸¸
 
-	int OffsetSize = data->BoneOffsetTM->size();
+	int OffsetSize = (data->BoneOffsetTM).size();
 	for (int i = 0; i < OffsetSize; i++)
 	{
-		mbuffer.BoneOffset[i] = (*data->BoneOffsetTM)[i];
+		mbuffer.BoneOffset[i] = (data->BoneOffsetTM)[i];
 	}
 	
 

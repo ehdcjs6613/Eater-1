@@ -54,7 +54,7 @@ public:
 	int indexCount;		//인덱스 카운터
 	int vertexCount;	//버텍스 카운터
 
-	std::vector<DirectX::SimpleMath::Matrix>* BoneOffsetTM; //본 오프셋 TM
+	std::vector<DirectX::SimpleMath::Matrix> BoneOffsetTM; //본 오프셋 TM
 
 
 	DirectX::XMMATRIX mWorld;	//매쉬의 월드 행렬

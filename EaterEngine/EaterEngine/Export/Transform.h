@@ -3,13 +3,14 @@
 #include "EaterEngineDLL.h"
 #include "SimpleMath.h"
 #include <DirectXMath.h>
+#include <vector>
 #include "Component.h"
 
 class Transform :public Component
 {
 public:
 	EATER_ENGINEDLL Transform();
-	virtual ~Transform();
+	virtual EATER_ENGINEDLL ~Transform();
 	
 	
 	//가장먼저 실행되는 업데이트
