@@ -7,11 +7,12 @@
 
 
 
-std::map<std::string, LoadData*> LoadManager::MeshList;
+std::map<std::string, ModelData*> LoadManager::ModelList;
 std::map<std::string, TextureBuffer*> LoadManager::TextureList;
 LoadManager::LoadManager()
 {
-	GEngine = nullptr;
+	GEngine		= nullptr;
+	EaterParser = nullptr;
 }
 
 LoadManager::~LoadManager()
@@ -27,12 +28,12 @@ void LoadManager::Initialize(GraphicEngineManager* Graphic)
 	EaterParser->Initialize();
 }
 
-LoadData* LoadManager::GetMesh(std::string Name)
+ModelData* LoadManager::GetMesh(std::string Name)
 {
-	std::map<std::string, LoadData*>::iterator temp = MeshList.find(Name);
-	if (temp == MeshList.end())
+	std::map<std::string, ModelData*>::iterator temp = ModelList.find(Name);
+	if (temp == ModelList.end())
 	{
-		DebugManager::Print(Name, DebugManager::MSG_TYPE::MSG_LOAD, true);
+		DebugManager::Print(Name, 0, 0, DebugManager::MSG_TYPE::MSG_LOAD, true);
 		return nullptr;
 	}
 	else
@@ -47,7 +48,7 @@ TextureBuffer* LoadManager::GetTexture(std::string Name)
 	std::map<std::string, TextureBuffer*>::iterator temp = TextureList.find(Name);
 	if (temp == TextureList.end())
 	{
-		DebugManager::Print(Name, DebugManager::MSG_TYPE::MSG_LOAD, true);
+		DebugManager::Print(Name, 0, 0, DebugManager::MSG_TYPE::MSG_LOAD, true);
 		return nullptr;
 	}
 	else
@@ -62,36 +63,38 @@ void LoadManager::LoadMesh( std::string Name, bool Scale, bool LoadAnime)
 	std::string Strtemp = ".fbx";
 	std::string FullName = MeshPath + Name + Strtemp;
 
+	ModelData* SaveMesh = new ModelData();
+
+
 	//파서를 통해서 매쉬를 로드
-	 ParserData::Model* temp = EaterParser->LoadModel(FullName,Scale,LoadAnime);
+	ParserData::Model* temp = EaterParser->LoadModel(FullName,Scale,LoadAnime);
 	
-
-	LoadData* data = new LoadData();
-	Indexbuffer*	IB = GEngine->CreateIndexBuffer(temp);
-	Vertexbuffer*	VB = GEngine->CreateVertexBuffer(temp);
-
-	data->IB = IB;
-	data->VB = VB;
-	data->indexCount = (int)temp->m_MeshList[0]->m_IndexList.size()*3;
-	data->vertexCount = (int)temp->m_MeshList[0]->m_VertexList.size();
-
-
-	if (data->IB == nullptr)
+	//매쉬 개수
+	int MeshCount = (int)temp->m_MeshList.size();
+	for (int i = 0; i < MeshCount; i++)
 	{
-		std::string strtemp = FullName + "[인덱스버퍼]";
-		DebugManager::Print(strtemp, DebugManager::MSG_TYPE::MSG_LOAD, true);
-		return;
+		//리스트에 매쉬 조사
+		ParserData::Mesh* mesh = temp->m_MeshList[i];
+
+		//최상위 매쉬가 아니라면 아무것도 하지않음
+		if (mesh->m_TopNode != true){continue;}
+
+		//재귀를 호출하면서 매쉬를 생성하고 연결해준다 마지막에 나오는 값은 최상위 오브젝트
+		LoadMeshData* data = CreateMesh(mesh);
+
+		//이렇게 나온 서로연결된 매쉬데이터의 최상위 오브젝트가 본인지 아닌지 판별후 리스트에 넣어준다
+		if (data->Bone_Object == true)
+		{	
+			SaveMesh->BoneList.push_back(data);
+		}
+		else
+		{
+			SaveMesh->MeshList.push_back(data);
+		}
 	}
-	else if (data->VB == nullptr) 
-	{
-		std::string strtemp = FullName + "[버텍스버퍼]";
-		DebugManager::Print(FullName, DebugManager::MSG_TYPE::MSG_LOAD, true);
-		return;
-	}
-	else
-	{
-		MeshList.insert({Name,data});
-	}
+
+	//최상위 오브젝트의 리스트를 넣어준다
+	ModelList.insert({Name,SaveMesh});
 }
 
 void LoadManager::LoadTexture(std::string Name)
@@ -101,12 +104,12 @@ void LoadManager::LoadTexture(std::string Name)
 
 	if (Tbuffer == nullptr || Tbuffer->TextureBufferPointer == nullptr) 
 	{
-		DebugManager::Print(TextureName, DebugManager::MSG_TYPE::MSG_LOAD, true);
+		DebugManager::Print(TextureName, 0, 0, DebugManager::MSG_TYPE::MSG_LOAD, true);
 	}
 	else
 	{
 		std::string strTemp = "텍스쳐를 로드합니다 :" + Name;
-		DebugManager::Print(strTemp, DebugManager::MSG_TYPE::MSG_LOAD);
+		DebugManager::Print(strTemp, 0, 0, DebugManager::MSG_TYPE::MSG_LOAD);
 		TextureList.insert({Name,Tbuffer});
 	}
 }
@@ -132,33 +135,83 @@ void LoadManager::DeleteMesh(std::string mMeshName)
 {
 	//메모리에 할당한 매쉬의 정보를 삭제시킴
 
-	std::map<std::string, LoadData*>::iterator temp = MeshList.find(mMeshName);
-	if (temp == MeshList.end())
+	std::map<std::string, ModelData*>::iterator temp = ModelList.find(mMeshName);
+	if (temp == ModelList.end())
 	{
-		DebugManager::Print(mMeshName, DebugManager::MSG_TYPE::MSG_DELETE,true);
+		DebugManager::Print(mMeshName, 0, 0, DebugManager::MSG_TYPE::MSG_DELETE,true);
 		return;
 	}
 	else
 	{
-		DebugManager::Print(mMeshName, DebugManager::MSG_TYPE::MSG_DELETE);
-		MeshList.erase(mMeshName);
+		DebugManager::Print(mMeshName, 0, 0, DebugManager::MSG_TYPE::MSG_DELETE);
+		ModelList.erase(mMeshName);
 	}
 }
 
 void LoadManager::DeleteMeshAll()
 {
-	MeshList.clear();
+	ModelList.clear();
 }
 
-void LoadManager::CreateBuffer(ParserData::Model* mesh)
+
+LoadMeshData* LoadManager::CreateMesh(ParserData::Mesh* mesh)
 {
-	LoadData* data = new LoadData();
-	Indexbuffer*	IB		= GEngine->CreateIndexBuffer(mesh);
-	Vertexbuffer*	VB		= GEngine->CreateVertexBuffer(mesh);
+	LoadMeshData* box = new LoadMeshData();
 
-	data->IB = IB;
-	data->VB = VB;
+
+	//이매쉬에 자식객체 개수
+	int ChildCount = mesh->m_ChildList.size();
+
+	//계층정보 받기
+	box->Name				= mesh->m_NodeName;
+	box->ParentName			= mesh->m_ParentName;
+	box->Top_Object			= mesh->m_TopNode;
+	box->Bone_Object		= mesh->m_IsBone;
+	box->Skinning_Object	= mesh->m_IsSkinningObject;
+	box->Animation			= mesh->m_Animation;
+
+	//매트릭스 정보 받기
+	box->WorldTM =  &mesh->m_WorldTM;
+	box->LocalTM =  &mesh->m_LocalTM;
+	
+	//메터리얼 정보
+	box->Material	= mesh->m_MaterialData;
+
+	
+	if(mesh->m_IsBone == false)
+	{
+		//매쉬라면 랜더링할 인덱스버퍼와 버텍스버퍼를 읽어온다
+		box->IB = GEngine->CreateIndexBuffer(mesh);
+		box->VB = GEngine->CreateVertexBuffer(mesh);
+		box->IB->Count = (int)mesh->m_IndexList.size() * 3;
+		box->VB->Count = (int)mesh->m_VertexList.size();
+		
+
+		if (mesh->m_IsSkinningObject == true)
+		{
+			//스키닝 오브젝트라면 본정보도 읽는다
+			box->BoneList	= &(mesh->m_BoneMeshList);
+			box->BoneTMList = &(mesh->m_BoneTMList);
+			mesh->m_Animation;
+		}
+	}
+	
+	
+
+
+	//자식객체가 있다면 정보읽어옴
+	for (int i = 0; i < ChildCount; i++)
+	{
+		LoadMeshData* temp = CreateMesh(mesh->m_ChildList[i]);
+		box->Child.push_back(temp);
+		temp->Parent = box;
+	}
+
+	return box;
 }
+
+
+
 
 
 

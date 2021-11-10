@@ -18,7 +18,7 @@ class TextureBuffer;
 
 namespace ParserData
 {
-	struct Model;
+	struct Mesh;
 }
 
 
@@ -33,6 +33,7 @@ public:
 	template<typename T>
 	void PushEngine(std::string Name);
 
+	void Update();
 	//모든 그래픽 엔진 초기화
 	void EngineAllInitialize(HWND Hwnd,int WinSizeWidth,int WinSizeHeight);
 	//사용할 그래픽엔진 선택
@@ -45,10 +46,10 @@ public:
 	void Render(std::queue<MeshData*>* meshList, GlobalData* global);
 
 	//선택한 그래픽엔진으로 인덱스버퍼를 생성함
-	Indexbuffer* CreateIndexBuffer(ParserData::Model* mModel);
+	Indexbuffer* CreateIndexBuffer(ParserData::Mesh* mModel);
 
 	//선택한 그래픽 엔진으로 버텍스 버퍼를 생성함
-	Vertexbuffer* CreateVertexBuffer(ParserData::Model* mModel);
+	Vertexbuffer* CreateVertexBuffer(ParserData::Mesh* mModel);
 
 	//선택한 그래픽엔진으로 텍스쳐 생성
 	TextureBuffer* CreateTextureBuffer(std::string Name);
@@ -62,6 +63,7 @@ private:
 	//현재 선택된 그래픽 엔진
 	GraphicEngine* NowEngine;
 
+	std::string EngineName;
 	//그래픽 엔진들을 관리할 리스트
 	std::map<std::string,GraphicEngine*> GEngineList;
 };

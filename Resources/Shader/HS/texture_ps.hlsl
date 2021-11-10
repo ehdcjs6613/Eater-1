@@ -20,12 +20,7 @@ struct PixeloutputType
 PixeloutputType main(PixelInputType input)
 { 
     PixeloutputType output;
-	output.color = float4(1, 1, 1, 1);
-    
-    //Tex01 = MainTexture.Sample(SampleType, input.Tex);
-    //
-    //output.color = Tex01;
-    //output.color = pow(output.color, 1 / 2.2f);
-    //output.color.a =1;
+	output.color = float4(1, 0, 0, 1);
+
 	return output;
 }

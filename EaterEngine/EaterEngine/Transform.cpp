@@ -16,14 +16,12 @@ Transform::Transform()
 	Local_Look	= { 0,0,0 };
 
 	LocalUpdate = false;
+
+	Load_World = DirectX::XMMatrixIdentity();
+	Load_Local = DirectX::XMMatrixIdentity();
 }
 
 Transform::~Transform()
-{
-
-}
-
-void Transform::Awake()
 {
 
 }
@@ -36,7 +34,7 @@ void Transform::TransformUpdate()
 	UpdateLocalPosition();
 
 	//업데이트가 끝난후 오브젝트 안에 매쉬데이터를 업데이트
-	gameobject->OneMeshData->mWorld = GetWorld();
+	gameobject->OneMeshData->mWorld = *(GetWorld());
 }
 
 DirectX::XMFLOAT3 Transform::GetLocalPosition_UP()
@@ -146,6 +144,34 @@ void Transform::SetLocalUpdate(bool isUpdate)
 	LocalUpdate = isUpdate;
 }
 
+void Transform::SetChild(Transform* mChild)
+{
+	ChildList.push_back(mChild);
+}
+
+void Transform::SetParnet(Transform* mParent)
+{
+	Parent = mParent;
+}
+
+void Transform::Child_Local_Updata()
+{
+	if (Parent == nullptr)
+	{
+		Load_Local = Load_World;
+	}
+	else
+	{
+		DirectX::XMMATRIX TM2_1 = DirectX::XMMatrixInverse(nullptr, Parent->Load_World);
+		Load_Local = Load_World * TM2_1;
+	}
+
+	for (int i = 0; i < ChildList.size(); i++) 
+	{
+		ChildList[i]->Child_Local_Updata();
+	}
+}
+
 DirectX::XMMATRIX Transform::CreateXMPos4x4()
 {
 	DirectX::XMFLOAT4X4 Position_4x4;
@@ -188,7 +214,15 @@ void Transform::UpdateWorldXM()
 	RotationXM	= CreateXMRot4x4();
 	ScaleXM		= CreateXMScl4x4();
 
-	World_M = ScaleXM * RotationXM * PositionXM;
+	DirectX::XMMATRIX Master = (ScaleXM * RotationXM * PositionXM);
+	if (Parent != nullptr)
+	{
+		World_M = Load_Local * Master * Parent->World_M;
+	}
+	else
+	{
+		World_M = Load_Local*  Master;
+	}
 }
 
 void Transform::UpdateLocalPosition()

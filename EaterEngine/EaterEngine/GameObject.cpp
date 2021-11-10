@@ -1,5 +1,6 @@
 #include "GameObject.h"
 #include "EngineData.h"
+#include "DebugManager.h"
 #include "ObjectManager.h"
 GameObject::GameObject()
 {
@@ -32,6 +33,18 @@ GameObject* GameObject::GetChild(int Number)
 	return nullptr;
 }
 
+Transform* GameObject::GetTransform()
+{
+	if (transform != nullptr)
+	{
+		return  transform;
+	}
+	else
+	{
+		return nullptr;
+	}
+}
+
 Component* GameObject::GetDeleteComponent(int i)
 {
 	Component* temp = ComponentList[i];
@@ -41,6 +54,11 @@ Component* GameObject::GetDeleteComponent(int i)
 int GameObject::GetComponentCount()
 {
 	return ComponentList.size();
+}
+
+void GameObject::PushChildList(GameObject* obj)
+{
+	ChildList.push_back(obj);
 }
 
 void GameObject::PushComponentFunction(Component* con, unsigned int type)

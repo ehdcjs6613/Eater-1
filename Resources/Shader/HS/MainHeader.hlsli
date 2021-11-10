@@ -1,24 +1,25 @@
 //카메라 관련 버퍼
 cbuffer CameraBuffer : register(b0)
 {
-    float4x4 viewproj;
-    float4x4 ViewMatrix;
-    float3 camPos;
+    float4x4 view;
+    float4x4 proj;
 };
 
 //오브젝트 관련 버퍼
 cbuffer ObjectBuffer : register(b1)
 {
-    float4x4    ObjworldMatrix;
-    float4x4    TexMatrix;
-    uint        Texture_Mask;
+    float4x4    world;
 };
 
+//스키닝 관련 버퍼
+cbuffer SkinningBuffer : register(b2)
+{
+    float4x4 Skinning_world;
+    float4x4 BoneOffset[96];
+};
 
 Texture2D MainTexture   : register(t0); //메인
 Texture2D NomalTexture  : register(t1); //노말
-
-
 
 SamplerState SampleType : register(s0)
 {

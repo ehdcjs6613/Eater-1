@@ -19,7 +19,7 @@ Delegate_Map<Component> ObjectManager::EndUpdate;
 
 ObjectManager::ObjectManager()
 {
-	Global = new GlobalData();
+	Global = nullptr;
 }
 
 ObjectManager::~ObjectManager()
@@ -88,9 +88,7 @@ void ObjectManager::AllDeleteObject()
 
 void ObjectManager::Initialize(HWND _g_hWnd)
 {
-	//pTest_Engine = new DH3DEngine();
-	//pTest_Engine->Initialize(_g_hWnd, 1920, 1080);
-	//pTest_Engine->SetDebug(true);
+	Global = new GlobalData();
 }
 
 void ObjectManager::PushStartUpdate(Component* mComponent)

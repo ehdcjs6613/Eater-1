@@ -103,3 +103,10 @@ void EndEngine()
 	return gGameEngine->GetMousePosY();
 }
 
+
+ /// 시간 관련
+ float GetDeltaTime()
+ {
+	 return gGameEngine->GetdeltaTime();
+ }
+

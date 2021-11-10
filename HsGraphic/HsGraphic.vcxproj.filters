@@ -40,6 +40,15 @@
     <Filter Include="소스 파일\Shader\Data">
       <UniqueIdentifier>{1d736070-7b51-4dfd-93bd-37deaa9f3e7a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Texture">
+      <UniqueIdentifier>{5040d5ad-6a88-40cd-be27-a9bcbb366e73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Texture\TextureMap">
+      <UniqueIdentifier>{471fe6d9-1017-4f2c-9f53-8d7a1a44bf7f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Texture\TextureMapBase">
+      <UniqueIdentifier>{ddc8ea16-f3cd-4227-8f76-023ce6a4cfda}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -50,9 +59,6 @@
     </ClInclude>
     <ClInclude Include="Data.h">
       <Filter>소스 파일\Data</Filter>
-    </ClInclude>
-    <ClInclude Include="SimpleMath.h">
-      <Filter>소스 파일\Helper</Filter>
     </ClInclude>
     <ClInclude Include="AlignedAllocationPolicy.h">
       <Filter>소스 파일\Helper</Filter>
@@ -78,6 +84,12 @@
     <ClInclude Include="HsGraphicDLL.h">
       <Filter>소스 파일\Helper</Filter>
     </ClInclude>
+    <ClInclude Include="TextureMap.h">
+      <Filter>소스 파일\Texture\TextureMap</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureBase.h">
+      <Filter>소스 파일\Texture\TextureMapBase</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -92,11 +104,14 @@
     <ClCompile Include="ShaderManager.cpp">
       <Filter>소스 파일\ShaderManager</Filter>
     </ClCompile>
+    <ClCompile Include="TextureMap.cpp">
+      <Filter>소스 파일\Texture\TextureMap</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureBase.cpp">
+      <Filter>소스 파일\Texture\TextureMapBase</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="SimpleMath.inl">
-      <Filter>소스 파일\Helper</Filter>
-    </None>
     <None Include="..\Resources\Shader\HS\MainHeader.hlsli">
       <Filter>소스 파일\Shader\Header</Filter>
     </None>
@@ -106,6 +121,12 @@
       <Filter>소스 파일\Shader\hlsl</Filter>
     </FxCompile>
     <FxCompile Include="..\Resources\Shader\HS\texture_vs.hlsl">
+      <Filter>소스 파일\Shader\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Resources\Shader\HS\Skinning_ps.hlsl">
+      <Filter>소스 파일\Shader\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Resources\Shader\HS\Skinning_vs.hlsl">
       <Filter>소스 파일\Shader\hlsl</Filter>
     </FxCompile>
   </ItemGroup>

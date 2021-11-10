@@ -3,9 +3,12 @@
 #include "HsEngineHelper.h"
 #include "ParserData.h"
 #include "EngineData.h"
-//#include "ShaderManager.h"
-//#include "RenderingManager.h"
+#include "ShaderManager.h"
+#include "RenderingManager.h"
+#include "BufferData.h"
+#include "InputLayout.h"
 #include "HsDefine.h"
+#include "TextureBase.h"
 #include <vector>
 #include "Data.h"
 
@@ -14,14 +17,12 @@ using namespace DirectX;
 HsGraphic::HsGraphic()
 {
 	hwnd = 0;
-
-	Device			= nullptr;
+	Device				= nullptr;
 	DeviceContext		= nullptr;
 	mRenderTargetView	= nullptr;
 	mDepthStencilView	= nullptr;
 	mScreenViewport		= D3D11_VIEWPORT();
 	mSwapChain			= nullptr;
-
 
 	//윈도우 사이즈
 	WinSizeX = 0;
@@ -47,37 +48,50 @@ void HsGraphic::Initialize(HWND _hWnd, int screenWidth, int screenHeight)
 
 	//랜더타겟과 상태를 생성
 	CreateRenderTarget();
-	CreateRenderState();
 
 	//매니저들 생성
-	//mShaderManager = new ShaderManager();
-	//mRenderManager = new RenderingManager();
-	//
-	//mShaderManager->Initialize(Device, DeviceContext);
+	mShaderManager = new ShaderManager();		//쉐이더를 가져오고 저장하는 클래스
+	mRenderManager = new RenderingManager();	//랜더링을 해주는 클래스
+	
+
+	//매니저들 초기화
+	mShaderManager->Initialize(Device, DeviceContext);
+	mRenderManager->Initialize(Device, DeviceContext, mShaderManager);
 }
 
-Indexbuffer* HsGraphic::CreateIndexBuffer(ParserData::Model* mModel)
+Indexbuffer* HsGraphic::CreateIndexBuffer(ParserData::Mesh* mModel)
 {
 
 	ID3D11Buffer* mIB = nullptr;
 	Indexbuffer* indexbuffer = new Indexbuffer();
 
 	//모델의 계수
-	int ModelCount = (int)mModel->m_MeshList.size();
-	int Icount =  (int)mModel->m_MeshList[0]->m_IndexList.size();
-	std::vector<ParserData::IndexList*> IndexList = mModel->m_MeshList[0]->m_IndexList;
+	int Icount		= (int)mModel->m_IndexList.size();
 
+	std::vector<UINT> index;
+	index.resize(Icount*3);
+
+	int j = 0;
+	for (int i = 0 ;i < Icount; i++)
+	{
+		index[j] = mModel->m_IndexList[i]->m_Index[0];
+		j++;
+		index[j] = mModel->m_IndexList[i]->m_Index[1];
+		j++;
+		index[j] = mModel->m_IndexList[i]->m_Index[2];
+		j++;
+	}
 
 	//인덱스 버퍼를 생성한다
 	D3D11_BUFFER_DESC ibd;
 	ibd.Usage = D3D11_USAGE_IMMUTABLE;
-	ibd.ByteWidth = sizeof(UINT) * Icount;
+	ibd.ByteWidth = sizeof(UINT) * index.size();
 	ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	ibd.CPUAccessFlags = 0;
 	ibd.MiscFlags = 0;
 	D3D11_SUBRESOURCE_DATA iinitData;
-	iinitData.pSysMem = &IndexList[0];
-	//HR(Device->CreateBuffer(&ibd, &iinitData, &mIB));
+	iinitData.pSysMem = &index[0];
+	Device->CreateBuffer(&ibd, &iinitData, &mIB);
 
 	//인덱스버퍼를 보낼수있도록 변경
 	indexbuffer->IndexBufferPointer = mIB;
@@ -86,50 +100,36 @@ Indexbuffer* HsGraphic::CreateIndexBuffer(ParserData::Model* mModel)
 	return indexbuffer;
 }
 
-Vertexbuffer* HsGraphic::CreateVertexBuffer(ParserData::Model* mModel)
+Vertexbuffer* HsGraphic::CreateVertexBuffer(ParserData::Mesh* mModel)
 {
-	ID3D11Buffer* mVB = nullptr;
-	Vertexbuffer* vertexbuffer = new Vertexbuffer();
-
-	//모델의 계수
-	int ModelCount = (int)mModel->m_MeshList.size();
-	int Vcount = (int)mModel->m_MeshList[0]->m_VertexList.size();
-	std::vector<ParserData::Vertex*> VertexList = mModel->m_MeshList[0]->m_VertexList;
-	
-
-	std::vector<Deferred32> temp;
-	temp.resize(Vcount);
-	for (int i = 0; i < Vcount; i++)
+	//모델의 	
+	Vertexbuffer* vertexbuffer;
+	if (mModel->m_IsSkinningObject == true)
 	{
-		temp[i].Pos			= VertexList[i]->m_Pos;
-		temp[i].Nomal		= VertexList[i]->m_Normal;
-		temp[i].Tex			={ VertexList[i]->m_U ,VertexList[i]->m_V};
-		temp[i].Tangent		= VertexList[i]->m_Tanget;
+		vertexbuffer = CreateSkinngingVertexBuffer(mModel);
+	}
+	else
+	{
+		vertexbuffer = CreateBasicVertexBuffer(mModel);
 	}
 
-
-
-	D3D11_BUFFER_DESC vbd;
-	vbd.Usage = D3D11_USAGE_IMMUTABLE;
-	vbd.ByteWidth = sizeof(Deferred32) * Vcount;
-	vbd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	vbd.CPUAccessFlags = 0;
-	vbd.MiscFlags = 0;
-	D3D11_SUBRESOURCE_DATA vinitData;
-	vinitData.pSysMem = &temp[0];
-	//HR(Device->CreateBuffer(&vbd, &vinitData, &mVB));
-	
-
-	vertexbuffer->VertexbufferPointer = mVB;
-	vertexbuffer->size = sizeof(ID3D11Buffer);
-
 	return vertexbuffer;
+}
+
+ID3D11RenderTargetView* HsGraphic::GetEngineRTV()
+{
+	return mRenderTargetView;
+}
+
+ID3D11DepthStencilView* HsGraphic::GetEngineDSV()
+{
+	return mDepthStencilView;
 }
 
 void HsGraphic::CreateRenderTarget()
 {
 	//D3D에 연결된 랜더타겟과 뎁스스텐실 을 생성한다
-
+	
 	ID3D11Texture2D* backBuffer;
 	mSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&backBuffer));
 	Device->CreateRenderTargetView(backBuffer, 0, &mRenderTargetView);
@@ -165,30 +165,6 @@ void HsGraphic::CreateRenderTarget()
 	mScreenViewport.MaxDepth = 1.0f;
 
 	DeviceContext->RSSetViewports(1, &mScreenViewport);
-}
-
-void HsGraphic::CreateRenderState()
-{
-	//각종 상태를 생성해준다
-
-	D3D11_RASTERIZER_DESC solidDesc;
-	ZeroMemory(&solidDesc, sizeof(D3D11_RASTERIZER_DESC));
-	solidDesc.FillMode = D3D11_FILL_SOLID;
-	solidDesc.CullMode = D3D11_CULL_BACK;
-	solidDesc.FrontCounterClockwise = false;
-	solidDesc.DepthClipEnable = true;
-
-	//HR(Device->CreateRasterizerState(&solidDesc, &mSolid));
-
-
-	D3D11_RASTERIZER_DESC wireframeDesc;
-	ZeroMemory(&wireframeDesc, sizeof(D3D11_RASTERIZER_DESC));
-	wireframeDesc.FillMode = D3D11_FILL_WIREFRAME;
-	wireframeDesc.CullMode = D3D11_CULL_BACK;
-	wireframeDesc.FrontCounterClockwise = false;
-	wireframeDesc.DepthClipEnable = true;
-
-	//HR(Device->CreateRasterizerState(&wireframeDesc, &mWireframe));
 }
 
 void HsGraphic::CreateDevice()
@@ -298,18 +274,11 @@ void HsGraphic::CreateDevice()
 void HsGraphic::BeginRender()
 {
 	//엔진 랜더링 시작
-	float DeepDarkGray[4] = { 1.0f, 0.0f, 0.0f, 1.0f };
+	float DeepDarkGray[4] = { 1.0f, 1.0f, 0.0f, 1.0f };
 	DeviceContext->OMSetRenderTargets(1, &mRenderTargetView, mDepthStencilView);
 	DeviceContext->ClearRenderTargetView(mRenderTargetView, DeepDarkGray);
 	DeviceContext->ClearDepthStencilView(mDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	DeviceContext->RSSetViewports(1, &mScreenViewport);
-}
-
-void HsGraphic::EngineRender()
-{
-	//엔진 랜더링
-
-
 }
 
 void HsGraphic::EndRender()
@@ -318,34 +287,120 @@ void HsGraphic::EndRender()
 	mSwapChain->Present(0, 0);
 }
 
-int HsGraphic::GetAspectRatio()
+Vertexbuffer* HsGraphic::CreateBasicVertexBuffer(ParserData::Mesh* mModel)
 {
-	int width = WinSizeX;
-	int Height = WinSizeY;
-	int Ratio = width / Height;
-	return  Ratio;
+	///스키닝이없는 기본 오브젝트를 생성해줌
+	ID3D11Buffer* mVB = nullptr;
+	Vertexbuffer* vertexbuffer = new Vertexbuffer();
+
+	//포지션 , 노말, uv, 탄젠타 값만 읽어옴
+	std::vector<Deferred32> temp;
+	int Vcount = mModel->m_VertexList.size();
+	temp.resize(Vcount);
+	for (int i = 0; i < Vcount; i++)
+	{
+		temp[i].Pos = mModel->m_VertexList[i]->m_Pos;
+		temp[i].Nomal = mModel->m_VertexList[i]->m_Normal;
+		temp[i].Tex = { mModel->m_VertexList[i]->m_U ,mModel->m_VertexList[i]->m_V };
+		temp[i].Tangent = mModel->m_VertexList[i]->m_Tanget;
+	}
+
+	//버퍼 생성
+	D3D11_BUFFER_DESC vbd;
+	vbd.Usage = D3D11_USAGE_IMMUTABLE;
+	vbd.ByteWidth = sizeof(Deferred32) * Vcount;
+	vbd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	vbd.CPUAccessFlags = 0;
+	vbd.MiscFlags = 0;
+	D3D11_SUBRESOURCE_DATA vinitData;
+	vinitData.pSysMem = &temp[0];
+	Device->CreateBuffer(&vbd, &vinitData, &mVB);
+
+	vertexbuffer->VertexbufferPointer = mVB;
+	vertexbuffer->size = sizeof(ID3D11Buffer);
+
+	/////////////////////////////////////////////////// 중요함 꼭넣어주세요
+	vertexbuffer->VectexDataSize = sizeof(Deferred32);
+	//////////////////////////////////////////////////
+	
+
+	return vertexbuffer;
 }
+
+Vertexbuffer* HsGraphic::CreateSkinngingVertexBuffer(ParserData::Mesh* mModel)
+{
+	///스키닝이 오브젝트를 생성해줌
+	ID3D11Buffer* mVB = nullptr;
+	Vertexbuffer* vertexbuffer = new Vertexbuffer();
+
+	//포지션 , 노말, uv, 탄젠타 값만 읽어옴
+	std::vector<Skinning32> temp;
+	int Vcount = mModel->m_VertexList.size();
+	temp.resize(Vcount);
+
+
+	for (int i = 0; i < Vcount; i++)
+	{
+		ParserData::Vertex* One = mModel->m_VertexList[i];
+
+		temp[i].Pos		= One->m_Pos;
+		temp[i].Nomal	= One->m_Normal;
+		temp[i].Tex		= { One->m_U ,One->m_V };
+		temp[i].Tangent = One->m_Tanget;
+
+		
+		int Count =  (int)One->m_BoneIndices.size();
+		for (int j = 0; j < Count; j++)
+		{
+			temp[i].BoneIndex0[j]	= One->m_BoneIndices[j];
+			temp[i].BoneWeights0[j] = One->m_BoneWeights[j];
+		}
+	}
+
+
+
+	//버퍼 생성
+	D3D11_BUFFER_DESC vbd;
+	vbd.Usage = D3D11_USAGE_IMMUTABLE;
+	vbd.ByteWidth = sizeof(Skinning32) * Vcount;
+	vbd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	vbd.CPUAccessFlags = 0;
+	vbd.MiscFlags = 0;
+	D3D11_SUBRESOURCE_DATA vinitData;
+	vinitData.pSysMem = &temp[0];
+	Device->CreateBuffer(&vbd, &vinitData, &mVB);
+
+	vertexbuffer->VertexbufferPointer = mVB;
+	vertexbuffer->size = sizeof(ID3D11Buffer);
+
+	/////////////////////////////////////////////////// 중요함 꼭넣어주세요
+	vertexbuffer->VectexDataSize = sizeof(Skinning32);
+	//////////////////////////////////////////////////
+
+	return vertexbuffer;
+}
+
 
 TextureBuffer* HsGraphic::CreateTextureBuffer(std::string path)
 {
 	ID3D11ShaderResourceView* Textures = nullptr;
 	ID3D11Resource* texResource = nullptr;
 
-	CString _path = path.c_str();
-	 
-	//if (CreateDDSTextureFromFile(Device, _path, &texResource, &Textures, 0))
-	//{
-	//	return nullptr;
-	//}
-	
-	//TextureBuffer* buffer = new TextureBuffer();
-	//buffer->TextureBufferPointer = Textures;
-	//buffer->size = sizeof(ID3D11ShaderResourceView);
-	//
-	//texResource->Release();
 
-	//return buffer;
-	return nullptr;
+	std::wstring _path = std::wstring(path.begin(), path.end());
+	const wchar_t* w_path = _path.c_str();
+
+	if (CreateDDSTextureFromFile(Device, w_path, &texResource, &Textures, 0))
+	{
+		return nullptr;
+	}
+	
+	TextureBuffer* buffer = new TextureBuffer();
+	buffer->TextureBufferPointer = Textures;
+	buffer->size = sizeof(ID3D11ShaderResourceView);	
+	texResource->Release();
+
+	return buffer;
 }
 
 void HsGraphic::OnReSize(int Change_Width, int Change_Height)
@@ -357,11 +412,20 @@ void HsGraphic::OnReSize(int Change_Width, int Change_Height)
 	assert(Device);
 	assert(mSwapChain);
 
-	mRenderTargetView->Release();	//랜더타겟 삭제
-	mDepthStencilView->Release();	//뎁스스텐실 삭제
+	//랜더타겟 삭제
+	if (mRenderTargetView != nullptr)
+	{
+		mRenderTargetView->Release();
+		mRenderTargetView = nullptr;
+	}
 
-	mRenderTargetView = nullptr;
-	mDepthStencilView = nullptr;
+	//뎁스스텐실 삭제
+	if (mDepthStencilView != nullptr)
+	{
+		mDepthStencilView->Release();	
+		mDepthStencilView = nullptr;
+	}
+
 
 	//스왑체인 재설정
 	mSwapChain->ResizeBuffers(1, WinSizeX, WinSizeY, DXGI_FORMAT_R8G8B8A8_UNORM, 0);
@@ -378,7 +442,40 @@ void HsGraphic::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 {
 	BeginRender();
 
-	EngineRender();
+
+	while (meshList->size() != 0)
+	{
+		//가장 먼저들어온 오브젝트를 가져온다
+		MeshData* Mesh = meshList->front();
+		
+		switch (Mesh->ObjType)
+		{
+			case OBJECT_TYPE::Camera: //카메라 오브젝트
+			{
+				mRenderManager->CameraUpdate(global);
+				break;
+			}
+
+			case OBJECT_TYPE::Skinning: //스키닝 매쉬
+			{
+				mRenderManager->SkinningUpdate(Mesh);
+				mRenderManager->Rendering(Mesh,RenderingManager::ShaderType::SKINNING);
+				break;
+			}
+
+			case OBJECT_TYPE::Base: //기본 매쉬
+			{
+				mRenderManager->MeshUpdate(Mesh);
+				mRenderManager->Rendering(Mesh, RenderingManager::ShaderType::BASIC);
+				break;
+			}
+		}
+
+
+		//사용한것은 뺴준다
+		meshList->pop();
+	}
+
 
 	EndRender();
 }
@@ -387,9 +484,6 @@ void HsGraphic::Delete()
 {
 	mWireframe->Release();
 	mSolid->Release();
-
-	//mShaderManager;
-	//mRenderManager;
 }
 
 

@@ -235,6 +235,7 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\lib"
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Animation.h" />
     <ClInclude Include="ComponentHeader.h" />
     <ClInclude Include="DebugManager.h" />
     <ClInclude Include="Delegate.h" />
@@ -245,21 +246,23 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\lib"
     <ClInclude Include="Export\EaterEngineDLL.h" />
     <ClInclude Include="Export\GameObject.h" />
     <ClInclude Include="Export\MainHeader.h" />
+    <ClInclude Include="Export\MeshFilter.h" />
+    <ClInclude Include="Export\ResourcesData.h" />
     <ClInclude Include="Export\Scene.h" />
+    <ClInclude Include="Export\SkinningFilter.h" />
     <ClInclude Include="Export\Transform.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="GraphicEngineManager.h" />
     <ClInclude Include="GraphicsEngine.h" />
     <ClInclude Include="KeyinputManager.h" />
-    <ClInclude Include="MeshFilter.h" />
     <ClInclude Include="ObjectManager.h" />
     <ClInclude Include="LoadManager.h" />
-    <ClInclude Include="ResourcesData.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="TimeManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Animation.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="DebugManager.cpp" />
@@ -276,6 +279,7 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\lib"
     <ClCompile Include="LoadManager.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="SkinningFilter.cpp" />
     <ClCompile Include="TimeManager.cpp" />
     <ClCompile Include="Transform.cpp" />
   </ItemGroup>

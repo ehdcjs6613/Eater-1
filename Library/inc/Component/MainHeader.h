@@ -18,18 +18,11 @@ extern "C" EATER_ENGINEDLL GameObject*	Instance(std::string ObjName= "GameObject
 extern "C" EATER_ENGINEDLL void			Destroy(GameObject* obj);					//오브젝트 삭제
 
 
-extern "C" EATER_ENGINEDLL void ChoiceScene(std::string name);		//스크린 선택
-extern "C" EATER_ENGINEDLL void StartScene();						//스크린 넣기
-
-
 ///스크린 생성하기
 template<typename T>
-void CreateScene(std::string Name)
-{ 
-	T* temp = new T();
-	CreateSceneSub(temp,Name);
-};
-EATER_ENGINEDLL void CreateSceneSub(Scene* mSceneTemp,std::string SceneName);
+void CreateScene(std::string Name);
+extern "C" EATER_ENGINEDLL void ChoiceScene(std::string name);					//스크린 선택
+EATER_ENGINEDLL void CreateSceneSub(Scene* mSceneTemp,std::string SceneName);	//스크린 생성
 
 
 ///매쉬 불러오기
@@ -46,3 +39,14 @@ extern "C" EATER_ENGINEDLL bool  GetKey(byte number);		//키누르고있을때
 extern "C" EATER_ENGINEDLL bool  GetTogle(byte number);		//키 토글
 extern "C" EATER_ENGINEDLL float GetMousePosX();			//마우스 위치 X
 extern "C" EATER_ENGINEDLL float GetMousePosY();			//마우스 위치 Y
+
+///시간 관련
+extern "C" EATER_ENGINEDLL float GetDeltaTime();
+
+
+template<typename T>
+inline void CreateScene(std::string Name)
+{
+	T* temp = new T();
+	CreateSceneSub(temp, Name);
+}

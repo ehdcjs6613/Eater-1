@@ -1,16 +1,12 @@
 #pragma once
 #include <DirectXMath.h>
+#include <string>
 //리소스 최상위 클래스
 class  Resources
 {
 public:
 	Resources() {};
 	virtual ~Resources() {};
-
-	///데이터를 넣었다면 true 바꿔주세요
-	bool Use = false;
-
-	virtual void Delete() = 0;
 };
 
 //인덱스 버퍼를 받을 클래스
@@ -21,14 +17,11 @@ public:
 	{
 		delete IndexBufferPointer;
 	};
-	Indexbuffer()
-	{
-		IndexBufferPointer = nullptr;
-		size = 0;
-	};
-	virtual void Delete() {};
-	void* IndexBufferPointer;
-	unsigned int size;
+	
+	void* IndexBufferPointer = nullptr;
+
+	unsigned int Count	= 0;	//버텍스 개수
+	unsigned int size	= 0;	//바꾸려는 자료형의 사이즈
 };
 
 
@@ -40,14 +33,13 @@ public:
 	{
 		delete VertexbufferPointer;
 	};
-	Vertexbuffer()
-	{
-		VertexbufferPointer = nullptr;
-		size = 0;
-	};
-	virtual void Delete() {};
-	void* VertexbufferPointer;
-	unsigned int size;
+
+	void* VertexbufferPointer = nullptr;
+
+	//어떠한자료형으로 버텍스 버퍼를 만들었는지 사이즈
+	unsigned int VectexDataSize = 0;
+	unsigned int Count	= 0;	//버텍스 개수
+	unsigned int size	= 0;	//바꾸려는 자료형의 사이즈
 };
 
 //텍스쳐를 받을 클래스
@@ -58,16 +50,14 @@ public:
 	{
 		delete TextureBufferPointer;
 	};
-	TextureBuffer()
-	{
-		TextureBufferPointer = nullptr;
-		size = 0;
-	};
-	virtual void Delete() {};
 
-	void* TextureBufferPointer;
-	unsigned int size;
+	void* TextureBufferPointer = nullptr;
+	unsigned int size = 0;
 };
+
+
+
+
 
 
 

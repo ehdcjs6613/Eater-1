@@ -32,12 +32,15 @@ public:
 
 	EATER_ENGINEDLL GameObject* GetChild(std::string Name);	//자식객체를 가져옴
 	EATER_ENGINEDLL GameObject* GetChild(int Number);		//자식객체를 가져옴
+	EATER_ENGINEDLL	Transform* GetTransform();				//기본 컨퍼넌트인 Transform을 가져옴
 
 	//삭제할 컨퍼넌트를 가져옴
 	Component* GetDeleteComponent(int i);
 
 	//오브젝트의 컨퍼넌트 갯수를 가져옴
 	int GetComponentCount();
+
+	void PushChildList(GameObject* obj);
 	
 	MeshData* OneMeshData;
 	Transform* transform;
@@ -64,7 +67,7 @@ private:
 
 	//컨퍼넌트 리스트
 	std::vector<Component*> ComponentList;
-
+	std::vector<GameObject*> ChildList;
 	EATER_ENGINEDLL void PushComponentFunction(Component* con, unsigned int type);
 };
 

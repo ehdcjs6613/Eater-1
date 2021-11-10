@@ -4,9 +4,8 @@
 #include "GraphicsEngine.h"
 #include "d3d11.h"
 
-//class ShaderManager;
-//class RenderingManager;
-
+class ShaderManager;
+class RenderingManager;
 
 class TextureBuffer;
 class Indexbuffer;
@@ -16,7 +15,7 @@ class HsGraphic : public GraphicEngine
 {
 public:
 	HS_GRAPHICDLL HsGraphic();
-	virtual ~HsGraphic();
+	virtual HS_GRAPHICDLL ~HsGraphic();
 
 
 	virtual HS_GRAPHICDLL void Initialize(HWND _hWnd, int screenWidth, int screenHeight) override;
@@ -27,17 +26,21 @@ public:
 	//텍스쳐 버퍼를생성
 	virtual HS_GRAPHICDLL TextureBuffer* CreateTextureBuffer(std::string path) override;
 	//인덱스 버퍼를 생성
-	virtual HS_GRAPHICDLL Indexbuffer*	CreateIndexBuffer(ParserData::Model* mModel) override;
+	virtual HS_GRAPHICDLL Indexbuffer*	CreateIndexBuffer(ParserData::Mesh* mModel) override;
 	//버텍스 버퍼를 생성
-	virtual HS_GRAPHICDLL Vertexbuffer* CreateVertexBuffer(ParserData::Model* mModel) override;
+	virtual HS_GRAPHICDLL Vertexbuffer* CreateVertexBuffer(ParserData::Mesh* mModel) override;
+
+	ID3D11RenderTargetView* GetEngineRTV();
+	ID3D11DepthStencilView* GetEngineDSV();
 private:
 	void CreateRenderTarget();	//랜더타겟 뎁스스텐실 뷰포트를 생성한다
-	void CreateRenderState();	//랜더타겟 상태를 생성해준다
 	void CreateDevice();		//엔진의 디바이스를 생성해준다
 	void BeginRender();			//랜더링 시작
 	void EngineRender();		//엔진 랜더링
 	void EndRender();			//랜더링 종료
-	int GetAspectRatio();		//화면비율 종횡비를 설정
+	
+	Vertexbuffer* CreateBasicVertexBuffer(ParserData::Mesh* mModel);
+	Vertexbuffer* CreateSkinngingVertexBuffer(ParserData::Mesh* mModel);
 private:
 
 	///엔진 데이터
@@ -60,6 +63,6 @@ private:
 	ID3D11RasterizerState* mSolid;
 
 	//매니저들
-	//ShaderManager*		mShaderManager;
-	//RenderingManager*	mRenderManager;
+	ShaderManager*		mShaderManager;
+	RenderingManager*	mRenderManager;
 };
