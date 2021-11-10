@@ -26,8 +26,8 @@ public:
 	/// 초기화 관련
 	DHENGINE_DLL void Initialize(HWND hWnd, int screenWidth, int screenHeight);
 	/// 화면 갱신시 Resize를 할 함수.
-	DHENGINE_DLL Indexbuffer* CreateIndexBuffer(ParserData::Model* mModel);	//인덱스 버퍼를 만들어준다
-	DHENGINE_DLL Vertexbuffer* CreateVertexBuffer(ParserData::Model* mModel);	//버텍스 버퍼를 만들어준다
+	DHENGINE_DLL Indexbuffer* CreateIndexBuffer(ParserData::Mesh* mModel);	//인덱스 버퍼를 만들어준다
+	DHENGINE_DLL Vertexbuffer* CreateVertexBuffer(ParserData::Mesh* mModel);	//버텍스 버퍼를 만들어준다
 	DHENGINE_DLL TextureBuffer* CreateTextureBuffer(std::string path);					//텍스쳐를 만들어준다
 	DHENGINE_DLL void OnReSize(int Change_Width, int Change_Height);
 	DHENGINE_DLL void Delete();

@@ -22,6 +22,7 @@
 
 //테스트용
 #include "HsGraphic.h";
+#include "DH3DEngine.h"
 
 
 GameEngine::GameEngine()
@@ -86,7 +87,8 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 	/// </summary>
 	/////////////////////////////////////////////////////////////////
 	mGraphicManager->PushEngine<HsGraphic>("형선");
-	mGraphicManager->ChoiceEngine("형선");
+	mGraphicManager->PushEngine<DH3DEngine>("동혁");
+	mGraphicManager->ChoiceEngine("동혁");
 	/////////////////////////////////////////////////////////////////
 
 

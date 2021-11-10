@@ -315,7 +315,7 @@ void DH3DEngine::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 		meshList->pop();
 
 		/// 오브젝트들을 그린다. (Draw Primitive)
-		if (_Mesh_Data->ObjType == OBJECT_TYPE::Camera)
+		if (_Mesh_Data->ObjType != OBJECT_TYPE::Base)
 		{
 			continue;
 		}
@@ -336,7 +336,7 @@ void DH3DEngine::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 		Vertex_Buffer_Offset = 0;
 
 		/// WVP TM등을 셋팅
-		World_Mat = DirectX::SimpleMath::Matrix(*(_Mesh_Data->mWorld));
+		World_Mat = DirectX::SimpleMath::Matrix(_Mesh_Data->mWorld);
 		Mul_WVP = World_Mat * View_Mat * Proj_Mat;
 
 		// 월드의 역행렬
@@ -563,14 +563,13 @@ void DH3DEngine::OnReSize(int Change_Width, int Change_Height)
 	//m_DHCamera->SetLens(0.25f * MathHelper::Pi, GetAspectRatio(), 1.0f, 1000.0f);
 }
 
-Indexbuffer* DH3DEngine::CreateIndexBuffer(ParserData::Model* mModel)
+Indexbuffer* DH3DEngine::CreateIndexBuffer(ParserData::Mesh* mModel)
 {
 	ID3D11Buffer* mIB = nullptr;
 	Indexbuffer* indexbuffer = new Indexbuffer();
 
 	//모델의 계수
-	int ModelCount = (int)mModel[0].m_MeshList[0]->m_IndexList.size();
-	int Icount = (int)mModel[0].m_MeshList[0]->m_IndexList.size();
+	int Icount = (int)mModel->m_IndexList.size();
 
 	std::vector<UINT> index;
 	index.resize(Icount * 3);
@@ -578,11 +577,11 @@ Indexbuffer* DH3DEngine::CreateIndexBuffer(ParserData::Model* mModel)
 	int j = 0;
 	for (int i = 0; i < Icount; i++)
 	{
-		index[j] = mModel[0].m_MeshList[0]->m_IndexList[i]->m_Index[0];
+		index[j] = mModel->m_IndexList[i]->m_Index[0];
 		j++;
-		index[j] = mModel[0].m_MeshList[0]->m_IndexList[i]->m_Index[1];
+		index[j] = mModel->m_IndexList[i]->m_Index[1];
 		j++;
-		index[j] = mModel[0].m_MeshList[0]->m_IndexList[i]->m_Index[2];
+		index[j] = mModel->m_IndexList[i]->m_Index[2];
 		j++;
 	}
 
@@ -603,23 +602,20 @@ Indexbuffer* DH3DEngine::CreateIndexBuffer(ParserData::Model* mModel)
 	return indexbuffer;
 }
 
-Vertexbuffer* DH3DEngine::CreateVertexBuffer(ParserData::Model* mModel)
+Vertexbuffer* DH3DEngine::CreateVertexBuffer(ParserData::Mesh* mModel)
 {
 	ID3D11Buffer* mVB = nullptr;
 	Vertexbuffer* vertexbuffer = new Vertexbuffer();
 
 	//모델의 계수
-	int ModelCount = (int)mModel->m_MeshList.size();
-	int Vcount = (int)mModel->m_MeshList[0]->m_VertexList.size();
-	std::vector<ParserData::Vertex*> VertexList = mModel->m_MeshList[0]->m_VertexList;
-
+	int Vcount = (int)mModel->m_VertexList.size();
 	std::vector<DHVertex> temp;
 	temp.resize(Vcount);
 	for (int i = 0; i < Vcount; i++)
 	{
-		temp[i].Pos = mModel->m_MeshList[0]->m_VertexList[i]->m_Pos;
-		temp[i].Normal = mModel->m_MeshList[0]->m_VertexList[i]->m_Normal;
-		temp[i].Tex = { mModel->m_MeshList[0]->m_VertexList[i]->m_U ,mModel->m_MeshList[0]->m_VertexList[i]->m_V };
+		temp[i].Pos = mModel->m_VertexList[i]->m_Pos;
+		temp[i].Normal = mModel->m_VertexList[i]->m_Normal;
+		temp[i].Tex = { mModel->m_VertexList[i]->m_U ,mModel->m_VertexList[i]->m_V };
 	}
 
 	D3D11_BUFFER_DESC vbd;
