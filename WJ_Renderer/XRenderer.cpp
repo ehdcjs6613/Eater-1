@@ -149,7 +149,7 @@ bool XRenderer::Render_Update(
 	//=======================================================================
 	///삼각형 그리기 3
 	//=======================================================================
-	XVertexTex v[] =
+	XVertexTex v2[] =
 	{
 		XVertexTex(-0.5f,  -0.5f,    1.f, 0.0f,1.0f),//B L
 		XVertexTex(0.0f,   +0.5f,	 1.f, 0.5f,0.0f),  //T M
@@ -158,27 +158,26 @@ bool XRenderer::Render_Update(
 	};
 
 
-	UINT stride = sizeof(XVertex);
-	UINT offset = 0;
 
-	D3D11_BUFFER_DESC vertexBufferDESC;
-	ZeroMemory(&vertexBufferDESC, sizeof(D3D11_BUFFER_DESC));
 
-	vertexBufferDESC.Usage = D3D11_USAGE_DEFAULT;
-	vertexBufferDESC.ByteWidth = sizeof(XVertex) * ARRAYSIZE(v);//* ARRAYSIZE(v);
-	vertexBufferDESC.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	vertexBufferDESC.CPUAccessFlags = 0;
-	vertexBufferDESC.MiscFlags = 0;
+	D3D11_BUFFER_DESC vertexBufferDESC2;
+	ZeroMemory(&vertexBufferDESC2, sizeof(D3D11_BUFFER_DESC));
 
-	D3D11_SUBRESOURCE_DATA vertexBufferData;
-	ZeroMemory(&vertexBufferData, sizeof(D3D11_SUBRESOURCE_DATA));
-	vertexBufferData.pSysMem = v;
-	vertexBufferData.SysMemPitch = 0;
-	vertexBufferData.SysMemSlicePitch = 0;
+	vertexBufferDESC2.Usage = D3D11_USAGE_DEFAULT;
+	vertexBufferDESC2.ByteWidth = sizeof(XVertex) * ARRAYSIZE(v);//* ARRAYSIZE(v);
+	vertexBufferDESC2.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	vertexBufferDESC2.CPUAccessFlags = 0;
+	vertexBufferDESC2.MiscFlags = 0;
+
+	D3D11_SUBRESOURCE_DATA vertexBufferData2;
+	ZeroMemory(&vertexBufferData2, sizeof(D3D11_SUBRESOURCE_DATA));
+	vertexBufferData2.pSysMem = v2;
+	vertexBufferData2.SysMemPitch = 0;
+	vertexBufferData2.SysMemSlicePitch = 0;
 
 	//DirectX::CreateWICTextureFromFile
 
-	hr = m_pDevice->CreateBuffer(&vertexBufferDESC, &vertexBufferData, &_vb);
+	hr = m_pDevice->CreateBuffer(&vertexBufferDESC2, &vertexBufferData2, &_vb);
 
 	_pD3DeviceContext->PSSetSamplers(1, 0, &_pSampler);
 

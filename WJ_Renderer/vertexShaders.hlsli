@@ -16,16 +16,16 @@ struct VS_OUTPUT
 struct VS_OUTPUT_TEX
 {
     float4 outPosition : SV_POSITION;
-    float3 outTexCoord : TEXCOORD;
+    float2 outTexCoord : TEXCOORD;
 };
 
 
 
-VS_OUTPUT main(VS_INPUT_TEX input)
+VS_OUTPUT_TEX main(VS_INPUT_TEX input)
 {
-    VS_OUTPUT output;
+    VS_OUTPUT_TEX output;
     output.outPosition = float4(input.inPos, 1.0f);
-    output.outColor = input.inTexCoord;
+    output.outTexCoord = input.inTexCoord;
     
     
     return output;
