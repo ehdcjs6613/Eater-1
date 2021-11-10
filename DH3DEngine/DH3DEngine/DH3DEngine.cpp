@@ -321,8 +321,8 @@ void DH3DEngine::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 		}
 
 		// 해당 메시의 VB,IB 를 받아옴.
-		Render_VB = reinterpret_cast<ID3D11Buffer*>(_Mesh_Data->VB);
-		Render_IB = reinterpret_cast<ID3D11Buffer*>(_Mesh_Data->IB);
+		Render_VB = reinterpret_cast<ID3D11Buffer*>(_Mesh_Data->VB->VertexbufferPointer);
+		Render_IB = reinterpret_cast<ID3D11Buffer*>(_Mesh_Data->IB->IndexBufferPointer);
 
 		// 입력 배치 객체 셋팅
 		DX11_Device_Context->IASetInputLayout(InputLayouts::PosNormalTexBiNormalTangent);
@@ -353,6 +353,17 @@ void DH3DEngine::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 		_temp_Dir.Specular = _Specular;
 		_temp_Dir.Direction = _Direction;
 
+		Material _Temp_Mat;
+		DirectX::SimpleMath::Vector4 _Ambient1 = DirectX::SimpleMath::Vector4(0.2f, 0.2f, 0.2f, 1.0f);
+		DirectX::SimpleMath::Vector4 _Diffuse1 = DirectX::SimpleMath::Vector4(0.5f, 0.5f, 0.5f, 1.0f);
+		DirectX::SimpleMath::Vector4 _Specular1 = DirectX::SimpleMath::Vector4(0.5f, 0.5f, 0.5f, 1.0f);
+		DirectX::SimpleMath::Vector4 _Reflect1 = DirectX::SimpleMath::Vector4(0.5f, 0.5f, 0.5f, 1.0f);
+		_Temp_Mat.Ambient = _Ambient1;
+		_Temp_Mat.Diffuse = _Diffuse1;
+		_Temp_Mat.Specular = _Specular1;
+		_Temp_Mat.Reflect = _Reflect1;
+
+
 		Effects::BasicFX->SetDirLights(_temp_Dir);
 
 		// 월드 Eye 포지션.
@@ -378,10 +389,11 @@ void DH3DEngine::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 			Effects::BasicFX->SetWorld(World_Mat);
 			Effects::BasicFX->SetWorldInvTranspose(World_Inverse_Transpose);
 			Effects::BasicFX->SetWorldViewProj(Mul_WVP);
-			//Effects::BasicFX->SetMaterial(_Render_Mesh.Mesh_Material);
+			Effects::BasicFX->SetMaterial(_Temp_Mat);
+			Effects::BasicFX->SetTexTransform(DirectX::SimpleMath::Matrix::Identity);
 
 			mTech->GetPassByIndex(p)->Apply(0, DX11_Device_Context);
-			//DX11_Device_Context->DrawIndexed(_Mesh_Data->indexCount, 0, 0);
+			DX11_Device_Context->DrawIndexed(_Mesh_Data->indexCount, 0, 0);
 		}
 
 	}

@@ -81,10 +81,10 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 	/// 다만 그래픽엔진의 순수가상함수로된건 무조건다만들어놔야함
 	/// </summary>
 	/////////////////////////////////////////////////////////////////
-	mGraphicManager->PushEngine<DH3DEngine>("동혁");
-	//mGraphicManager->PushEngine<HsGraphic>("형선");
-	mGraphicManager->ChoiceEngine("동혁");
-	//mGraphicManager->ChoiceEngine("형선");
+	//mGraphicManager->PushEngine<DH3DEngine>("동혁");
+	mGraphicManager->PushEngine<HsGraphic>("형선");
+	//mGraphicManager->ChoiceEngine("동혁");
+	mGraphicManager->ChoiceEngine("형선");
 	/////////////////////////////////////////////////////////////////
 
 	mGraphicManager->Initialize(Hwnd, WinSizeWidth, WinSizeHeight);

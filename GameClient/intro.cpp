@@ -12,7 +12,7 @@ void intro::Awake()
 	LoadMeshPath("../Resources/Mesh/");
 	LoadTesturePath("../Resources/Texture/");
 	
-	LoadMesh("box");
+	LoadMesh("Table");
 	LoadTesture("WoodCrate01");
 
 
@@ -22,8 +22,8 @@ void intro::Awake()
 	testobj->AddComponent<Camera>();
 	//
 	//
-	testobj = Instance("box");
-	testobj->AddComponent<MeshFilter>()->SetMeshName("box");
+	testobj = Instance("Table");
+	testobj->AddComponent<MeshFilter>()->SetMeshName("Table");
 	//
 	//
 	//for (int i = 0; i < 5; i++) 

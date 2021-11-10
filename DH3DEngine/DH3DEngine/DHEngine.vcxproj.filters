@@ -111,4 +111,9 @@
       <Filter>FX</Filter>
     </FxCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\FX\Basic.cso">
+      <Filter>FX</Filter>
+    </None>
+  </ItemGroup>
 </Project>
