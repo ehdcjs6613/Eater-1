@@ -9,7 +9,7 @@
 /// </summary>
 
 class MeshData;
-struct GlobalData;
+class GlobalData;
 class GraphicEngine;
 
 class Indexbuffer;

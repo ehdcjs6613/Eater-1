@@ -13,9 +13,9 @@
 ////////////////////////////////////////////////
 #include "DDSTextureLoader.h"
 	#ifdef _DEBUG
-		#pragma comment(lib,"DirectXTKd")
+		#pragma comment(lib,"DirectXTK_x64d")
 	#else
-		#pragma comment(lib,"DirectXTK")
+		#pragma comment(lib,"DirectXTK_x64r")
 		
 #endif
 ////////////////////////////////////////////////

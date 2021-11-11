@@ -8,7 +8,7 @@
 /// </summary>
 
 class MeshData;
-struct GlobalData;
+class GlobalData;
 class Indexbuffer;
 class Vertexbuffer;
 class TextureBuffer;
