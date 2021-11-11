@@ -1,52 +1,51 @@
 ﻿
-// GameEditor.cpp: 애플리케이션에 대한 클래스 동작을 정의합니다.
+// Editor.cpp: 애플리케이션에 대한 클래스 동작을 정의합니다.
 //
 
+#include "pch.h"
 #include "framework.h"
 #include "afxwinappex.h"
 #include "afxdialogex.h"
+#include "Editor.h"
+#include "CDockalbePannel.h"
 #include "MainFrm.h"
+
 #include "ChildFrm.h"
-#include "GameEditorDoc.h"
-#include "GameEditorView.h"
-#include "GameEditor.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
 
 
-// CGameEditorApp
+// CEditorApp
 
-BEGIN_MESSAGE_MAP(CGameEditorApp, CWinApp)
-	ON_COMMAND(ID_APP_ABOUT, &CGameEditorApp::OnAppAbout)
-	// 표준 파일을 기초로 하는 문서 명령입니다.
-	ON_COMMAND(ID_FILE_NEW, &CWinApp::OnFileNew)
-	ON_COMMAND(ID_FILE_OPEN, &CWinApp::OnFileOpen)
+BEGIN_MESSAGE_MAP(CEditorApp, CWinApp)
+	ON_COMMAND(ID_APP_ABOUT, &CEditorApp::OnAppAbout)
+	ON_COMMAND(ID_FILE_NEW, &CEditorApp::OnFileNew)
 END_MESSAGE_MAP()
 
 
-// CGameEditorApp 생성
+// CEditorApp 생성
 
-CGameEditorApp::CGameEditorApp() noexcept
+CEditorApp::CEditorApp() noexcept
 {
 
 	// TODO: 아래 애플리케이션 ID 문자열을 고유 ID 문자열로 바꾸십시오(권장).
 	// 문자열에 대한 서식: CompanyName.ProductName.SubProduct.VersionInformation
-	SetAppID(_T("GameEditor.AppID.NoVersion"));
+	SetAppID(_T("Editor.AppID.NoVersion"));
 
 	// TODO: 여기에 생성 코드를 추가합니다.
 	// InitInstance에 모든 중요한 초기화 작업을 배치합니다.
 }
 
-// 유일한 CGameEditorApp 개체입니다.
+// 유일한 CEditorApp 개체입니다.
 
-CGameEditorApp theApp;
+CEditorApp theApp;
 
 
-// CGameEditorApp 초기화
+// CEditorApp 초기화
 
-BOOL CGameEditorApp::InitInstance()
+BOOL CEditorApp::InitInstance()
 {
 	// 애플리케이션 매니페스트가 ComCtl32.dll 버전 6 이상을 사용하여 비주얼 스타일을
 	// 사용하도록 지정하는 경우, Windows XP 상에서 반드시 InitCommonControlsEx()가 필요합니다. 
@@ -61,6 +60,15 @@ BOOL CGameEditorApp::InitInstance()
 	CWinApp::InitInstance();
 
 
+	// OLE 라이브러리를 초기화합니다.
+	if (!AfxOleInit())
+	{
+		AfxMessageBox(IDP_OLE_INIT_FAILED);
+		return FALSE;
+	}
+
+	AfxEnableControlContainer();
+
 	EnableTaskbarInteraction(FALSE);
 
 	// RichEdit 컨트롤을 사용하려면 AfxInitRichEdit2()가 있어야 합니다.
@@ -74,55 +82,60 @@ BOOL CGameEditorApp::InitInstance()
 	// TODO: 이 문자열을 회사 또는 조직의 이름과 같은
 	// 적절한 내용으로 수정해야 합니다.
 	SetRegistryKey(_T("로컬 애플리케이션 마법사에서 생성된 애플리케이션"));
-	LoadStdProfileSettings(4);  // MRU를 포함하여 표준 INI 파일 옵션을 로드합니다.
 
 
-	// 애플리케이션의 문서 템플릿을 등록합니다.  문서 템플릿은
-	//  문서, 프레임 창 및 뷰 사이의 연결 역할을 합니다.
-	CMultiDocTemplate* pDocTemplate;
-	pDocTemplate = new CMultiDocTemplate(IDR_GameEditorTYPE,
-		RUNTIME_CLASS(CGameEditorDoc),
-		RUNTIME_CLASS(CChildFrame), // 사용자 지정 MDI 자식 프레임입니다.
-		RUNTIME_CLASS(CGameEditorView));
-	if (!pDocTemplate)
+	// 주 창을 만들기 위해 이 코드에서는 새 프레임 창 개체를
+	// 만든 다음 이를 애플리케이션의 주 창 개체로 설정합니다.
+	CMDIFrameWnd* pFrame = new CMainFrame;
+	if (!pFrame)
 		return FALSE;
-	AddDocTemplate(pDocTemplate);
-
+	m_pMainWnd = pFrame;
 	// 주 MDI 프레임 창을 만듭니다.
-	pMainFrame = new CMainFrame;
-	if (!pMainFrame || !pMainFrame->LoadFrame(IDR_MAINFRAME))
-	{
-		delete pMainFrame;
+	if (!pFrame->LoadFrame(IDR_MAINFRAME))
 		return FALSE;
-	}
-	m_pMainWnd = pMainFrame;
+	// 공유 MDI 메뉴 및 액셀러레이터 키 테이블의 로드를 시도합니다.
+	//TODO: 추가 멤버 변수를 추가하고 응용 프로그램에 필요한 추가 메뉴 형식에 대한
+	//	호출을 로드합니다.
+	HINSTANCE hInst = AfxGetResourceHandle();
+	m_hMDIMenu  = ::LoadMenu(hInst, MAKEINTRESOURCE(IDR_EditorTYPE));
+	m_hMDIAccel = ::LoadAccelerators(hInst, MAKEINTRESOURCE(IDR_EditorTYPE));
+	m_hIcon = ::LoadIcon(hInst, MAKEINTRESOURCE(IDR_MAINFRAME));
 
 
-	// 표준 셸 명령, DDE, 파일 열기에 대한 명령줄을 구문 분석합니다.
-	CCommandLineInfo cmdInfo;
-	ParseCommandLine(cmdInfo);
 
-
-
-	// 명령줄에 지정된 명령을 디스패치합니다.
-	// 응용 프로그램이 /RegServer, /Register, /Unregserver 또는 /Unregister로 시작된 경우 FALSE를 반환합니다.
-	if (!ProcessShellCommand(cmdInfo))
-		return FALSE;
 	// 주 창이 초기화되었으므로 이를 표시하고 업데이트합니다.
-	pMainFrame->ShowWindow(m_nCmdShow);
-	pMainFrame->UpdateWindow();
+	pFrame->ShowWindow(m_nCmdShow);
+	pFrame->UpdateWindow();
 
 	return TRUE;
 }
 
-int CGameEditorApp::ExitInstance()
+int CEditorApp::ExitInstance()
 {
 	//TODO: 추가한 추가 리소스를 처리합니다.
+	if (m_hMDIMenu != nullptr)
+		FreeResource(m_hMDIMenu);
+	if (m_hMDIAccel != nullptr)
+		FreeResource(m_hMDIAccel);
+
+	AfxOleTerm(FALSE);
+
 	return CWinApp::ExitInstance();
 }
 
-// CGameEditorApp 메시지 처리기
+// CEditorApp 메시지 처리기
 
+void CEditorApp::OnFileNew()
+{
+	CMainFrame* pFrame = STATIC_DOWNCAST(CMainFrame, m_pMainWnd);
+	// 새 MDI 자식 창을 만듭니다.
+	pFrame->CreateNewChild
+	(
+		RUNTIME_CLASS(CChildFrame),
+		IDR_EditorTYPE,
+		m_hMDIMenu, m_hMDIAccel
+	);
+}
 
 // 응용 프로그램 정보에 사용되는 CAboutDlg 대화 상자입니다.
 
@@ -157,33 +170,21 @@ BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
 END_MESSAGE_MAP()
 
 // 대화 상자를 실행하기 위한 응용 프로그램 명령입니다.
-void CGameEditorApp::OnAppAbout()
+void CEditorApp::OnAppAbout()
 {
 	CAboutDlg aboutDlg;
 	aboutDlg.DoModal();
 }
 
-// CGameEditorApp 메시지 처리기
+// CEditorApp 메시지 처리기
 
 
 
 
 
-BOOL CGameEditorApp::OnIdle(LONG lCount)
+BOOL CEditorApp::OnIdle(LONG lCount)
 {
-	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
-
-	if (this->m_pMainWnd->IsIconic())//만약 최소화가된다면. 
-	{
-		//ㅁㅔㅅㅔㅈㅣㅊㅓㄹㅣ를 ㅎㅏㅈㅣ않는ㄷㅏ
-		return false;
-	}
-	else //최소화가 아니라면? 계속 그려줘 '해줘'
-	{
-		
-	}
 
 
-	//메세지 처리 계속함.
-	return TRUE;
+	return true;
 }
