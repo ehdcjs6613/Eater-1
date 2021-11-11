@@ -4,6 +4,7 @@
 // CDockalbePannel
 
 class CGameView;
+class SaveData;
 
 class CDockalbePannel : public CDockablePane
 {

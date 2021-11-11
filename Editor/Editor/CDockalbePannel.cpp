@@ -5,16 +5,18 @@
 #include "Editor.h"
 #include "MainFrm.h"
 #include "CGameView.h"
+#include "SaveData.h"
 #include "CDockalbePannel.h"
 
 
+SaveData* g_pTestSaveData;
 // CDockalbePannel
 
 IMPLEMENT_DYNAMIC(CDockalbePannel, CDockablePane)
 
 CDockalbePannel::CDockalbePannel() : m_DialogWidth(0), m_DialogHeight(0)
 {
-
+	g_pTestSaveData = new SaveData();
 }
 
 CDockalbePannel::~CDockalbePannel()
@@ -142,21 +144,33 @@ BOOL CDockalbePannel::PreCreateWindow(CREATESTRUCT& cs)
 
 void CDockalbePannel::OnMove(int x, int y)
 {
+	if (x == 0)
+	{
+		return;
+	}
 
 	if (x != 0 || y != 0)
 	{
 	
 		m_RectPos.left = x;
 		m_RectPos.top = y;
-		g_SaveXPos = m_RectPos.left;
-		g_SaveYPos = m_RectPos.top;
-		//m_pDialog.MoveWindow(m_RectPos.left, m_RectPos.top , m_RectPos.right, m_RectPos.bottom);
+		g_pTestSaveData->m_DockedPosX = m_RectPos.left;
+		g_pTestSaveData->m_DockedPosY = m_RectPos.top;
+
 		m_pDialog.SetWindowPos(this, m_RectPos.left, m_RectPos.top, m_RectPos.right, m_RectPos.bottom, 0);
 
 		CDockablePane::OnMove(m_RectPos.left, m_RectPos.bottom);
 	}
 	else
 	{
+		if (0 != g_pTestSaveData->m_DockedPosX || 0 != g_pTestSaveData->m_DockedPosY)
+		{
+			m_pDialog.SetWindowPos(this, 
+				g_pTestSaveData->m_DockedPosX,
+				g_pTestSaveData->m_DockedPosY,
+				m_RectPos.right, 
+				m_RectPos.bottom, 0);
+		}
 		m_pDialog.SetWindowPos(this, g_SaveXPos, g_SaveYPos, m_RectPos.right, m_RectPos.bottom, 0);
 
 	}

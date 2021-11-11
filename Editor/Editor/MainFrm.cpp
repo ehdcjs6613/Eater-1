@@ -7,9 +7,10 @@
 #include "resource.h"
 #include "Editor.h"
 
-#include "CDockalbePannel.h"
+#include "SaveData.h"
 #include "CGameView.h"
 #include "GameView.h"
+#include "CDockalbePannel.h"
 
 #include "MainFrm.h"
 

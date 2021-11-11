@@ -8,6 +8,7 @@ class CDockalbePannel;
 class GameView;
 class CGameView;
 
+class SaveData;
 
 class CMainFrame : public CMDIFrameWndEx
 {
@@ -22,6 +23,8 @@ public:
 	CGameView*		 m_pCGameView;
 // 특성입니다.
 public:
+	
+
 
 // 작업입니다.
 public:

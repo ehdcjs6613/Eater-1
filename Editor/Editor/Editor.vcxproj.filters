@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="SubScript">
+      <UniqueIdentifier>{84fea1cb-373f-4724-9bcb-1c751646aca6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -48,6 +51,9 @@
     <ClInclude Include="CGameView.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="SaveData.h">
+      <Filter>SubScript</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Editor.cpp">
@@ -73,6 +79,9 @@
     </ClCompile>
     <ClCompile Include="CGameView.cpp">
       <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="SaveData.cpp">
+      <Filter>SubScript</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

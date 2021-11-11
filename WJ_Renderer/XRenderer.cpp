@@ -110,7 +110,7 @@ bool XRenderer::Render_Update(
 	//=======================================================================
 	///삼각형 그리기 2
 	//=======================================================================
-	
+
 	//XVertex v2[] =
 	//{
 	//	XVertex(-0.250f,  -0.250f,  0.0f, 0.0f,  1.0f,   0.0f),//B L
@@ -139,9 +139,9 @@ bool XRenderer::Render_Update(
 	//
 	//hr = m_pDevice->CreateBuffer(&vertexBufferDESC2, &vertexBufferData2, &_vb2);
 	//=======================================================================
-	
-	
-	
+
+
+
 	//_pD3DeviceContext->IASetVertexBuffers(0, 1, &_vb2, &stride, &offset);
 	//
 	//_pD3DeviceContext->Draw(3, 0);
