@@ -235,6 +235,7 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\lib"
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Library\inc\GraphicsEngine.h" />
     <ClInclude Include="Animation.h" />
     <ClInclude Include="ComponentHeader.h" />
     <ClInclude Include="DebugManager.h" />
@@ -245,7 +246,6 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\lib"
     <ClInclude Include="Export\Component.h" />
     <ClInclude Include="Export\EaterEngineDLL.h" />
     <ClInclude Include="Export\GameObject.h" />
-    <ClInclude Include="Export\GraphicsEngine.h" />
     <ClInclude Include="Export\MainHeader.h" />
     <ClInclude Include="Export\MeshFilter.h" />
     <ClInclude Include="Export\ResourcesData.h" />
@@ -271,7 +271,6 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\lib"
     <ClCompile Include="GameEngine.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GraphicEngineManager.cpp" />
-    <ClCompile Include="GraphicsEngine.cpp" />
     <ClCompile Include="KeyinputManager.cpp" />
     <ClCompile Include="MainHeader.cpp" />
     <ClCompile Include="MeshFilter.cpp" />

@@ -58,8 +58,8 @@ void GraphicResourceFactory::Release()
 	RESET_COM(m_Context);
 	RESET_COM(m_SwapChain);
 
-	SAFE_DELETE(m_ShaderManager);
-	SAFE_DELETE(m_ResourceManager);
+	SAFE_RELEASE(m_ShaderManager);
+	SAFE_RELEASE(m_ResourceManager);
 }
 
 void GraphicResourceFactory::CreateTexture2D(D3D11_TEXTURE2D_DESC* texDesc, ID3D11Texture2D** tex2D)
@@ -337,6 +337,7 @@ Vertexbuffer* GraphicResourceFactory::CreateVertexBuffer(ParserData::Mesh* mesh)
 	// ³Ñ°ÜÁà¾ßÇÒ VertexBufferData »ðÀÔ..
 	vBuffer->Count = vCount;
 	vBuffer->VertexbufferPointer = VB;
+	vBuffer->VertexDataSize = sizeof(NormalMapVertex);
 
 	return vBuffer;
 }

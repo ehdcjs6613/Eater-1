@@ -159,7 +159,7 @@
     <ClInclude Include="Export\ResourcesData.h">
       <Filter>소스 파일\Data</Filter>
     </ClInclude>
-    <ClInclude Include="Export\GraphicsEngine.h">
+    <ClInclude Include="..\..\Library\inc\GraphicsEngine.h">
       <Filter>소스 파일\Engine\GraphicsClass</Filter>
     </ClInclude>
   </ItemGroup>
@@ -202,9 +202,6 @@
     </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>소스 파일\Component\Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="GraphicsEngine.cpp">
-      <Filter>소스 파일\Engine\GraphicsClass</Filter>
     </ClCompile>
     <ClCompile Include="GameEngine.cpp">
       <Filter>소스 파일\Engine\GameEngine</Filter>

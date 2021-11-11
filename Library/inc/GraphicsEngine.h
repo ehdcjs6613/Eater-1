@@ -4,7 +4,7 @@
 #include <queue>
 /// <summary>
 /// 게임 엔진에서 제공하는 그래픽 엔진 최상위 클래스
-/// 이클래스를 상속받은 그래픽 엔진을 제작하면 된다 
+/// 이클래스를 상속받은 그래픽 엔진을 제작하면 된다.
 /// </summary>
 
 class MeshData;
@@ -39,7 +39,7 @@ public:
 	virtual void Delete() = 0;
 
 	/// 랜더링을 한다 매쉬 랜더데이터 리스트, 글로벌 데이터
-	virtual void Render(std::queue<MeshData*>* meshList, GlobalData* global) = 0;
+	virtual void Render(std::queue<MeshData*>* meshList,GlobalData* global) = 0;
 	virtual void ShadowRender(std::queue<MeshData*>* meshList, GlobalData* global) { return; };
 	virtual void SSAORender() { return; };
 	virtual void UIRender(std::queue<MeshData*>* meshList, GlobalData* global) { return; };
