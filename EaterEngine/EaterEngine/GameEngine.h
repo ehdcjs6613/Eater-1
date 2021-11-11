@@ -15,7 +15,7 @@ class ObjectManager;
 class SceneManager;
 class KeyinputManager;
 class GraphicEngineManager;
-class GameTimer;
+class TimeManager;
 
 class HsGraphic;
 class Scene;
@@ -58,6 +58,10 @@ public:
 	bool  GetTogle(byte number);	//키 on/off
 	float GetMousePosX();			//마우스 위치 X
 	float GetMousePosY();			//마우스 위치 Y
+public:
+	///시간 관련
+	float GetdeltaTime();
+
 private:
 	///각종 매니저들
 	ObjectManager*			mObjectManager;		//오브젝트 관리 매니저
@@ -66,7 +70,7 @@ private:
 	SceneManager*			mSceneManager;		//스크린 관리 매니저
 	KeyinputManager*		mKeyManager;		//키인풋 관련 매니저
 	GraphicEngineManager*	mGraphicManager;	//그래픽엔진 관리 매니저
-	GameTimer*				mTime;
+	TimeManager*			mTimeManager;		//시간 관련 타임매니저
 private:
 	///클라쪽에서 받아야 하는 데이터
 	HWND mHwnd; //핸들

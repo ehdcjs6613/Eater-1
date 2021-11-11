@@ -1,6 +1,6 @@
 #include "MainHeader.h"
 #include "inGame.h"
-#include "intro.h";
+#include "intro.h"
 #include "GameObject.h"
 #include "MeshFilter.h"
 #include "Transform.h"

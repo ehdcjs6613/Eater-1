@@ -3,16 +3,16 @@
 #include "EaterEngineDLL.h"
 #include "SimpleMath.h"
 #include <DirectXMath.h>
+#include <vector>
 #include "Component.h"
 
 class Transform :public Component
 {
 public:
 	EATER_ENGINEDLL Transform();
-	virtual ~Transform();
+	virtual EATER_ENGINEDLL ~Transform();
 	
-	//생성될때 한번
-	void Awake();
+	
 	//가장먼저 실행되는 업데이트
 	void TransformUpdate();
 
@@ -35,6 +35,8 @@ public:
 	//로컬 앞방향 벡터를 가져온다
 	DirectX::XMFLOAT3 GetLocalPosition_Look();
 
+	
+	
 
 	//현재위치값에 값을 더해줌
 	EATER_ENGINEDLL void SetLocalPosition(float X, float Y, float Z);
@@ -61,11 +63,14 @@ public:
 	EATER_ENGINEDLL void SetLocalUpdate(bool isUpdate);
 
 
-
 	DirectX::XMMATRIX Load_World; //로드된 월드
 	DirectX::XMMATRIX Load_Local; //로드된 로컬
-	static void LinkHierarchy(Transform* mChild,Transform* mParent);
 
+	//자식객체 넣기
+	void SetChild(Transform* mChild);
+	//부모 객체 넣기
+	void SetParnet(Transform* mParent);
+	//자식객체 로컬 업데이트
 	void Child_Local_Updata();
 private:
 	//현재 위치 회전 크기값을 가져와 행렬을 구한다
@@ -102,7 +107,7 @@ private:
 
 
 
-	//계층 구조 여부
+	///계층 구조에서 부모 객체 자식객체
 	Transform* Parent;
 	std::vector<Transform*> ChildList;
 };

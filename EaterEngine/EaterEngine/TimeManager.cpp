@@ -1,19 +1,57 @@
 #include <windows.h>
+#include <string>
 #include "TimeManager.h"
+#include "DebugManager.h"
 
 
-GameTimer::GameTimer()
-	: mSecondsPerCount(0.0), mDeltaTime(-1.0), mBaseTime(0),
-	mPausedTime(0), mPrevTime(0), mCurrTime(0), mStopped(false)
+TimeManager::TimeManager()
+{
+	mSecondsPerCount = 0;
+	mDeltaTime = -1.0f;
+	mBaseTime = 0;
+	mPausedTime = 0;
+	mStopTime = 0;
+	mPrevTime = 0;
+	mCurrTime = 0;
+	mStopped = false;
+}
+
+void TimeManager::Initialize()
 {
 	__int64 countsPerSec;
 	QueryPerformanceFrequency((LARGE_INTEGER*)&countsPerSec);
 	mSecondsPerCount = 1.0 / (double)countsPerSec;
 }
 
+void TimeManager::Update()
+{
+	Tick();
+
+	static float _addedTime = 0;
+	static float _FPS = 0;
+	static float _deltaTimeMS = 0;
+
+	float deltaTime = DeltaTime();
+
+	// 갱신주기는 0.2초
+	if (0.2f < _addedTime)
+	{
+		_FPS = (1.0f / deltaTime);
+		_deltaTimeMS = deltaTime * 1000.0f;
+
+		_addedTime = 0;
+	}
+
+	std::string temp = "FPS :" +std::to_string(_FPS);
+	DebugManager::Print(temp, 80, 1, DebugManager::MSG_TYPE::MSG_ENGINE);
+
+	_addedTime += (deltaTime);
+
+}
+
 // Returns the total time elapsed since Reset() was called, NOT counting any
 // time when the clock is stopped.
-float GameTimer::TotalTime()const
+float TimeManager::TotalTime()const
 {
 	// If we are stopped, do not count the time that has passed since we stopped.
 	// Moreover, if we previously already had a pause, the distance 
@@ -45,12 +83,12 @@ float GameTimer::TotalTime()const
 	}
 }
 
-float GameTimer::DeltaTime()const
+float TimeManager::DeltaTime()const
 {
 	return (float)mDeltaTime;
 }
 
-void GameTimer::Reset()
+void TimeManager::Reset()
 {
 	__int64 currTime;
 	QueryPerformanceCounter((LARGE_INTEGER*)&currTime);
@@ -61,7 +99,7 @@ void GameTimer::Reset()
 	mStopped = false;
 }
 
-void GameTimer::Start()
+void TimeManager::Start()
 {
 	__int64 startTime;
 	QueryPerformanceCounter((LARGE_INTEGER*)&startTime);
@@ -83,7 +121,7 @@ void GameTimer::Start()
 	}
 }
 
-void GameTimer::Stop()
+void TimeManager::Stop()
 {
 	if (!mStopped)
 	{
@@ -95,7 +133,7 @@ void GameTimer::Stop()
 	}
 }
 
-void GameTimer::Tick()
+void TimeManager::Tick()
 {
 	if (mStopped)
 	{

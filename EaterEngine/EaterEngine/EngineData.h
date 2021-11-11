@@ -54,6 +54,9 @@ public:
 	int indexCount;		//인덱스 카운터
 	int vertexCount;	//버텍스 카운터
 
+	std::vector<DirectX::SimpleMath::Matrix> BoneOffsetTM; //본 오프셋 TM
+
+
 	DirectX::XMMATRIX mWorld;	//매쉬의 월드 행렬
 	DirectX::XMMATRIX mLocal;	//매쉬의 로컬행렬
 	DirectX::XMFLOAT3 Pos;		//매쉬의 위치값
@@ -70,7 +73,8 @@ public:
 	};
 
 	bool Top_Object;			//가장 최상위 오브젝트인지 여부
-	bool Bone_Object;
+	bool Bone_Object;			//본오브젝트 여부
+	bool Skinning_Object;		//스키닝 오브젝트 여부
 
 	std::string ParentName;		//부모의 이름
 	std::string	Name;			//자기자신의 이름
@@ -108,37 +112,6 @@ public:
 
 	
 	LoadMeshData* Top;
-	//받은 매쉬들을 부모 자식관계로 변환
-	void MeshLink()
-	{
-		int MeshCount = MeshList.size();
-
-		for (int i = 0; i < MeshCount; i++)
-		{
-			for (int j = 0; j < MeshCount; j++)
-			{
-				LoadMeshData* Now  = MeshList[i];
-				LoadMeshData* Back = MeshList[j];
-				
-				//가장 위에있는 오브젝트인지
-				if (Now->Top_Object == true){Top = Now;}
-
-				//자기 자신은 검사하지않음
-				if (i == j) { continue; }
-			
-
-				//현재 매쉬의 부모이름과 자기이름이 같다면 연결
-				if (Now->ParentName == Back->Name)
-				{
-					Back->Child.push_back(Now);
-					Now->Parent = Back;
-					continue;
-				}
-
-
-			}
-		}
-	}
 };
 
 

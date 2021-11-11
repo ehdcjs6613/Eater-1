@@ -4,7 +4,7 @@
 	#ifdef _DEBUG
 		#pragma comment( lib, "../lib/DirectXTK_x64d.lib" )
 	#else
-		#pragma comment( lib, "../lib/DirectXTK_x64.lib" )
+		#pragma comment( lib, "../lib/DirectXTK_x64r.lib" )
 	#endif
 #else
 	#ifdef _DEBUG

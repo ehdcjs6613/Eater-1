@@ -33,7 +33,7 @@ ModelData* LoadManager::GetMesh(std::string Name)
 	std::map<std::string, ModelData*>::iterator temp = ModelList.find(Name);
 	if (temp == ModelList.end())
 	{
-		DebugManager::Print(Name, DebugManager::MSG_TYPE::MSG_LOAD, true);
+		DebugManager::Print(Name, 0, 0, DebugManager::MSG_TYPE::MSG_LOAD, true);
 		return nullptr;
 	}
 	else
@@ -48,7 +48,7 @@ TextureBuffer* LoadManager::GetTexture(std::string Name)
 	std::map<std::string, TextureBuffer*>::iterator temp = TextureList.find(Name);
 	if (temp == TextureList.end())
 	{
-		DebugManager::Print(Name, DebugManager::MSG_TYPE::MSG_LOAD, true);
+		DebugManager::Print(Name, 0, 0, DebugManager::MSG_TYPE::MSG_LOAD, true);
 		return nullptr;
 	}
 	else
@@ -71,7 +71,6 @@ void LoadManager::LoadMesh( std::string Name, bool Scale, bool LoadAnime)
 	
 	//매쉬 개수
 	int MeshCount = (int)temp->m_MeshList.size();
-	
 	for (int i = 0; i < MeshCount; i++)
 	{
 		//리스트에 매쉬 조사
@@ -80,10 +79,21 @@ void LoadManager::LoadMesh( std::string Name, bool Scale, bool LoadAnime)
 		//최상위 매쉬가 아니라면 아무것도 하지않음
 		if (mesh->m_TopNode != true){continue;}
 
-		//최상위 오브젝트를 만났다면 데이터 변환을해줌
+		//재귀를 호출하면서 매쉬를 생성하고 연결해준다 마지막에 나오는 값은 최상위 오브젝트
 		LoadMeshData* data = CreateMesh(mesh);
-		SaveMesh->MeshList.push_back(data);
+
+		//이렇게 나온 서로연결된 매쉬데이터의 최상위 오브젝트가 본인지 아닌지 판별후 리스트에 넣어준다
+		if (data->Bone_Object == true)
+		{	
+			SaveMesh->BoneList.push_back(data);
+		}
+		else
+		{
+			SaveMesh->MeshList.push_back(data);
+		}
 	}
+
+	//최상위 오브젝트의 리스트를 넣어준다
 	ModelList.insert({Name,SaveMesh});
 }
 
@@ -94,12 +104,12 @@ void LoadManager::LoadTexture(std::string Name)
 
 	if (Tbuffer == nullptr || Tbuffer->TextureBufferPointer == nullptr) 
 	{
-		DebugManager::Print(TextureName, DebugManager::MSG_TYPE::MSG_LOAD, true);
+		DebugManager::Print(TextureName, 0, 0, DebugManager::MSG_TYPE::MSG_LOAD, true);
 	}
 	else
 	{
 		std::string strTemp = "텍스쳐를 로드합니다 :" + Name;
-		DebugManager::Print(strTemp, DebugManager::MSG_TYPE::MSG_LOAD);
+		DebugManager::Print(strTemp, 0, 0, DebugManager::MSG_TYPE::MSG_LOAD);
 		TextureList.insert({Name,Tbuffer});
 	}
 }
@@ -128,12 +138,12 @@ void LoadManager::DeleteMesh(std::string mMeshName)
 	std::map<std::string, ModelData*>::iterator temp = ModelList.find(mMeshName);
 	if (temp == ModelList.end())
 	{
-		DebugManager::Print(mMeshName, DebugManager::MSG_TYPE::MSG_DELETE,true);
+		DebugManager::Print(mMeshName, 0, 0, DebugManager::MSG_TYPE::MSG_DELETE,true);
 		return;
 	}
 	else
 	{
-		DebugManager::Print(mMeshName, DebugManager::MSG_TYPE::MSG_DELETE);
+		DebugManager::Print(mMeshName, 0, 0, DebugManager::MSG_TYPE::MSG_DELETE);
 		ModelList.erase(mMeshName);
 	}
 }
@@ -153,10 +163,12 @@ LoadMeshData* LoadManager::CreateMesh(ParserData::Mesh* mesh)
 	int ChildCount = mesh->m_ChildList.size();
 
 	//계층정보 받기
-	box->Name		= mesh->m_NodeName;
-	box->ParentName = mesh->m_ParentName;
-	box->Top_Object = mesh->m_TopNode;
-	box->Bone_Object = mesh->m_IsBone;
+	box->Name				= mesh->m_NodeName;
+	box->ParentName			= mesh->m_ParentName;
+	box->Top_Object			= mesh->m_TopNode;
+	box->Bone_Object		= mesh->m_IsBone;
+	box->Skinning_Object	= mesh->m_IsSkinningObject;
+	box->Animation			= mesh->m_Animation;
 
 	//매트릭스 정보 받기
 	box->WorldTM =  &mesh->m_WorldTM;
@@ -165,29 +177,36 @@ LoadMeshData* LoadManager::CreateMesh(ParserData::Mesh* mesh)
 	//메터리얼 정보
 	box->Material	= mesh->m_MaterialData;
 
-	//본정보 여부
-	if(mesh->m_IsBone == true)
+	
+	if(mesh->m_IsBone == false)
 	{
-		box->BoneList	= &(mesh->m_BoneMeshList);
-		box->BoneTMList = &(mesh->m_BoneTMList);
-		return box;
-	}
-	else
-	{
-		//각종 버퍼 생성해서 받기
+		//매쉬라면 랜더링할 인덱스버퍼와 버텍스버퍼를 읽어온다
 		box->IB = GEngine->CreateIndexBuffer(mesh);
 		box->VB = GEngine->CreateVertexBuffer(mesh);
 		box->IB->Count = (int)mesh->m_IndexList.size() * 3;
 		box->VB->Count = (int)mesh->m_VertexList.size();
+		
 
-		//자식객체가 있다면 정보읽어옴
-		for (int i = 0; i < ChildCount; i++)
+		if (mesh->m_IsSkinningObject == true)
 		{
-			LoadMeshData* temp = CreateMesh(mesh->m_ChildList[i]);
-			box->Child.push_back(temp);
-			temp->Parent = box;
+			//스키닝 오브젝트라면 본정보도 읽는다
+			box->BoneList	= &(mesh->m_BoneMeshList);
+			box->BoneTMList = &(mesh->m_BoneTMList);
+			mesh->m_Animation;
 		}
 	}
+	
+	
+
+
+	//자식객체가 있다면 정보읽어옴
+	for (int i = 0; i < ChildCount; i++)
+	{
+		LoadMeshData* temp = CreateMesh(mesh->m_ChildList[i]);
+		box->Child.push_back(temp);
+		temp->Parent = box;
+	}
+
 	return box;
 }
 

@@ -26,11 +26,6 @@ Transform::~Transform()
 
 }
 
-void Transform::Awake()
-{
-
-}
-
 void Transform::TransformUpdate()
 {
 	//월드 좌표들을 기반으로 월드 행렬을 구한다
@@ -149,13 +144,14 @@ void Transform::SetLocalUpdate(bool isUpdate)
 	LocalUpdate = isUpdate;
 }
 
-void Transform::LinkHierarchy(Transform* mChild, Transform* mParent)
+void Transform::SetChild(Transform* mChild)
 {
-	//부모 Transform에 링크
-	mParent->ChildList.push_back(mChild);
+	ChildList.push_back(mChild);
+}
 
-	//자식 Transform에 링크
-	mChild->Parent = mParent;
+void Transform::SetParnet(Transform* mParent)
+{
+	Parent = mParent;
 }
 
 void Transform::Child_Local_Updata()

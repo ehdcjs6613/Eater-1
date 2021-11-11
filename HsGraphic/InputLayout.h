@@ -13,3 +13,19 @@ struct Deferred32
 	//ÅºÁ¨Æ®
 	DirectX::SimpleMath::Vector3 Tangent;
 };
+
+struct Skinning32
+{
+	//À§Ä¡
+	DirectX::SimpleMath::Vector3 Pos;
+	//ÅØ½ºÃÄ
+	DirectX::SimpleMath::Vector2 Tex;
+	//³ë¸»
+	DirectX::SimpleMath::Vector3 Nomal;
+	//ÅºÁ¨Æ®
+	DirectX::SimpleMath::Vector3 Tangent;
+
+
+	UINT BoneIndex[4];
+	float BoneWeights[4];
+};

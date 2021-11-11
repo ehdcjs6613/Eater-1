@@ -14,6 +14,20 @@ GraphicEngineManager::~GraphicEngineManager()
 	
 }
 
+void GraphicEngineManager::Update()
+{
+	if (NowEngine == nullptr)
+	{
+		DebugManager::Print("선택한 그래픽엔진이 없습니다", 80, 0, DebugManager::MSG_TYPE::MSG_ERROR);
+	}
+	else
+	{
+		std::string temp = "선택된 그래픽 엔진 :" + EngineName;
+		DebugManager::Print(temp, 80, 0, DebugManager::MSG_TYPE::MSG_ENGINE);
+	}
+
+}
+
 void GraphicEngineManager::EngineAllInitialize(HWND Hwnd, int WinSizeWidth, int WinSizeHeight)
 {
 	//모든 엔진을 초기화 시킨다
@@ -28,25 +42,13 @@ void GraphicEngineManager::EngineAllInitialize(HWND Hwnd, int WinSizeWidth, int 
 
 void GraphicEngineManager::Initialize(HWND Hwnd, int WinSizeWidth, int WinSizeHeight)
 {
-	//선택한 엔진 초기화
-	if (NowEngine == nullptr)
-	{
-		DebugManager::Print("선택한 그래픽엔진이 없습니다", DebugManager::MSG_TYPE::MSG_ERROR);
-	}
-	else
-	{
-		NowEngine->Initialize(Hwnd, WinSizeWidth, WinSizeHeight);
-	}
+	NowEngine->Initialize(Hwnd, WinSizeWidth, WinSizeHeight);
 }
 
 void GraphicEngineManager::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 {
 	//선택한 엔진 랜더링
-	if (NowEngine == nullptr)
-	{
-		DebugManager::Print("선택한 그래픽엔진이 없습니다", DebugManager::MSG_TYPE::MSG_ERROR);
-	}
-	else
+	if (NowEngine != nullptr)
 	{
 		NowEngine->Render(meshList, global);
 	}
@@ -81,12 +83,11 @@ void GraphicEngineManager::ChoiceEngine(std::string Name)
 	//랜더링할 엔진 선택
 	if (GEngineList.find(Name) == GEngineList.end())
 	{
-		DebugManager::Print("그래픽엔진을 찾지못했습니다", DebugManager::MSG_TYPE::MSG_ERROR);
+		DebugManager::Print("그래픽엔진을 찾지못했습니다", 80, 1, DebugManager::MSG_TYPE::MSG_ERROR);
 	}
 	else
 	{
-		std::string temp = "선택된 그래픽 엔진 :" + Name;
-		DebugManager::Print(temp, DebugManager::MSG_TYPE::MSG_ENGINE);
+		EngineName = Name;
 		NowEngine = GEngineList[Name];
 	}
 }
