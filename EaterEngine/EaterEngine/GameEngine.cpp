@@ -22,8 +22,8 @@
 
 //테스트용
 #include "HsGraphic.h"
-//#include "DH3DEngine.h"
-//#include "KHGraphic.h"
+#include "DH3DEngine.h"
+#include "KHGraphic.h"
 
 GameEngine::GameEngine()
 {
@@ -77,8 +77,6 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 
 	MeshFilter::SetObjMananager(mObjectManager);
 	//처음시작하기전 엔진의 구조간략설명
-	
-
 
 	/// <summary>
 	/// 여기 두부분만 해주면 그래픽엔진 매니저에서 알아서 해줄꺼임
@@ -86,8 +84,8 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 	/// </summary>
 	/////////////////////////////////////////////////////////////////
 	mGraphicManager->PushEngine<HsGraphic>("형선");
-	//mGraphicManager->PushEngine<KHGraphic>("형선");
-	//mGraphicManager->PushEngine<DH3DEngine>("동혁");
+	mGraphicManager->PushEngine<DH3DEngine>("동혁");
+	mGraphicManager->PushEngine<KHGraphic>("규황");
 	mGraphicManager->ChoiceEngine("형선");
 	/////////////////////////////////////////////////////////////////
 

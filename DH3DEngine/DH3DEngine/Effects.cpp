@@ -51,34 +51,34 @@ BasicEffect::~BasicEffect()
 }
 #pragma endregion
 
-#pragma region SkyEffect
-SkyEffect::SkyEffect(ID3D11Device* device, const std::wstring& filename)
-	: Effect(device, filename)
-{
-	SkyTech = mFX->GetTechniqueByName("SkyTech");
-	WorldViewProj = mFX->GetVariableByName("gWorldViewProj")->AsMatrix();
-	CubeMap = mFX->GetVariableByName("gCubeMap")->AsShaderResource();
-}
-
-SkyEffect::~SkyEffect()
-{
-}
-#pragma endregion
+//#pragma region SkyEffect
+//SkyEffect::SkyEffect(ID3D11Device* device, const std::wstring& filename)
+//	: Effect(device, filename)
+//{
+//	SkyTech = mFX->GetTechniqueByName("SkyTech");
+//	WorldViewProj = mFX->GetVariableByName("gWorldViewProj")->AsMatrix();
+//	CubeMap = mFX->GetVariableByName("gCubeMap")->AsShaderResource();
+//}
+//
+//SkyEffect::~SkyEffect()
+//{
+//}
+//#pragma endregion
 
 #pragma region Effects
 
 BasicEffect* Effects::BasicFX = 0;
-SkyEffect* Effects::SkyFx = 0;
+//SkyEffect* Effects::SkyFx = 0;
 
 void Effects::InitAll(ID3D11Device* device)
 {
-	BasicFX = new BasicEffect(device, L"../FX/Basic.cso");
-	SkyFx = new SkyEffect(device, L"../FX/Sky.cso");
+	BasicFX = new BasicEffect(device, L"../Resources/Shader/CDH/Basic.cso");
+	//SkyFx = new SkyEffect(device, L"../FX/Sky.cso");
 }
 
 void Effects::DestroyAll()
 {
 	SafeDelete(BasicFX);
-	SafeDelete(SkyFx);
+	//SafeDelete(SkyFx);
 }
 #pragma endregion

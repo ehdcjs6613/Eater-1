@@ -34,18 +34,17 @@ void InputLayouts::InitAll(ID3D11Device* device)
 {
 
 	D3DX11_PASS_DESC passDesc;
-	//Effects::BasicFX->Light1Tech->GetPassByIndex(0)->GetDesc(&passDesc);
-	//HR(device->CreateInputLayout(InputLayoutDesc::PosNormal, 2, passDesc.pIAInputSignature,
-	//	passDesc.IAInputSignatureSize, &PosNormal));
-
-	//D3DX11_PASS_DESC passDesc;
 	Effects::BasicFX->Light1Tech->GetPassByIndex(0)->GetDesc(&passDesc);
 	HR(device->CreateInputLayout(InputLayoutDesc::PosNormalTexBiNormalTangent, 5, passDesc.pIAInputSignature,
 		passDesc.IAInputSignatureSize, &PosNormalTexBiNormalTangent));
 
-	Effects::SkyFx->SkyTech->GetPassByIndex(0)->GetDesc(&passDesc);
-	HR(device->CreateInputLayout(InputLayoutDesc::Pos, 1, passDesc.pIAInputSignature,
-		passDesc.IAInputSignatureSize, &Pos));
+	//Effects::BasicFX->Light1Tech->GetPassByIndex(0)->GetDesc(&passDesc);
+	//HR(device->CreateInputLayout(InputLayoutDesc::PosNormal, 2, passDesc.pIAInputSignature,
+	//	passDesc.IAInputSignatureSize, &PosNormal));
+
+	//Effects::SkyFx->SkyTech->GetPassByIndex(0)->GetDesc(&passDesc);
+	//HR(device->CreateInputLayout(InputLayoutDesc::Pos, 1, passDesc.pIAInputSignature,
+	//	passDesc.IAInputSignatureSize, &Pos));
 }
 
 void InputLayouts::DestroyAll()

@@ -8,13 +8,16 @@
 #define DHENGINE_DLL __declspec(dllexport)
 #else
 #define DHENGINE_DLL __declspec(dllimport)
+
+#ifdef _DEBUG
+#pragma comment(lib,"DH3DEngine_x64d")
+#else
+#pragma comment(lib,"DH3DEngine_x64r")
 #endif
 
-class TextureBuffer;
-class Indexbuffer;
-class Vertexbuffer;
+#endif
+
 class AxisGrid;
-class SkyBox;
 
 class DH3DEngine : public GraphicEngine
 {
@@ -24,7 +27,7 @@ public:
 	DHENGINE_DLL DH3DEngine();
 	DHENGINE_DLL virtual ~DH3DEngine();
 	/// 초기화 관련
-	DHENGINE_DLL void Initialize(HWND hWnd, int screenWidth, int screenHeight);
+	DHENGINE_DLL void Initialize(HWND _hWnd, int screenWidth, int screenHeight);
 	/// 화면 갱신시 Resize를 할 함수.
 	DHENGINE_DLL Indexbuffer* CreateIndexBuffer(ParserData::Mesh* mModel);	//인덱스 버퍼를 만들어준다
 	DHENGINE_DLL Vertexbuffer* CreateVertexBuffer(ParserData::Mesh* mModel);	//버텍스 버퍼를 만들어준다

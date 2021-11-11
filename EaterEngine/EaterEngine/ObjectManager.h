@@ -14,7 +14,6 @@ class Camera;
 class FBXModel;
 class GameObject;
 class Component;
-class DH3DEngine;
 class MeshFilter;
 
 class ObjectManager

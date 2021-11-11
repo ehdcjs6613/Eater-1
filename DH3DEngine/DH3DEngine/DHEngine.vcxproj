@@ -79,9 +79,11 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <TargetName>$(ProjectName)_x64d</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <TargetName>$(ProjectName)_x64r</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -136,7 +138,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)Library\inc;$(SolutionDir)Library\inc\DHEngineHelper;$(SolutionDir)Resources\Shader\CDH;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Library\inc;$(SolutionDir)Library\inc\DHEngine;$(SolutionDir)Resources\Shader\CDH;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -154,7 +156,9 @@
     <PostBuildEvent>
       <Command>copy/Y "$(TargetDir)*.lib"   "$(SolutionDir)Library\lib"
 copy/Y "$(TargetDir)*.dll"   "$(SolutionDir)Library\lib"
-copy /Y "$(ProjectDir)DH3DEngine.h" "$(SolutionDir)Library\inc"</Command>
+copy /Y "$(ProjectDir)DH3DEngine.h" "$(SolutionDir)Library\inc\DHEngine"
+copy /Y "$(ProjectDir)DH3DEngineDefine.h" "$(SolutionDir)Library\inc\DHEngine"
+copy /Y "$(ProjectDir)DH3DEngineHeader.h" "$(SolutionDir)Library\inc\DHEngine"</Command>
     </PostBuildEvent>
     <PreLinkEvent>
       <Command>
@@ -172,7 +176,7 @@ copy /Y "$(ProjectDir)DH3DEngine.h" "$(SolutionDir)Library\inc"</Command>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)Library\inc;$(SolutionDir)Library\inc\DHEngineHelper;$(SolutionDir)Resources\Shader\CDH;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Library\inc;$(SolutionDir)Library\inc\DHEngine;$(SolutionDir)Resources\Shader\CDH;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -193,6 +197,13 @@ copy /Y "$(ProjectDir)DH3DEngine.h" "$(SolutionDir)Library\inc"</Command>
       <Command>
       </Command>
     </PreLinkEvent>
+    <PostBuildEvent>
+      <Command>copy/Y "$(TargetDir)*.lib"   "$(SolutionDir)Library\lib"
+copy/Y "$(TargetDir)*.dll"   "$(SolutionDir)Library\lib"
+copy /Y "$(ProjectDir)DH3DEngine.h" "$(SolutionDir)Library\inc\DHEngine"
+copy /Y "$(ProjectDir)DH3DEngineDefine.h" "$(SolutionDir)Library\inc\DHEngine"
+copy /Y "$(ProjectDir)DH3DEngineHeader.h" "$(SolutionDir)Library\inc\DHEngine"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Lib\FX11_2021_06_14\d3dx11effect.h" />
@@ -224,10 +235,21 @@ copy /Y "$(ProjectDir)DH3DEngine.h" "$(SolutionDir)Library\inc"</Command>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">PS</EntryPointName>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resources\Shader\CDH\%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)Resources\Shader\CDH\%(Filename).cso</ObjectFileOutput>
     </FxCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\FX\Basic.cso" />
+    <FxCompile Include="..\..\Resources\Shader\CDH\color.fx">
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resources\Shader\CDH\%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)Resources\Shader\CDH\%(Filename).cso</ObjectFileOutput>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">PS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">PS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+    </FxCompile>
+    <FxCompile Include="..\..\Resources\Shader\CDH\LightHelper.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

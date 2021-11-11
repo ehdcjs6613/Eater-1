@@ -17,9 +17,9 @@ DH3DEngine::~DH3DEngine()
 	Effects::DestroyAll();
 }
 
-void DH3DEngine::Initialize(HWND hWnd, int screenWidth, int screenHeight)
+void DH3DEngine::Initialize(HWND _hWnd, int screenWidth, int screenHeight)
 {
-	g_hWnd = hWnd;
+	g_hWnd = _hWnd;
 	g_Screen_Width = screenWidth;
 	g_Screen_Height = screenHeight;
 	CreateGraphicResource();
@@ -393,7 +393,7 @@ void DH3DEngine::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 			Effects::BasicFX->SetTexTransform(DirectX::SimpleMath::Matrix::Identity);
 
 			mTech->GetPassByIndex(p)->Apply(0, DX11_Device_Context);
-			DX11_Device_Context->DrawIndexed(_Mesh_Data->indexCount, 0, 0);
+			DX11_Device_Context->DrawIndexed(_Mesh_Data->IB->Count, 0, 0);
 		}
 
 	}
@@ -597,7 +597,6 @@ Indexbuffer* DH3DEngine::CreateIndexBuffer(ParserData::Mesh* mModel)
 	HR(DX11_Device->CreateBuffer(&ibd, &iinitData, &mIB));
 
 	indexbuffer->IndexBufferPointer = mIB;
-	indexbuffer->size = Icount * 3;
 
 	return indexbuffer;
 }
@@ -630,7 +629,6 @@ Vertexbuffer* DH3DEngine::CreateVertexBuffer(ParserData::Mesh* mModel)
 	HR(DX11_Device->CreateBuffer(&vbd, &vinitData, &mVB));
 
 	vertexbuffer->VertexbufferPointer = mVB;
-	vertexbuffer->size = Vcount;
 
 	return vertexbuffer;
 }
