@@ -34,7 +34,7 @@ void MeshFilter::Awake()
 		for (int i = 0; i < data->BoneList.size(); i++)
 		{
 			int size = (data->MeshList[0]->BoneList)->size();
-			CreateChild_Bone(data->BoneList[i], MyTr, &BoneList, size);
+			CreateChild_Bone(data->BoneList[i], MyTr, &BoneList);
 		}
 
 
@@ -67,9 +67,6 @@ void MeshFilter::PushModelData(LoadMeshData* mModel)
 
 	data->mLocal = *(mModel->LocalTM);
 	data->mWorld = *(mModel->WorldTM);
-
-	data->indexCount	= mModel->IB->Count;
-	data->vertexCount	= mModel->VB->Count;
 }
 
 void MeshFilter::CreateChild_Mesh(LoadMeshData* data, Transform* parent)
@@ -127,20 +124,14 @@ void MeshFilter::CreateChild_Mesh(LoadMeshData* data, Transform* parent)
 	}
 }
 
-void MeshFilter::CreateChild_Bone(LoadMeshData* data, Transform* parent, std::vector<Transform*>* mBoneList, int BoneSize)
+void MeshFilter::CreateChild_Bone(LoadMeshData* data, Transform* parent, std::vector<Transform*>* mBoneList)
 {
-	if (mBoneList->size() == BoneSize)
-	{
-		return;
-	}
-
-
 	GameObject* OBJ = new GameObject();
 	OBJ->Name = data->Name;
 	OBJ->OneMeshData->ObjType = OBJECT_TYPE::Bone;
 
 	//ÄÁÆÛ³ÍÆ® »ý¼º
-	Transform* Tr		= OBJ->AddComponent<Transform>();
+	Transform*	Tr		= OBJ->AddComponent<Transform>();
 	MeshFilter* Filter	= OBJ->AddComponent<MeshFilter>();
 
 
@@ -162,7 +153,7 @@ void MeshFilter::CreateChild_Bone(LoadMeshData* data, Transform* parent, std::ve
 	for (int i = 0; i < ChildCount; i++)
 	{
 		//Àç±Í È£Ãâ
-		Filter->CreateChild_Bone(data->Child[i], Tr, mBoneList, BoneSize);
+		Filter->CreateChild_Bone(data->Child[i], Tr, mBoneList);
 	}
 }
 

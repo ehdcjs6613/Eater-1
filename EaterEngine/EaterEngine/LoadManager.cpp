@@ -91,6 +91,8 @@ void LoadManager::LoadMesh( std::string Name, bool Scale, bool LoadAnime)
 		{
 			SaveMesh->MeshList.push_back(data);
 		}
+
+		
 	}
 
 	//최상위 오브젝트의 리스트를 넣어준다
@@ -138,12 +140,10 @@ void LoadManager::DeleteMesh(std::string mMeshName)
 	std::map<std::string, ModelData*>::iterator temp = ModelList.find(mMeshName);
 	if (temp == ModelList.end())
 	{
-		DebugManager::Print(mMeshName, 0, 0, DebugManager::MSG_TYPE::MSG_DELETE,true);
 		return;
 	}
 	else
 	{
-		DebugManager::Print(mMeshName, 0, 0, DebugManager::MSG_TYPE::MSG_DELETE);
 		ModelList.erase(mMeshName);
 	}
 }
@@ -168,37 +168,33 @@ LoadMeshData* LoadManager::CreateMesh(ParserData::Mesh* mesh)
 	box->Top_Object			= mesh->m_TopNode;
 	box->Bone_Object		= mesh->m_IsBone;
 	box->Skinning_Object	= mesh->m_IsSkinningObject;
+
+	//기존 데이터 그냥 읽어옴
 	box->Animation			= mesh->m_Animation;
+	box->Material			= mesh->m_MaterialData;
 
 	//매트릭스 정보 받기
 	box->WorldTM =  &mesh->m_WorldTM;
 	box->LocalTM =  &mesh->m_LocalTM;
 	
-	//메터리얼 정보
-	box->Material	= mesh->m_MaterialData;
-
-	
+	//매쉬라면 랜더링할 인덱스버퍼와 버텍스버퍼를 읽어온다
 	if(mesh->m_IsBone == false)
 	{
-		//매쉬라면 랜더링할 인덱스버퍼와 버텍스버퍼를 읽어온다
 		box->IB = GEngine->CreateIndexBuffer(mesh);
 		box->VB = GEngine->CreateVertexBuffer(mesh);
 		box->IB->Count = (int)mesh->m_IndexList.size() * 3;
 		box->VB->Count = (int)mesh->m_VertexList.size();
 		
 
+		//스키닝 오브젝트라면 본정보도 읽는다
 		if (mesh->m_IsSkinningObject == true)
 		{
-			//스키닝 오브젝트라면 본정보도 읽는다
 			box->BoneList	= &(mesh->m_BoneMeshList);
 			box->BoneTMList = &(mesh->m_BoneTMList);
 			mesh->m_Animation;
 		}
 	}
 	
-	
-
-
 	//자식객체가 있다면 정보읽어옴
 	for (int i = 0; i < ChildCount; i++)
 	{

@@ -64,6 +64,9 @@ private:
 	//매쉬 데이터를 저장할 구조체를 만든다(재귀)
 	LoadMeshData* CreateMesh(ParserData::Mesh* mesh);
 	
+
+
+	
 	//모델이 들어있는 경로
 	std::string MeshPath;
 	//텍스쳐가 들어있는 경로

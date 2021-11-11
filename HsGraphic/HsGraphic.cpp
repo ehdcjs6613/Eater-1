@@ -61,18 +61,18 @@ void HsGraphic::Initialize(HWND _hWnd, int screenWidth, int screenHeight)
 
 Indexbuffer* HsGraphic::CreateIndexBuffer(ParserData::Mesh* mModel)
 {
-
 	ID3D11Buffer* mIB = nullptr;
 	Indexbuffer* indexbuffer = new Indexbuffer();
 
 	//모델의 계수
-	int Icount		= (int)mModel->m_IndexList.size();
+	int IndexFaceCount = (int)mModel->m_IndexList.size();
+	int IndexCount = IndexFaceCount * 3;
 
 	std::vector<UINT> index;
-	index.resize(Icount*3);
+	index.resize(IndexCount);
 
 	int j = 0;
-	for (int i = 0 ;i < Icount; i++)
+	for (int i = 0; i < IndexFaceCount; i++)
 	{
 		index[j] = mModel->m_IndexList[i]->m_Index[0];
 		j++;
@@ -82,20 +82,18 @@ Indexbuffer* HsGraphic::CreateIndexBuffer(ParserData::Mesh* mModel)
 		j++;
 	}
 
-	//인덱스 버퍼를 생성한다
 	D3D11_BUFFER_DESC ibd;
 	ibd.Usage = D3D11_USAGE_IMMUTABLE;
-	ibd.ByteWidth = sizeof(UINT) * index.size();
+	ibd.ByteWidth = sizeof(UINT) * IndexCount;
 	ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	ibd.CPUAccessFlags = 0;
 	ibd.MiscFlags = 0;
 	D3D11_SUBRESOURCE_DATA iinitData;
 	iinitData.pSysMem = &index[0];
+
 	Device->CreateBuffer(&ibd, &iinitData, &mIB);
 
-	//인덱스버퍼를 보낼수있도록 변경
 	indexbuffer->IndexBufferPointer = mIB;
-	indexbuffer->size = sizeof(ID3D11Buffer);
 
 	return indexbuffer;
 }
@@ -317,10 +315,9 @@ Vertexbuffer* HsGraphic::CreateBasicVertexBuffer(ParserData::Mesh* mModel)
 	Device->CreateBuffer(&vbd, &vinitData, &mVB);
 
 	vertexbuffer->VertexbufferPointer = mVB;
-	vertexbuffer->size = sizeof(ID3D11Buffer);
 
 	/////////////////////////////////////////////////// 중요함 꼭넣어주세요
-	vertexbuffer->VectexDataSize = sizeof(Deferred32);
+	vertexbuffer->VertexDataSize = sizeof(Deferred32);
 	//////////////////////////////////////////////////
 	
 
@@ -372,10 +369,9 @@ Vertexbuffer* HsGraphic::CreateSkinngingVertexBuffer(ParserData::Mesh* mModel)
 	Device->CreateBuffer(&vbd, &vinitData, &mVB);
 
 	vertexbuffer->VertexbufferPointer = mVB;
-	vertexbuffer->size = sizeof(ID3D11Buffer);
 
 	/////////////////////////////////////////////////// 중요함 꼭넣어주세요
-	vertexbuffer->VectexDataSize = sizeof(Skinning32);
+	vertexbuffer->VertexDataSize = sizeof(Skinning32);
 	//////////////////////////////////////////////////
 
 	return vertexbuffer;
@@ -398,7 +394,6 @@ TextureBuffer* HsGraphic::CreateTextureBuffer(std::string path)
 	
 	TextureBuffer* buffer = new TextureBuffer();
 	buffer->TextureBufferPointer = Textures;
-	buffer->size = sizeof(ID3D11ShaderResourceView);	
 	texResource->Release();
 
 	return buffer;
