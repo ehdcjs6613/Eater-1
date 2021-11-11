@@ -112,9 +112,8 @@ public:
 	~ModelData()
 	{
 		//최상위의 오브젝트를 재귀로 돌면서 포인터로 생성된것들 모두삭제
+		//
 	}
-
-
 	std::vector<LoadMeshData*> MeshList;
 	std::vector<LoadMeshData*> BoneList;
 };

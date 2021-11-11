@@ -170,6 +170,11 @@ void ObjectManager::PlayStart()
 void ObjectManager::CreateRenderQueue()
 {
 	//오브젝트의 사이즈 만큼 돌면서 랜더큐에 MeshData를 전달해준다
+	for (int i = 0; i < ShadowData.size(); i++)
+	{
+		ShadowData.pop();
+	}
+	
 
 	int count = ObjectList.size();
 	
@@ -177,6 +182,7 @@ void ObjectManager::CreateRenderQueue()
 	for (it; it != ObjectList.end(); it++)
 	{
 		RenderData.push((*it)->OneMeshData);
+		ShadowData.push((*it)->OneMeshData);
 	}
 }
 
@@ -215,6 +221,11 @@ void ObjectManager::DeleteObject()
 std::queue<MeshData*>* ObjectManager::GetRenderQueue()
 {
 	return &RenderData;
+}
+
+std::queue<MeshData*>* ObjectManager::GetShadowQueue()
+{
+	return &ShadowData;
 }
 
 
