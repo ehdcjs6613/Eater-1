@@ -48,8 +48,8 @@ void RenderManager::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 	ID3D11Buffer* iBuffer = nullptr;
 	ID3D11Buffer* vBuffer = nullptr;
 	UINT indexCount = 0;
-	const UINT size = sizeof(NormalMapVertex);
-	const UINT offset = 0;
+	UINT size = 0;
+	UINT offset = 0;
 
 	DirectX::XMMATRIX world;
 
@@ -77,7 +77,8 @@ void RenderManager::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 		iBuffer = reinterpret_cast<ID3D11Buffer*>(mesh->IB->IndexBufferPointer);
 		vBuffer = reinterpret_cast<ID3D11Buffer*>(mesh->VB->VertexbufferPointer);
 
-		indexCount = mesh->indexCount;
+		indexCount = mesh->IB->Count;
+		size = mesh->VB->VertexDataSize;
 
 		m_Deferred->Render(view, proj, world, vBuffer, iBuffer, size, offset, indexCount);
 		

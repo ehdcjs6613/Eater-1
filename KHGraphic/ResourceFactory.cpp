@@ -337,7 +337,7 @@ Vertexbuffer* GraphicResourceFactory::CreateVertexBuffer(ParserData::Mesh* mesh)
 	// ³Ñ°ÜÁà¾ßÇÒ VertexBufferData »ðÀÔ..
 	vBuffer->Count = vCount;
 	vBuffer->VertexbufferPointer = VB;
-	vBuffer->VectexDataSize = sizeof(NormalMapVertex);
+	vBuffer->VertexDataSize = sizeof(NormalMapVertex);
 
 	return vBuffer;
 }

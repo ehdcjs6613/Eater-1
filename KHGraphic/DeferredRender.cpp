@@ -189,7 +189,7 @@ void DeferredRender::BeginRender()
 	g_Context->RSSetState(m_RasterizerState);
 }
 
-void DeferredRender::Render(DirectX::XMMATRIX view, DirectX::XMMATRIX proj, DirectX::XMMATRIX world, ID3D11Buffer* vb, ID3D11Buffer* ib, const UINT size, const UINT offset, UINT indexCount)
+void DeferredRender::Render(DirectX::XMMATRIX view, DirectX::XMMATRIX proj, DirectX::XMMATRIX world, ID3D11Buffer* vb, ID3D11Buffer* ib, UINT size, UINT offset, UINT indexCount)
 {
 	// Shader Update
 	cbPerObject objData;
