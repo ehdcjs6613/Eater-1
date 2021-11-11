@@ -16,7 +16,7 @@ namespace DirectX
 	}
 }
 
-
+class ModelData;
 class LoadMeshData;
 class Transform;
 class ObjectManager;
@@ -39,10 +39,10 @@ private:
 	void LinkHierarchy(Transform* my,Transform*parent);
 
 	//LoadMeshData를 게임에 사용할 오브젝트로 생성하면서 값을 넣어준다
-	void CreateChild_Mesh(LoadMeshData* data,Transform* parent);
+	void CreateChild_Mesh(LoadMeshData* data,Transform* parent, ModelData* modeldata);
 
 	//LoadMeshData를 게임에 사용할 오브젝트로 생성하면서 값을 넣어준다
-	void CreateChild_Bone(LoadMeshData* data, Transform* parent, std::vector<Transform*>* mBoneList);
+	void CreateChild_Bone(LoadMeshData* data, Transform* parent, std::vector<Transform*>* mBoneList, std::vector<DirectX::SimpleMath::Matrix>* BoneOffsetList);
 
 	//게임오브젝트의 LoadData를 합쳐준다
 	void PushModelData(LoadMeshData* mModel);
@@ -53,5 +53,6 @@ private:
 	std::string MeshName;	//로드한 매쉬 이름
 
 	std::vector<Transform*> BoneList;
+	std::vector<DirectX::SimpleMath::Matrix> BoneOffsetList;
 };
 

@@ -2,6 +2,10 @@
 #include "ResourcesData.h"
 #include "ParserData.h"
 
+using namespace DirectX;
+using namespace SimpleMath;
+using namespace ParserData;
+
 enum class OBJECT_TYPE
 {
 	///현재 기본형으로 넣어둔 오브젝트 종류
@@ -58,6 +62,7 @@ public:
 
 
 
+
 /// <summary>
 /// 규황이 파서에서 버텍스와 인덱스를 버퍼로 변경해주고
 /// 애니메이션과, 변경되지않는값들은 그냥 가져와서 합쳐놓는 클래스
@@ -95,11 +100,15 @@ public:
 	ParserData::CMaterial*		Material	= nullptr;	//메테리얼 정보
 	ParserData::OneAnimation*	Animation	= nullptr;	//애니메이션 정보
 	
-	std::vector<DirectX::SimpleMath::Matrix>* BoneTMList	= nullptr;	//본 매트릭스
-	std::vector<ParserData::Mesh*>* BoneList				= nullptr;	//본 매쉬
+	std::vector<Matrix>*	BoneTMList		= nullptr;	//본 매트릭스
+	std::vector<Mesh*>*		BoneList		= nullptr;	//본 매쉬
 
 	LoadMeshData* Parent = nullptr;		//부모 매쉬
 	std::vector<LoadMeshData*> Child;	//자식 매쉬 리스트
+
+
+	Matrix* BoneOffset	= nullptr;	//본 매트릭스
+	Mesh*	BoneNumber	= nullptr;	//본 매쉬
 };
 
 /// <summary>
@@ -114,8 +123,11 @@ public:
 		//최상위의 오브젝트를 재귀로 돌면서 포인터로 생성된것들 모두삭제
 		//
 	}
-	std::vector<LoadMeshData*> MeshList;
-	std::vector<LoadMeshData*> BoneList;
+	std::vector<LoadMeshData*> TopMeshList;
+	std::vector<LoadMeshData*> TopBoneList;
+
+	std::vector<Matrix>*	BoneOffsetList	= nullptr;	//본 매트릭스
+	std::vector<Mesh*>*		BoneList		= nullptr;	//본 매쉬
 };
 
 

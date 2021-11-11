@@ -15,9 +15,11 @@ void intro::Awake()
 	LoadTesturePath("../Resources/Texture/");
 	
 	//LoadMesh("Player");
-	LoadMesh("Table");
-	//LoadMesh("Dome_v03");
+	//LoadMesh("Table");
+	LoadMesh("Dome_v03");
 	//LoadMesh("EnemyB");
+	//LoadMesh("Skinning");
+	//LoadMesh("Enemy");
 	//LoadMesh("box");
 	LoadTesture("WoodCrate01");
 
@@ -26,13 +28,15 @@ void intro::Awake()
 	testobj->AddComponent<Keyinput>();
 	testobj->AddComponent<Camera>();
 
-	//매쉬 필터로 매쉬의 정보만 읽은 오브젝트
+
 	testobj = Instance("obj");
-	testobj->AddComponent<MeshFilter>()->SetMeshName("Table");
-	//testobj->AddComponent<AI>();
+	testobj->AddComponent<MeshFilter>()->SetMeshName("Dome_v03");
+	testobj->AddComponent<AI>();
 	testobj->GetTransform()->Position = { 0 ,0, 0 };
 	testobj->GetTransform()->Scale = { 1 ,1,1 };
-	testobj->GetTransform()->Rotation = { 0 ,0,0 };
+	testobj->GetTransform()->Rotation = { 90 ,0,0 };
+	//매쉬 필터로 매쉬의 정보만 읽은 오브젝트
+	
 	//
 	//
 	////스키닝필터로 본과 매쉬정보 둘다 읽은 오브젝트
