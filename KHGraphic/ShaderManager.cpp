@@ -41,6 +41,18 @@ void ShaderManager::AddSampler(Hash_Code hash_code, Microsoft::WRL::ComPtr<ID3D1
 	m_SamplerList.insert(std::make_pair(hash_code, sampler));
 }
 
+void ShaderManager::Release()
+{
+	IShader::Reset();
+
+	for (std::pair<std::string, IShader*> shader : m_ShaderList)
+	{
+		RELEASE_COM(shader.second);
+	}
+
+	m_ShaderList.clear();
+}
+
 VertexShader* ShaderManager::GetVertexShader(std::string shaderName)
 {
 	std::unordered_map<std::string, IShader*>::iterator shader = m_ShaderList.find(shaderName);
