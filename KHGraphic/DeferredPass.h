@@ -8,6 +8,7 @@ public:
 public:
 	void Initialize(int width, int height) override;
 	void OnResize(int width, int height) override;
+	void Release() override;
 
 	void BeginRender();
 	void Render(DirectX::XMMATRIX view, DirectX::XMMATRIX proj, DirectX::XMMATRIX world, ID3D11Buffer* vb, ID3D11Buffer* ib, UINT size, UINT offset, UINT indexCount);

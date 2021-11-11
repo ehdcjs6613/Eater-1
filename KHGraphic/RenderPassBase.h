@@ -22,6 +22,7 @@ public:
 public:
 	virtual void Initialize(int width, int height) abstract;
 	virtual void OnResize(int width, int height) abstract;
+	virtual void Release() abstract;
 
 public:
 	static void Initialize(Microsoft::WRL::ComPtr<ID3D11DeviceContext> context, IGraphicResourceFactory* factory, IGraphicResourceManager* resourceManager, IShaderManager* shaderManager);

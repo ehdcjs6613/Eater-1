@@ -22,7 +22,7 @@ enum class eBlendState
 
 enum class eViewPort
 {
-	DEFALT = 0,
+	SCREEN = 0,
 	SHADOW,
 	SSAO,
 };
