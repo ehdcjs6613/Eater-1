@@ -6,10 +6,10 @@
 #pragma comment(lib,"d3dcompiler.lib")
 
 #ifdef _DEBUG
-#pragma comment( lib, "DirectXTKd.lib" )
+#pragma comment( lib, "DirectXTK_x64d.lib" )
 #pragma comment( lib, "Effects11d.lib" )
 #else
-#pragma comment( lib, "DirectXTK.lib" )
+#pragma comment( lib, "DirectXTK_x64r.lib" )
 #pragma comment( lib, "Effects11.lib" )
 #endif
 

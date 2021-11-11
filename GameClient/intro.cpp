@@ -21,7 +21,6 @@ void intro::Awake()
 	//LoadMesh("box");
 	LoadTesture("WoodCrate01");
 
-
 	///Ä«¸Þ¶ó
 	testobj = Instance();
 	testobj->AddComponent<Keyinput>();

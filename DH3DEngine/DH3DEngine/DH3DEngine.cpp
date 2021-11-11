@@ -17,9 +17,9 @@ DH3DEngine::~DH3DEngine()
 	Effects::DestroyAll();
 }
 
-void DH3DEngine::Initialize(HWND hWnd, int screenWidth, int screenHeight)
+void DH3DEngine::Initialize(HWND _hWnd, int screenWidth, int screenHeight)
 {
-	g_hWnd = hWnd;
+	g_hWnd = _hWnd;
 	g_Screen_Width = screenWidth;
 	g_Screen_Height = screenHeight;
 	CreateGraphicResource();
@@ -393,7 +393,7 @@ void DH3DEngine::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 			Effects::BasicFX->SetTexTransform(DirectX::SimpleMath::Matrix::Identity);
 
 			mTech->GetPassByIndex(p)->Apply(0, DX11_Device_Context);
-			DX11_Device_Context->DrawIndexed(_Mesh_Data->VB->Count, 0, 0);
+			DX11_Device_Context->DrawIndexed(_Mesh_Data->IB->Count, 0, 0);
 		}
 
 	}
@@ -569,15 +569,13 @@ Indexbuffer* DH3DEngine::CreateIndexBuffer(ParserData::Mesh* mModel)
 	Indexbuffer* indexbuffer = new Indexbuffer();
 
 	//¸ðµ¨ÀÇ °è¼ö
-	int IndexFaceCount = (int)mModel->m_IndexList.size();
-	int IndexCount = IndexFaceCount * 3;
+	int Icount = (int)mModel->m_IndexList.size();
 
 	std::vector<UINT> index;
-	
-	index.resize(IndexCount);
+	index.resize(Icount * 3);
 
 	int j = 0;
-	for (int i = 0; i < IndexFaceCount; i++)
+	for (int i = 0; i < Icount; i++)
 	{
 		index[j] = mModel->m_IndexList[i]->m_Index[0];
 		j++;
@@ -589,7 +587,7 @@ Indexbuffer* DH3DEngine::CreateIndexBuffer(ParserData::Mesh* mModel)
 
 	D3D11_BUFFER_DESC ibd;
 	ibd.Usage = D3D11_USAGE_IMMUTABLE;
-	ibd.ByteWidth = sizeof(UINT) * IndexCount;
+	ibd.ByteWidth = sizeof(UINT) * Icount * 3;
 	ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	ibd.CPUAccessFlags = 0;
 	ibd.MiscFlags = 0;
