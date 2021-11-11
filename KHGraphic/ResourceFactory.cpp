@@ -296,7 +296,6 @@ Indexbuffer* GraphicResourceFactory::CreateIndexBuffer(ParserData::Mesh* mesh)
 	// ³Ñ°ÜÁà¾ßÇÒ IndexBufferData »ðÀÔ..
 	iBuffer->Count = iCount * 3;
 	iBuffer->IndexBufferPointer = IB;
-	iBuffer->size = sizeof(ID3D11Buffer);
 	
 	return iBuffer;
 }
@@ -338,7 +337,6 @@ Vertexbuffer* GraphicResourceFactory::CreateVertexBuffer(ParserData::Mesh* mesh)
 	// ³Ñ°ÜÁà¾ßÇÒ VertexBufferData »ðÀÔ..
 	vBuffer->Count = vCount;
 	vBuffer->VertexbufferPointer = VB;
-	vBuffer->size = sizeof(ID3D11Buffer);
 
 	return vBuffer;
 }
@@ -367,7 +365,6 @@ TextureBuffer* GraphicResourceFactory::CreateTextureBuffer(std::string path)
 
 	// ³Ñ°ÜÁà¾ßÇÒ TextureBufferData »ðÀÔ..
 	tBuffer->TextureBufferPointer = newTex;
-	tBuffer->size = sizeof(ID3D11ShaderResourceView);
 	texResource->Release();
 
 	return tBuffer;

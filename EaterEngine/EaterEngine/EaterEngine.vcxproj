@@ -245,6 +245,7 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\lib"
     <ClInclude Include="Export\Component.h" />
     <ClInclude Include="Export\EaterEngineDLL.h" />
     <ClInclude Include="Export\GameObject.h" />
+    <ClInclude Include="Export\GraphicsEngine.h" />
     <ClInclude Include="Export\MainHeader.h" />
     <ClInclude Include="Export\MeshFilter.h" />
     <ClInclude Include="Export\ResourcesData.h" />
@@ -254,7 +255,6 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\lib"
     <ClInclude Include="framework.h" />
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="GraphicEngineManager.h" />
-    <ClInclude Include="GraphicsEngine.h" />
     <ClInclude Include="KeyinputManager.h" />
     <ClInclude Include="ObjectManager.h" />
     <ClInclude Include="LoadManager.h" />

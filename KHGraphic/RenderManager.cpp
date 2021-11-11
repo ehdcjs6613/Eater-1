@@ -77,12 +77,7 @@ void RenderManager::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 		iBuffer = reinterpret_cast<ID3D11Buffer*>(mesh->IB->IndexBufferPointer);
 		vBuffer = reinterpret_cast<ID3D11Buffer*>(mesh->VB->VertexbufferPointer);
 
-		indexCount = mesh->indexCount;
-
 		m_Deferred->Render(view, proj, world, vBuffer, iBuffer, size, offset, indexCount);
-		
-
-
 
 	}
 

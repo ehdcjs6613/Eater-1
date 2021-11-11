@@ -59,6 +59,7 @@ public:
 	void DeleteObject();
 
 	std::queue<MeshData*>* GetRenderQueue();
+	std::queue<MeshData*>* GetShadowQueue();
 	
 
 	///매쉬마다 없어도되는 데이터들
@@ -69,6 +70,8 @@ private:
 
 	///그래픽엔진쪽으로 던저줄 데이터들
 	std::queue<MeshData*> RenderData;
+	std::queue<MeshData*> ShadowData;
+	std::queue<MeshData*> UIData;
 
 	GlobalData* Global;
 

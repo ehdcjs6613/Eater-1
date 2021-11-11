@@ -54,6 +54,30 @@ void GraphicEngineManager::Render(std::queue<MeshData*>* meshList, GlobalData* g
 	}
 }
 
+void GraphicEngineManager::ShadowRender(std::queue<MeshData*>* meshList, GlobalData* global)
+{
+	if (NowEngine != nullptr)
+	{
+		NowEngine->ShadowRender(meshList, global);
+	}
+}
+
+void GraphicEngineManager::SSAORender(std::queue<MeshData*>* meshList, GlobalData* global)
+{
+	if (NowEngine != nullptr)
+	{
+		NowEngine->SSAORender();
+	}
+}
+
+void GraphicEngineManager::UIRender(std::queue<MeshData*>* meshList, GlobalData* global)
+{
+	if (NowEngine != nullptr)
+	{
+		NowEngine->UIRender(meshList, global);
+	}
+}
+
 Indexbuffer* GraphicEngineManager::CreateIndexBuffer(ParserData::Mesh* mModel)
 {
 	//인덱스버퍼 생성
