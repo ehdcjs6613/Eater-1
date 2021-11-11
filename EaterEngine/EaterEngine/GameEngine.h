@@ -17,7 +17,6 @@ class KeyinputManager;
 class GraphicEngineManager;
 class TimeManager;
 
-class HsGraphic;
 class Scene;
 //게임 오브젝트
 class GameObject;

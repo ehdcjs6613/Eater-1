@@ -113,7 +113,7 @@ void AxisGrid::BuildAxisGeometryBuffers()
 
 void AxisGrid::BuildFX()
 {
-	std::ifstream fin("../fx/color.fxo", std::ios::binary);
+	std::ifstream fin("../Resources/Shader/CDH/color.cso", std::ios::binary);
 
 	fin.seekg(0, std::ios_base::end);
 	int size = (int)fin.tellg();

@@ -22,7 +22,6 @@ class ModelData;
 class ModelParser;
 class FBXParser;
 class FBXModel;
-class GraphicEngine;
 class TextureBuffer;
 class GraphicEngineManager;
 

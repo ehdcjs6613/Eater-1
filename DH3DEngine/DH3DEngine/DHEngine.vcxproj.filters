@@ -110,10 +110,11 @@
     <FxCompile Include="..\..\Resources\Shader\CDH\Basic.fx">
       <Filter>FX</Filter>
     </FxCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\FX\Basic.cso">
+    <FxCompile Include="..\..\Resources\Shader\CDH\color.fx">
       <Filter>FX</Filter>
-    </None>
+    </FxCompile>
+    <FxCompile Include="..\..\Resources\Shader\CDH\LightHelper.fx">
+      <Filter>FX</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
