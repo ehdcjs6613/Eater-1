@@ -58,8 +58,8 @@ void GraphicResourceFactory::Release()
 	RESET_COM(m_Context);
 	RESET_COM(m_SwapChain);
 
-	SAFE_DELETE(m_ShaderManager);
-	SAFE_DELETE(m_ResourceManager);
+	SAFE_RELEASE(m_ShaderManager);
+	SAFE_RELEASE(m_ResourceManager);
 }
 
 void GraphicResourceFactory::CreateTexture2D(D3D11_TEXTURE2D_DESC* texDesc, ID3D11Texture2D** tex2D)
@@ -296,7 +296,6 @@ Indexbuffer* GraphicResourceFactory::CreateIndexBuffer(ParserData::Mesh* mesh)
 	// ³Ñ°ÜÁà¾ßÇÒ IndexBufferData »ðÀÔ..
 	iBuffer->Count = iCount * 3;
 	iBuffer->IndexBufferPointer = IB;
-	iBuffer->size = sizeof(ID3D11Buffer);
 	
 	return iBuffer;
 }
@@ -338,7 +337,7 @@ Vertexbuffer* GraphicResourceFactory::CreateVertexBuffer(ParserData::Mesh* mesh)
 	// ³Ñ°ÜÁà¾ßÇÒ VertexBufferData »ðÀÔ..
 	vBuffer->Count = vCount;
 	vBuffer->VertexbufferPointer = VB;
-	vBuffer->size = sizeof(ID3D11Buffer);
+	vBuffer->VectexDataSize = sizeof(NormalMapVertex);
 
 	return vBuffer;
 }
@@ -367,7 +366,6 @@ TextureBuffer* GraphicResourceFactory::CreateTextureBuffer(std::string path)
 
 	// ³Ñ°ÜÁà¾ßÇÒ TextureBufferData »ðÀÔ..
 	tBuffer->TextureBufferPointer = newTex;
-	tBuffer->size = sizeof(ID3D11ShaderResourceView);
 	texResource->Release();
 
 	return tBuffer;

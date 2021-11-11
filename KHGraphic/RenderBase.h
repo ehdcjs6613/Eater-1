@@ -27,6 +27,9 @@ public:
 	static void Initialize(Microsoft::WRL::ComPtr<ID3D11DeviceContext> context, IGraphicResourceFactory* factory, IGraphicResourceManager* resourceManager, IShaderManager* shaderManager);
 	static void Reset();
 
+public:
+	friend class RenderManager;
+
 protected:
 	static Microsoft::WRL::ComPtr<ID3D11DeviceContext> g_Context;
 	static IGraphicResourceFactory* g_Factory;

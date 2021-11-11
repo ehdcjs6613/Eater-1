@@ -7,12 +7,14 @@ class LightRender;
 class RenderManager : public IRenderManager
 {
 public:
-	RenderManager(D3D11Graphic* graphic, IGraphicResourceFactory* factory, IGraphicResourceManager* resource, IShaderManager* shader);
+	RenderManager(D3D11Graphic* graphic, IGraphicResourceFactory* factory);
 	~RenderManager();
 
 public:
 	void Initialize(int width, int height) override;
 	void Render(std::queue<MeshData*>* meshList, GlobalData* global) override;
+	void OnResize(int width, int height) override;
+	void Release() override;
 
 private:
 	Microsoft::WRL::ComPtr<IDXGISwapChain> m_SwapChain;

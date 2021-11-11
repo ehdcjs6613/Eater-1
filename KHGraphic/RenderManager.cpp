@@ -18,10 +18,10 @@
 #include "LightRender.h"
 #include "VertexDefine.h"
 
-RenderManager::RenderManager(D3D11Graphic* graphic, IGraphicResourceFactory* factory, IGraphicResourceManager* resource, IShaderManager* shader)
+RenderManager::RenderManager(D3D11Graphic* graphic, IGraphicResourceFactory* factory)
 {
 	// Rendering Initialize..
-	RenderBase::Initialize(graphic->GetContext(), factory, resource, shader);
+	RenderBase::Initialize(graphic->GetContext(), factory, factory->GetResourceManager(), factory->GetShaderManager());
 
 	m_SwapChain = graphic->GetSwapChain();
 
@@ -88,4 +88,15 @@ void RenderManager::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 
 	// 최종 출력..
 	m_SwapChain->Present(0, 0);
+}
+
+void RenderManager::OnResize(int width, int height)
+{
+	RenderBase::g_Resource->OnResize(width, height);
+
+}
+
+void RenderManager::Release()
+{
+
 }

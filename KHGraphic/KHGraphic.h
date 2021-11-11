@@ -26,8 +26,6 @@ public:
 private:
 	IGraphicResourceFactory* m_ResourceFactory;
 
-	IGraphicResourceManager* m_ResourceMananger;
-
 	IRenderManager* m_RenderManager;
 };
 

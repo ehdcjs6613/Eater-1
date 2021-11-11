@@ -43,8 +43,8 @@ public:
 	TextureBuffer* CreateTextureBuffer(std::string path) override;
 
 public:
-	IShaderManager* GetShaderManager();
-	IGraphicResourceManager* GetResourceManager();
+	IShaderManager* GetShaderManager() override;
+	IGraphicResourceManager* GetResourceManager() override;
 
 private:
 	void CreateDepthStencilState();
