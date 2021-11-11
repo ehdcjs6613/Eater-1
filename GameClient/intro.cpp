@@ -1,5 +1,5 @@
 #include "MainHeader.h"
-#include "intro.h";
+#include "intro.h"
 #include "GameObject.h"
 #include "MeshFilter.h"
 #include "SkinningFilter.h"

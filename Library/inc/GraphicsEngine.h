@@ -8,14 +8,14 @@
 /// </summary>
 
 class MeshData;
-struct GlobalData;
+class GlobalData;
 class Indexbuffer;
 class Vertexbuffer;
 class TextureBuffer;
 
 namespace ParserData 
 {
-	struct Mesh;
+	class Mesh;
 }
 
 

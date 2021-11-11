@@ -21,8 +21,9 @@ enum class OBJECT_TYPE
 };
 
 //씬 기준 매쉬마다 존재하지않아도 되는것들
-struct GlobalData
+class GlobalData
 {
+public:
 	//카메라 정보들
 	DirectX::XMMATRIX* mViewMX;
 	DirectX::XMMATRIX* mProj;

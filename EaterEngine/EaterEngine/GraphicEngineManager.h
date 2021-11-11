@@ -9,7 +9,7 @@
 /// </summary>
 
 class MeshData;
-struct GlobalData;
+class GlobalData;
 class GraphicEngine;
 
 class Indexbuffer;
@@ -18,7 +18,7 @@ class TextureBuffer;
 
 namespace ParserData
 {
-	struct Mesh;
+	class Mesh;
 }
 
 
