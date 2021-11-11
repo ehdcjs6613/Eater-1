@@ -27,8 +27,6 @@ void intro::Awake()
 	testobj->AddComponent<Keyinput>();
 	testobj->AddComponent<Camera>();
 
-	
-
 	//매쉬 필터로 매쉬의 정보만 읽은 오브젝트
 	testobj = Instance("obj");
 	testobj->AddComponent<MeshFilter>()->SetMeshName("Table");

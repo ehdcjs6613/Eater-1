@@ -393,7 +393,7 @@ void DH3DEngine::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 			Effects::BasicFX->SetTexTransform(DirectX::SimpleMath::Matrix::Identity);
 
 			mTech->GetPassByIndex(p)->Apply(0, DX11_Device_Context);
-			DX11_Device_Context->DrawIndexed(_Mesh_Data->indexCount, 0, 0);
+			DX11_Device_Context->DrawIndexed(_Mesh_Data->VB->Count, 0, 0);
 		}
 
 	}
@@ -569,13 +569,15 @@ Indexbuffer* DH3DEngine::CreateIndexBuffer(ParserData::Mesh* mModel)
 	Indexbuffer* indexbuffer = new Indexbuffer();
 
 	//¸ðµ¨ÀÇ °è¼ö
-	int Icount = (int)mModel->m_IndexList.size();
+	int IndexFaceCount = (int)mModel->m_IndexList.size();
+	int IndexCount = IndexFaceCount * 3;
 
 	std::vector<UINT> index;
-	index.resize(Icount * 3);
+	
+	index.resize(IndexCount);
 
 	int j = 0;
-	for (int i = 0; i < Icount; i++)
+	for (int i = 0; i < IndexFaceCount; i++)
 	{
 		index[j] = mModel->m_IndexList[i]->m_Index[0];
 		j++;
@@ -587,7 +589,7 @@ Indexbuffer* DH3DEngine::CreateIndexBuffer(ParserData::Mesh* mModel)
 
 	D3D11_BUFFER_DESC ibd;
 	ibd.Usage = D3D11_USAGE_IMMUTABLE;
-	ibd.ByteWidth = sizeof(UINT) * Icount * 3;
+	ibd.ByteWidth = sizeof(UINT) * IndexCount;
 	ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	ibd.CPUAccessFlags = 0;
 	ibd.MiscFlags = 0;
@@ -597,7 +599,6 @@ Indexbuffer* DH3DEngine::CreateIndexBuffer(ParserData::Mesh* mModel)
 	HR(DX11_Device->CreateBuffer(&ibd, &iinitData, &mIB));
 
 	indexbuffer->IndexBufferPointer = mIB;
-	indexbuffer->size = Icount * 3;
 
 	return indexbuffer;
 }
@@ -630,7 +631,6 @@ Vertexbuffer* DH3DEngine::CreateVertexBuffer(ParserData::Mesh* mModel)
 	HR(DX11_Device->CreateBuffer(&vbd, &vinitData, &mVB));
 
 	vertexbuffer->VertexbufferPointer = mVB;
-	vertexbuffer->size = Vcount;
 
 	return vertexbuffer;
 }

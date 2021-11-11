@@ -42,7 +42,7 @@ private:
 	void CreateChild_Mesh(LoadMeshData* data,Transform* parent);
 
 	//LoadMeshData를 게임에 사용할 오브젝트로 생성하면서 값을 넣어준다
-	void CreateChild_Bone(LoadMeshData* data, Transform* parent, std::vector<Transform*>* mBoneList,int BoneSize);
+	void CreateChild_Bone(LoadMeshData* data, Transform* parent, std::vector<Transform*>* mBoneList);
 
 	//게임오브젝트의 LoadData를 합쳐준다
 	void PushModelData(LoadMeshData* mModel);
