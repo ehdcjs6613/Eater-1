@@ -40,4 +40,7 @@ public:
 
 	/// 랜더링을 한다 매쉬 랜더데이터 리스트, 글로벌 데이터
 	virtual void Render(std::queue<MeshData*>* meshList, GlobalData* global) = 0;
+	virtual void ShadowRender(std::queue<MeshData*>* meshList, GlobalData* global) { return; };
+	virtual void SSAORender() { return; };
+	virtual void UIRender(std::queue<MeshData*>* meshList, GlobalData* global) { return; };
 };

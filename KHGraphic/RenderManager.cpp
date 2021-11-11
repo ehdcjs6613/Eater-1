@@ -18,10 +18,10 @@
 #include "LightRender.h"
 #include "VertexDefine.h"
 
-RenderManager::RenderManager(D3D11Graphic* graphic, IGraphicResourceFactory* factory)
+RenderManager::RenderManager(D3D11Graphic* graphic, IGraphicResourceFactory* factory, IGraphicResourceManager* resource, IShaderManager* shader)
 {
 	// Rendering Initialize..
-	RenderBase::Initialize(graphic->GetContext(), factory, factory->GetResourceManager(), factory->GetShaderManager());
+	RenderBase::Initialize(graphic->GetContext(), factory, resource, shader);
 
 	m_SwapChain = graphic->GetSwapChain();
 
@@ -48,8 +48,8 @@ void RenderManager::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 	ID3D11Buffer* iBuffer = nullptr;
 	ID3D11Buffer* vBuffer = nullptr;
 	UINT indexCount = 0;
-	UINT size = 0;
-	UINT offset = 0;
+	const UINT size = sizeof(NormalMapVertex);
+	const UINT offset = 0;
 
 	DirectX::XMMATRIX world;
 
@@ -77,27 +77,10 @@ void RenderManager::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 		iBuffer = reinterpret_cast<ID3D11Buffer*>(mesh->IB->IndexBufferPointer);
 		vBuffer = reinterpret_cast<ID3D11Buffer*>(mesh->VB->VertexbufferPointer);
 
-		indexCount = mesh->IB->Count;
-		size = mesh->VB->VertexDataSize;
-
 		m_Deferred->Render(view, proj, world, vBuffer, iBuffer, size, offset, indexCount);
-		
-
-
 
 	}
 
 	// 최종 출력..
 	m_SwapChain->Present(0, 0);
-}
-
-void RenderManager::OnResize(int width, int height)
-{
-	RenderBase::g_Resource->OnResize(width, height);
-
-}
-
-void RenderManager::Release()
-{
-
 }

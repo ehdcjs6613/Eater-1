@@ -147,9 +147,6 @@
     <ClInclude Include="Export\EaterEngineDLL.h">
       <Filter>소스 파일\Data</Filter>
     </ClInclude>
-    <ClInclude Include="GraphicsEngine.h">
-      <Filter>소스 파일\Engine\GraphicsClass</Filter>
-    </ClInclude>
     <ClInclude Include="Export\MeshFilter.h">
       <Filter>소스 파일\Component\MeshFilter</Filter>
     </ClInclude>
@@ -161,6 +158,9 @@
     </ClInclude>
     <ClInclude Include="Export\ResourcesData.h">
       <Filter>소스 파일\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="Export\GraphicsEngine.h">
+      <Filter>소스 파일\Engine\GraphicsClass</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
