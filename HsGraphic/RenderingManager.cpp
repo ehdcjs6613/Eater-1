@@ -63,7 +63,6 @@ void RenderingManager::SkinningUpdate(MeshData* data)
 	}
 	
 
-
 	DeviceContext->UpdateSubresource(buffer, 0, nullptr, &mbuffer, 0, 0);
 	DeviceContext->VSSetConstantBuffers(2, 1, &buffer);
 	DeviceContext->PSSetConstantBuffers(2, 1, &buffer);
@@ -85,7 +84,7 @@ void RenderingManager::MeshUpdate(MeshData* data)
 void RenderingManager::Rendering(MeshData* data, ShaderType type)
 {
 	///버텍스 버퍼를 만든 자료형 사이즈
-	UINT stride = data->VB->VectexDataSize;
+	UINT stride = data->VB->VertexDataSize;
 	UINT offset = 0;
 
 	///void* 를 버퍼로 타입변환
@@ -120,10 +119,10 @@ void RenderingManager::Rendering(MeshData* data, ShaderType type)
 
 	///샘플러 삽입
 	DeviceContext->PSSetSamplers(0, 1, &BasicSampler);
-	DeviceContext->PSSetSamplers(0, 1, &BasicSampler);
+	DeviceContext->VSSetSamplers(0, 1, &BasicSampler);
 
 	///그리기
-	DeviceContext->DrawIndexed(data->indexCount, 0, 0);
+	DeviceContext->DrawIndexed(data->IB->Count, 0, 0);
 }
 
 void RenderingManager::CreateRenderState()

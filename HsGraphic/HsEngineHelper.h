@@ -11,14 +11,13 @@
 
 //텍스쳐 불러올떄
 ////////////////////////////////////////////////
-#include "DDSTextureLoader.h"
-	#ifdef _DEBUG
-		#pragma comment(lib,"DirectXTK_x64d")
-	#else
-		#pragma comment(lib,"DirectXTK_x64r")
-		
+#ifdef _DEBUG
+	#pragma comment(lib,"DirectXTK_x64d")
+#else
+	#pragma comment(lib,"DirectXTK_x64r")	
 #endif
 ////////////////////////////////////////////////
+#include "DDSTextureLoader.h"
 
 
 #include <d3dcompiler.h>
