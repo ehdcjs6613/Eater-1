@@ -19,6 +19,7 @@ interface IGraphicResourceManager
 public:
 	virtual void Initialize(Microsoft::WRL::ComPtr<ID3D11Device> device, Microsoft::WRL::ComPtr<IDXGISwapChain> swapChain) abstract;
 	virtual void OnResize(int width, int height) abstract;
+	virtual void Release() abstract;
 
 public:
 	virtual RenderTarget* GetRenderTarget(eRenderTarget state) abstract;
@@ -31,5 +32,4 @@ public:
 	virtual ID3D11DepthStencilState* GetDepthStencilState(eDepthStencilState state) abstract;
 
 	virtual D3D11_VIEWPORT* GetViewPort(eViewPort state) abstract;
-
 };
