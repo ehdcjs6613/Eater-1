@@ -23,6 +23,7 @@ public:
 	ID3D11DepthStencilState* GetDepthStencilState(eDepthStencilState state) override;
 
 	D3D11_VIEWPORT* GetViewPort(eViewPort state) override;
+	BufferData* GetBuffer(eBuffer state) override;
 
 public:
 	template<typename T>
@@ -55,6 +56,11 @@ private:
 	std::vector<Microsoft::WRL::ComPtr<ID3D11RasterizerState>> m_RasterizerStateList;
 	std::vector<Microsoft::WRL::ComPtr<ID3D11BlendState>> m_BlendStateList;
 	std::vector<Microsoft::WRL::ComPtr<ID3D11SamplerState>> m_SamplerStateList;
+
+	/////////////////////////////////////////////////////////////////////////////////////////
+	// Buffer Resource List
+	/////////////////////////////////////////////////////////////////////////////////////////
+	std::vector<BufferData*> m_BufferList;
 };
 
 template<typename T>
@@ -78,3 +84,6 @@ inline void GraphicResourceManager::AddResource(Microsoft::WRL::ComPtr<ID3D11Ble
 
 template<>
 inline void GraphicResourceManager::AddResource(Microsoft::WRL::ComPtr<ID3D11SamplerState> resource) { m_SamplerStateList.push_back(resource); }
+
+template<>
+inline void GraphicResourceManager::AddResource(BufferData* resource) { m_BufferList.push_back(resource); }

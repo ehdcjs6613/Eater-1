@@ -1,9 +1,9 @@
 #pragma once
 #include "RenderManagerBase.h"
 
-class ShadowRender;
-class DeferredRender;
-class LightRender;
+class ShadowPass;
+class DeferredPass;
+class LightPass;
 class RenderManager : public IRenderManager
 {
 public:
@@ -12,16 +12,21 @@ public:
 
 public:
 	void Initialize(int width, int height) override;
+
 	void Render(std::queue<MeshData*>* meshList, GlobalData* global) override;
+	void ShadowRender(std::queue<MeshData*>* meshList, GlobalData* global) override; 
+	void SSAORender() override;
+	void UIRender(std::queue<MeshData*>* meshList, GlobalData* global) override;
+
 	void OnResize(int width, int height) override;
 	void Release() override;
 
 private:
 	Microsoft::WRL::ComPtr<IDXGISwapChain> m_SwapChain;
 
-	ShadowRender* m_Shadow;
-	DeferredRender* m_Deferred;
-	LightRender* m_Light;
+	ShadowPass* m_Shadow;
+	DeferredPass* m_Deferred;
+	LightPass* m_Light;
 };
 
 //struct RenderData

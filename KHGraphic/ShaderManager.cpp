@@ -24,7 +24,7 @@ void ShaderManager::Initialize(Microsoft::WRL::ComPtr<ID3D11Device> device, Micr
 {
 	// Shader Global Initialize..
 	IShader::Initialize(device, context);
-	IShader::SetShaderRoute("../Resource/Shader/");
+	IShader::SetShaderRoute("../Resource/Shader/SKH/");
 
 	// Shader Hash Table Initialize..
 	ShaderResourceHashTable::Initialize();

@@ -1,9 +1,9 @@
 #pragma once
-class DeferredRender : public RenderBase
+class DeferredPass : public RenderPassBase
 {
 public:
-	DeferredRender();
-	~DeferredRender();
+	DeferredPass();
+	~DeferredPass();
 
 public:
 	void Initialize(int width, int height) override;

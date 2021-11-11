@@ -13,11 +13,11 @@ interface IShaderManager;
 interface IGraphicResourceManager;
 interface IGraphicResourceFactory;
 
-class RenderBase
+class RenderPassBase
 {
 public:
-	RenderBase() = default;
-	virtual ~RenderBase() = default;
+	RenderPassBase() = default;
+	virtual ~RenderPassBase() = default;
 
 public:
 	virtual void Initialize(int width, int height) abstract;

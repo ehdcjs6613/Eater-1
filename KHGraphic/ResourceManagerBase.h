@@ -13,6 +13,7 @@
 class ViewPort;
 class RenderTarget;
 class DepthStencilView;
+class BufferData;
 
 interface IGraphicResourceManager
 {
@@ -32,4 +33,5 @@ public:
 	virtual ID3D11DepthStencilState* GetDepthStencilState(eDepthStencilState state) abstract;
 
 	virtual D3D11_VIEWPORT* GetViewPort(eViewPort state) abstract;
+	virtual BufferData* GetBuffer(eBuffer state) abstract;
 };

@@ -162,3 +162,8 @@ D3D11_VIEWPORT* GraphicResourceManager::GetViewPort(eViewPort state)
 {
 	return m_ViewPortList[(int)state]->GetViewPort();
 }
+
+BufferData* GraphicResourceManager::GetBuffer(eBuffer state)
+{
+	return m_BufferList[(int)state];
+}
