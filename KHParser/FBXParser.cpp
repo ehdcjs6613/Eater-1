@@ -346,7 +346,9 @@ void FBXParser::ProcessMesh(fbxsdk::FbxNode* node)
 	if (m_OnlyAni) return;
 
 	// Çö Node Parent Ã£±â..
+	
 	const char* parentName = node->GetParent()->GetName();
+
 	Mesh* parentMesh = FindMesh(parentName);
 	m_OneMesh->m_ParentName = parentName;
 
@@ -491,7 +493,7 @@ bool FBXParser::ProcessBoneWeights(fbxsdk::FbxNode* node, std::vector<BoneWeight
 					int m_Index = cluster->GetControlPointIndices()[j];
 					double weight = cluster->GetControlPointWeights()[j];
 
-					if (weight == 0) continue;
+					//if (weight == 0) continue;
 
 					skinBoneWeights[m_Index].AddBoneWeight(clusterIndex, (float)weight);
 				}

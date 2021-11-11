@@ -22,8 +22,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HsGraphic", "HsGraphic\HsGr
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DH3DEngine", "DH3DEngine\DH3DEngine\DHEngine.vcxproj", "{618062D4-3084-4395-8AB7-59EBE75042BF}"
+<<<<<<< HEAD
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KHGraphic", "KHGraphic\KHGraphic.vcxproj", "{C30C0D52-7379-4659-A70C-6F9A15342031}"
+=======
+>>>>>>> main
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -73,6 +76,7 @@ Global
 		{618062D4-3084-4395-8AB7-59EBE75042BF}.Release|x64.Build.0 = Release|x64
 		{618062D4-3084-4395-8AB7-59EBE75042BF}.Release|x86.ActiveCfg = Release|Win32
 		{618062D4-3084-4395-8AB7-59EBE75042BF}.Release|x86.Build.0 = Release|Win32
+<<<<<<< HEAD
 		{C30C0D52-7379-4659-A70C-6F9A15342031}.Debug|x64.ActiveCfg = Debug|x64
 		{C30C0D52-7379-4659-A70C-6F9A15342031}.Debug|x64.Build.0 = Debug|x64
 		{C30C0D52-7379-4659-A70C-6F9A15342031}.Debug|x86.ActiveCfg = Debug|Win32
@@ -81,6 +85,8 @@ Global
 		{C30C0D52-7379-4659-A70C-6F9A15342031}.Release|x64.Build.0 = Release|x64
 		{C30C0D52-7379-4659-A70C-6F9A15342031}.Release|x86.ActiveCfg = Release|Win32
 		{C30C0D52-7379-4659-A70C-6F9A15342031}.Release|x86.Build.0 = Release|Win32
+=======
+>>>>>>> main
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
