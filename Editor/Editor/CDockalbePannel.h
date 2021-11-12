@@ -8,11 +8,16 @@ class SaveData;
 
 class CDockalbePannel : public CDockablePane
 {
+private:
 	DECLARE_DYNAMIC(CDockalbePannel)
 
 	CGameView* m_pCGameView;
 	CWnd	   m_pCWND;
 	CDialog	   m_pDialog;
+
+
+	CPoint	   m_sMousePoint;
+	UINT	   m_bMouse;
 
 public:
 	CDockalbePannel();
@@ -42,6 +47,8 @@ public:
 	afx_msg void OnMove(int x, int y);
 	afx_msg void OnMoving(UINT fwSide, LPRECT pRect);
 	afx_msg void OnPaint();
+	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
+	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 };
 
 

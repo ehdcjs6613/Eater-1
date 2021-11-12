@@ -34,6 +34,8 @@ ON_WM_CLOSE()
 ON_WM_MOVE()
 ON_WM_MOVING()
 ON_WM_PAINT()
+ON_WM_LBUTTONUP()
+ON_WM_LBUTTONDOWN()
 END_MESSAGE_MAP()
 
 
@@ -154,8 +156,6 @@ void CDockalbePannel::OnMove(int x, int y)
 	
 		m_RectPos.left = x;
 		m_RectPos.top = y;
-		g_pTestSaveData->m_DockedPosX = m_RectPos.left;
-		g_pTestSaveData->m_DockedPosY = m_RectPos.top;
 
 		m_pDialog.SetWindowPos(this, m_RectPos.left, m_RectPos.top, m_RectPos.right, m_RectPos.bottom, 0);
 
@@ -163,16 +163,15 @@ void CDockalbePannel::OnMove(int x, int y)
 	}
 	else
 	{
-		if (0 != g_pTestSaveData->m_DockedPosX || 0 != g_pTestSaveData->m_DockedPosY)
+		if (0 != m_RectPos.left || 0 != m_RectPos.top)
 		{
 			m_pDialog.SetWindowPos(this, 
-				g_pTestSaveData->m_DockedPosX,
-				g_pTestSaveData->m_DockedPosY,
+				m_RectPos.left,
+				m_RectPos.top,
 				m_RectPos.right, 
-				m_RectPos.bottom, 0);
+				m_RectPos.bottom, TRUE);
 		}
-		m_pDialog.SetWindowPos(this, g_SaveXPos, g_SaveYPos, m_RectPos.right, m_RectPos.bottom, 0);
-
+	
 	}
 
 
@@ -184,14 +183,8 @@ void CDockalbePannel::OnMoving(UINT fwSide, LPRECT pRect)
 {
 	if (pRect->right != 0 || pRect->bottom != 0)
 	{
-		m_RectPos.left = pRect->left;
-		m_RectPos.top = pRect->top;
-		m_DialogWidth = pRect->right;
-		m_DialogHeight = pRect->bottom;
 		m_pDialog.SetWindowPos(this,m_RectPos.left, m_RectPos.top , m_RectPos.right, m_RectPos.bottom,0);
 		
-		//m_pDialog.MoveWindow(pRect->left + m_RectPos.left, pRect->top + m_RectPos.top, m_RectPos.right, m_RectPos.bottom);
-	
 		CDockablePane::OnMoving(fwSide, m_RectPos);
 	}
 
@@ -213,4 +206,31 @@ void CDockalbePannel::OnPaint()
 	rectDlg.InflateRect(1, 1);
 	dc.Draw3dRect(rectDlg, ::GetSysColor(COLOR_3DDKSHADOW), ::GetSysColor(COLOR_3DDKSHADOW));
 
+}
+
+///파라미터 nFlags는 Down(1) Up(0)이다.
+
+void CDockalbePannel::OnLButtonUp(UINT nFlags, CPoint point)
+{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+	m_sMousePoint.x = point.x;
+	m_sMousePoint.y = point.y;
+
+	m_bMouse = nFlags;//false
+
+
+	CDockablePane::OnLButtonUp(nFlags, point);
+}
+
+
+void CDockalbePannel::OnLButtonDown(UINT nFlags, CPoint point)
+{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+	m_sMousePoint.x = point.x;
+	m_sMousePoint.y = point.y;
+	
+	m_bMouse = nFlags;//true
+
+
+	CDockablePane::OnLButtonDown(nFlags, point);
 }
