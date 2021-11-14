@@ -25,7 +25,8 @@ void SkinningFilter::Update()
 	//사이즈 잡기
 	int BoneSize =  (int)BoneList->size();
 	//data->BoneOffsetTM.resize(BoneSize);
-	(*BoneList)[10]->SetRotate(0.1f,0,0);
+	(*BoneList)[1]->SetRotate(0, 0, 0.01f);
+	//(*BoneList)[27]->SetRotate(0, 0, 0.01f);
 
 	//데이터 넣어주기
 	for (int i = 0; i < BoneList->size(); i++)
@@ -38,7 +39,7 @@ void SkinningFilter::Update()
 		DirectX::XMMATRIX Offset = DirectX::XMLoadFloat4x4(&temp);
 
 		//그래픽 랜더링쪽으로 넘겨줄수있도록 값을 넣어줌
-		(data->BoneOffsetTM).push_back(BoneWorld *Offset);
+		(data->BoneOffsetTM).push_back(Offset * BoneWorld);
 	}
 	int num = 0;
 }

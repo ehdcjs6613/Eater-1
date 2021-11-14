@@ -65,35 +65,47 @@ void LoadManager::LoadMesh( std::string Name, bool Scale, bool LoadAnime)
 
 	ModelData* SaveMesh = new ModelData();
 
-
 	//파서를 통해서 매쉬를 로드
 	ParserData::Model* temp = EaterParser->LoadModel(FullName,Scale,LoadAnime);
 	
-	//매쉬 개수
-	int MeshCount = (int)temp->m_MeshList.size();
+	//본오프셋 TM과 본리스트를 먼저읽어오기위해 
+	int MeshCount = temp->m_MeshList.size();
 	for (int i = 0; i < MeshCount; i++)
 	{
 		//리스트에 매쉬 조사
 		ParserData::Mesh* mesh = temp->m_MeshList[i];
-
 		//최상위 매쉬가 아니라면 아무것도 하지않음
 		if (mesh->m_TopNode != true){continue;}
+	
+		//매쉬이고 스키닝 오브젝트라면
+		if (mesh->m_IsBone == false && mesh->m_IsSkinningObject == true) 
+		{
+			SaveMesh->BoneOffsetList	= &mesh->m_BoneTMList;
+			SaveMesh->BoneList			= &mesh->m_BoneMeshList;
+		}
+	}
 
-		//재귀를 호출하면서 매쉬를 생성하고 연결해준다 마지막에 나오는 값은 최상위 오브젝트
-		LoadMeshData* data = CreateMesh(mesh);
+	
+	for (int i = 0; i < MeshCount; i++)
+	{
+		//리스트에 매쉬 조사
+		ParserData::Mesh* mesh = temp->m_MeshList[i];
+		//최상위 매쉬가 아니라면 아무것도 하지않음
+		if (mesh->m_TopNode != true) { continue; }
 
-		//이렇게 나온 서로연결된 매쉬데이터의 최상위 오브젝트가 본인지 아닌지 판별후 리스트에 넣어준다
-		if (data->Bone_Object == true)
-		{	
-			SaveMesh->BoneList.push_back(data);
+		 
+		if (mesh->m_IsBone == true)
+		{
+			LoadMeshData* temp = CreateBoneObjeect(mesh, SaveMesh);
+			SaveMesh->TopBoneList.push_back(temp);
 		}
 		else
 		{
-			SaveMesh->MeshList.push_back(data);
+			LoadMeshData* temp = CreateMeshObjeect(mesh);
+			SaveMesh->TopMeshList.push_back(temp);
 		}
-
-		
 	}
+
 
 	//최상위 오브젝트의 리스트를 넣어준다
 	ModelList.insert({Name,SaveMesh});
@@ -153,58 +165,88 @@ void LoadManager::DeleteMeshAll()
 	ModelList.clear();
 }
 
-
-LoadMeshData* LoadManager::CreateMesh(ParserData::Mesh* mesh)
+LoadMeshData* LoadManager::CreateMeshObjeect(ParserData::Mesh* mesh)
 {
+	//계층정보 받기
 	LoadMeshData* box = new LoadMeshData();
 
+	SetData(box, mesh);
 
-	//이매쉬에 자식객체 개수
-	int ChildCount = mesh->m_ChildList.size();
+	//버퍼값 읽어오기
+	box->IB = GEngine->CreateIndexBuffer(mesh);
+	box->IB->Count = (int)mesh->m_IndexList.size() * 3;
 
-	//계층정보 받기
-	box->Name				= mesh->m_NodeName;
-	box->ParentName			= mesh->m_ParentName;
-	box->Top_Object			= mesh->m_TopNode;
-	box->Bone_Object		= mesh->m_IsBone;
-	box->Skinning_Object	= mesh->m_IsSkinningObject;
+	box->VB = GEngine->CreateVertexBuffer(mesh);
+	box->VB->Count = (int)mesh->m_VertexList.size();
 
-	//기존 데이터 그냥 읽어옴
-	box->Animation			= mesh->m_Animation;
-	box->Material			= mesh->m_MaterialData;
 
-	//매트릭스 정보 받기
-	box->WorldTM =  &mesh->m_WorldTM;
-	box->LocalTM =  &mesh->m_LocalTM;
-	
-	//매쉬라면 랜더링할 인덱스버퍼와 버텍스버퍼를 읽어온다
-	if(mesh->m_IsBone == false)
-	{
-		box->IB = GEngine->CreateIndexBuffer(mesh);
-		box->VB = GEngine->CreateVertexBuffer(mesh);
-		box->IB->Count = (int)mesh->m_IndexList.size() * 3;
-		box->VB->Count = (int)mesh->m_VertexList.size();
-		
-
-		//스키닝 오브젝트라면 본정보도 읽는다
-		if (mesh->m_IsSkinningObject == true)
-		{
-			box->BoneList	= &(mesh->m_BoneMeshList);
-			box->BoneTMList = &(mesh->m_BoneTMList);
-			mesh->m_Animation;
-		}
-	}
-	
 	//자식객체가 있다면 정보읽어옴
+	int ChildCount = mesh->m_ChildList.size();
 	for (int i = 0; i < ChildCount; i++)
 	{
-		LoadMeshData* temp = CreateMesh(mesh->m_ChildList[i]);
+		LoadMeshData* temp = CreateMeshObjeect(mesh->m_ChildList[i]);
 		box->Child.push_back(temp);
 		temp->Parent = box;
 	}
 
 	return box;
 }
+
+LoadMeshData* LoadManager::CreateBoneObjeect(ParserData::Mesh* mesh, ModelData* SaveData)
+{
+	LoadMeshData* box = nullptr;
+	int size = SaveData->BoneList->size();
+
+	//본리스트에 데이터가들어있지않으면 생성하지않는다
+	for (int i = 0; i < size; i++)
+	{
+		if (mesh == (*SaveData->BoneList)[i])
+		{
+			//계층정보 받기
+			box = new LoadMeshData();
+			box->BoneNumber = (*SaveData->BoneList)[i];
+			box->BoneOffset = &(*SaveData->BoneOffsetList)[i];
+
+			SetData(box, mesh);
+
+			//자식객체가 있다면 정보읽어옴
+			int ChildCount = mesh->m_ChildList.size();
+			for (int i = 0; i < ChildCount; i++)
+			{
+				LoadMeshData* temp = CreateBoneObjeect(mesh->m_ChildList[i], SaveData);
+
+				if (temp != nullptr)
+				{
+					box->Child.push_back(temp);
+					temp->Parent = box;
+				}
+			}
+		}
+	}
+
+	return box;
+}
+
+void LoadManager::SetData(LoadMeshData* MeshData, ParserData::Mesh* LoadData)
+{
+	MeshData->Name				= LoadData->m_NodeName;
+	MeshData->ParentName		= LoadData->m_ParentName;
+	MeshData->Top_Object		= LoadData->m_TopNode;
+	MeshData->Bone_Object		= LoadData->m_IsBone;
+	MeshData->Skinning_Object	= LoadData->m_IsSkinningObject;
+
+	//기존 데이터 그냥 읽어옴
+	MeshData->Animation = LoadData->m_Animation;
+	MeshData->Material	= LoadData->m_MaterialData;
+
+	//매트릭스 정보 받기
+	MeshData->WorldTM = &LoadData->m_WorldTM;
+	MeshData->LocalTM = &LoadData->m_LocalTM;
+
+	MeshData->BoneOffset;
+}
+
+
 
 
 
