@@ -25,7 +25,7 @@ void SkinningFilter::Update()
 	//사이즈 잡기
 	int BoneSize =  (int)BoneList->size();
 	//data->BoneOffsetTM.resize(BoneSize);
-	//(*BoneList)[1]->SetRotate(0, 0, 0.01f);
+	(*BoneList)[1]->SetRotate(0, 0, 0.01f);
 	//(*BoneList)[27]->SetRotate(0, 0, 0.01f);
 
 	//데이터 넣어주기

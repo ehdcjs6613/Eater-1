@@ -17,7 +17,9 @@ struct VertexIn
     float3 TangentL : TANGENT;
     
     uint4 BoneIndices1 : BONEINDICES1;
+    uint4 BoneIndices2 : BONEINDICES2;
     float4 BoneWeights1 : WEIGHTS1;
+    float4 BoneWeights2 : WEIGHTS2;
 };
 
 struct VertexOut
@@ -40,6 +42,12 @@ VertexOut main(VertexIn vin)
         posL += vin.BoneWeights1[i] * mul(gBoneTransforms[vin.BoneIndices1[i]], float4(vin.PosL, 1.0f)).xyz;
         normalL += vin.BoneWeights1[i] * mul((float3x3) gBoneTransforms[vin.BoneIndices1[i]], vin.NormalL);
         tangentL += vin.BoneWeights1[i] * mul((float3x3) gBoneTransforms[vin.BoneIndices1[i]], vin.TangentL);
+    }
+    
+    for (int j = 0; j < 4; ++j)
+    {
+        posL += vin.BoneWeights2[j] * mul(gBoneTransforms[vin.BoneIndices2[j]], float4(vin.PosL, 1.0f)).xyz;
+        normalL += vin.BoneWeights2[j] * mul((float3x3) gBoneTransforms[vin.BoneIndices2[j]], vin.NormalL);
     }
     
 	// 세계 공간 변환

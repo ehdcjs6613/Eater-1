@@ -286,7 +286,7 @@ Vertexbuffer* GraphicResourceFactory::CreateVertexBuffer(ParserData::Mesh* mesh)
 		return CreateMeshVertexBuffer<MeshVertex>(mesh);
 
 		// Terrain Type
-		return CreateMeshVertexBuffer<TerrainVertex>(mesh);
+		//return CreateMeshVertexBuffer<TerrainVertex>(mesh);
 	}
 }
 
@@ -437,8 +437,13 @@ Vertexbuffer* GraphicResourceFactory::CreateMeshVertexBuffer<SkinVertex>(ParserD
 		{
 			if (j < 4)
 			{
-				vertices[i].BoneIndex[j] = mesh->m_VertexList[i]->m_BoneIndices[j];
-				vertices[i].BoneWeight[j] = mesh->m_VertexList[i]->m_BoneWeights[j];
+				vertices[i].BoneIndex1[j] = mesh->m_VertexList[i]->m_BoneIndices[j];
+				vertices[i].BoneWeight1[j] = mesh->m_VertexList[i]->m_BoneWeights[j];
+			}
+			else if (j < 8)
+			{
+				vertices[i].BoneIndex2[j - 4] = mesh->m_VertexList[i]->m_BoneIndices[j];
+				vertices[i].BoneWeight2[j - 4] = mesh->m_VertexList[i]->m_BoneWeights[j];
 			}
 		}
 	}
