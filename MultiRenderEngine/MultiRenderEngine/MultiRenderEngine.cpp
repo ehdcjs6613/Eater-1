@@ -1,29 +1,50 @@
 #include "MultiRenderEngine.h"
-#include <iostream>
-
 #include "EngineData.h"
 #include "GraphicsEngine.h"
+#include "MacroDefine.h"
+#include "TextureBase.h"
+#include "InputLayoutData.h"
+#include <iostream>
 #include <d3d11.h>
+
+#pragma comment(lib, "dxguid.lib") 
+#pragma comment(lib, "dxgi.lib")
+#pragma comment(lib, "d3d11.lib")
 
 
 MultiRenderEngine* MultiRenderEngine::m_Engine = nullptr;
 
 MultiRenderEngine::MultiRenderEngine()
 {
+	m_Device		= nullptr;
+	m_DeviceContext = nullptr;
+	m_SwapChain		= nullptr;
+	m_ViewPort		= nullptr;
 
+	m_RenderTargetView = nullptr;
+	m_DepthStencilView = nullptr;
+
+	m_ScreenHeight	= 0;
+	m_ScreenWidth	= 0;
+
+	m_Hwnd = NULL;
 }
 
 MultiRenderEngine::~MultiRenderEngine()
 {
-
+	Test00->Delete();
+	Test01->Delete();
 }
 
 MultiRenderEngine* MultiRenderEngine::Initialize(HWND hwnd, int screenWidth, int screenHeight)
 {
 	m_Engine = new MultiRenderEngine();
 
+	//디바이스와 컨텍스트를 생성한다
+	m_Engine->CreateDevice(hwnd, screenWidth, screenHeight);
 
-
+	//스왑체인에 붙어있는 랜더타겟을 생성한다
+	m_Engine->Create_SwapChain_RenderTarget();
 	return m_Engine;
 }
 
@@ -53,10 +74,40 @@ BOOL MultiRenderEngine::SplitWindow(int _Horizontal, int _Vertical)
 		return false;
 	}
 
+	//for (int i = 0; i < 4; i++)
+	//{
+	//	//짝수 홀수 판별
+	//	int num = i % 2;
+	//	if (num == 0)
+	//	{
+	//		int startX = i * m_ScreenWidth;
+	//		int StartY = i * m_ScreenHeight;
+	//
+	//		int Width = m_ScreenWidth / _Horizontal;
+	//		int Height = m_ScreenHeight / _Vertical;
+	//
+	//		TextureBase* temp00 = Create_RenderTarget(startX, StartY, Width, Height);
+	//	}
+	//	else
+	//	{
+	//		int startX = i * m_ScreenWidth;
+	//		int StartY = i * m_ScreenHeight;
+	//
+	//		int Width = m_ScreenWidth / _Horizontal;
+	//		int Height = m_ScreenHeight / _Vertical;
+	//
+	//		TextureBase* temp00 = Create_RenderTarget(startX, StartY, Width, Height);
+	//	}
+	//}
+
+	Test00 = Create_RenderTarget(0, 0, 400, 400);
+	Test01 = Create_RenderTarget(400, 400, 800, 800);
+
+
 	for (int i = 0; i < _Horizontal * _Vertical; i++)
 	{
 		/// RenderTargetView 를 생성해서 ID3D11RenderTargetView* 자리에 할당해두면 됨.
-		Split_Window.insert({i, {nullptr, nullptr}});
+		Split_Window.insert({i, {Test00->GetRTV(), nullptr}});
 		/// 자료형이 헷갈리신다면 다음을 참조하시면됩니다..
 		//std::pair<int, std::pair<ID3D11RenderTargetView*, GraphicEngine*>> InsertData = { i, {nullptr, nullptr} };
 		//Split_Window.emplace(InsertData);
@@ -78,6 +129,9 @@ BOOL MultiRenderEngine::RegisterRenderer(GraphicEngine* _Renderer, std::string _
 	// 할당받은 엔진을 리스트에 등록해놓는다.
 	Registered_Engine_List.insert({ _Engine_Name, _Renderer });
 
+	//디바이스와 디바이스 컨텍스트를 넣어준다
+	_Renderer->SetDevice(m_Device, m_DeviceContext);
+	_Renderer->SetRenderTarget(Test00->GetRTV(), Test00->GetDSV(),Test00->GetView());
 	return true;
 }
 
@@ -124,11 +178,14 @@ void MultiRenderEngine::Render(std::queue<MeshData*>* meshList, GlobalData* glob
 {
 	BeginRender();
 
-	for (auto _Renderer : Split_Window)
-	{
-		/// 다음과같이 VeiwPort 전용 랜더를 해주던가 해야된다..
-		// ex) _Renderer.second.second->Render(meshList, global);
-	}
+	Registered_Engine_List["형선"]->Render(meshList, global);
+	//for (auto _Renderer : Split_Window)
+	//{
+	//	//Registered_Engine_List["형선"]->Render(meshList, global);
+	//	/// 다음과같이 VeiwPort 전용 랜더를 해주던가 해야된다..
+	//	// ex) _Renderer.second.second->Render(meshList, global);
+	//}
+
 
 	EndRender();
 }
@@ -139,8 +196,93 @@ void MultiRenderEngine::Delete()
 	Split_Window.clear();
 }
 
-MULTIENGINE_DLL void MultiRenderEngine::CreateDevice(HWND hwnd,int screenWidth, int screenHeight)
+
+
+Vertexbuffer* MultiRenderEngine::CreateVertexBuffer(ParserData::Mesh* mModel)
 {
+	
+	///스키닝이없는 기본 오브젝트를 생성해줌
+	ID3D11Buffer* mVB = nullptr;
+	Vertexbuffer* vertexbuffer = new Vertexbuffer();
+
+	//포지션 , 노말, uv, 탄젠타 값만 읽어옴
+	std::vector<Deferred32> temp;
+	int Vcount = mModel->m_VertexList.size();
+	temp.resize(Vcount);
+	for (int i = 0; i < Vcount; i++)
+	{
+		temp[i].Pos = mModel->m_VertexList[i]->m_Pos;
+		temp[i].Nomal = mModel->m_VertexList[i]->m_Normal;
+		temp[i].Tex = { mModel->m_VertexList[i]->m_U ,mModel->m_VertexList[i]->m_V };
+		temp[i].Tangent = mModel->m_VertexList[i]->m_Tanget;
+	}
+
+
+	//버퍼 생성
+	D3D11_BUFFER_DESC vbd;
+	vbd.Usage = D3D11_USAGE_IMMUTABLE;
+	vbd.ByteWidth = sizeof(Deferred32) * Vcount;
+	vbd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	vbd.CPUAccessFlags = 0;
+	vbd.MiscFlags = 0;
+	D3D11_SUBRESOURCE_DATA vinitData;
+	vinitData.pSysMem = &temp[0];
+	m_Device->CreateBuffer(&vbd, &vinitData, &mVB);
+
+	vertexbuffer->VertexbufferPointer = mVB;
+
+	/////////////////////////////////////////////////// 중요함 꼭넣어주세요
+	vertexbuffer->VertexDataSize = sizeof(Deferred32);
+	//////////////////////////////////////////////////
+	return vertexbuffer;
+}
+
+Indexbuffer* MultiRenderEngine::CreateIndexBuffer(ParserData::Mesh* mModel)
+{
+	ID3D11Buffer* mIB = nullptr;
+	Indexbuffer* indexbuffer = new Indexbuffer();
+
+	//모델의 계수
+	int IndexFaceCount = (int)mModel->m_IndexList.size();
+	int IndexCount = IndexFaceCount * 3;
+
+	std::vector<UINT> index;
+	index.resize(IndexCount);
+
+	int j = 0;
+	for (int i = 0; i < IndexFaceCount; i++)
+	{
+		index[j] = mModel->m_IndexList[i]->m_Index[0];
+		j++;
+		index[j] = mModel->m_IndexList[i]->m_Index[1];
+		j++;
+		index[j] = mModel->m_IndexList[i]->m_Index[2];
+		j++;
+	}
+
+	D3D11_BUFFER_DESC ibd;
+	ibd.Usage = D3D11_USAGE_IMMUTABLE;
+	ibd.ByteWidth = sizeof(UINT) * IndexCount;
+	ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	ibd.CPUAccessFlags = 0;
+	ibd.MiscFlags = 0;
+	D3D11_SUBRESOURCE_DATA iinitData;
+	iinitData.pSysMem = &index[0];
+
+	m_Device->CreateBuffer(&ibd, &iinitData, &mIB);
+
+	indexbuffer->IndexBufferPointer = mIB;
+
+	return indexbuffer;
+}
+
+void MultiRenderEngine::CreateDevice(HWND hwnd,int screenWidth, int screenHeight)
+{
+	//데이터 받기
+	m_ScreenHeight	= screenHeight;
+	m_ScreenWidth	= screenWidth;
+	m_Hwnd = hwnd;
+
 	UINT createDeviceFlags = 0;
 
 #ifdef _DEBUG
@@ -187,16 +329,92 @@ MULTIENGINE_DLL void MultiRenderEngine::CreateDevice(HWND hwnd,int screenWidth, 
 
 	// 스왑 체인, Direct3D 장치 및 Direct3D 장치 컨텍스트 생성..
 	/// MSDN에선 SwapChain 과 Device 를 한번에 생성해주는 함수를 지향함..
-	//HR(D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, 0, &featurelevel, 1,
-	//	D3D11_SDK_VERSION, &swapChainDesc, &m_SwapChain, &m_Device, NULL, &m_DeviceContext));
+	HR(D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, 0, &featurelevel, 1,
+		D3D11_SDK_VERSION, &swapChainDesc, &m_SwapChain, &m_Device, NULL, &m_DeviceContext));
+}
+
+void MultiRenderEngine::Create_SwapChain_RenderTarget()
+{
+	///스왑체인과 연결된 랜더타겟과 뎁스스텐실을 생성
+
+	ID3D11Texture2D* backBuffer;
+	m_SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&backBuffer));
+	HR(m_Device->CreateRenderTargetView(backBuffer, 0, &m_RenderTargetView));
+	backBuffer->Release();
+
+	ID3D11Texture2D* mDepthStencilBuffer = nullptr;
+	D3D11_TEXTURE2D_DESC depthStencilDesc;
+	depthStencilDesc.Width		= m_ScreenHeight;
+	depthStencilDesc.Height		= m_ScreenWidth;
+	depthStencilDesc.MipLevels	= 1;							
+	depthStencilDesc.ArraySize	= 1;							
+
+	
+	depthStencilDesc.Format				= DXGI_FORMAT_D24_UNORM_S8_UINT;
+	depthStencilDesc.SampleDesc.Count	= 1;					
+	depthStencilDesc.SampleDesc.Quality = 0;
+	depthStencilDesc.Usage				= D3D11_USAGE_DEFAULT;
+	depthStencilDesc.BindFlags			= D3D11_BIND_DEPTH_STENCIL;
+	depthStencilDesc.CPUAccessFlags		= 0;
+	depthStencilDesc.MiscFlags			= 0;
+
+
+	m_Device->CreateTexture2D(&depthStencilDesc, 0, &mDepthStencilBuffer);
+	HR(m_Device->CreateDepthStencilView(mDepthStencilBuffer, 0, &m_DepthStencilView));
+	m_DeviceContext->OMSetRenderTargets(1, &m_RenderTargetView, m_DepthStencilView);
+
+	//ViewPort
+	m_ViewPort = new D3D11_VIEWPORT();
+	m_ViewPort->TopLeftX	= 0;
+	m_ViewPort->TopLeftY	= 0;
+	m_ViewPort->Width		= static_cast<float>(m_ScreenWidth);
+	m_ViewPort->Height		= static_cast<float>(m_ScreenHeight);
+	m_ViewPort->MinDepth	= 0.0f;
+	m_ViewPort->MaxDepth	= 1.0f;
+}
+
+TextureBase* MultiRenderEngine::Create_RenderTarget(int StartX, int StartY, int Width, int Height)
+{
+	TextureBase* temp = new TextureBase();
+	temp->Initialize(m_Device, m_DeviceContext);
+	temp->Create(StartX, StartY, Width, Height);
+	return temp;
 }
 
 void MultiRenderEngine::BeginRender()
 {
+	ID3D11DepthStencilView* mPostDSV = Test00->GetDSV();
+	ID3D11RenderTargetView* mPostRTV = Test00->GetRTV();
+	D3D11_VIEWPORT*			mPostVP = Test00->GetView();
 
+	m_DeviceContext->OMSetRenderTargets(1, &mPostRTV, mPostDSV);
+	m_DeviceContext->RSSetViewports(1, mPostVP);
+
+	//클리어
+	XMVECTORF32 DeepDarkGray = { 1, 1, 0, 1.0f };
+	m_DeviceContext->ClearRenderTargetView(mPostRTV, DeepDarkGray);
+	m_DeviceContext->ClearDepthStencilView(mPostDSV, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 }
 
 void MultiRenderEngine::EndRender()
 {
+	//여기까지왔으면 오브젝트 렌더링은 mPostRTV 여기에 그려져있을거임
+	ID3D11DepthStencilView* ENGINE_DSV	= m_DepthStencilView;
+	ID3D11RenderTargetView* ENGINE_RTV	= m_RenderTargetView;
+	D3D11_VIEWPORT			ENGINE_VP	= *m_ViewPort;
+	
+	//이제 스왑체인에 연결된 백버퍼로 연결해주고 클리어
+	XMVECTORF32 DeepDarkGray = { 1.0f, 1.0f, 0.0f, 1.0f };
+	m_DeviceContext->OMSetRenderTargets(1, &ENGINE_RTV, ENGINE_DSV);
+	
+	
+	m_DeviceContext->RSSetViewports(1, &ENGINE_VP);
+	m_DeviceContext->ClearRenderTargetView(ENGINE_RTV, DeepDarkGray);
+	m_DeviceContext->ClearDepthStencilView(ENGINE_DSV, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
+
+	//엔진 랜더링 종료
+	m_SwapChain->Present(0, 0);
 }
+
+

@@ -19,10 +19,15 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="InputLayoutData.h" />
+    <ClInclude Include="MacroDefine.h" />
+    <ClInclude Include="MultiRenderDefine.h" />
     <ClInclude Include="MultiRenderEngine.h" />
+    <ClInclude Include="TextureBase.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MultiRenderEngine.cpp" />
+    <ClCompile Include="TextureBase.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -144,7 +149,8 @@
     <PostBuildEvent>
       <Command>copy/Y "$(TargetDir)*.lib"   "$(SolutionDir)Library\lib"
 copy/Y "$(TargetDir)*.dll"   "$(SolutionDir)Library\lib"
-copy /Y "$(ProjectDir)MultiRenderEngine.h" "$(SolutionDir)Library\inc"</Command>
+copy /Y "$(ProjectDir)MultiRenderEngine.h" "$(SolutionDir)Library\inc"
+copy /Y "$(ProjectDir)MultiRenderDefine.h" "$(SolutionDir)Library\inc"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -171,7 +177,8 @@ copy /Y "$(ProjectDir)MultiRenderEngine.h" "$(SolutionDir)Library\inc"</Command>
     <PostBuildEvent>
       <Command>copy/Y "$(TargetDir)*.lib"   "$(SolutionDir)Library\lib"
 copy/Y "$(TargetDir)*.dll"   "$(SolutionDir)Library\lib"
-copy /Y "$(ProjectDir)MultiRenderEngine.h" "$(SolutionDir)Library\inc"</Command>
+copy /Y "$(ProjectDir)MultiRenderEngine.h" "$(SolutionDir)Library\inc"
+copy /Y "$(ProjectDir)MultiRenderDefine.h" "$(SolutionDir)Library\inc"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
