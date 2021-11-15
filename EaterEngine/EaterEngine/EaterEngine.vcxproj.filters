@@ -85,6 +85,21 @@
     <Filter Include="소스 파일\Component\Animation">
       <UniqueIdentifier>{5d4d878e-6e04-41e7-a1e6-ee77e43803d7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Manager\BaseManager">
+      <UniqueIdentifier>{7515b128-a908-4f50-9f37-1bebd61f2db9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Manager\LightManager">
+      <UniqueIdentifier>{660a8a07-22fd-441b-9e1d-b3385e883764}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Manager\MaterialManager">
+      <UniqueIdentifier>{97384cd9-9b0f-408f-bb40-d7e5ba516608}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Component\Light">
+      <UniqueIdentifier>{94a42d33-37f6-4e8c-bc61-b51a98b6214a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Component\Material">
+      <UniqueIdentifier>{28ae9443-7d0e-48a9-89f0-3585c441a9b2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -162,6 +177,21 @@
     <ClInclude Include="..\..\Library\inc\GraphicsEngine.h">
       <Filter>소스 파일\Engine\GraphicsClass</Filter>
     </ClInclude>
+    <ClInclude Include="BaseManager.h">
+      <Filter>소스 파일\Manager\BaseManager</Filter>
+    </ClInclude>
+    <ClInclude Include="LightManager.h">
+      <Filter>소스 파일\Manager\LightManager</Filter>
+    </ClInclude>
+    <ClInclude Include="MaterialManager.h">
+      <Filter>소스 파일\Manager\MaterialManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>소스 파일\Component\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>소스 파일\Component\Material</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -220,6 +250,21 @@
     </ClCompile>
     <ClCompile Include="Animation.cpp">
       <Filter>소스 파일\Component\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseManager.cpp">
+      <Filter>소스 파일\Manager\BaseManager</Filter>
+    </ClCompile>
+    <ClCompile Include="LightManager.cpp">
+      <Filter>소스 파일\Manager\LightManager</Filter>
+    </ClCompile>
+    <ClCompile Include="MaterialManager.cpp">
+      <Filter>소스 파일\Manager\MaterialManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Light.cpp">
+      <Filter>소스 파일\Component\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>소스 파일\Component\Material</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

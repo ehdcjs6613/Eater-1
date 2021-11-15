@@ -19,18 +19,10 @@ Delegate_Map<Component> ObjectManager::EndUpdate;
 
 ObjectManager::ObjectManager()
 {
-	Global = nullptr;
 }
 
 ObjectManager::~ObjectManager()
 {
-	delete Global;
-	Global = nullptr;
-}
-
-GlobalData* ObjectManager::GetGlobalData()
-{
-	return Global;
 }
 
 void ObjectManager::PushCreateObject(GameObject* obj)
@@ -88,7 +80,6 @@ void ObjectManager::AllDeleteObject()
 
 void ObjectManager::Initialize(HWND _g_hWnd)
 {
-	Global = new GlobalData();
 }
 
 void ObjectManager::PushStartUpdate(Component* mComponent)
@@ -152,6 +143,7 @@ void ObjectManager::PlayUpdate()
 	//글로벌 데이터
 	Global->mProj = Camera::GetProj();
 	Global->mViewMX = Camera::GetMainView();
+	Global->mPos = Camera::GetMainPos();
 
 	///모든오브젝트의 데이터를 랜더큐에 담는다
 	CreateRenderQueue();

@@ -27,6 +27,8 @@ struct VertexOut
     float4 PosW : SV_POSITION;
     float3 NormalW : NORMALW;
     float2 Tex : TEXCOORD;
+    
+    float3x3 TBN : TANGENT;
 };
 
 VertexOut main(VertexIn vin)
@@ -48,6 +50,7 @@ VertexOut main(VertexIn vin)
     {
         posL += vin.BoneWeights2[j] * mul(gBoneTransforms[vin.BoneIndices2[j]], float4(vin.PosL, 1.0f)).xyz;
         normalL += vin.BoneWeights2[j] * mul((float3x3) gBoneTransforms[vin.BoneIndices2[j]], vin.NormalL);
+        tangentL += vin.BoneWeights2[j] * mul((float3x3) gBoneTransforms[vin.BoneIndices2[j]], vin.TangentL);
     }
     
 	// 세계 공간 변환
@@ -59,5 +62,13 @@ VertexOut main(VertexIn vin)
 	// Output vertex attributes for interpolation across triangle.
     vout.Tex = mul(gTexTransform, float4(vin.Tex, 0.0f, 1.0f)).xy;
 
+    // Vertex Shader 에서 TBN을 구해주자..
+	// Pixel Shader에서 연산은 최소한으로 해야하기 때문..
+    float3 N = normalL;
+    float3 T = normalize(tangentL - dot(tangentL, N) * N);
+    float3 B = cross(N, T);
+    
+    vout.TBN = float3x3(T, B, N);
+    
     return vout;
 }

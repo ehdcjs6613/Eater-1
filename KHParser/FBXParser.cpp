@@ -43,12 +43,6 @@ void FBXParser::Initialize()
 		throw std::exception("error: unable to create FBX scene\n");
 }
 
-void FBXParser::SetTextureRoute(std::string texRoute)
-{
-	// 기본 Texture 파일 루트 설정
-	m_TextureRoute = texRoute;
-}
-
 void FBXParser::Release()
 {
 	pImporter->Destroy();

@@ -38,6 +38,16 @@ DirectX::XMMATRIX* Camera::GetProj()
 	return &mProj_M;
 }
 
+DirectX::XMFLOAT3* Camera::GetMainPos()
+{
+	return MainCam->GetPos();
+}
+
+DirectX::XMFLOAT3* Camera::GetPos()
+{
+	return &tranform->Position;
+}
+
 void Camera::SetSize(int Change_Width, int Change_Height)
 {
 	float Ratio = Change_Width / Change_Height;
