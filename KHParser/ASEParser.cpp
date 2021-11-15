@@ -26,11 +26,6 @@ void ASEParser::Initialize()
 	m_lexer = new ASE::CASELexer;
 }
 
-void ASEParser::SetTextureRoute(std::string texRoute)
-{
-	m_TexRoute = texRoute;
-}
-
 void ASEParser::Release()
 {
 	SAFE_DELETE(m_lexer);

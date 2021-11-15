@@ -11,7 +11,7 @@ std::map<std::string, ModelData*> LoadManager::ModelList;
 std::map<std::string, TextureBuffer*> LoadManager::TextureList;
 LoadManager::LoadManager()
 {
-	GEngine		= nullptr;
+	GEngine = nullptr;
 	EaterParser = nullptr;
 }
 
@@ -25,6 +25,7 @@ void LoadManager::Initialize(GraphicEngineManager* Graphic)
 	//그래픽 엔진 받아오기
 	GEngine = Graphic;
 	EaterParser = ModelParser::Create(ModelParser::FBX);
+
 	EaterParser->Initialize();
 }
 
@@ -57,7 +58,7 @@ TextureBuffer* LoadManager::GetTexture(std::string Name)
 	}
 }
 
-void LoadManager::LoadMesh( std::string Name, bool Scale, bool LoadAnime)
+void LoadManager::LoadMesh(std::string Name, bool Scale, bool LoadAnime)
 {
 	// "../ 이거와 .fbx 이거를 붙여준다"
 	std::string Strtemp = ".fbx";
@@ -66,8 +67,8 @@ void LoadManager::LoadMesh( std::string Name, bool Scale, bool LoadAnime)
 	ModelData* SaveMesh = new ModelData();
 
 	//파서를 통해서 매쉬를 로드
-	ParserData::Model* temp = EaterParser->LoadModel(FullName,Scale,LoadAnime);
-	
+	ParserData::Model* temp = EaterParser->LoadModel(FullName, Scale, LoadAnime);
+
 	//본오프셋 TM과 본리스트를 먼저읽어오기위해 
 	int MeshCount = temp->m_MeshList.size();
 	for (int i = 0; i < MeshCount; i++)
@@ -75,17 +76,17 @@ void LoadManager::LoadMesh( std::string Name, bool Scale, bool LoadAnime)
 		//리스트에 매쉬 조사
 		ParserData::Mesh* mesh = temp->m_MeshList[i];
 		//최상위 매쉬가 아니라면 아무것도 하지않음
-		if (mesh->m_TopNode != true){continue;}
-	
+		if (mesh->m_TopNode != true) { continue; }
+
 		//매쉬이고 스키닝 오브젝트라면
-		if (mesh->m_IsBone == false && mesh->m_IsSkinningObject == true) 
+		if (mesh->m_IsBone == false && mesh->m_IsSkinningObject == true)
 		{
-			SaveMesh->BoneOffsetList	= &mesh->m_BoneTMList;
-			SaveMesh->BoneList			= &mesh->m_BoneMeshList;
+			SaveMesh->BoneOffsetList = &mesh->m_BoneTMList;
+			SaveMesh->BoneList = &mesh->m_BoneMeshList;
 		}
 	}
 
-	
+
 	for (int i = 0; i < MeshCount; i++)
 	{
 		//리스트에 매쉬 조사
@@ -93,7 +94,7 @@ void LoadManager::LoadMesh( std::string Name, bool Scale, bool LoadAnime)
 		//최상위 매쉬가 아니라면 아무것도 하지않음
 		if (mesh->m_TopNode != true) { continue; }
 
-		 
+
 		if (mesh->m_IsBone == true)
 		{
 			LoadMeshData* temp = CreateBoneObjeect(mesh, SaveMesh);
@@ -108,7 +109,7 @@ void LoadManager::LoadMesh( std::string Name, bool Scale, bool LoadAnime)
 
 
 	//최상위 오브젝트의 리스트를 넣어준다
-	ModelList.insert({Name,SaveMesh});
+	ModelList.insert({ Name,SaveMesh });
 }
 
 void LoadManager::LoadTexture(std::string Name)
@@ -116,7 +117,7 @@ void LoadManager::LoadTexture(std::string Name)
 	std::string TextureName = TexturePath + Name + ".dds";
 	TextureBuffer* Tbuffer = GEngine->CreateTextureBuffer(TextureName);
 
-	if (Tbuffer == nullptr || Tbuffer->TextureBufferPointer == nullptr) 
+	if (Tbuffer == nullptr || Tbuffer->TextureBufferPointer == nullptr)
 	{
 		DebugManager::Print(TextureName, 0, 0, DebugManager::MSG_TYPE::MSG_LOAD, true);
 	}
@@ -124,7 +125,7 @@ void LoadManager::LoadTexture(std::string Name)
 	{
 		std::string strTemp = "텍스쳐를 로드합니다 :" + Name;
 		DebugManager::Print(strTemp, 0, 0, DebugManager::MSG_TYPE::MSG_LOAD);
-		TextureList.insert({Name,Tbuffer});
+		TextureList.insert({ Name,Tbuffer });
 	}
 }
 
@@ -143,6 +144,7 @@ void LoadManager::LoadTexturePath(std::string mPath)
 {
 	//텍스쳐 경로 입력
 	TexturePath = mPath;
+	ModelParser::SetTextureRoute(TexturePath);
 }
 
 void LoadManager::DeleteMesh(std::string mMeshName)
@@ -179,6 +181,20 @@ LoadMeshData* LoadManager::CreateMeshObjeect(ParserData::Mesh* mesh)
 	box->VB = GEngine->CreateVertexBuffer(mesh);
 	box->VB->Count = (int)mesh->m_VertexList.size();
 
+	// Texture Buffer 삽입..
+	CMaterial* mat = mesh->m_MaterialData;
+
+	if (mat)
+	{
+		if (mat->m_IsDiffuseMap)
+		{
+			box->Diffuse = GEngine->CreateTextureBuffer(mat->m_DiffuseMap->m_BitMap);
+		}
+		if (mat->m_IsBumpMap)
+		{
+			box->Normal = GEngine->CreateTextureBuffer(mat->m_BumpMap->m_BitMap);
+		}
+	}
 
 	//자식객체가 있다면 정보읽어옴
 	int ChildCount = mesh->m_ChildList.size();
@@ -229,15 +245,15 @@ LoadMeshData* LoadManager::CreateBoneObjeect(ParserData::Mesh* mesh, ModelData* 
 
 void LoadManager::SetData(LoadMeshData* MeshData, ParserData::Mesh* LoadData)
 {
-	MeshData->Name				= LoadData->m_NodeName;
-	MeshData->ParentName		= LoadData->m_ParentName;
-	MeshData->Top_Object		= LoadData->m_TopNode;
-	MeshData->Bone_Object		= LoadData->m_IsBone;
-	MeshData->Skinning_Object	= LoadData->m_IsSkinningObject;
+	MeshData->Name = LoadData->m_NodeName;
+	MeshData->ParentName = LoadData->m_ParentName;
+	MeshData->Top_Object = LoadData->m_TopNode;
+	MeshData->Bone_Object = LoadData->m_IsBone;
+	MeshData->Skinning_Object = LoadData->m_IsSkinningObject;
 
 	//기존 데이터 그냥 읽어옴
 	MeshData->Animation = LoadData->m_Animation;
-	MeshData->Material	= LoadData->m_MaterialData;
+	MeshData->Material = LoadData->m_MaterialData;
 
 	//매트릭스 정보 받기
 	MeshData->WorldTM = &LoadData->m_WorldTM;

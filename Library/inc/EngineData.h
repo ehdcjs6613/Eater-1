@@ -1,6 +1,7 @@
 #pragma once
 #include "ResourcesData.h"
 #include "ParserData.h"
+#include "LightHelper.h"
 
 using namespace DirectX;
 using namespace SimpleMath;
@@ -33,6 +34,10 @@ public:
 	//카메라 정보들
 	DirectX::XMMATRIX* mViewMX;
 	DirectX::XMMATRIX* mProj;
+	DirectX::XMFLOAT3* mPos;
+
+	LightData* mLightData;
+	MaterialData* mMatData;
 };
 
 /// <summary>
@@ -52,7 +57,10 @@ public:
 
 	Indexbuffer*  IB = nullptr;	//인덱스 버퍼
 	Vertexbuffer* VB = nullptr;	//버텍스 버퍼
-	
+
+	TextureBuffer* Diffuse = nullptr;	// Diffuse Texture
+	TextureBuffer* Normal = nullptr;	// NormalMap Texture
+
 	std::vector<DirectX::SimpleMath::Matrix> BoneOffsetTM; //본 오프셋 TM
 
 	DirectX::XMMATRIX mWorld = DirectX::XMMatrixIdentity();	//매쉬의 월드 행렬
@@ -96,6 +104,9 @@ public:
 	
 	Indexbuffer*	IB = nullptr;	//인덱스 버퍼
 	Vertexbuffer*	VB = nullptr;	//버텍스 버퍼
+
+	TextureBuffer* Diffuse = nullptr;	// Diffuse Texture
+	TextureBuffer* Normal = nullptr;	// NormalMap Texture
 
 	ParserData::CMaterial*		Material	= nullptr;	//메테리얼 정보
 	ParserData::OneAnimation*	Animation	= nullptr;	//애니메이션 정보

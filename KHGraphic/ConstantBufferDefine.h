@@ -23,18 +23,26 @@
 CONSTANT_BUFFER(cbPerObject)
 {
 	DirectX::SimpleMath::Matrix gWorld;
-	DirectX::SimpleMath::Matrix gWorldInvTranspose;
-	DirectX::SimpleMath::Matrix gWorldViewProj;
+	//DirectX::SimpleMath::Matrix gWorldInvTranspose;
+	//DirectX::SimpleMath::Matrix gWorldViewProj;
 	DirectX::SimpleMath::Matrix gTexTransform;
-	DirectX::SimpleMath::Matrix gWorldView;
-	DirectX::SimpleMath::Matrix gWorldInvTransposeView;
+	//DirectX::SimpleMath::Matrix gWorldView;
+	//DirectX::SimpleMath::Matrix gWorldInvTransposeView;
 };
 
 CONSTANT_BUFFER(cbLights)
 {
-	DirectionalLight gDirLights[3];
-	PointLight gPointLights[4];
-	SpotLight gSpotLights[4];
+	DirectionalLightData gDirLights[3];
+	PointLightData gPointLights[5];
+	SpotLightData gSpotLights[5];
+
+	UINT gPointLightCount;
+	UINT gSpotLightCount;
+};
+
+CONSTANT_BUFFER(cbMaterial)
+{
+	MaterialData gMaterials;
 };
 
 CONSTANT_BUFFER(cbCamera)
@@ -63,9 +71,9 @@ CONSTANT_BUFFER(cbID)
 
 CONSTANT_BUFFER(cbLightList)
 {
-	DirectionalLight gDirLights[3];
-	PointLight gPointLights[16];
-	SpotLight gSpotLights[16];
+	DirectionalLightData gDirLights[3];
+	PointLightData gPointLights[16];
+	SpotLightData gSpotLights[16];
 
 	UINT gPointLightCount;
 	UINT gSpotLightCount;

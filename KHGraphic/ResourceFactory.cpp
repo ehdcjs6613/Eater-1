@@ -9,13 +9,19 @@
 #include "ComputeRenderTarget.h"
 #include "ResourceManager.h"
 #include "ShaderBase.h"
+#include "VertexShader.h"
+#include "PixelShader.h"
+#include "ComputeShader.h"
 #include "ShaderManager.h"
+#include "ShaderTypes.h"
 #include "ResourceFactory.h"
 
 #include "VertexDefine.h"
 #include "ResourceBufferHashTable.h"
 #include "SamplerStateDefine.h"
 #include "ToolKitDefine.h"
+
+using namespace DirectX::SimpleMath;
 
 GraphicResourceFactory::GraphicResourceFactory(D3D11Graphic* graphic)
 {
@@ -35,6 +41,15 @@ GraphicResourceFactory::~GraphicResourceFactory()
 
 void GraphicResourceFactory::Initialize(int width, int height)
 {
+	// Shader Manager 檬扁拳..
+	m_ShaderManager->Initialize(m_Device, m_Context);
+
+	// Graphic Resource Manager 檬扁拳..
+	m_ResourceManager->Initialize(m_Device, m_SwapChain);
+
+	// Back Buffer 积己..
+	CreateMainRenderTarget(width, height);
+
 	/// Global Resource 积己..
 	CreateDepthStencilState();
 	CreateRasterizerState();
@@ -45,11 +60,8 @@ void GraphicResourceFactory::Initialize(int width, int height)
 	CreateViewPort(width, height);
 
 	// FullScreen Buffer..
-	CreateScreenBuffer();
-
-	// Graphic Resource & Shader Manager 檬扁拳..
-	m_ResourceManager->Initialize(m_Device, m_SwapChain);
-	m_ShaderManager->Initialize(m_Device, m_Context);
+	CreateQuadBuffer();
+	CreateSSAOQuadBuffer();
 }
 
 void GraphicResourceFactory::Release()
@@ -264,6 +276,21 @@ ComputeRenderTarget* GraphicResourceFactory::CreateComputeRenderTarget(ID3D11Tex
 	return computeRenderTarget;
 }
 
+Vertexbuffer* GraphicResourceFactory::CreateVertexBuffer(ParserData::Mesh* mesh)
+{
+	if (mesh->m_IsSkinningObject)
+	{
+		return CreateMeshVertexBuffer<SkinVertex>(mesh);
+	}
+	else
+	{
+		return CreateMeshVertexBuffer<MeshVertex>(mesh);
+
+		// Terrain Type
+		//return CreateMeshVertexBuffer<TerrainVertex>(mesh);
+	}
+}
+
 Indexbuffer* GraphicResourceFactory::CreateIndexBuffer(ParserData::Mesh* mesh)
 {
 	// 货肺款 IndexBufferData 积己..
@@ -300,48 +327,6 @@ Indexbuffer* GraphicResourceFactory::CreateIndexBuffer(ParserData::Mesh* mesh)
 	return iBuffer;
 }
 
-Vertexbuffer* GraphicResourceFactory::CreateVertexBuffer(ParserData::Mesh* mesh)
-{
-	// 货肺款 VertexBufferData 积己..
-	Vertexbuffer* vBuffer = new Vertexbuffer();
-
-	ID3D11Buffer* VB = nullptr;
-
-	// Vertex Count..
-	UINT vCount = (UINT)mesh->m_VertexList.size();
-
-	std::vector<NormalMapVertex> vertices(vCount);
-	for (UINT i = 0; i < vCount; i++)
-	{
-		vertices[i].Pos = mesh->m_VertexList[i]->m_Pos;
-
-		vertices[i].Normal = mesh->m_VertexList[i]->m_Normal;
-
-		vertices[i].Tex.x = mesh->m_VertexList[i]->m_U;
-		vertices[i].Tex.y = mesh->m_VertexList[i]->m_V;
-
-		vertices[i].Tangent = mesh->m_VertexList[i]->m_Tanget;
-	}
-
-	// 货肺款 VertexBuffer 积己..
-	D3D11_BUFFER_DESC ibd;
-	ibd.Usage = D3D11_USAGE_IMMUTABLE;
-	ibd.ByteWidth = sizeof(UINT) * vCount;
-	ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	ibd.CPUAccessFlags = 0;
-	ibd.MiscFlags = 0;
-	D3D11_SUBRESOURCE_DATA iinitData;
-	iinitData.pSysMem = &vertices[0];
-	HR(m_Device->CreateBuffer(&ibd, &iinitData, &VB));
-
-	// 逞败拎具且 VertexBufferData 火涝..
-	vBuffer->Count = vCount;
-	vBuffer->VertexbufferPointer = VB;
-	vBuffer->VertexDataSize = sizeof(NormalMapVertex);
-
-	return vBuffer;
-}
-
 TextureBuffer* GraphicResourceFactory::CreateTextureBuffer(std::string path)
 {
 	TextureBuffer* tBuffer = new TextureBuffer();
@@ -366,7 +351,9 @@ TextureBuffer* GraphicResourceFactory::CreateTextureBuffer(std::string path)
 
 	// 逞败拎具且 TextureBufferData 火涝..
 	tBuffer->TextureBufferPointer = newTex;
-	texResource->Release();
+
+	if (texResource != nullptr)
+		texResource->Release();
 
 	return tBuffer;
 }
@@ -379,6 +366,155 @@ IShaderManager* GraphicResourceFactory::GetShaderManager()
 IGraphicResourceManager* GraphicResourceFactory::GetResourceManager()
 {
 	return m_ResourceManager;
+}
+
+template<>
+Vertexbuffer* GraphicResourceFactory::CreateMeshVertexBuffer<MeshVertex>(ParserData::Mesh* mesh)
+{
+	// 货肺款 VertexBufferData 积己..
+	Vertexbuffer* vBuffer = new Vertexbuffer();
+
+	ID3D11Buffer* VB = nullptr;
+
+	// Vertex Count..
+	UINT vCount = (UINT)mesh->m_VertexList.size();
+
+	std::vector<MeshVertex> vertices(vCount);
+	for (UINT i = 0; i < vCount; i++)
+	{
+		vertices[i].Pos = mesh->m_VertexList[i]->m_Pos;
+
+		vertices[i].Normal = mesh->m_VertexList[i]->m_Normal;
+
+		vertices[i].Tex.x = mesh->m_VertexList[i]->m_U;
+		vertices[i].Tex.y = mesh->m_VertexList[i]->m_V;
+
+		vertices[i].Tangent = mesh->m_VertexList[i]->m_Tanget;
+	}
+
+	// 货肺款 VertexBuffer 积己..
+	D3D11_BUFFER_DESC ibd;
+	ibd.Usage = D3D11_USAGE_IMMUTABLE;
+	ibd.ByteWidth = sizeof(MeshVertex) * vCount;
+	ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	ibd.CPUAccessFlags = 0;
+	ibd.MiscFlags = 0;
+	D3D11_SUBRESOURCE_DATA iinitData;
+	iinitData.pSysMem = &vertices[0];
+	HR(m_Device->CreateBuffer(&ibd, &iinitData, &VB));
+
+	// 逞败拎具且 VertexBufferData 火涝..
+	vBuffer->Count = vCount;
+	vBuffer->VertexbufferPointer = VB;
+	vBuffer->VertexDataSize = sizeof(MeshVertex);
+
+	return vBuffer;
+}
+
+template<>
+Vertexbuffer* GraphicResourceFactory::CreateMeshVertexBuffer<SkinVertex>(ParserData::Mesh* mesh)
+{
+	// 货肺款 VertexBufferData 积己..
+	Vertexbuffer* vBuffer = new Vertexbuffer();
+
+	ID3D11Buffer* VB = nullptr;
+
+	// Vertex Count..
+	UINT vCount = (UINT)mesh->m_VertexList.size();
+	UINT bCount = 0;
+	std::vector<SkinVertex> vertices(vCount);
+	for (UINT i = 0; i < vCount; i++)
+	{
+		vertices[i].Pos = mesh->m_VertexList[i]->m_Pos;
+
+		vertices[i].Normal = mesh->m_VertexList[i]->m_Normal;
+
+		vertices[i].Tex.x = mesh->m_VertexList[i]->m_U;
+		vertices[i].Tex.y = mesh->m_VertexList[i]->m_V;
+
+		vertices[i].Tangent = mesh->m_VertexList[i]->m_Tanget;
+
+		// Bone Weights, Bone Index..
+		bCount = (UINT)mesh->m_VertexList[i]->m_BoneIndices.size();
+		for (UINT j = 0; j < bCount; j++)
+		{
+			if (j < 4)
+			{
+				vertices[i].BoneIndex1[j] = mesh->m_VertexList[i]->m_BoneIndices[j];
+				vertices[i].BoneWeight1[j] = mesh->m_VertexList[i]->m_BoneWeights[j];
+			}
+			else if (j < 8)
+			{
+				vertices[i].BoneIndex2[j - 4] = mesh->m_VertexList[i]->m_BoneIndices[j];
+				vertices[i].BoneWeight2[j - 4] = mesh->m_VertexList[i]->m_BoneWeights[j];
+			}
+		}
+	}
+
+	// 货肺款 VertexBuffer 积己..
+	D3D11_BUFFER_DESC ibd;
+	ibd.Usage = D3D11_USAGE_IMMUTABLE;
+	ibd.ByteWidth = sizeof(SkinVertex) * vCount;
+	ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	ibd.CPUAccessFlags = 0;
+	ibd.MiscFlags = 0;
+	D3D11_SUBRESOURCE_DATA iinitData;
+	iinitData.pSysMem = &vertices[0];
+	HR(m_Device->CreateBuffer(&ibd, &iinitData, &VB));
+
+	// 逞败拎具且 VertexBufferData 火涝..
+	vBuffer->Count = vCount;
+	vBuffer->VertexbufferPointer = VB;
+	vBuffer->VertexDataSize = sizeof(SkinVertex);
+
+	return vBuffer;
+}
+
+template<>
+Vertexbuffer* GraphicResourceFactory::CreateMeshVertexBuffer<TerrainVertex>(ParserData::Mesh* mesh)
+{
+	// 货肺款 VertexBufferData 积己..
+	Vertexbuffer* vBuffer = new Vertexbuffer();
+
+	ID3D11Buffer* VB = nullptr;
+
+	// Vertex Count..
+	UINT vCount = (UINT)mesh->m_VertexList.size();
+
+	std::vector<TerrainVertex> vertices(vCount);
+	for (UINT i = 0; i < vCount; i++)
+	{
+		vertices[i].Pos = mesh->m_VertexList[i]->m_Pos;
+
+		vertices[i].Normal = mesh->m_VertexList[i]->m_Normal;
+
+		vertices[i].Tex.x = mesh->m_VertexList[i]->m_U;
+		vertices[i].Tex.y = mesh->m_VertexList[i]->m_V;
+
+		vertices[i].Tangent = mesh->m_VertexList[i]->m_Tanget;
+
+		// 秦寸 Pixel Mask Color..
+		vertices[i].Mask1;
+		vertices[i].Mask2;
+	}
+
+	// 货肺款 VertexBuffer 积己..
+	D3D11_BUFFER_DESC ibd;
+	ibd.Usage = D3D11_USAGE_IMMUTABLE;
+	ibd.ByteWidth = sizeof(TerrainVertex) * vCount;
+	ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	ibd.CPUAccessFlags = 0;
+	ibd.MiscFlags = 0;
+	D3D11_SUBRESOURCE_DATA iinitData;
+	iinitData.pSysMem = &vertices[0];
+	HR(m_Device->CreateBuffer(&ibd, &iinitData, &VB));
+
+	// 逞败拎具且 VertexBufferData 火涝..
+	vBuffer->Count = vCount;
+	vBuffer->VertexbufferPointer = VB;
+	vBuffer->VertexDataSize = sizeof(TerrainVertex);
+
+	return vBuffer;
 }
 
 void GraphicResourceFactory::CreateDepthStencilState()
@@ -501,7 +637,7 @@ void GraphicResourceFactory::CreateSamplerState()
 	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
 	// samClampMinLinear SamplerState 积己..
-	m_ShaderManager->AddSampler(samClampMinLinear::GetHashCode(), CreateSS(&samplerDesc));
+	m_ShaderManager->AddSampler<samClampMinLinear>(CreateSS(&samplerDesc));
 
 	ZeroMemory(&samplerDesc, sizeof(samplerDesc));
 	samplerDesc.Filter = D3D11_FILTER_ANISOTROPIC;
@@ -513,7 +649,7 @@ void GraphicResourceFactory::CreateSamplerState()
 	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
 	// samWrapAnisotropic SamplerState 积己..
-	m_ShaderManager->AddSampler(samWrapAnisotropic::GetHashCode(), CreateSS(&samplerDesc));
+	m_ShaderManager->AddSampler<samWrapAnisotropic>(CreateSS(&samplerDesc));
 
 	ZeroMemory(&samplerDesc, sizeof(samplerDesc));
 	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
@@ -526,7 +662,7 @@ void GraphicResourceFactory::CreateSamplerState()
 	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
 	// samWrapMinLinear SamplerState 积己..
-	m_ShaderManager->AddSampler(samWrapMinLinear::GetHashCode(), CreateSS(&samplerDesc));
+	m_ShaderManager->AddSampler<samWrapMinLinear>(CreateSS(&samplerDesc));
 
 	ZeroMemory(&samplerDesc, sizeof(samplerDesc));
 	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
@@ -538,7 +674,7 @@ void GraphicResourceFactory::CreateSamplerState()
 	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
 	// samMirrorMinLinear SamplerState 积己..
-	m_ShaderManager->AddSampler(samMirrorMinLinear::GetHashCode(), CreateSS(&samplerDesc));
+	m_ShaderManager->AddSampler<samMirrorMinLinear>(CreateSS(&samplerDesc));
 
 	ZeroMemory(&samplerDesc, sizeof(samplerDesc));
 	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT;
@@ -550,7 +686,7 @@ void GraphicResourceFactory::CreateSamplerState()
 	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
 	// samClampMinLinearPoint SamplerState 积己..
-	m_ShaderManager->AddSampler(samClampMinLinearPoint::GetHashCode(), CreateSS(&samplerDesc));
+	m_ShaderManager->AddSampler<samClampMinLinearPoint>(CreateSS(&samplerDesc));
 	
 	ZeroMemory(&samplerDesc, sizeof(samplerDesc));
 	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT;
@@ -563,7 +699,7 @@ void GraphicResourceFactory::CreateSamplerState()
 	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
 	// samBorderLinerPoint SamplerState 积己..
-	m_ShaderManager->AddSampler(samBorderLinerPoint::GetHashCode(), CreateSS(&samplerDesc));
+	m_ShaderManager->AddSampler<samBorderLinerPoint>(CreateSS(&samplerDesc));
 
 	ZeroMemory(&samplerDesc, sizeof(samplerDesc));
 	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT;
@@ -574,7 +710,7 @@ void GraphicResourceFactory::CreateSamplerState()
 	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
 	// samWrapLinerPoint SamplerState 积己..
-	m_ShaderManager->AddSampler(samWrapLinerPoint::GetHashCode(), CreateSS(&samplerDesc));
+	m_ShaderManager->AddSampler<samWrapLinerPoint>(CreateSS(&samplerDesc));
 
 	ZeroMemory(&samplerDesc, sizeof(samplerDesc));
 	samplerDesc.Filter = D3D11_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT;
@@ -586,7 +722,7 @@ void GraphicResourceFactory::CreateSamplerState()
 	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
 	// gShadowSam SamplerState 积己..
-	m_ShaderManager->AddSampler(gShadowSam::GetHashCode(), CreateSS(&samplerDesc));
+	m_ShaderManager->AddSampler<gShadowSam>(CreateSS(&samplerDesc));
 }
 
 void GraphicResourceFactory::CreateBlendState()
@@ -614,6 +750,8 @@ void GraphicResourceFactory::CreateDepthStencilView(int width, int height)
 
 	D3D11_TEXTURE2D_DESC texDesc;
 	ZeroMemory(&texDesc, sizeof(texDesc));
+	texDesc.Width = width;
+	texDesc.Height = height;
 	texDesc.MipLevels = 1;
 	texDesc.ArraySize = 1;
 	//texDesc.Format = DXGI_FORMAT_R24G8_TYPELESS;
@@ -653,6 +791,8 @@ void GraphicResourceFactory::CreateDepthStencilView(int width, int height)
 
 	// Shadow DepthStencilView 积己..
 	CreateDSV(tex2D.Get(), &dsvDesc, nullptr);
+
+	RESET_COM(tex2D);
 }
 
 void GraphicResourceFactory::CreateViewPort(int width, int height)
@@ -661,7 +801,117 @@ void GraphicResourceFactory::CreateViewPort(int width, int height)
 	CreateViewPort(0.0f, 0.0f, (float)width, (float)height);
 }
 
-void GraphicResourceFactory::CreateScreenBuffer()
+void GraphicResourceFactory::CreateQuadBuffer()
 {
+	BufferData* newBuf = new BufferData();
 
+	PosTexVertex v[4];
+	v[0].Pos = Vector3(-1.0f, -1.0f, 0.0f);
+	v[1].Pos = Vector3(-1.0f, +1.0f, 0.0f);
+	v[2].Pos = Vector3(+1.0f, +1.0f, 0.0f);
+	v[3].Pos = Vector3(+1.0f, -1.0f, 0.0f);
+
+	v[0].Tex = Vector2(0.0f, 1.0f);
+	v[1].Tex = Vector2(0.0f, 0.0f);
+	v[2].Tex = Vector2(1.0f, 0.0f);
+	v[3].Tex = Vector2(1.0f, 1.0f);
+
+	UINT indices[6] =
+	{
+		0, 1, 2,
+		0, 2, 3
+	};
+
+	newBuf->Stride = sizeof(PosTexVertex);
+	newBuf->IndexCount = 6;
+
+	D3D11_BUFFER_DESC vbd;
+	vbd.Usage = D3D11_USAGE_IMMUTABLE;
+	vbd.ByteWidth = sizeof(PosTexVertex) * 4;
+	vbd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	vbd.CPUAccessFlags = 0;
+	vbd.MiscFlags = 0;
+	vbd.StructureByteStride = 0;
+
+	D3D11_SUBRESOURCE_DATA vinitData;
+	vinitData.pSysMem = v;
+
+	HR(m_Device->CreateBuffer(&vbd, &vinitData, &newBuf->VB));
+
+	D3D11_BUFFER_DESC ibd;
+	ibd.Usage = D3D11_USAGE_IMMUTABLE;
+	ibd.ByteWidth = sizeof(UINT) * 6;
+	ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	ibd.CPUAccessFlags = 0;
+	ibd.StructureByteStride = 0;
+	ibd.MiscFlags = 0;
+
+	D3D11_SUBRESOURCE_DATA iinitData;
+	iinitData.pSysMem = indices;
+
+	HR(m_Device->CreateBuffer(&ibd, &iinitData, &newBuf->IB));
+
+	// Resource 殿废..
+	m_ResourceManager->AddResource(newBuf);
+}
+
+void GraphicResourceFactory::CreateSSAOQuadBuffer()
+{
+	BufferData* newBuf = new BufferData();
+
+	PosNormalTexVertex v[4];
+
+	v[0].Pos = Vector3(-1.0f, -1.0f, 0.0f);
+	v[1].Pos = Vector3(-1.0f, +1.0f, 0.0f);
+	v[2].Pos = Vector3(+1.0f, +1.0f, 0.0f);
+	v[3].Pos = Vector3(+1.0f, -1.0f, 0.0f);
+
+	// Store far plane frustum corner indices in Normal.x slot.
+	v[0].Normal = Vector3(0.0f, 0.0f, 0.0f);
+	v[1].Normal = Vector3(1.0f, 0.0f, 0.0f);
+	v[2].Normal = Vector3(2.0f, 0.0f, 0.0f);
+	v[3].Normal = Vector3(3.0f, 0.0f, 0.0f);
+
+	v[0].Tex = Vector2(0.0f, 1.0f);
+	v[1].Tex = Vector2(0.0f, 0.0f);
+	v[2].Tex = Vector2(1.0f, 0.0f);
+	v[3].Tex = Vector2(1.0f, 1.0f);
+
+	UINT indices[6] =
+	{
+		0, 1, 2,
+		0, 2, 3
+	};
+
+	newBuf->Stride = sizeof(PosNormalTexVertex);
+	newBuf->IndexCount = 6;
+
+	D3D11_BUFFER_DESC vbd;
+	vbd.Usage = D3D11_USAGE_IMMUTABLE;
+	vbd.ByteWidth = sizeof(PosNormalTexVertex) * 4;
+	vbd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	vbd.CPUAccessFlags = 0;
+	vbd.MiscFlags = 0;
+	vbd.StructureByteStride = 0;
+
+	D3D11_SUBRESOURCE_DATA vinitData;
+	vinitData.pSysMem = v;
+
+	HR(m_Device->CreateBuffer(&vbd, &vinitData, &newBuf->VB));
+
+	D3D11_BUFFER_DESC ibd;
+	ibd.Usage = D3D11_USAGE_IMMUTABLE;
+	ibd.ByteWidth = sizeof(UINT) * 6;
+	ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	ibd.CPUAccessFlags = 0;
+	ibd.StructureByteStride = 0;
+	ibd.MiscFlags = 0;
+
+	D3D11_SUBRESOURCE_DATA iinitData;
+	iinitData.pSysMem = indices;
+
+	HR(m_Device->CreateBuffer(&ibd, &iinitData, &newBuf->IB));
+
+	// Resource 殿废..
+	m_ResourceManager->AddResource(newBuf);
 }

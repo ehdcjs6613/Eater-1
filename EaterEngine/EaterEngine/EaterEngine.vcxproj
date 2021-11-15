@@ -237,6 +237,7 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\lib"
   <ItemGroup>
     <ClInclude Include="..\..\Library\inc\GraphicsEngine.h" />
     <ClInclude Include="Animation.h" />
+    <ClInclude Include="BaseManager.h" />
     <ClInclude Include="ComponentHeader.h" />
     <ClInclude Include="DebugManager.h" />
     <ClInclude Include="Delegate.h" />
@@ -256,6 +257,10 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\lib"
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="GraphicEngineManager.h" />
     <ClInclude Include="KeyinputManager.h" />
+    <ClInclude Include="Light.h" />
+    <ClInclude Include="LightManager.h" />
+    <ClInclude Include="Material.h" />
+    <ClInclude Include="MaterialManager.h" />
     <ClInclude Include="ObjectManager.h" />
     <ClInclude Include="LoadManager.h" />
     <ClInclude Include="SceneManager.h" />
@@ -263,6 +268,7 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\lib"
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Animation.cpp" />
+    <ClCompile Include="BaseManager.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="DebugManager.cpp" />
@@ -272,7 +278,11 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\lib"
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GraphicEngineManager.cpp" />
     <ClCompile Include="KeyinputManager.cpp" />
+    <ClCompile Include="Light.cpp" />
+    <ClCompile Include="LightManager.cpp" />
     <ClCompile Include="MainHeader.cpp" />
+    <ClCompile Include="Material.cpp" />
+    <ClCompile Include="MaterialManager.cpp" />
     <ClCompile Include="MeshFilter.cpp" />
     <ClCompile Include="ObjectManager.cpp" />
     <ClCompile Include="LoadManager.cpp" />

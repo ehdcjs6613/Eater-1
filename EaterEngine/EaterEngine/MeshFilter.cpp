@@ -63,6 +63,9 @@ void MeshFilter::PushModelData(LoadMeshData* mModel)
 	data->IB = mModel->IB;
 	data->VB = mModel->VB;
 
+	data->Diffuse = mModel->Diffuse;
+	data->Normal = mModel->Normal;
+
 	data->mLocal = *(mModel->LocalTM);
 	data->mWorld = *(mModel->WorldTM);
 }
@@ -79,7 +82,6 @@ void MeshFilter::CreateChild_Mesh(LoadMeshData* data, Transform* parent, ModelDa
 	Transform*	Tr		= OBJ->AddComponent<Transform>();
 	MeshFilter* Filter	= OBJ->AddComponent<MeshFilter>();
 	
-
 	//Transform 연결
 	OBJ->transform = Tr;
 
@@ -99,20 +101,15 @@ void MeshFilter::CreateChild_Mesh(LoadMeshData* data, Transform* parent, ModelDa
 		OBJ->OneMeshData->ObjType = OBJECT_TYPE::Base;
 	}
 	
-
 	//데이터를 넘겨준다 
 	Filter->PushModelData(data);
 	Tr->Load_Local = *data->LocalTM;
 	Tr->Load_World = *data->WorldTM;
 	
-
-
 	//Transform 끼리 연결
 	LinkHierarchy(Tr, parent);
 	//오브젝트 매니저에서 관리할수있도록 넣어준다
 	OBJ_Manager->PushCreateObject(OBJ);
-	
-
 
 	//자식객체 개수만큼 실행
 	for (int i = 0; i < ChildCount; i++)
