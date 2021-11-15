@@ -3,10 +3,12 @@
 #include "GraphicsEngine.h"
 #include "EngineData.h"
 #include "ParserData.h"
+#include "MultiRenderEngine.h"
 
 GraphicEngineManager::GraphicEngineManager()
 {
-	NowEngine = nullptr;
+	NowEngine	= nullptr;
+	MultiEngine = nullptr;
 }
 
 GraphicEngineManager::~GraphicEngineManager()
@@ -43,6 +45,8 @@ void GraphicEngineManager::EngineAllInitialize(HWND Hwnd, int WinSizeWidth, int 
 void GraphicEngineManager::Initialize(HWND Hwnd, int WinSizeWidth, int WinSizeHeight)
 {
 	NowEngine->Initialize(Hwnd, WinSizeWidth, WinSizeHeight);
+	MultiEngine = MultiRenderEngine::Initialize(Hwnd, WinSizeWidth, WinSizeHeight);
+	MultiEngine->SplitWindow(2, 2);
 }
 
 void GraphicEngineManager::Render(std::queue<MeshData*>* meshList, GlobalData* global)
