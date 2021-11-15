@@ -113,11 +113,14 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(SolutionDir)Library\inc</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
+      <AdditionalLibraryDirectories>$(SolutionDir)Library\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>DirectX2DSupporter.lib;</AdditionalDependencies>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -183,26 +186,27 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="CDockalbePannel.h" />
-    <ClInclude Include="CGameView.h" />
+    <ClInclude Include="DockableView.h" />
+    <ClInclude Include="EDDockableBase.h" />
     <ClInclude Include="ChildFrm.h" />
     <ClInclude Include="ChildView.h" />
     <ClInclude Include="Editor.h" />
     <ClInclude Include="framework.h" />
-    <ClInclude Include="GameView.h" />
+    <ClInclude Include="GameDlg.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="SaveData.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="EWGameView.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CDockalbePannel.cpp" />
-    <ClCompile Include="CGameView.cpp" />
+    <ClCompile Include="DockableView.cpp" />
+    <ClCompile Include="EDDockableBase.cpp" />
     <ClCompile Include="ChildFrm.cpp" />
     <ClCompile Include="ChildView.cpp" />
     <ClCompile Include="Editor.cpp" />
-    <ClCompile Include="GameView.cpp" />
+    <ClCompile Include="GameDlg.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -211,6 +215,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="SaveData.cpp" />
+    <ClCompile Include="EWGameView.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Editor.rc" />

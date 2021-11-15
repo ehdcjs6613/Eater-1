@@ -16,6 +16,27 @@
     <Filter Include="SubScript">
       <UniqueIdentifier>{84fea1cb-373f-4724-9bcb-1c751646aca6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DockableClass">
+      <UniqueIdentifier>{08ad40b1-4f45-40a4-a1ea-55f5802ba4e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DockableClass\0.Base">
+      <UniqueIdentifier>{6cb00ba5-9281-4d14-8e3f-bc3cb02dc652}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DockableClass\1.GameView">
+      <UniqueIdentifier>{74cf76c5-d8b3-4054-896f-f3ac0ec33144}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DockableClass\2.Inspector">
+      <UniqueIdentifier>{a8130443-4055-4d27-95e0-fbcbc65cada6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="WorkableClass">
+      <UniqueIdentifier>{7e1e8d6a-17e5-4093-918c-782a3299f25d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="WorkableClass\0.Base">
+      <UniqueIdentifier>{2b98cf3c-5a3b-427b-84b8-e2eaf9222ca1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="WorkableClass\GameView">
+      <UniqueIdentifier>{9b2f08cc-261b-4055-bf70-043730a4a0eb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -42,17 +63,20 @@
     <ClInclude Include="pch.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="CDockalbePannel.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="GameView.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="CGameView.h">
+    <ClInclude Include="GameDlg.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="SaveData.h">
       <Filter>SubScript</Filter>
+    </ClInclude>
+    <ClInclude Include="EDDockableBase.h">
+      <Filter>DockableClass\0.Base</Filter>
+    </ClInclude>
+    <ClInclude Include="EWGameView.h">
+      <Filter>WorkableClass\GameView</Filter>
+    </ClInclude>
+    <ClInclude Include="DockableView.h">
+      <Filter>DockableClass\1.GameView</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -71,17 +95,20 @@
     <ClCompile Include="pch.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="CDockalbePannel.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="GameView.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="CGameView.cpp">
+    <ClCompile Include="GameDlg.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="SaveData.cpp">
       <Filter>SubScript</Filter>
+    </ClCompile>
+    <ClCompile Include="EDDockableBase.cpp">
+      <Filter>DockableClass\0.Base</Filter>
+    </ClCompile>
+    <ClCompile Include="EWGameView.cpp">
+      <Filter>WorkableClass\GameView</Filter>
+    </ClCompile>
+    <ClCompile Include="DockableView.cpp">
+      <Filter>DockableClass\1.GameView</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

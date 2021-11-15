@@ -7,10 +7,11 @@
 #include "resource.h"
 #include "Editor.h"
 
+#include "EWGameView.h"
+#include "EDDockableBase.h"
+#include "DockableView.h"
 #include "SaveData.h"
-#include "CGameView.h"
-#include "GameView.h"
-#include "CDockalbePannel.h"
+#include "GameDlg.h"
 
 #include "MainFrm.h"
 
@@ -42,9 +43,8 @@ static UINT indicators[] =
 CMainFrame::CMainFrame() noexcept
 {
 	// TODO: 여기에 멤버 초기화 코드를 추가합니다.
-	m_pCDockalbePannel[0] = nullptr;
-	m_pCDockalbePannel[1] = nullptr;
-	m_pGameView = nullptr;
+	m_pDlg = nullptr;
+	m_pDlgV = nullptr;
 }
 
 CMainFrame::~CMainFrame()
@@ -57,7 +57,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return -1;
 
 	if (!m_wndToolBar.CreateEx(this, TBSTYLE_FLAT, WS_CHILD | WS_VISIBLE | CBRS_TOP |
-		CBRS_GRIPPER | CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC ) ||
+		CBRS_GRIPPER | CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC) ||
 		!m_wndToolBar.LoadToolBar(IDR_MAINFRAME))
 	{
 		TRACE0("도구 모음을 만들지 못했습니다.\n");
@@ -69,7 +69,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		TRACE0("상태 표시줄을 만들지 못했습니다.\n");
 		return -1;      // 만들지 못했습니다.
 	}
-	m_wndStatusBar.SetIndicators(indicators, sizeof(indicators)/sizeof(UINT));
+	m_wndStatusBar.SetIndicators(indicators, sizeof(indicators) / sizeof(UINT));
 
 	// TODO: 도구 모음을 도킹할 수 없게 하려면 이 세 줄을 삭제하십시오.
 	m_wndToolBar.EnableDocking(CBRS_ALIGN_ANY);
@@ -82,8 +82,6 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_wndStatusBar.EnableDocking(CBRS_ALIGN_ANY);
 	EnableDocking(CBRS_ALIGN_ANY);
 
-	m_pCGameView = new CGameView();
-	m_pCGameView->Create(_T("cs"), _T("cs"), WS_CHILD | WS_VISIBLE, CRect(200, +500, 200, 100), this, -1);
 	//m_pCGameView->ShowWindow(SW_SHOW);
 	//m_pCGameView->UpdateWindow();
 
@@ -100,7 +98,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
 {
-	if( !CMDIFrameWnd::PreCreateWindow(cs) )
+	if (!CMDIFrameWnd::PreCreateWindow(cs))
 		return FALSE;
 	// TODO: CREATESTRUCT cs를 수정하여 여기에서
 	//  Window 클래스 또는 스타일을 수정합니다.
@@ -134,39 +132,47 @@ void CMainFrame::OnDockTable()
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
 
 
+	//EnableDocking(CBRS_ALIGN_LEFT);
+	//EnableAutoHidePanes(CBRS_ALIGN_RIGHT);
+	//m_pDialog.EnableDocking(CBRS_ALIGN_ANY);
+	//DockPane(&m_pDialog);
 
-	if (m_pCDockalbePannel[0] == nullptr && m_pCDockalbePannel[1] == nullptr)
+	if (nullptr == m_pDlg && m_Num==0)
 	{
-		m_pCDockalbePannel[0] = new CDockalbePannel();
+		m_pDlg = new DockableBase();
 
-		m_pCDockalbePannel[0]->Create(_T(""), this, CRect(0, 0, 300, 200), TRUE, ID_FILE_NEW,
-			WS_SYSMENU |	WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_RIGHT | CBRS_FLOAT_MULTI);
-
-		m_pCDockalbePannel[0]->EnableDocking(CBRS_ALIGN_ANY);
-
-		DockPane(m_pCDockalbePannel[0]);
-
-		m_pCDockalbePannel[0]->SetAutoHideMode(false, CBRS_ALIGN_ANY);
-
-		m_pCDockalbePannel[0]->ShowPane(true, false, true);
-	}
-	else if (m_pCDockalbePannel[0] != nullptr && m_pCDockalbePannel[1] == nullptr)
-	{
-		m_pCDockalbePannel[1] = new CDockalbePannel();
-
-		m_pCDockalbePannel[1]->Create(_T(""), this, CRect(0, 0, 300, 200), TRUE, ID_FILE_NEW,
+		m_pDlg->Create(_T("sss"), this, CRect(0, 0, 500, 500), TRUE, ID_FILE_NEW,
 			WS_SYSMENU | WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_RIGHT | CBRS_FLOAT_MULTI);
 
-		m_pCDockalbePannel[1]->EnableDocking(CBRS_ALIGN_ANY);
+		m_pDlg->EnableDocking(CBRS_ALIGN_ANY);
 
-		DockPane(m_pCDockalbePannel[1]);
+		DockPane(m_pDlg);
 
-		m_pCDockalbePannel[1]->SetAutoHideMode(false, CBRS_ALIGN_ANY);
+		m_pDlg->SetAutoHideMode(false, CBRS_ALIGN_ANY);
 
-		m_pCDockalbePannel[1]->ShowPane(true, false, true);
+		m_pDlg->ShowPane(true, false, true);
+		m_Num++;
+
 	}
-	
-	
-	
+	else if ( nullptr == m_pDlgV && m_Num == 1)
+	{
+		m_pDlgV = new DockableView();
+
+		m_pDlgV->Create(_T("DDDDD"), this, CRect(0, 0, 1920, 1080), TRUE, ID_FILE_NEW,
+			WS_SYSMENU | WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_RIGHT | CBRS_FLOAT_MULTI);
+
+		m_pDlgV->EnableDocking(CBRS_ALIGN_ANY);
+
+		DockPane(m_pDlgV);
+
+		m_pDlgV->SetAutoHideMode(false, CBRS_ALIGN_ANY);
+
+		m_pDlgV->ShowPane(true, false, true);
+		m_Num++;
+	}
+
+	//해당 프레임 및 자식창의 크기를 재조절함
+	RecalcLayout();
+
 	//m_pGameView->OnInitDialog();
 }

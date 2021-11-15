@@ -7,7 +7,7 @@
 #include "afxwinappex.h"
 #include "afxdialogex.h"
 #include "Editor.h"
-#include "CDockalbePannel.h"
+#include "EDDockableBase.h"
 #include "MainFrm.h"
 
 #include "ChildFrm.h"
@@ -93,19 +93,30 @@ BOOL CEditorApp::InitInstance()
 	// 주 MDI 프레임 창을 만듭니다.
 	if (!pFrame->LoadFrame(IDR_MAINFRAME))
 		return FALSE;
+
+
+	//pFrame->CreateEx(WS_BORDER|WS_OVERLAPPED|WS_SYSMENU,L"")
+
+
 	// 공유 MDI 메뉴 및 액셀러레이터 키 테이블의 로드를 시도합니다.
 	//TODO: 추가 멤버 변수를 추가하고 응용 프로그램에 필요한 추가 메뉴 형식에 대한
 	//	호출을 로드합니다.
 	HINSTANCE hInst = AfxGetResourceHandle();
-	m_hMDIMenu  = ::LoadMenu(hInst, MAKEINTRESOURCE(IDR_EditorTYPE));
+	m_hMDIMenu = ::LoadMenu(hInst, MAKEINTRESOURCE(IDR_EditorTYPE));
 	m_hMDIAccel = ::LoadAccelerators(hInst, MAKEINTRESOURCE(IDR_EditorTYPE));
 	m_hIcon = ::LoadIcon(hInst, MAKEINTRESOURCE(IDR_MAINFRAME));
 
+	
 
+	int result = GetLastError();
+	
 
 	// 주 창이 초기화되었으므로 이를 표시하고 업데이트합니다.
 	pFrame->ShowWindow(m_nCmdShow);
 	pFrame->UpdateWindow();
+
+	ShowWindow(m_Hwnd,SW_SHOW);
+	UpdateWindow(m_Hwnd);
 
 	return TRUE;
 }
@@ -186,5 +197,13 @@ BOOL CEditorApp::OnIdle(LONG lCount)
 {
 
 
-	return true;
+	return 0;
+}
+
+
+int CEditorApp::Run()
+{
+	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
+
+	return CWinApp::Run();
 }

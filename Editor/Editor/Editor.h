@@ -19,6 +19,8 @@ class CEditorApp : public CWinApp
 public:
 	CEditorApp() noexcept;
 
+	HWND	   m_Hwnd;
+	CWnd	   m_cwnd;
 
 // 재정의입니다.
 public:
@@ -36,6 +38,7 @@ public:
 	afx_msg void OnFileNew();
 	DECLARE_MESSAGE_MAP()
 	virtual BOOL OnIdle(LONG lCount);
+	virtual int Run();
 };
 
 extern CEditorApp theApp;
