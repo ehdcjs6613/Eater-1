@@ -11,7 +11,7 @@
 class MeshData;
 class GlobalData;
 class GraphicEngine;
-
+class MultiRenderEngine;
 class Indexbuffer;
 class Vertexbuffer;
 class TextureBuffer;
@@ -63,6 +63,8 @@ public:
 	//모든 엔진 삭제
 	void Delete();
 private:
+	MultiRenderEngine* MultiEngine;
+
 	//현재 선택된 그래픽 엔진
 	GraphicEngine* NowEngine;
 

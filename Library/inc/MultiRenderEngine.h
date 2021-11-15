@@ -27,6 +27,11 @@
 #include <string>
 
 struct ID3D11RenderTargetView;
+struct ID3D11Device;
+struct ID3D11DeviceContext;
+struct IDXGISwapChain;
+
+
 class GraphicEngine;
 class MeshData;
 class GlobalData;
@@ -71,8 +76,17 @@ public:
 	MULTIENGINE_DLL void Render(std::queue<MeshData*>* meshList, GlobalData* global);
 	MULTIENGINE_DLL void Delete();
 
+	
+	//그래픽 엔진 디바이스와 컨텍스트를 생성해줌
+	MULTIENGINE_DLL void CreateDevice(HWND hwnd,int screenWidth, int screenHeight);
 private:
 	void BeginRender();
 	void EndRender();
+
+	
+
+	ID3D11Device*			m_Device;
+	ID3D11DeviceContext*	m_DeviceContext;
+	IDXGISwapChain*			m_SwapChain;
 };
 
