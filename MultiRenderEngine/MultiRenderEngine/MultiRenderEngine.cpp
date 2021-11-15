@@ -187,8 +187,8 @@ MULTIENGINE_DLL void MultiRenderEngine::CreateDevice(HWND hwnd,int screenWidth, 
 
 	// 스왑 체인, Direct3D 장치 및 Direct3D 장치 컨텍스트 생성..
 	/// MSDN에선 SwapChain 과 Device 를 한번에 생성해주는 함수를 지향함..
-	HR(D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, 0, &featurelevel, 1,
-		D3D11_SDK_VERSION, &swapChainDesc, &m_SwapChain, &m_Device, NULL, &m_DeviceContext));
+	//HR(D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, 0, &featurelevel, 1,
+	//	D3D11_SDK_VERSION, &swapChainDesc, &m_SwapChain, &m_Device, NULL, &m_DeviceContext));
 }
 
 void MultiRenderEngine::BeginRender()
