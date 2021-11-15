@@ -39,24 +39,7 @@ HsGraphic::~HsGraphic()
 
 void HsGraphic::Initialize(HWND _hWnd, int screenWidth, int screenHeight)
 {
-	hwnd = _hWnd;
-	WinSizeX = screenWidth;
-	WinSizeY = screenHeight;
-
-	//엔진 디바이스를 생성
-	CreateDevice();
-
-	//랜더타겟과 상태를 생성
-	CreateRenderTarget();
-
-	//매니저들 생성
-	mShaderManager = new ShaderManager();		//쉐이더를 가져오고 저장하는 클래스
-	mRenderManager = new RenderingManager();	//랜더링을 해주는 클래스
 	
-
-	//매니저들 초기화
-	mShaderManager->Initialize(Device, DeviceContext);
-	mRenderManager->Initialize(Device, DeviceContext, mShaderManager);
 }
 
 Indexbuffer* HsGraphic::CreateIndexBuffer(ParserData::Mesh* mModel)
@@ -282,7 +265,7 @@ void HsGraphic::BeginRender()
 void HsGraphic::EndRender()
 {
 	//엔진 랜더링 종료
-	mSwapChain->Present(0, 0);
+	//mSwapChain->Present(0, 0);
 }
 
 Vertexbuffer* HsGraphic::CreateBasicVertexBuffer(ParserData::Mesh* mModel)
@@ -436,7 +419,7 @@ void HsGraphic::OnReSize(int Change_Width, int Change_Height)
 
 void HsGraphic::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 {
-	BeginRender();
+	//BeginRender();
 
 
 	while (meshList->size() != 0)
@@ -473,13 +456,36 @@ void HsGraphic::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 	}
 
 
-	EndRender();
+	//EndRender();
 }
 
 void HsGraphic::Delete()
 {
 	mWireframe->Release();
 	mSolid->Release();
+}
+
+void HsGraphic::SetRenderTarget(void* RTV, void* DSV, void* VPT)
+{
+	//랜더타겟과 뎁스스텐실 뷰포트를 받아온다
+	mRenderTargetView	= reinterpret_cast<ID3D11RenderTargetView*>(RTV);
+	mDepthStencilView	= reinterpret_cast<ID3D11DepthStencilView*>(DSV);
+	mScreenViewport		= *reinterpret_cast<D3D11_VIEWPORT*>(VPT);
+}
+	
+void HsGraphic::SetDevice(void* mDevie, void* mDevieContext)
+{
+	//디바이스와 컨텍스트를 받아온다 
+	Device			= reinterpret_cast<ID3D11Device*>(mDevie);
+	DeviceContext	= reinterpret_cast<ID3D11DeviceContext*>(mDevieContext);
+
+
+	//디바이스와 컨텍스트를 받은 동시에 각종 매니저 초기화
+	mShaderManager = new ShaderManager();
+	mShaderManager->Initialize(Device, DeviceContext);
+
+	mRenderManager = new RenderingManager();
+	mRenderManager->Initialize(Device, DeviceContext, mShaderManager);
 }
 
 
