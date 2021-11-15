@@ -62,7 +62,7 @@ void MeshFilter::PushModelData(LoadMeshData* mModel)
 
 	data->IB = mModel->IB;
 	data->VB = mModel->VB;
-
+	
 	data->Diffuse = mModel->Diffuse;
 	data->Normal = mModel->Normal;
 

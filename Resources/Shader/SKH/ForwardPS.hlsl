@@ -38,77 +38,75 @@ float4 main(PixelIn pin) : SV_Target0
 {
     float4 albedo = gDiffuseMap.Sample(samWrapMinLinear, pin.Tex);
     
-    //// Gamma Correction
-	//// Gamma Space -> Linear Space
-	//// 모든 라이팅 연산은 선형 공간에서 이루어져야 한다..
-    //albedo.rgb = pow(albedo.rgb, 2.2);
-    //
-    //float3 normalMapSample = 2.0f * gNormalMap.Sample(samWrapMinLinear, pin.Tex).rgb - 1.0f;
-    //float3 bumpedNormalW = mul(normalMapSample, pin.TBN);
-    //
-    //// View Direction
-    //float3 ViewDirection = gEyePosW - pin.PosW.xyz;
-    //ViewDirection = normalize(ViewDirection);
-    //
-    //// Start with a sum of zero.
-    //float4 ambient = float4(0.0f, 0.0f, 0.0f, 0.0f);
-    //float4 diffuse = float4(0.0f, 0.0f, 0.0f, 0.0f);
-    //float4 spec = float4(0.0f, 0.0f, 0.0f, 0.0f);
-    //
-    //float4 A, D, S;
-    //
-	//float4 litColor = albedo;
-    //
-    //// Directional Light
-	//[unroll]
-    //for (uint i = 0; i < 3; ++i)
-    //{
-    //    ComputeDirectionalLight(gMaterials, gDirLights[i], bumpedNormalW, ViewDirection,
-	//			A, D, S);
-    //
-    //    ambient += A;
-    //    diffuse += D;
-    //    spec += S;
-    //}
-    //
-    //// Point Light
-    //if (gPointLightCount > 0)
-    //{
-	//		[unroll]
-    //    for (uint i = 0; i < gPointLightCount; ++i)
-    //    {
-    //        ComputePointLight(gMaterials, gPointLights[i], pin.PosW.xyz, bumpedNormalW, ViewDirection,
-	//				A, D, S);
-    //
-    //        ambient += A;
-    //        diffuse += D;
-    //        spec += S;
-    //    }
-    //}
-    //
-    //// Spot Light
-    //if (gSpotLightCount > 0)
-    //{
-	//		[unroll]
-    //    for (uint i = 0; i < gSpotLightCount; ++i)
-    //    {
-    //        ComputeSpotLight(gMaterials, gSpotLights[i], pin.PosW.xyz, bumpedNormalW, ViewDirection,
-	//				A, D, S);
-    //
-    //        ambient += A;
-    //        diffuse += D;
-    //        spec += S;
-    //    }
-    //}
-    //
-    //// Modulate with late add.
-    //litColor = albedo * (ambient + diffuse) + spec;
-    //
-    //// Common to take alpha from diffuse material and texture.
-    //litColor.a = gMaterials.Diffuse.a * albedo.a;
-    //
-    //
-    //return litColor;
+    // Gamma Correction
+	// Gamma Space -> Linear Space
+	// 모든 라이팅 연산은 선형 공간에서 이루어져야 한다..
+    albedo.rgb = pow(albedo.rgb, 2.2);
     
-    return albedo;
+    float3 normalMapSample = 2.0f * gNormalMap.Sample(samWrapMinLinear, pin.Tex).rgb - 1.0f;
+    float3 bumpedNormalW = mul(normalMapSample, pin.TBN);
+    
+    // View Direction
+    float3 ViewDirection = gEyePosW - pin.PosW.xyz;
+    ViewDirection = normalize(ViewDirection);
+    
+    // Start with a sum of zero.
+    float4 ambient = float4(0.0f, 0.0f, 0.0f, 0.0f);
+    float4 diffuse = float4(0.0f, 0.0f, 0.0f, 0.0f);
+    float4 spec = float4(0.0f, 0.0f, 0.0f, 0.0f);
+    
+    float4 A, D, S;
+    
+	float4 litColor = albedo;
+    
+    // Directional Light
+	[unroll]
+    for (uint i = 0; i < 3; ++i)
+    {
+        ComputeDirectionalLight(gMaterials, gDirLights[i], bumpedNormalW, ViewDirection,
+				A, D, S);
+    
+        ambient += A;
+        diffuse += D;
+        spec += S;
+    }
+    
+    // Point Light
+    if (gPointLightCount > 0)
+    {
+			[unroll]
+        for (uint i = 0; i < gPointLightCount; ++i)
+        {
+            ComputePointLight(gMaterials, gPointLights[i], pin.PosW.xyz, bumpedNormalW, ViewDirection,
+					A, D, S);
+    
+            ambient += A;
+            diffuse += D;
+            spec += S;
+        }
+    }
+    
+    // Spot Light
+    if (gSpotLightCount > 0)
+    {
+			[unroll]
+        for (uint i = 0; i < gSpotLightCount; ++i)
+        {
+            ComputeSpotLight(gMaterials, gSpotLights[i], pin.PosW.xyz, bumpedNormalW, ViewDirection,
+					A, D, S);
+    
+            ambient += A;
+            diffuse += D;
+            spec += S;
+        }
+    }
+    
+    // Modulate with late add.
+    litColor = albedo * (ambient + diffuse) + spec;
+    
+    // Common to take alpha from diffuse material and texture.
+    litColor.a = gMaterials.Diffuse.a * albedo.a;
+    
+    
+    return litColor;
 }

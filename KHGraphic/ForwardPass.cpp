@@ -102,28 +102,28 @@ void ForwardPass::Update(MeshData* mesh, GlobalData* global)
 		// Vertex Shader Update..
 		m_MeshVS->Update();
 
-		//cbLights lightBuf;
-		//lightBuf.gPointLightCount = lightData->gPointLightCount;
-		//lightBuf.gSpotLightCount = lightData->gSpotLightCount;
-		//for (int i = 0; i < 5; i++)
-		//{
-		//	if (i < 3)
-		//	{
-		//		lightBuf.gDirLights[i] = lightData->DirLights[i];
-		//	}
-		//	lightBuf.gPointLights[i] = lightData->PointLights[i];
-		//	lightBuf.gSpotLights[i] = lightData->SpotLights[i];
-		//}
-		//
-		//cbCamera cameraBuf;
-		//cameraBuf.gEyePosW = *eye;
-		//
-		//cbMaterial matBuf;
-		//matBuf.gMaterials = *matData;
-		//
-		//m_ForwardPS->SetConstantBuffer(lightBuf);
-		//m_ForwardPS->SetConstantBuffer(cameraBuf);
-		//m_ForwardPS->SetConstantBuffer(matBuf);
+		cbLights lightBuf;
+		lightBuf.gPointLightCount = lightData->gPointLightCount;
+		lightBuf.gSpotLightCount = lightData->gSpotLightCount;
+		for (int i = 0; i < 5; i++)
+		{
+			if (i < 3)
+			{
+				lightBuf.gDirLights[i] = lightData->DirLights[i];
+			}
+			lightBuf.gPointLights[i] = lightData->PointLights[i];
+			lightBuf.gSpotLights[i] = lightData->SpotLights[i];
+		}
+
+		cbCamera cameraBuf;
+		cameraBuf.gEyePosW = *eye;
+
+		cbMaterial matBuf;
+		matBuf.gMaterials = *matData;
+
+		m_ForwardPS->SetConstantBuffer(lightBuf);
+		m_ForwardPS->SetConstantBuffer(cameraBuf);
+		m_ForwardPS->SetConstantBuffer(matBuf);
 
 		m_ForwardPS->SetShaderResourceView<gDiffuseMap>(&diffuse_srv);
 		m_ForwardPS->SetShaderResourceView<gNormalMap>(&normal_srv);
@@ -148,28 +148,28 @@ void ForwardPass::Update(MeshData* mesh, GlobalData* global)
 		// Vertex Shader Update..
 		m_SkinVS->Update();
 
-		//cbLights lightBuf;
-		//lightBuf.gPointLightCount = lightData->gPointLightCount;
-		//lightBuf.gSpotLightCount = lightData->gSpotLightCount;
-		//for (int i = 0; i < 5; i++)
-		//{
-		//	if (i < 3)
-		//	{
-		//		lightBuf.gDirLights[i] = lightData->DirLights[i];
-		//	}
-		//	lightBuf.gPointLights[i] = lightData->PointLights[i];
-		//	lightBuf.gSpotLights[i] = lightData->SpotLights[i];
-		//}
+		cbLights lightBuf;
+		lightBuf.gPointLightCount = lightData->gPointLightCount;
+		lightBuf.gSpotLightCount = lightData->gSpotLightCount;
+		for (int i = 0; i < 5; i++)
+		{
+			if (i < 3)
+			{
+				lightBuf.gDirLights[i] = lightData->DirLights[i];
+			}
+			lightBuf.gPointLights[i] = lightData->PointLights[i];
+			lightBuf.gSpotLights[i] = lightData->SpotLights[i];
+		}
 
-		//cbCamera cameraBuf;
-		//cameraBuf.gEyePosW = *eye;
-		//
-		//cbMaterial matBuf;
-		//matBuf.gMaterials = *matData;
+		cbCamera cameraBuf;
+		cameraBuf.gEyePosW = *eye;
+		
+		cbMaterial matBuf;
+		matBuf.gMaterials = *matData;
 
-		//m_ForwardPS->SetConstantBuffer(lightBuf);
-		//m_ForwardPS->SetConstantBuffer(cameraBuf);
-		//m_ForwardPS->SetConstantBuffer(matBuf);
+		m_ForwardPS->SetConstantBuffer(lightBuf);
+		m_ForwardPS->SetConstantBuffer(cameraBuf);
+		m_ForwardPS->SetConstantBuffer(matBuf);
 
 		m_ForwardPS->SetShaderResourceView<gDiffuseMap>(&diffuse_srv);
 		m_ForwardPS->SetShaderResourceView<gNormalMap>(&normal_srv);

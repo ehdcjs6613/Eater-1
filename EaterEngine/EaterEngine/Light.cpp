@@ -3,14 +3,14 @@
 #include "Light.h"
 
 DirectionLight::DirectionLight()
-	:Light(eLightType::DIRECTION), m_DirLight(nullptr)
+	:Light(eLightType::DIRECTION)
 {
-
+	m_DirLight = new DirectionalLightData();
 }
 
 DirectionLight::~DirectionLight()
 {
-
+	delete m_DirLight;
 }
 
 void DirectionLight::Awake()
@@ -49,14 +49,14 @@ void DirectionLight::SetLight(DirectionalLightData& lightData)
 }
 
 SpotLight::SpotLight()
-	:Light(eLightType::SPOT), m_SpotLight(nullptr)
+	:Light(eLightType::SPOT)
 {
-
+	m_SpotLight = new SpotLightData();
 }
 
 SpotLight::~SpotLight()
 {
-
+	delete m_SpotLight;
 }
 
 void SpotLight::Awake()
@@ -120,13 +120,14 @@ void SpotLight::SetLight(SpotLightData& lightData)
 }
 
 PointLight::PointLight()
-	:Light(eLightType::POINT), m_PointLight(nullptr)
+	:Light(eLightType::POINT)
 {
-
+	m_PointLight = new PointLightData();
 }
+
 PointLight::~PointLight()
 {
-
+	delete m_PointLight;
 }
 
 void PointLight::Awake()

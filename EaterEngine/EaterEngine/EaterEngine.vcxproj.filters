@@ -97,9 +97,6 @@
     <Filter Include="소스 파일\Component\Light">
       <UniqueIdentifier>{94a42d33-37f6-4e8c-bc61-b51a98b6214a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Component\Material">
-      <UniqueIdentifier>{28ae9443-7d0e-48a9-89f0-3585c441a9b2}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -189,9 +186,6 @@
     <ClInclude Include="Light.h">
       <Filter>소스 파일\Component\Light</Filter>
     </ClInclude>
-    <ClInclude Include="Material.h">
-      <Filter>소스 파일\Component\Material</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -262,9 +256,6 @@
     </ClCompile>
     <ClCompile Include="Light.cpp">
       <Filter>소스 파일\Component\Light</Filter>
-    </ClCompile>
-    <ClCompile Include="Material.cpp">
-      <Filter>소스 파일\Component\Material</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
