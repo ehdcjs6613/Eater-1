@@ -6,7 +6,7 @@
 #include "ResourceManagerBase.h"
 #include "ResourceFactory.h"
 #include "RenderManager.h"
-#include "RenderBase.h"
+#include "RenderPassBase.h"
 
 KHGraphic::KHGraphic()
 	:m_ResourceFactory(nullptr), m_RenderManager(nullptr)
@@ -37,6 +37,21 @@ void KHGraphic::Initialize(HWND hwnd, int screenWidth, int screenHeight)
 void KHGraphic::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 {
 	m_RenderManager->Render(meshList, global);
+}
+
+void KHGraphic::ShadowRender(std::queue<MeshData*>* meshList, GlobalData* global)
+{
+	m_RenderManager->ShadowRender(meshList, global);
+}
+
+void KHGraphic::SSAORender()
+{
+
+}
+
+void KHGraphic::UIRender(std::queue<MeshData*>* meshList, GlobalData* global)
+{
+
 }
 
 void KHGraphic::OnReSize(int screenWidth, int screenheight)

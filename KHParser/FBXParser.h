@@ -10,7 +10,6 @@ public:
 
 public:
 	void Initialize() override;
-	void SetTextureRoute(std::string texRoute) override;
 	void Release() override;
 	ParserData::Model* LoadModel(std::string fileName, bool scaling, bool onlyAni = false) override;
 
@@ -81,8 +80,6 @@ private:
 	ParserData::OneAnimation* m_OneAnimation;		// Object One Animation Data
 
 	bool m_OnlyAni = false;
-
-	std::string m_TextureRoute;
 };
 
 inline DirectX::SimpleMath::Vector2 FBXParser::ConvertVector2(fbxsdk::FbxVector2 v2)
@@ -151,7 +148,7 @@ inline std::string FBXParser::ConvertFileRoute(const char* fileName)
 	size_t indexDot = filePath.rfind(".");
 
 	// 파일 임시경로..
-	std::string fileRoute = m_TextureRoute;
+	std::string fileRoute = g_TextureRoute;
 
 	std::string fileame = filePath.substr(indexSlash, indexDot - indexSlash);
 	fileRoute += filePath.substr(indexSlash, filePath.size() - indexSlash);

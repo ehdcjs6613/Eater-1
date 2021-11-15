@@ -9,6 +9,8 @@
 #include <fbxsdk.h>
 #include "FBXParser.h"
 
+std::string ModelParser::g_TextureRoute;
+
 PARSER_DLL ModelParser* ModelParser::Create(Type type)
 {
 	ModelParser* newParser = nullptr;
@@ -28,4 +30,10 @@ PARSER_DLL ModelParser* ModelParser::Create(Type type)
 	}
 
 	return newParser;
+}
+
+PARSER_DLL void ModelParser::SetTextureRoute(std::string texRoute)
+{
+	// 기본 Texture 파일 루트 설정
+	g_TextureRoute = texRoute;
 }

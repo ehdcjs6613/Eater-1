@@ -20,13 +20,17 @@ public:
 
 	//현재카메라를 메인카메라로 변경시킨다
 	void ChoiceMainCam();
+	// Camera Position
+	DirectX::XMFLOAT3* GetPos();
 	//현재 카메라의 뷰행렬
 	DirectX::XMMATRIX* GetView();
 	//메인으로 지정한 카메라의 뷰행렬
 	static DirectX::XMMATRIX* GetMainView();
 	//프로젝션 행렬을 가져온다
 	static DirectX::XMMATRIX* GetProj();
-	
+	// Main Camera Position
+	static DirectX::XMFLOAT3* GetMainPos();
+
 	//OnResize 에서 실행될 함수
 	static void SetSize(int Change_Width, int Change_Height);
 	static void CreateProj(int winsizeX,int WinSizeY, bool ViewPoint = false);

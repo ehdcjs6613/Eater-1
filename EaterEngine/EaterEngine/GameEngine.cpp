@@ -68,6 +68,7 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 
 
 	//매니저들 초기화
+	BaseManager::Initialize();
 	mKeyManager->Initialize(mHwnd);
 	mDebugManager->Initialize(mKeyManager,mConsoleDebug);
 	mSceneManager->Initialize();
@@ -86,7 +87,7 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 	mGraphicManager->PushEngine<HsGraphic>("형선");
 	mGraphicManager->PushEngine<DH3DEngine>("동혁");
 	mGraphicManager->PushEngine<KHGraphic>("규황");
-	mGraphicManager->ChoiceEngine("형선");
+	mGraphicManager->ChoiceEngine("규황");
 	/////////////////////////////////////////////////////////////////
 
 
@@ -102,6 +103,7 @@ void GameEngine::Update()
 	mKeyManager->Update();
 	mSceneManager->Update();
 	mObjectManager->PlayUpdate();
+
 	mDebugManager->Update();
 	mTimeManager->Update();
 	mGraphicManager->Update();
@@ -131,6 +133,8 @@ void GameEngine::Finish()
 
 	mDebugManager->Delete();
 	mSceneManager->Delete();
+
+	BaseManager::Reset();
 }
 
 void GameEngine::OnResize(int Change_Width, int Change_Height)

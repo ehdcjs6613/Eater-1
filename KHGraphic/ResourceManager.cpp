@@ -8,6 +8,7 @@
 #include "ComputeRenderTarget.h"
 #include "ResourceManager.h"
 #include "EnumDefine.h"
+#include "VertexDefine.h"
 
 GraphicResourceManager::GraphicResourceManager()
 	:m_Device(nullptr), m_SwapChain(nullptr),m_BackBuffer(nullptr)
@@ -45,6 +46,9 @@ void GraphicResourceManager::OnResize(int width, int height)
 	D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc;
 	ZeroMemory(&dsvDesc, sizeof(dsvDesc));
 
+	// BackBuffer Reset..
+	m_BackBuffer->Reset();
+
 	// Swap Chain, Render Target View Resize
 	HR(m_SwapChain->ResizeBuffers(1, (UINT)width, (UINT)height, DXGI_FORMAT_R8G8B8A8_UNORM, 0));
 
@@ -55,7 +59,10 @@ void GraphicResourceManager::OnResize(int width, int height)
 	BasicRenderTarget* bRenderTarget = reinterpret_cast<BasicRenderTarget*>(m_BackBuffer);
 	HR(m_Device->CreateRenderTargetView(tex2D.Get(), nullptr, bRenderTarget->GetAddressRTV()));
 	HR(m_Device->CreateShaderResourceView(tex2D.Get(), nullptr, bRenderTarget->GetAddressSRV()));
-	
+
+	// Texture2D Reset..
+	RESET_COM(tex2D);
+
 	// RenderTarget Resize..
 	for (RenderTarget* rt : m_RenderTargetList)
 	{
@@ -65,13 +72,7 @@ void GraphicResourceManager::OnResize(int width, int height)
 		texDesc.Width = height;
 
 		// Texture2D Resize..
-		HR(m_Device->CreateTexture2D(&texDesc, 0, tex2D.ReleaseAndGetAddressOf()));
-
-		// RenderTargetView Description 추출..
-		rtvDesc = rt->GetRTVDesc();
-		
-		// RenderTargetView Resize..
-		HR(m_Device->CreateRenderTargetView(tex2D.Get(), &rtvDesc, rt->GetAddressRTV()));
+		HR(m_Device->CreateTexture2D(&texDesc, 0, tex2D.GetAddressOf()));
 
 		switch (rt->GetType())
 		{
@@ -79,8 +80,17 @@ void GraphicResourceManager::OnResize(int width, int height)
 		{
 			BasicRenderTarget* bRenderTarget = reinterpret_cast<BasicRenderTarget*>(rt);
 
+			// RenderTargetView Description 추출..
+			rtvDesc = rt->GetRTVDesc();
+
 			// ShaderResourceView Description 추출..
 			srvDesc = bRenderTarget->GetSRVDesc();
+
+			// Resource Reset..
+			bRenderTarget->Reset();
+
+			// RenderTargetView Resize..
+			HR(m_Device->CreateRenderTargetView(tex2D.Get(), &rtvDesc, rt->GetAddressRTV()));
 
 			// ShaderResourceView Resize..
 			HR(m_Device->CreateShaderResourceView(tex2D.Get(), &srvDesc, bRenderTarget->GetAddressSRV()));
@@ -89,9 +99,18 @@ void GraphicResourceManager::OnResize(int width, int height)
 		case eRenderTargetType::COMPUTE:
 		{
 			ComputeRenderTarget* cRenderTarget = reinterpret_cast<ComputeRenderTarget*>(rt);
-			
+
+			// RenderTargetView Description 추출..
+			rtvDesc = rt->GetRTVDesc();
+
 			// UnorderedAccessView Description 추출..
 			uavDesc = cRenderTarget->GetUAVDesc();
+
+			// Resource Reset..
+			cRenderTarget->Reset();
+
+			// RenderTargetView Resize..
+			HR(m_Device->CreateRenderTargetView(tex2D.Get(), &rtvDesc, rt->GetAddressRTV()));
 
 			// UnorderedAccessView Resize..
 			HR(m_Device->CreateUnorderedAccessView(tex2D.Get(), &uavDesc, cRenderTarget->GetAddressUAV()));
@@ -100,18 +119,31 @@ void GraphicResourceManager::OnResize(int width, int height)
 		default:
 			break;
 		}
+
+		// Texture2D Reset..
+		RESET_COM(tex2D);
 	}
 
 	// DepthStecilView Resize..
 	for (DepthStencilView* dsv : m_DepthStencilViewList)
 	{
+		// Texture2D Description 추출..
 		texDesc = dsv->GetTextureDesc();
 		texDesc.Width = width;
-		texDesc.Width = height;
-		HR(m_Device->CreateTexture2D(&texDesc, 0, tex2D.ReleaseAndGetAddressOf()));
+		texDesc.Height = height;
+		HR(m_Device->CreateTexture2D(&texDesc, 0, tex2D.GetAddressOf()));
 
+		// DepthStencilView Description 추출..
 		dsvDesc = dsv->GetDSVDesc();
+		
+		// Resource Reset..
+		dsv->Reset();
+
+		// DepthStencilView Resize..
 		HR(m_Device->CreateDepthStencilView(tex2D.Get(), &dsvDesc, dsv->GetAddressDSV()));
+
+		// Texture2D Reset..
+		RESET_COM(tex2D);
 	}
 
 	// ViewPort Resize..
@@ -119,25 +151,108 @@ void GraphicResourceManager::OnResize(int width, int height)
 	{
 		viewport->OnResize(width, height);
 	}
-
-	RESET_COM(tex2D);
 }
 
 void GraphicResourceManager::Release()
 {
+	RESET_COM(m_Device);
+	RESET_COM(m_SwapChain);
 
+	SAFE_DELETE(m_BackBuffer);
+
+	for (RenderTarget* rt : m_RenderTargetList)
+	{
+		SAFE_DELETE(rt);
+	}
+
+	for (DepthStencilView* dsv : m_DepthStencilViewList)
+	{
+		SAFE_DELETE(dsv);
+	}
+
+	for (ViewPort* viewport : m_ViewPortList)
+	{
+		SAFE_DELETE(viewport);
+	}
+
+	for (ComPtr<ID3D11DepthStencilState> dss : m_DepthStencilStateList)
+	{
+		RESET_COM(dss);
+	}
+
+	for (ComPtr<ID3D11RasterizerState> rs : m_RasterizerStateList)
+	{
+		RESET_COM(rs);
+	}
+
+	for (ComPtr<ID3D11BlendState> bs : m_BlendStateList)
+	{
+		RESET_COM(bs);
+	}
+
+	for (ComPtr<ID3D11SamplerState> ss : m_SamplerStateList)
+	{
+		RESET_COM(ss);
+	}
+
+	for (BufferData* buffer : m_BufferList)
+	{
+		SAFE_DELETE(buffer);
+	}
+	
+	m_RenderTargetList.clear();
+	m_DepthStencilViewList.clear();
+	m_ViewPortList.clear();
+	m_DepthStencilStateList.clear();
+	m_RasterizerStateList.clear();
+	m_BlendStateList.clear();
+	m_SamplerStateList.clear();
+	m_BufferList.clear();
 }
 
-RenderTarget* GraphicResourceManager::GetMainRenderTarget()
+BasicRenderTarget* GraphicResourceManager::GetMainRenderTarget()
 {
-	return m_BackBuffer;
+	return reinterpret_cast<BasicRenderTarget*>(m_BackBuffer);
 }
 
-RenderTarget* GraphicResourceManager::GetRenderTarget(eRenderTarget state)
+OriginalRenderTarget GraphicResourceManager::GetRenderTarget(eRenderTarget state)
 {
-	return m_RenderTargetList[(int)state];
+	return OriginalRenderTarget{ this, state };
 }
 
+BasicRenderTarget* GraphicResourceManager::GetBasicRenderTarget(eRenderTarget state)
+{
+	int index = (int)state;
+
+	if (index >= m_RenderTargetList.size()) return nullptr;
+
+	RenderTarget* renderTarget = m_RenderTargetList[index];
+
+	switch (renderTarget->GetType())
+	{
+	case eRenderTargetType::BASIC:
+		return reinterpret_cast<BasicRenderTarget*>(renderTarget);
+	default:
+		return nullptr;
+	}
+}
+
+ComputeRenderTarget* GraphicResourceManager::GetComputeRenderTarget(eRenderTarget state)
+{
+	int index = (int)state;
+
+	if (index >= m_RenderTargetList.size()) return nullptr;
+
+	RenderTarget* renderTarget = m_RenderTargetList[index];
+
+	switch (renderTarget->GetType())
+	{
+	case eRenderTargetType::COMPUTE:
+		return reinterpret_cast<ComputeRenderTarget*>(renderTarget);
+	default:
+		return nullptr;
+	}
+}
 DepthStencilView* GraphicResourceManager::GetDepthStencilView(eDepthStencilView state)
 {
 	return m_DepthStencilViewList[(int)state];
@@ -161,4 +276,9 @@ ID3D11DepthStencilState* GraphicResourceManager::GetDepthStencilState(eDepthSten
 D3D11_VIEWPORT* GraphicResourceManager::GetViewPort(eViewPort state)
 {
 	return m_ViewPortList[(int)state]->GetViewPort();
+}
+
+BufferData* GraphicResourceManager::GetBuffer(eBuffer state)
+{
+	return m_BufferList[(int)state];
 }

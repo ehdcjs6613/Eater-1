@@ -29,12 +29,15 @@ public:
 	// Create 함수를 통해 ModelParser 생성..
 	static PARSER_DLL ModelParser* Create(Type type);
 
+	// 기본 Texture 경로 설정 함수..
+	static PARSER_DLL void SetTextureRoute(std::string texRoute);
+
+protected:
+	static std::string g_TextureRoute;
+
 public:
 	// 기본적인 초기화 함수..
 	virtual PARSER_DLL void Initialize() abstract;
-
-	// 기본 Texture 경로 설정 함수..
-	virtual PARSER_DLL void SetTextureRoute(std::string texRoute) abstract;
 
 	// Model Data 해제 함수..
 	virtual PARSER_DLL void Release() abstract;

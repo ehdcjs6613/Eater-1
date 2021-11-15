@@ -12,69 +12,87 @@
 // LEHIDE
 //#include <xnamath.h>
 #include <DirectXMath.h>
-using namespace DirectX;
+#include "SimpleMath.h"
 
 // Note: Make sure structure alignment agrees with HLSL structure padding rules. 
 //   Elements are packed into 4D vectors with the restriction that an element
 //   cannot straddle a 4D vector boundary.
 
-struct DirectionalLight
+struct DirectionalLightData
 {
-	DirectionalLight() { ZeroMemory(this, sizeof(this)); }
+	DirectionalLightData() = default;
 
-	XMFLOAT4 Ambient;
-	XMFLOAT4 Diffuse;
-	XMFLOAT4 Specular;
-	XMFLOAT3 Direction;
+	DirectX::SimpleMath::Vector4 Ambient;
+	DirectX::SimpleMath::Vector4 Diffuse;
+	DirectX::SimpleMath::Vector4 Specular;
+	DirectX::SimpleMath::Vector3 Direction;
 	float Pad; // Pad the last float so we can set an array of lights if we wanted.
 };
 
-struct PointLight
+struct PointLightData
 {
-	PointLight() { ZeroMemory(this, sizeof(this)); }
-
-	XMFLOAT4 Ambient;
-	XMFLOAT4 Diffuse;
-	XMFLOAT4 Specular;
+	PointLightData() = default;
+	
+	DirectX::SimpleMath::Vector4 Ambient;
+	DirectX::SimpleMath::Vector4 Diffuse;
+	DirectX::SimpleMath::Vector4 Specular;
 
 	// Packed into 4D vector: (Position, Range)
-	XMFLOAT3 Position;
+	DirectX::SimpleMath::Vector3 Position;
 	float Range;
 
 	// Packed into 4D vector: (A0, A1, A2, Pad)
-	XMFLOAT3 Att;
+	DirectX::SimpleMath::Vector3 Att;
 	float Pad; // Pad the last float so we can set an array of lights if we wanted.
 };
 
-struct SpotLight
+struct SpotLightData
 {
-	SpotLight() { ZeroMemory(this, sizeof(this)); }
-
-	XMFLOAT4 Ambient;
-	XMFLOAT4 Diffuse;
-	XMFLOAT4 Specular;
+	SpotLightData() = default;
+	
+	DirectX::SimpleMath::Vector4 Ambient;
+	DirectX::SimpleMath::Vector4 Diffuse;
+	DirectX::SimpleMath::Vector4 Specular;
 
 	// Packed into 4D vector: (Position, Range)
-	XMFLOAT3 Position;
+	DirectX::SimpleMath::Vector3 Position;
 	float Range;
 
 	// Packed into 4D vector: (Direction, Spot)
-	XMFLOAT3 Direction;
+	DirectX::SimpleMath::Vector3 Direction;
 	float Spot;
 
 	// Packed into 4D vector: (Att, Pad)
-	XMFLOAT3 Att;
+	DirectX::SimpleMath::Vector3 Att;
 	float Pad; // Pad the last float so we can set an array of lights if we wanted.
 };
 
-struct Material
+struct MaterialData
 {
-	Material() { ZeroMemory(this, sizeof(this)); }
+	MaterialData() = default;
 
-	XMFLOAT4 Ambient;
-	XMFLOAT4 Diffuse;
-	XMFLOAT4 Specular; // w = SpecPower
-	XMFLOAT4 Reflect;
+	DirectX::SimpleMath::Vector4 Ambient;
+	DirectX::SimpleMath::Vector4 Diffuse;
+	DirectX::SimpleMath::Vector4 Specular; // w = SpecPower
+	DirectX::SimpleMath::Vector4 Reflect;
+
+	bool operator==(MaterialData& mat)
+	{
+		if (Ambient == mat.Ambient && Diffuse == mat.Diffuse && Specular == mat.Specular && Reflect == mat.Reflect)
+			return true;
+		else
+			return false;
+	}
+};
+
+struct LightData
+{
+	DirectionalLightData DirLights[3];
+	PointLightData PointLights[5];
+	SpotLightData SpotLights[5];
+
+	UINT gPointLightCount;
+	UINT gSpotLightCount;
 };
 
 #endif // LIGHTHELPER_H

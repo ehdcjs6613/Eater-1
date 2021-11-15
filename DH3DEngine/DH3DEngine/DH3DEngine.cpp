@@ -343,7 +343,7 @@ void DH3DEngine::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 		World_Inverse = World_Mat.Invert();
 
 		// Set per frame constants.
-		DirectionalLight _temp_Dir;
+		DirectionalLightData _temp_Dir;
 		DirectX::SimpleMath::Vector4 _Ambient = DirectX::SimpleMath::Vector4(0.2f, 0.2f, 0.2f, 1.0f);
 		DirectX::SimpleMath::Vector4 _Diffuse = DirectX::SimpleMath::Vector4(0.5f, 0.5f, 0.5f, 1.0f);
 		DirectX::SimpleMath::Vector4 _Specular = DirectX::SimpleMath::Vector4(0.5f, 0.5f, 0.5f, 1.0f);
@@ -353,7 +353,7 @@ void DH3DEngine::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 		_temp_Dir.Specular = _Specular;
 		_temp_Dir.Direction = _Direction;
 
-		Material _Temp_Mat;
+		MaterialData _Temp_Mat;
 		DirectX::SimpleMath::Vector4 _Ambient1 = DirectX::SimpleMath::Vector4(0.2f, 0.2f, 0.2f, 1.0f);
 		DirectX::SimpleMath::Vector4 _Diffuse1 = DirectX::SimpleMath::Vector4(0.5f, 0.5f, 0.5f, 1.0f);
 		DirectX::SimpleMath::Vector4 _Specular1 = DirectX::SimpleMath::Vector4(0.5f, 0.5f, 0.5f, 1.0f);

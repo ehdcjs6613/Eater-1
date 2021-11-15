@@ -17,7 +17,6 @@ public:
 
 public:
 	void Initialize() override;
-	void SetTextureRoute(std::string texRoute) override;
 	void Release() override;
 	ParserData::Model* LoadModel(std::string fileName) override;
 

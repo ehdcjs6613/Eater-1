@@ -7,8 +7,10 @@ public:
 	~ComputeRenderTarget();
 
 public:
+	void Reset() override;
+
+public:
 	ID3D11Texture2D* GetTexture2D() override;
-	ID3D11Texture2D** GetAddressTexture2D() override;
 	D3D11_TEXTURE2D_DESC GetTextureDesc() override;
 
 public:

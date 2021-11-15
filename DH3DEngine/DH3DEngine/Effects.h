@@ -38,11 +38,11 @@ public:
 	void SetWorld(CXMMATRIX M)                          { World->SetMatrix(reinterpret_cast<const float*>(&M)); }
 	void SetWorldInvTranspose(CXMMATRIX M)              { WorldInvTranspose->SetMatrix(reinterpret_cast<const float*>(&M)); }
 	void SetEyePosW(const XMFLOAT3& v)                  { EyePosW->SetRawValue(&v, 0, sizeof(XMFLOAT3)); }
-	void SetDirLights(DirectionalLight lights)		
+	void SetDirLights(DirectionalLightData lights)		
 	{ 
-		HRESULT hr = DirLights->SetRawValue(&lights, 0, sizeof(DirectionalLight));
+		HRESULT hr = DirLights->SetRawValue(&lights, 0, sizeof(DirectionalLightData));
 	}
-	void SetMaterial(const Material& mat)               { Mat->SetRawValue(&mat, 0, sizeof(Material)); }
+	void SetMaterial(const MaterialData& mat)               { Mat->SetRawValue(&mat, 0, sizeof(MaterialData)); }
 	void SetTexTransform(CXMMATRIX M) { TexTransform->SetMatrix(reinterpret_cast<const float*>(&M)); }
 	void SetDiffuseMap(ID3D11ShaderResourceView* tex) { DiffuseMap->SetResource(tex); }
 
