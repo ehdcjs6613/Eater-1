@@ -42,7 +42,7 @@ CONSTANT_BUFFER(cbLights)
 
 CONSTANT_BUFFER(cbMaterial)
 {
-	MaterialData gMaterials;
+	MaterialData gMaterials[5];
 };
 
 CONSTANT_BUFFER(cbCamera)

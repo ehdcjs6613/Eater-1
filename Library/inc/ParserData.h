@@ -96,10 +96,11 @@ namespace ParserData
 		int	m_MaterialNumber;
 		std::string	m_MaterialName;
 
-		DirectX::SimpleMath::Vector3 m_Material_Ambient;
-		DirectX::SimpleMath::Vector3 m_Material_Diffuse;
-		DirectX::SimpleMath::Vector3 m_Material_Specular;
-		DirectX::SimpleMath::Vector3 m_Material_Emissive;
+		DirectX::SimpleMath::Vector4 m_Material_Ambient;
+		DirectX::SimpleMath::Vector4 m_Material_Diffuse;
+		DirectX::SimpleMath::Vector4 m_Material_Specular;
+		DirectX::SimpleMath::Vector4 m_Material_Emissive;
+
 		float m_Material_Shininess;
 		float m_Material_Transparency;
 		float m_Material_Reflectivity;

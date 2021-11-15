@@ -37,7 +37,7 @@ public:
 	DirectX::XMFLOAT3* mPos;
 
 	LightData* mLightData;
-	MaterialData* mMatData;
+	MaterialData mMatData[5];
 };
 
 /// <summary>

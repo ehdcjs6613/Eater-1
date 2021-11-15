@@ -6,10 +6,13 @@
 #include "EngineData.h"
 #include "Animation.h"
 #include "ObjectManager.h"
-
+#include "Material.h"
+#include "MaterialManager.h"
 
 
 ObjectManager* MeshFilter::OBJ_Manager = nullptr;
+MaterialManager* MeshFilter::MAT_Manager = nullptr;
+
 MeshFilter::MeshFilter()
 {
 	MeshName = "";
@@ -45,9 +48,10 @@ void MeshFilter::Awake()
 	}
 }
 
-void MeshFilter::SetObjMananager(ObjectManager* obj)
+void MeshFilter::SetManager(ObjectManager* obj, MaterialManager* mat)
 {
 	OBJ_Manager = obj;
+	MAT_Manager = mat;
 }
 
 void MeshFilter::SetMeshName(std::string mMeshName)
@@ -101,6 +105,24 @@ void MeshFilter::CreateChild_Mesh(LoadMeshData* data, Transform* parent, ModelDa
 		OBJ->OneMeshData->ObjType = OBJECT_TYPE::Base;
 	}
 	
+	// Material Data..
+	if (data->Material)
+	{
+		Material* mat = OBJ->AddComponent<Material>();
+
+		// 해당 Material Data..
+		MaterialData matData;
+		matData.Ambient = data->Material->m_Material_Ambient;
+		matData.Diffuse = data->Material->m_Material_Diffuse;
+		matData.Specular = data->Material->m_Material_Specular;
+
+		// 해당 Material 삽입..
+		mat->SetMaterialData(matData);
+
+		// Material 등록..
+		MAT_Manager->AddMaterial(mat);
+	}
+
 	//데이터를 넘겨준다 
 	Filter->PushModelData(data);
 	Tr->Load_Local = *data->LocalTM;

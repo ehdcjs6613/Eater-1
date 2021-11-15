@@ -8,6 +8,8 @@
 #include "DebugManager.h"
 #include "GraphicEngineManager.h"
 #include "TimeManager.h"
+#include "MaterialManager.h"
+#include "LightManager.h"
 
 #include "ParserData.h"
 #include "EngineData.h"
@@ -19,6 +21,7 @@
 #include "Camera.h"
 #include "MeshFilter.h"
 #include "SkinningFilter.h"
+#include "Light.h"
 
 //테스트용
 #include "HsGraphic.h"
@@ -54,13 +57,15 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 	mHwnd = Hwnd;
 
 	//매니저들 생성
-	mKeyManager		= new KeyinputManager();
-	mLoadManager	= new LoadManager();
-	mObjectManager	= new ObjectManager();
-	mSceneManager	= new SceneManager();
-	mDebugManager	= new DebugManager();
-	mGraphicManager = new GraphicEngineManager();
-	mTimeManager	= new TimeManager();
+	mKeyManager			= new KeyinputManager();
+	mLoadManager		= new LoadManager();
+	mObjectManager		= new ObjectManager();
+	mSceneManager		= new SceneManager();
+	mDebugManager		= new DebugManager();
+	mGraphicManager		= new GraphicEngineManager();
+	mTimeManager		= new TimeManager();
+	mMaterialManager	= new MaterialManager();
+	mLightManager		= new LightManager();
 
 	//그래픽 엔진 생성
 	//pTest_Engine = new DH3DEngine();
@@ -75,8 +80,11 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 	mObjectManager->Initialize(mHwnd);
 	mLoadManager->Initialize(mGraphicManager);
 	mTimeManager->Initialize();
+	mLightManager->Initialize();
 
-	MeshFilter::SetObjMananager(mObjectManager);
+	MeshFilter::SetManager(mObjectManager, mMaterialManager);
+	Light::SetManager(mLightManager);
+
 	//처음시작하기전 엔진의 구조간략설명
 
 	/// <summary>

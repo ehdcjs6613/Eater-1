@@ -17,7 +17,7 @@ cbuffer cbCamera : register(b1)
 
 cbuffer cbMaterial : register(b2)
 {
-    Material gMaterials;
+    Material gMaterials[5];
 }
 
 Texture2D gDiffuseMap : register(t0);
@@ -61,9 +61,9 @@ float4 main(PixelIn pin) : SV_Target0
     
     // Directional Light
 	[unroll]
-    for (uint i = 0; i < 3; ++i)
+    for (uint i = 0; i < 1; ++i)
     {
-        ComputeDirectionalLight(gMaterials, gDirLights[i], bumpedNormalW, ViewDirection,
+        ComputeDirectionalLight(gMaterials[0], gDirLights[i], bumpedNormalW, -ViewDirection,
 				A, D, S);
     
         ambient += A;
@@ -77,7 +77,7 @@ float4 main(PixelIn pin) : SV_Target0
 			[unroll]
         for (uint i = 0; i < gPointLightCount; ++i)
         {
-            ComputePointLight(gMaterials, gPointLights[i], pin.PosW.xyz, bumpedNormalW, ViewDirection,
+            ComputePointLight(gMaterials[0], gPointLights[i], pin.PosW.xyz, bumpedNormalW, ViewDirection,
 					A, D, S);
     
             ambient += A;
@@ -92,7 +92,7 @@ float4 main(PixelIn pin) : SV_Target0
 			[unroll]
         for (uint i = 0; i < gSpotLightCount; ++i)
         {
-            ComputeSpotLight(gMaterials, gSpotLights[i], pin.PosW.xyz, bumpedNormalW, ViewDirection,
+            ComputeSpotLight(gMaterials[0], gSpotLights[i], pin.PosW.xyz, bumpedNormalW, ViewDirection,
 					A, D, S);
     
             ambient += A;
@@ -105,7 +105,7 @@ float4 main(PixelIn pin) : SV_Target0
     litColor = albedo * (ambient + diffuse) + spec;
     
     // Common to take alpha from diffuse material and texture.
-    litColor.a = gMaterials.Diffuse.a * albedo.a;
+    litColor.a = gMaterials[0].Diffuse.a * albedo.a;
     
     
     return litColor;

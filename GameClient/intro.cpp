@@ -7,6 +7,7 @@
 #include "AI.h"
 #include "KeyInput.h"
 #include "Camera.h"
+#include "Light.h"
 
 void intro::Awake()
 {
@@ -30,6 +31,9 @@ void intro::Awake()
 	testobj->AddComponent<Keyinput>();
 	testobj->AddComponent<Camera>();
 
+	/// Light
+	testobj = Instance();
+	testobj->AddComponent<DirectionLight>();
 
 	testobj = Instance("obj");
 	testobj->AddComponent<MeshFilter>()->SetMeshName("Player");

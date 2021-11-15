@@ -20,6 +20,7 @@ class ModelData;
 class LoadMeshData;
 class Transform;
 class ObjectManager;
+class MaterialManager;
 
 class  MeshFilter : public Component
 {
@@ -33,7 +34,7 @@ public:
 	//메쉬의 이름을 넣으면 데이터 로드
 	EATER_ENGINEDLL void SetMeshName(std::string mMeshName);
 
-	static void SetObjMananager(ObjectManager* obj);
+	static void SetManager(ObjectManager* obj, MaterialManager* mat);
 private:
 	//Transform을 연결한다
 	void LinkHierarchy(Transform* my,Transform*parent);
@@ -48,6 +49,7 @@ private:
 	void PushModelData(LoadMeshData* mModel);
 
 	static ObjectManager* OBJ_Manager;
+	static MaterialManager* MAT_Manager;
 private:
 	bool isLoad;			//매쉬 로드여부
 	std::string MeshName;	//로드한 매쉬 이름

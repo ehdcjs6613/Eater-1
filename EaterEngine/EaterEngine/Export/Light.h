@@ -14,18 +14,25 @@ enum class eLightType
 /// Light Base Class
 /// </summary>
 
+class LightManager;
 class Transform;
 
 class Light : public Component
 {
 public:
-	Light(eLightType lightType) : m_LightType(lightType), m_Transform(nullptr) {}
+	Light(eLightType lightType);
 	virtual ~Light() = default;
+
+public:
+	static void SetManager(LightManager* light);
+	static void Reset();
 
 public:
 	eLightType GetType() { return m_LightType; }
 
 protected:
+	static LightManager* g_LightManager;
+
 	Transform* m_Transform;
 
 	eLightType m_LightType;
@@ -38,12 +45,11 @@ protected:
 class DirectionLight : public Light
 {
 public:
-	DirectionLight();
+	EATER_ENGINEDLL DirectionLight();
 	~DirectionLight();
 
 public:
 	void Awake() override;
-	void Update() override;
 
 public:
 	void SetAmbient(float r, float g, float b, float a = 1.0f);
@@ -53,6 +59,8 @@ public:
 
 public:
 	void SetLight(DirectionalLightData& lightData);
+	
+	DirectionalLightData* GetLightData();
 
 private:
 	DirectionalLightData* m_DirLight;
@@ -65,7 +73,7 @@ private:
 class SpotLight : public Light
 {
 public:
-	SpotLight();
+	EATER_ENGINEDLL SpotLight();
 	~SpotLight();
 
 public:
@@ -87,6 +95,8 @@ public:
 public:
 	void SetLight(SpotLightData& lightData);
 
+	SpotLightData* GetLightData();
+
 private:
 	SpotLightData* m_SpotLight;
 };
@@ -98,7 +108,7 @@ private:
 class PointLight : public Light
 {
 public:
-	PointLight();
+	EATER_ENGINEDLL PointLight();
 	~PointLight();
 
 public:
@@ -117,6 +127,8 @@ public:
 	
 public:
 	void SetLight(PointLightData& lightData);
+
+	PointLightData* GetLightData();
 
 private:
 	PointLightData* m_PointLight;

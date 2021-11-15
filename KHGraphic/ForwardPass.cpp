@@ -73,6 +73,7 @@ void ForwardPass::BeginRender()
 {
 	g_Context->OMSetRenderTargets(1, &m_BackBufferRTV, m_DepthStencilView);
 	g_Context->OMSetDepthStencilState(m_DepthStencilState, 0);
+	g_Context->OMSetBlendState(m_BlendState, 0, 0xffffffff);
 	g_Context->ClearRenderTargetView(m_BackBufferRTV, reinterpret_cast<const float*>(&DXColors::DeepDarkGray));
 	g_Context->ClearDepthStencilView(m_DepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	g_Context->RSSetViewports(1, m_ScreenViewport);
@@ -85,7 +86,6 @@ void ForwardPass::Update(MeshData* mesh, GlobalData* global)
 	DirectX::XMMATRIX* view = global->mViewMX;
 	DirectX::XMMATRIX* proj = global->mProj;
 	DirectX::XMFLOAT3* eye = global->mPos;
-	MaterialData* matData = global->mMatData;
 	LightData* lightData = global->mLightData;
 
 	ID3D11ShaderResourceView* diffuse_srv = reinterpret_cast<ID3D11ShaderResourceView*>(mesh->Diffuse->TextureBufferPointer);
@@ -105,21 +105,26 @@ void ForwardPass::Update(MeshData* mesh, GlobalData* global)
 		cbLights lightBuf;
 		lightBuf.gPointLightCount = lightData->gPointLightCount;
 		lightBuf.gSpotLightCount = lightData->gSpotLightCount;
-		for (int i = 0; i < 5; i++)
+
+		lightBuf.gDirLights[0] = *lightData->DirLights[0];
+
+		for (int p = 0; p < lightBuf.gPointLightCount; p++)
 		{
-			if (i < 3)
-			{
-				lightBuf.gDirLights[i] = lightData->DirLights[i];
-			}
-			lightBuf.gPointLights[i] = lightData->PointLights[i];
-			lightBuf.gSpotLights[i] = lightData->SpotLights[i];
+			lightBuf.gPointLights[p] = *lightData->PointLights[p];
+		}
+		for (int s = 0; s < lightBuf.gSpotLightCount; s++)
+		{
+			lightBuf.gSpotLights[s] = *lightData->SpotLights[s];
 		}
 
 		cbCamera cameraBuf;
 		cameraBuf.gEyePosW = *eye;
 
 		cbMaterial matBuf;
-		matBuf.gMaterials = *matData;
+		for (int i = 0; i < 5; i++)
+		{
+			matBuf.gMaterials[i] = global->mMatData[i];
+		}
 
 		m_ForwardPS->SetConstantBuffer(lightBuf);
 		m_ForwardPS->SetConstantBuffer(cameraBuf);
@@ -151,21 +156,26 @@ void ForwardPass::Update(MeshData* mesh, GlobalData* global)
 		cbLights lightBuf;
 		lightBuf.gPointLightCount = lightData->gPointLightCount;
 		lightBuf.gSpotLightCount = lightData->gSpotLightCount;
-		for (int i = 0; i < 5; i++)
+
+		lightBuf.gDirLights[0] = *lightData->DirLights[0];
+
+		for (int p = 0; p < lightBuf.gPointLightCount; p++)
 		{
-			if (i < 3)
-			{
-				lightBuf.gDirLights[i] = lightData->DirLights[i];
-			}
-			lightBuf.gPointLights[i] = lightData->PointLights[i];
-			lightBuf.gSpotLights[i] = lightData->SpotLights[i];
+			lightBuf.gPointLights[p] = *lightData->PointLights[p];
+		}
+		for (int s = 0; s < lightBuf.gSpotLightCount; s++)
+		{
+			lightBuf.gSpotLights[s] = *lightData->SpotLights[s];
 		}
 
 		cbCamera cameraBuf;
 		cameraBuf.gEyePosW = *eye;
 		
 		cbMaterial matBuf;
-		matBuf.gMaterials = *matData;
+		for (int i = 0; i < 5; i++)
+		{
+			matBuf.gMaterials[i] = global->mMatData[i];
+		}
 
 		m_ForwardPS->SetConstantBuffer(lightBuf);
 		m_ForwardPS->SetConstantBuffer(cameraBuf);

@@ -3,6 +3,7 @@
 #include "BaseManager.h"
 #include "LightHelper.h"
 
+class Material;
 class MaterialManager : public BaseManager
 {
 public:
@@ -10,14 +11,14 @@ public:
 	~MaterialManager();
 
 public:
-	void Update();
+	void Initialize();
 	void Release();
 
-	void AddMaterial(MaterialData* mat);
+	void AddMaterial(Material* mat);
 
 private:
-	std::unordered_map<int, MaterialData*> m_MaterialList;
+	std::unordered_map<int, Material*> m_MaterialList;
 	
-	UINT m_CountID;
+	UINT m_MaterialCount;
 };
 
