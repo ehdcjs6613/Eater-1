@@ -26,6 +26,7 @@ BEGIN_MESSAGE_MAP(DockableView, CDockablePane)
 	ON_WM_CLOSE()
 	ON_WM_SIZE()
 	ON_WM_CREATE()
+	ON_WM_GETMINMAXINFO()
 END_MESSAGE_MAP()
 
 
@@ -106,4 +107,20 @@ EWGameView* DockableView::GetGameView()
 DockableView* DockableView::GetDockableView()
 {
 	return this;
+}
+
+
+void DockableView::OnGetMinMaxInfo(MINMAXINFO* lpMMI)
+{
+	// 현재 도킹 렌더 뷰의 최소최대 크기를 지정한다.
+
+	//min
+	lpMMI->ptMinTrackSize.x = 800;     // 최소값
+	lpMMI->ptMinTrackSize.y = 600;
+	//max
+	lpMMI->ptMaxTrackSize.x = 1920;   // 최대값
+	lpMMI->ptMaxTrackSize.y = 1080;
+
+
+	CDockablePane::OnGetMinMaxInfo(lpMMI);
 }

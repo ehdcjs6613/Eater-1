@@ -27,6 +27,7 @@ public:
 public:
 	EWGameView* GetGameView();
 	DockableView* GetDockableView();
+	afx_msg void OnGetMinMaxInfo(MINMAXINFO* lpMMI);
 };
 
 

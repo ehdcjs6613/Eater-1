@@ -151,8 +151,10 @@ void CMainFrame::OnDockTable()
 	else if ( nullptr == m_pDockableView && m_Num == 1)
 	{
 		m_pDockableView = new DockableView();
-		m_pDockableView->Create(_T("DDDDD"), this, CRect(0, 0, 1920, 1080), TRUE, ID_FILE_NEW,
-			WS_SYSMENU | WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_RIGHT | CBRS_FLOAT_MULTI);
+		m_pDockableView->Create(_T("DDDDD"), this, CRect(0, 0, 1920, 1080), 
+			TRUE, ID_FILE_NEW,
+			WS_SYSMENU | WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS 
+			| WS_CLIPCHILDREN | CBRS_LEFT | CBRS_FLOAT_MULTI);
 
 		m_pDockableView->m_pXGameView->m_hWnd;// = m_pDockableView->m_hWnd;//this->GetSafeHwnd();
 		m_pDockableView->EnableDocking(CBRS_ALIGN_ANY);
