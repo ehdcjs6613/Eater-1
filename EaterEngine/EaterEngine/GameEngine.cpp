@@ -8,6 +8,8 @@
 #include "DebugManager.h"
 #include "GraphicEngineManager.h"
 #include "TimeManager.h"
+#include "MaterialManager.h"
+#include "LightManager.h"
 
 #include "ParserData.h"
 #include "EngineData.h"
@@ -19,6 +21,7 @@
 #include "Camera.h"
 #include "MeshFilter.h"
 #include "SkinningFilter.h"
+#include "Light.h"
 
 //테스트용
 #include "HsGraphic.h"
@@ -54,13 +57,15 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 	mHwnd = Hwnd;
 
 	//매니저들 생성
-	mKeyManager		= new KeyinputManager();
-	mLoadManager	= new LoadManager();
-	mObjectManager	= new ObjectManager();
-	mSceneManager	= new SceneManager();
-	mDebugManager	= new DebugManager();
-	mGraphicManager = new GraphicEngineManager();
-	mTimeManager	= new TimeManager();
+	mKeyManager			= new KeyinputManager();
+	mLoadManager		= new LoadManager();
+	mObjectManager		= new ObjectManager();
+	mSceneManager		= new SceneManager();
+	mDebugManager		= new DebugManager();
+	mGraphicManager		= new GraphicEngineManager();
+	mTimeManager		= new TimeManager();
+	mMaterialManager	= new MaterialManager();
+	mLightManager		= new LightManager();
 
 	//그래픽 엔진 생성
 	//pTest_Engine = new DH3DEngine();
@@ -75,9 +80,13 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 	mObjectManager->Initialize(mHwnd);
 	mLoadManager->Initialize(mGraphicManager);
 	mTimeManager->Initialize();
+	mLightManager->Initialize();
+
+	MeshFilter::SetManager(mObjectManager, mMaterialManager);
+	Light::SetManager(mLightManager);
 
 	mGraphicManager->Initialize(Hwnd, WinSizeWidth, WinSizeHeight, mObjectManager);
-	MeshFilter::SetObjMananager(mObjectManager);
+
 	//처음시작하기전 엔진의 구조간략설명
 
 	/// <summary>
@@ -85,10 +94,17 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 	/// 다만 그래픽엔진의 순수가상함수로된건 무조건다만들어놔야함
 	/// </summary>
 	/////////////////////////////////////////////////////////////////
+
+	//mGraphicManager->PushEngine<HsGraphic>("형선");
+	//mGraphicManager->PushEngine<DH3DEngine>("동혁");
+	//mGraphicManager->PushEngine<KHGraphic>("규황");
+	//mGraphicManager->ChoiceEngine("형선");
+
 	//윈도를 가로 2 	세로3번으로 분할시키겠다 (총 윈도우의 수 = 2 * 3)
 	mGraphicManager->SplitWindow(2, 2);
 	//엔진을 지정된 넘버로 넣는다
 	mGraphicManager->PushEngine(2, new HsGraphic(), "형선");
+
 	/////////////////////////////////////////////////////////////////
 }
 
@@ -272,4 +288,10 @@ float GameEngine::GetMousePosY()
 float GameEngine::GetdeltaTime()
 {
 	return mTimeManager->DeltaTime();
+}
+
+void GameEngine::CreateObject()
+{
+	GameObject* light = Instance();
+	light->AddComponent<DirectionLight>();
 }

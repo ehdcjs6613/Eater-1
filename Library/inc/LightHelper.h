@@ -76,7 +76,7 @@ struct MaterialData
 	DirectX::SimpleMath::Vector4 Specular; // w = SpecPower
 	DirectX::SimpleMath::Vector4 Reflect;
 
-	bool operator==(MaterialData& mat)
+	bool operator==(MaterialData mat)
 	{
 		if (Ambient == mat.Ambient && Diffuse == mat.Diffuse && Specular == mat.Specular && Reflect == mat.Reflect)
 			return true;
@@ -87,10 +87,11 @@ struct MaterialData
 
 struct LightData
 {
-	DirectionalLightData DirLights[3];
-	PointLightData PointLights[5];
-	SpotLightData SpotLights[5];
+	DirectionalLightData* DirLights[3];
+	PointLightData* PointLights[5];
+	SpotLightData* SpotLights[5];
 
+	UINT gDirLightCount;
 	UINT gPointLightCount;
 	UINT gSpotLightCount;
 };

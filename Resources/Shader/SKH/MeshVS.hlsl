@@ -1,7 +1,8 @@
 cbuffer cbPerObject : register(b0)
 {
     float4x4 gWorld : packoffset(c0);
-    float4x4 gTexTransform : packoffset(c4);
+    float4x4 gWorldViewProj : packoffset(c4);
+    float4x4 gTexTransform : packoffset(c8);
 };
 
 struct VertexIn
@@ -26,7 +27,7 @@ VertexOut main(VertexIn vin)
     VertexOut vout;
 
 	// 세계 공간 변환
-    vout.PosW = mul(gWorld, float4(vin.PosL, 1.0f));
+    vout.PosW = mul(gWorldViewProj, float4(vin.PosL, 1.0f));
 
     vout.NormalW = mul((float3x3)gWorld, vin.NormalL);
     vout.NormalW = normalize(vout.NormalW);

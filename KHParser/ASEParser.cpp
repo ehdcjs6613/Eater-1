@@ -500,13 +500,31 @@ void ASEParser::DataParsing()
 		case TOKENR_MATERIAL_CLASS:
 			break;
 		case TOKENR_MATERIAL_AMBIENT:
-			m_MaterialData->m_Material_Ambient = Parsing_ChangeNumberVector3();
+		{
+			Vector3 ambient = Parsing_ChangeNumberVector3();
+			m_MaterialData->m_Material_Ambient.x = ambient.x;
+			m_MaterialData->m_Material_Ambient.y = ambient.y;
+			m_MaterialData->m_Material_Ambient.z = ambient.z;
+			m_MaterialData->m_Material_Ambient.w = 1.0f;
+		}
 			break;
 		case TOKENR_MATERIAL_DIFFUSE:
-			m_MaterialData->m_Material_Diffuse = Parsing_ChangeNumberVector3();
+		{
+			Vector3 diffuse = Parsing_ChangeNumberVector3();
+			m_MaterialData->m_Material_Diffuse.x = diffuse.x;
+			m_MaterialData->m_Material_Diffuse.y = diffuse.y;
+			m_MaterialData->m_Material_Diffuse.z = diffuse.z;
+			m_MaterialData->m_Material_Diffuse.w = 1.0f;
+		}
 			break;
 		case TOKENR_MATERIAL_SPECULAR:
-			m_MaterialData->m_Material_Specular = Parsing_ChangeNumberVector3();
+		{
+			Vector3 specular = Parsing_ChangeNumberVector3();
+			m_MaterialData->m_Material_Specular.x = specular.x;
+			m_MaterialData->m_Material_Specular.y = specular.y;
+			m_MaterialData->m_Material_Specular.z = specular.z;
+			m_MaterialData->m_Material_Specular.w = 1.0f;
+		}
 			break;
 		case TOKENR_MATERIAL_SHINE:
 			break;

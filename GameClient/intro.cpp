@@ -7,6 +7,7 @@
 #include "AI.h"
 #include "KeyInput.h"
 #include "Camera.h"
+#include "Light.h"
 
 void intro::Awake()
 {
@@ -29,7 +30,6 @@ void intro::Awake()
 	testobj = Instance();
 	testobj->AddComponent<Keyinput>();
 	testobj->AddComponent<Camera>();
-
 
 	testobj = Instance("obj");
 	testobj->AddComponent<MeshFilter>()->SetMeshName("Table");

@@ -16,6 +16,8 @@ class SceneManager;
 class KeyinputManager;
 class GraphicEngineManager;
 class TimeManager;
+class MaterialManager;
+class LightManager;
 
 class Scene;
 //게임 오브젝트
@@ -62,6 +64,9 @@ public:
 	float GetdeltaTime();
 
 private:
+	void CreateObject();			//기본 생성 오브젝트
+
+private:
 	///각종 매니저들
 	ObjectManager*			mObjectManager;		//오브젝트 관리 매니저
 	DebugManager*			mDebugManager;		//디버깅매니저
@@ -70,6 +75,8 @@ private:
 	KeyinputManager*		mKeyManager;		//키인풋 관련 매니저
 	GraphicEngineManager*	mGraphicManager;	//그래픽엔진 관리 매니저
 	TimeManager*			mTimeManager;		//시간 관련 타임매니저
+	MaterialManager*		mMaterialManager;	// 메테리얼 관리 매니저
+	LightManager*			mLightManager;		// 라이트 관리 매니저
 private:
 	///클라쪽에서 받아야 하는 데이터
 	HWND mHwnd; //핸들

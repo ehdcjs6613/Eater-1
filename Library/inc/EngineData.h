@@ -36,8 +36,12 @@ public:
 	DirectX::XMMATRIX* mProj;
 	DirectX::XMFLOAT3* mPos;
 
+	DirectX::XMMATRIX* mLightViewMX;
+	DirectX::XMMATRIX* mLightProj;
+	DirectX::XMMATRIX* mShadowTrans;
+
 	LightData* mLightData;
-	MaterialData* mMatData;
+	MaterialData mMatData[5];
 };
 
 /// <summary>
@@ -60,6 +64,8 @@ public:
 
 	TextureBuffer* Diffuse = nullptr;	// Diffuse Texture
 	TextureBuffer* Normal = nullptr;	// NormalMap Texture
+
+	UINT Material_Index = 0;			// Material Index;
 
 	std::vector<DirectX::SimpleMath::Matrix> BoneOffsetTM; //본 오프셋 TM
 
