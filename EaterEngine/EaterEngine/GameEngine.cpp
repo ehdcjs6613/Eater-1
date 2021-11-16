@@ -85,6 +85,8 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 	MeshFilter::SetManager(mObjectManager, mMaterialManager);
 	Light::SetManager(mLightManager);
 
+	mGraphicManager->Initialize(Hwnd, WinSizeWidth, WinSizeHeight, mObjectManager);
+
 	//처음시작하기전 엔진의 구조간략설명
 
 	/// <summary>
@@ -92,15 +94,18 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 	/// 다만 그래픽엔진의 순수가상함수로된건 무조건다만들어놔야함
 	/// </summary>
 	/////////////////////////////////////////////////////////////////
-	mGraphicManager->PushEngine<HsGraphic>("형선");
-	mGraphicManager->PushEngine<DH3DEngine>("동혁");
-	mGraphicManager->PushEngine<KHGraphic>("규황");
-	mGraphicManager->ChoiceEngine("형선");
+
+	//mGraphicManager->PushEngine<HsGraphic>("형선");
+	//mGraphicManager->PushEngine<DH3DEngine>("동혁");
+	//mGraphicManager->PushEngine<KHGraphic>("규황");
+	//mGraphicManager->ChoiceEngine("형선");
+
+	//윈도를 가로 2 	세로3번으로 분할시키겠다 (총 윈도우의 수 = 2 * 3)
+	mGraphicManager->SplitWindow(2, 2);
+	//엔진을 지정된 넘버로 넣는다
+	mGraphicManager->PushEngine(2, new HsGraphic(), "형선");
+
 	/////////////////////////////////////////////////////////////////
-
-
-
-	mGraphicManager->Initialize(Hwnd, WinSizeWidth, WinSizeHeight);
 }
 
 void GameEngine::Update()
@@ -151,7 +156,6 @@ void GameEngine::OnResize(int Change_Width, int Change_Height)
 	WinSizeWidth	= Change_Width;
 	WinSizeHeight	= Change_Height;
 		
-	
 
 	//카메라의 변화할 사이즈를 넣어준다
 	Camera::SetSize(Change_Width, Change_Height);
