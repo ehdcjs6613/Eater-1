@@ -15,8 +15,12 @@ LightManager::~LightManager()
 void LightManager::Initialize()
 {
 	m_LightData = new LightData();
-
+	
+	// Light 관련 Global Data 등록..
 	Global->mLightData = m_LightData;
+	Global->mLightViewMX = DirectionLight::g_DirLight->GetView();
+	Global->mLightProj = DirectionLight::g_DirLight->GetProj();
+	Global->mShadowTrans = DirectionLight::g_DirLight->GetShadowTranspose();
 }
 
 void LightManager::AddLight(Light* light)
@@ -27,22 +31,19 @@ void LightManager::AddLight(Light* light)
 	case eLightType::DIRECTION:
 	{
 		DirectionLight* dirLight = reinterpret_cast<DirectionLight*>(light);
-		m_LightData->DirLights.push_back(dirLight->GetLightData());
-		m_LightData->gDirLightCount = ++m_DirectionCount;
+		m_LightData->DirLights[m_DirectionCount++] = dirLight->GetLightData();
 	}
 	break;
 	case eLightType::SPOT:
 	{
 		SpotLight* spotLight = reinterpret_cast<SpotLight*>(light);
-		m_LightData->SpotLights.push_back(spotLight->GetLightData());
-		m_LightData->gSpotLightCount = ++m_SpotCount;
+		m_LightData->SpotLights[m_SpotCount++] = spotLight->GetLightData();
 	}
 	break;
 	case eLightType::POINT:
 	{
 		PointLight* pointLight = reinterpret_cast<PointLight*>(light);
-		m_LightData->PointLights.push_back(pointLight->GetLightData());
-		m_LightData->gPointLightCount = ++m_PointCount;
+		m_LightData->PointLights[m_PointCount++] = pointLight->GetLightData();
 	}
 	break;
 	default:

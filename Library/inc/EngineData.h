@@ -36,6 +36,10 @@ public:
 	DirectX::XMMATRIX* mProj;
 	DirectX::XMFLOAT3* mPos;
 
+	DirectX::XMMATRIX* mLightViewMX;
+	DirectX::XMMATRIX* mLightProj;
+	DirectX::XMMATRIX* mShadowTrans;
+
 	LightData* mLightData;
 	MaterialData mMatData[5];
 };

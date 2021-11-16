@@ -34,7 +34,6 @@ protected:
 	static LightManager* g_LightManager;
 
 	Transform* m_Transform;
-
 	eLightType m_LightType;
 };
 
@@ -49,6 +48,9 @@ public:
 	~DirectionLight();
 
 public:
+	static DirectionLight* g_DirLight;
+
+public:
 	void Awake() override;
 
 public:
@@ -60,9 +62,26 @@ public:
 public:
 	void SetLight(DirectionalLightData& lightData);
 	
+public:
+	void SetShadowRadius(float radius) { m_ShadowRadius = radius; }
+	void SetCenterPos(DirectX::SimpleMath::Vector3 pos) { m_CenterPos = pos; }
+	void SetLightViewProj();
+
+public:
+	DirectX::XMMATRIX* GetView() { return &m_LightView; }
+	DirectX::XMMATRIX* GetProj() { return &m_LightProj; }
+	DirectX::XMMATRIX* GetShadowTranspose() { return &m_ShadowTrans; }
+
 	DirectionalLightData* GetLightData();
 
 private:
+	DirectX::XMMATRIX m_LightView;
+	DirectX::XMMATRIX m_LightProj;
+	DirectX::XMMATRIX m_ShadowTrans;
+
+	DirectX::SimpleMath::Vector3 m_CenterPos;
+	float m_ShadowRadius;
+
 	DirectionalLightData* m_DirLight;
 };
 

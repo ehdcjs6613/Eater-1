@@ -87,9 +87,9 @@ struct MaterialData
 
 struct LightData
 {
-	std::vector<DirectionalLightData*> DirLights;
-	std::vector<PointLightData*> PointLights;
-	std::vector<SpotLightData*> SpotLights;
+	DirectionalLightData* DirLights[3];
+	PointLightData* PointLights[5];
+	SpotLightData* SpotLights[5];
 
 	UINT gDirLightCount;
 	UINT gPointLightCount;

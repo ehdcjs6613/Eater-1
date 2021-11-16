@@ -3,13 +3,16 @@
 #include "LightManager.h"
 #include "Light.h"
 
-using namespace DirectX::SimpleMath;
+using namespace DirectX;
+using namespace SimpleMath;
 
 LightManager* Light::g_LightManager = nullptr;
+DirectionLight* DirectionLight::g_DirLight = nullptr;
 
 Light::Light(eLightType lightType)
 	:m_LightType(lightType), m_Transform(nullptr)
 {
+
 }
 
 void Light::SetManager(LightManager* light)
@@ -33,6 +36,16 @@ DirectionLight::DirectionLight()
 	m_DirLight->Specular = Vector4(0.8f, 0.8f, 0.8f, 1.0f);
 	m_DirLight->Direction = Vector3(-0.57735f, -0.57735f, 0.57735f);
 
+	m_CenterPos = Vector3(0, 0, 0);
+	m_ShadowRadius = sqrtf(10.0f * 10.0f + 15.0f * 15.0f);
+
+	// Light Direction 값 변동시 View Proj 재설정..
+	SetLightViewProj();
+
+	// Main Directional Light 설정..
+	if (g_DirLight == nullptr)
+		g_DirLight = this;
+
 	// Light Object 등록..
 	g_LightManager->AddLight(this);
 }
@@ -40,6 +53,37 @@ DirectionLight::DirectionLight()
 DirectionLight::~DirectionLight()
 {
 	delete m_DirLight;
+}
+
+void DirectionLight::SetLightViewProj()
+{
+	static XMMATRIX g_TexSpace = Matrix(0.5f, 0.0f, 0.0f, 0.0f,
+										0.0f, -0.5f, 0.0f, 0.0f,
+										0.0f, 0.0f, 1.0f, 0.0f,
+										0.5f, 0.5f, 0.0f, 1.0f);
+
+	/// Light Direction 값 변동시 같이 실행해주어야 함..
+	// Light View, Proj 설정..
+	Vector3 lightPos = m_DirLight->Direction * -2.0f * m_ShadowRadius;
+
+	// Ligh View
+	m_LightView = XMMatrixLookAtLH(lightPos, m_CenterPos, Vector4(0.0f, 1.0f, 0.0f, 0.0f));
+
+	Vector3 lightSpace = XMVector3TransformCoord(m_CenterPos, m_LightView);
+
+	// 장면을 감싸는 광원 공간 직교 투영 상자..
+	float l = lightSpace.x - m_ShadowRadius;
+	float b = lightSpace.y - m_ShadowRadius;
+	float n = lightSpace.z - m_ShadowRadius;
+	float r = lightSpace.x + m_ShadowRadius;
+	float t = lightSpace.y + m_ShadowRadius;
+	float f = lightSpace.z + m_ShadowRadius;
+
+	// Light Proj
+	m_LightProj = XMMatrixOrthographicOffCenterLH(l, r, b, t, n, f);
+
+	// Shadow Transpose
+	m_ShadowTrans = m_LightView * m_LightProj * g_TexSpace;
 }
 
 void DirectionLight::Awake()
@@ -65,6 +109,9 @@ void DirectionLight::SetSpecular(float r, float g, float b, float a /*= 1.0f*/)
 void DirectionLight::SetDirection(float x, float y, float z)
 {
 	m_DirLight->Direction = { x, y, z };
+
+	// Light Direction 값 변동시 View Proj 재설정..
+	SetLightViewProj();
 }
 
 void DirectionLight::SetLight(DirectionalLightData& lightData)

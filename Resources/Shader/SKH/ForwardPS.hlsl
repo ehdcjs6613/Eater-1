@@ -47,7 +47,7 @@ float4 main(PixelIn pin) : SV_Target0
     float3 bumpedNormalW = mul(normalMapSample, pin.TBN);
     
     // View Direction
-    float3 ViewDirection = gEyePosW - pin.PosW.xyz;
+    float3 ViewDirection = pin.PosW.xyz - gEyePosW;
     ViewDirection = normalize(ViewDirection);
     
     // Start with a sum of zero.
@@ -63,7 +63,7 @@ float4 main(PixelIn pin) : SV_Target0
 	[unroll]
     for (uint i = 0; i < 1; ++i)
     {
-        ComputeDirectionalLight(gMaterials[0], gDirLights[i], bumpedNormalW, -ViewDirection,
+        ComputeDirectionalLight(gMaterials[0], gDirLights[i], bumpedNormalW, ViewDirection,
 				A, D, S);
     
         ambient += A;
@@ -108,5 +108,5 @@ float4 main(PixelIn pin) : SV_Target0
     litColor.a = gMaterials[0].Diffuse.a * albedo.a;
     
     
-    return litColor;
+    return float4(1.0f, 0.0f, 0.0f, 1.0f);
 }

@@ -315,7 +315,7 @@ void DH3DEngine::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 		meshList->pop();
 
 		/// 오브젝트들을 그린다. (Draw Primitive)
-		if (_Mesh_Data->ObjType != OBJECT_TYPE::Base)
+		if (_Mesh_Data->ObjType != OBJECT_TYPE::Skinning)
 		{
 			continue;
 		}

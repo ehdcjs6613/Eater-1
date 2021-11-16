@@ -162,9 +162,6 @@
     <ClInclude Include="Export\EaterEngineDLL.h">
       <Filter>소스 파일\Data</Filter>
     </ClInclude>
-    <ClInclude Include="Export\MeshFilter.h">
-      <Filter>소스 파일\Component\MeshFilter</Filter>
-    </ClInclude>
     <ClInclude Include="Export\SkinningFilter.h">
       <Filter>소스 파일\Component\SkinningFilter</Filter>
     </ClInclude>
@@ -191,6 +188,9 @@
     </ClInclude>
     <ClInclude Include="Export\Light.h">
       <Filter>소스 파일\Component\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="Export\MeshFilter.h">
+      <Filter>소스 파일\Component\SkinningFilter</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

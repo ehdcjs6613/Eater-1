@@ -82,21 +82,22 @@ void ForwardPass::BeginRender()
 
 void ForwardPass::Update(MeshData* mesh, GlobalData* global)
 {
-	DirectX::XMMATRIX world = mesh->mWorld;
-	DirectX::XMMATRIX* view = global->mViewMX;
-	DirectX::XMMATRIX* proj = global->mProj;
-	DirectX::XMFLOAT3* eye = global->mPos;
+	Matrix world = mesh->mWorld;
+	Matrix view = *global->mViewMX;
+	Matrix proj = *global->mProj;
+	Vector3 eye(view._41, view._42, view._43);
 	LightData* lightData = global->mLightData;
 
-	ID3D11ShaderResourceView* diffuse_srv = reinterpret_cast<ID3D11ShaderResourceView*>(mesh->Diffuse->TextureBufferPointer);
-	ID3D11ShaderResourceView* normal_srv = reinterpret_cast<ID3D11ShaderResourceView*>(mesh->Normal->TextureBufferPointer);
+	//ID3D11ShaderResourceView* diffuse_srv = reinterpret_cast<ID3D11ShaderResourceView*>(mesh->Diffuse->TextureBufferPointer);
+	//ID3D11ShaderResourceView* normal_srv = reinterpret_cast<ID3D11ShaderResourceView*>(mesh->Normal->TextureBufferPointer);
 	
 	switch (mesh->ObjType)
 	{
 	case OBJECT_TYPE::Base:
 	{
 		cbPerObject objectBuf;
-		objectBuf.gWorld = (world) * (*view) * (*proj);
+		objectBuf.gWorld = world;
+		objectBuf.gWorldViewProj = world * view * proj;
 		m_MeshVS->SetConstantBuffer(objectBuf);
 
 		// Vertex Shader Update..
@@ -118,7 +119,7 @@ void ForwardPass::Update(MeshData* mesh, GlobalData* global)
 		}
 
 		cbCamera cameraBuf;
-		cameraBuf.gEyePosW = *eye;
+		cameraBuf.gEyePosW = eye;
 
 		cbMaterial matBuf;
 		for (int i = 0; i < 5; i++)
@@ -130,8 +131,8 @@ void ForwardPass::Update(MeshData* mesh, GlobalData* global)
 		m_ForwardPS->SetConstantBuffer(cameraBuf);
 		m_ForwardPS->SetConstantBuffer(matBuf);
 
-		m_ForwardPS->SetShaderResourceView<gDiffuseMap>(&diffuse_srv);
-		m_ForwardPS->SetShaderResourceView<gNormalMap>(&normal_srv);
+		//m_ForwardPS->SetShaderResourceView<gDiffuseMap>(&diffuse_srv);
+		//m_ForwardPS->SetShaderResourceView<gNormalMap>(&normal_srv);
 
 		// Pixel Shader Update..
 		m_ForwardPS->Update();
@@ -140,7 +141,8 @@ void ForwardPass::Update(MeshData* mesh, GlobalData* global)
 	case OBJECT_TYPE::Skinning:
 	{
 		cbPerObject objectBuf;
-		objectBuf.gWorld = world * (*view) * (*proj);
+		objectBuf.gWorld = world;
+		objectBuf.gWorldViewProj = world * view * proj;
 		m_SkinVS->SetConstantBuffer(objectBuf);
 
 		cbSkinned skinBuf;
@@ -169,7 +171,7 @@ void ForwardPass::Update(MeshData* mesh, GlobalData* global)
 		}
 
 		cbCamera cameraBuf;
-		cameraBuf.gEyePosW = *eye;
+		cameraBuf.gEyePosW = eye;
 		
 		cbMaterial matBuf;
 		for (int i = 0; i < 5; i++)
@@ -181,8 +183,8 @@ void ForwardPass::Update(MeshData* mesh, GlobalData* global)
 		m_ForwardPS->SetConstantBuffer(cameraBuf);
 		m_ForwardPS->SetConstantBuffer(matBuf);
 
-		m_ForwardPS->SetShaderResourceView<gDiffuseMap>(&diffuse_srv);
-		m_ForwardPS->SetShaderResourceView<gNormalMap>(&normal_srv);
+		//m_ForwardPS->SetShaderResourceView<gDiffuseMap>(&diffuse_srv);
+		//m_ForwardPS->SetShaderResourceView<gNormalMap>(&normal_srv);
 
 		// Pixel Shader Update..
 		m_ForwardPS->Update();
