@@ -69,7 +69,7 @@ void RenderManager::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 {
 	m_Farward->BeginRender();
 
-	RenderPassBase::g_Context->RSSetViewports(1, RenderPassBase::g_ViewPort);
+	RenderPassBase::g_Context->RSSetViewports(1, m_ViewPort);
 
 	while (meshList->size() != 0)
 	{

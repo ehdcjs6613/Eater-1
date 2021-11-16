@@ -24,8 +24,12 @@ public:
 
 	void OnResize(int width, int height) override;
 
+public:
+	D3D11_VIEWPORT* m_ViewPort;
+
 private:
 	std::vector<RenderPassBase*> m_RenderPassList;
+
 
 	ForwardPass* m_Farward;
 	ShadowPass* m_Shadow;
