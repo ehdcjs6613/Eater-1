@@ -384,8 +384,14 @@ TextureBase* MultiRenderEngine::Create_RenderTarget(int StartX, int StartY, int 
 void MultiRenderEngine::BeginRender()
 {
 	//Å¬¸®¾î
-	XMVECTORF32 DeepDarkGray = { 1, 1, 0, 1.0f };
-	m_DeviceContext->ClearRenderTargetView(m_RenderTargetView, DeepDarkGray);
+	float color[4];
+
+	// Setup the color to clear the buffer to.
+	color[0] = 0.17f;
+	color[1] = 0.17f;
+	color[2] = 0.17f;
+	color[3] = 1.0f;
+	m_DeviceContext->ClearRenderTargetView(m_RenderTargetView, color);
 	m_DeviceContext->ClearDepthStencilView(m_DepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 	

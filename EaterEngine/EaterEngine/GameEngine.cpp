@@ -102,10 +102,19 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 	//mGraphicManager->ChoiceEngine("형선");
 
 	//윈도를 가로 2 	세로3번으로 분할시키겠다 (총 윈도우의 수 = 2 * 3)
-	mGraphicManager->SplitWindow(2, 2);
+	mGraphicManager->SplitWindow(3, 3);
 	//엔진을 지정된 넘버로 넣는다
-	mGraphicManager->PushEngine(2, new HsGraphic(), "형선");
-	mGraphicManager->PushEngine(0, new KHGraphic(), "규황");
+	mGraphicManager->PushEngine(0, new DH3DEngine(), "동혁");
+	mGraphicManager->PushEngine(1, new HsGraphic(), "형선");
+	mGraphicManager->PushEngine(2, new DH3DEngine(), "동혁1");
+
+	mGraphicManager->PushEngine(3, new HsGraphic(), "형선1");
+	mGraphicManager->PushEngine(4, new KHGraphic(), "규황");
+	mGraphicManager->PushEngine(5, new DH3DEngine(), "동혁2");
+
+	mGraphicManager->PushEngine(6, new HsGraphic(), "형선2");
+	mGraphicManager->PushEngine(7, new DH3DEngine(), "동혁3");
+	mGraphicManager->PushEngine(8, new HsGraphic(), "형선3");
 
 	/////////////////////////////////////////////////////////////////
 }
