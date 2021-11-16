@@ -45,6 +45,6 @@ public:
 	virtual void UIRender(std::queue<MeshData*>* meshList, GlobalData* global) { return; };
 
 	/// 랜더타겟에 해당하는 데이터를 넘겨줄것임 (사실 디바이스만 넘어가면 멀티그래픽엔진쪽으로 넘겨줘도될듯)
-	virtual void SetRenderTarget(void* RTV, void* DSV, void* VPT) { return; }; //랜더타겟뷰, 뎁스스텐실,뷰포트
+	virtual void SetViewPort(void* VPT) { return; }; //랜더타겟뷰, 뎁스스텐실,뷰포트
 	virtual void SetDevice(void* Devie, void* DevieContext) { return; }; //디바이스,컨텍스트
 };

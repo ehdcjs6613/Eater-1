@@ -32,8 +32,8 @@ MultiRenderEngine::MultiRenderEngine()
 
 MultiRenderEngine::~MultiRenderEngine()
 {
-	Test00->Delete();
-	Test01->Delete();
+
+
 }
 
 MultiRenderEngine* MultiRenderEngine::Initialize(HWND hwnd, int screenWidth, int screenHeight)
@@ -74,44 +74,46 @@ BOOL MultiRenderEngine::SplitWindow(int _Horizontal, int _Vertical)
 		return false;
 	}
 
-	//for (int i = 0; i < 4; i++)
-	//{
-	//	//짝수 홀수 판별
-	//	int num = i % 2;
-	//	if (num == 0)
-	//	{
-	//		int startX = i * m_ScreenWidth;
-	//		int StartY = i * m_ScreenHeight;
-	//
-	//		int Width = m_ScreenWidth / _Horizontal;
-	//		int Height = m_ScreenHeight / _Vertical;
-	//
-	//		TextureBase* temp00 = Create_RenderTarget(startX, StartY, Width, Height);
-	//	}
-	//	else
-	//	{
-	//		int startX = i * m_ScreenWidth;
-	//		int StartY = i * m_ScreenHeight;
-	//
-	//		int Width = m_ScreenWidth / _Horizontal;
-	//		int Height = m_ScreenHeight / _Vertical;
-	//
-	//		TextureBase* temp00 = Create_RenderTarget(startX, StartY, Width, Height);
-	//	}
-	//}
-
-	Test00 = Create_RenderTarget(0, 0, 400, 400);
-	Test01 = Create_RenderTarget(400, 400, 800, 800);
-
-
-	for (int i = 0; i < _Horizontal * _Vertical; i++)
+	WindowCount = _Horizontal * _Vertical;
+	int Width	= m_ScreenWidth / _Horizontal;
+	int Height	= m_ScreenHeight / _Vertical;
+	int StartX	= 0;
+	int StartY	= 0;
+	int count	= 0;
+	for (int i = 0; i < _Vertical; i++)
 	{
-		/// RenderTargetView 를 생성해서 ID3D11RenderTargetView* 자리에 할당해두면 됨.
-		Split_Window.insert({i, {Test00->GetRTV(), nullptr}});
-		/// 자료형이 헷갈리신다면 다음을 참조하시면됩니다..
-		//std::pair<int, std::pair<ID3D11RenderTargetView*, GraphicEngine*>> InsertData = { i, {nullptr, nullptr} };
-		//Split_Window.emplace(InsertData);
+		for (int j = 0; j < _Horizontal; j++)
+		{
+			Create_ViewPort(count ,StartX, StartY, Width, Height);
+			if (StartX < m_ScreenWidth - Width)
+			{
+				StartX += Width;
+			}
+			else
+			{
+				StartX = 0;
+			}
+			count++;
+		}
+
+		if (StartY < m_ScreenHeight - Height)
+		{
+			StartY += Height;	
+		}
+		else
+		{
+			StartY = 0;
+		}
 	}
+
+	//for (int i = 0; i < _Horizontal * _Vertical; i++)
+	//{
+	//	/// RenderTargetView 를 생성해서 ID3D11RenderTargetView* 자리에 할당해두면 됨.
+	//	Split_Window.insert({i, {Test00->GetRTV(), nullptr}});
+	//	/// 자료형이 헷갈리신다면 다음을 참조하시면됩니다..
+	//	//std::pair<int, std::pair<ID3D11RenderTargetView*, GraphicEngine*>> InsertData = { i, {nullptr, nullptr} };
+	//	//Split_Window.emplace(InsertData);
+	//}
 
 	// 생성된 랜더타겟의 개수를 리턴.
 	return Split_Window.size();
@@ -131,14 +133,13 @@ BOOL MultiRenderEngine::RegisterRenderer(GraphicEngine* _Renderer, std::string _
 
 	//디바이스와 디바이스 컨텍스트를 넣어준다
 	_Renderer->SetDevice(m_Device, m_DeviceContext);
-	_Renderer->SetRenderTarget(Test00->GetRTV(), Test00->GetDSV(),Test00->GetView());
 	return true;
 }
 
 BOOL MultiRenderEngine::SetRenderer(int _ViewPort_Number, std::string _Engine_Name)
 {
 	// 윈도우가 생성되어있지 않은경우 return false;
-	if (!Split_Window.empty()) 
+	if (Split_Window.empty()) 
 	{ 
 		std::cout << "[MultiRenderEngine::SetRenderer() 오류] 아직 Split Window 를 하지 않았습니다." << std::endl;
 		return false; 
@@ -167,27 +168,22 @@ BOOL MultiRenderEngine::SetRenderer(int _ViewPort_Number, std::string _Engine_Na
 	GraphicEngine* Target_Engine = Find_Engine_Ptr->second;
 	Split_Window_Data->second.second = Target_Engine;
 
+	
 	/// 여기서 꼭!!!!!!!!!!!!!!!!!! 엔진에 ViewPort를 줘야함.
-	ID3D11RenderTargetView* Target_ViewPort = Split_Window_Data->second.first;
+	D3D11_VIEWPORT* Target_ViewPort = Split_Window_Data->second.first;
+	Target_Engine->SetViewPort(Target_ViewPort);
 	// ex) Target_Engine->SetViewPort(Target_ViewPort); 이런식으로..
 
 	return true;
 }
 
-void MultiRenderEngine::Render(std::queue<MeshData*>* meshList, GlobalData* global)
+void MultiRenderEngine::Render(int count, std::queue<MeshData*>* meshList, GlobalData* global)
 {
-	BeginRender();
-
-	Registered_Engine_List["형선"]->Render(meshList, global);
-	//for (auto _Renderer : Split_Window)
-	//{
-	//	//Registered_Engine_List["형선"]->Render(meshList, global);
-	//	/// 다음과같이 VeiwPort 전용 랜더를 해주던가 해야된다..
-	//	// ex) _Renderer.second.second->Render(meshList, global);
-	//}
-
-
-	EndRender();
+	if ((Split_Window[count]).second != nullptr) 
+	{
+		(Split_Window[count]).second->Render(meshList, global);
+	}
+	
 }
 
 void MultiRenderEngine::Delete()
@@ -205,7 +201,7 @@ Vertexbuffer* MultiRenderEngine::CreateVertexBuffer(ParserData::Mesh* mModel)
 	ID3D11Buffer* mVB = nullptr;
 	Vertexbuffer* vertexbuffer = new Vertexbuffer();
 
-	//포지션 , 노말, uv, 탄젠타 값만 읽어옴
+	//포지션 , 노말, uv, 탄젠트 값만 읽어옴
 	std::vector<Deferred32> temp;
 	int Vcount = mModel->m_VertexList.size();
 	temp.resize(Vcount);
@@ -344,8 +340,8 @@ void MultiRenderEngine::Create_SwapChain_RenderTarget()
 
 	ID3D11Texture2D* mDepthStencilBuffer = nullptr;
 	D3D11_TEXTURE2D_DESC depthStencilDesc;
-	depthStencilDesc.Width		= m_ScreenHeight;
-	depthStencilDesc.Height		= m_ScreenWidth;
+	depthStencilDesc.Width		= m_ScreenWidth;
+	depthStencilDesc.Height		= m_ScreenHeight;
 	depthStencilDesc.MipLevels	= 1;							
 	depthStencilDesc.ArraySize	= 1;							
 
@@ -362,15 +358,19 @@ void MultiRenderEngine::Create_SwapChain_RenderTarget()
 	m_Device->CreateTexture2D(&depthStencilDesc, 0, &mDepthStencilBuffer);
 	HR(m_Device->CreateDepthStencilView(mDepthStencilBuffer, 0, &m_DepthStencilView));
 	m_DeviceContext->OMSetRenderTargets(1, &m_RenderTargetView, m_DepthStencilView);
+}
 
-	//ViewPort
+void MultiRenderEngine::Create_ViewPort(int KeyNumber ,int StartX, int StartY, int Width, int Height)
+{
 	m_ViewPort = new D3D11_VIEWPORT();
-	m_ViewPort->TopLeftX	= 0;
-	m_ViewPort->TopLeftY	= 0;
-	m_ViewPort->Width		= static_cast<float>(m_ScreenWidth);
-	m_ViewPort->Height		= static_cast<float>(m_ScreenHeight);
-	m_ViewPort->MinDepth	= 0.0f;
-	m_ViewPort->MaxDepth	= 1.0f;
+	m_ViewPort->TopLeftX = StartX;
+	m_ViewPort->TopLeftY = StartY;
+	m_ViewPort->Width = static_cast<float>(Width);
+	m_ViewPort->Height = static_cast<float>(Height);
+	m_ViewPort->MinDepth = 0.0f;
+	m_ViewPort->MaxDepth = 1.0f;
+
+	Split_Window.insert({ KeyNumber, {m_ViewPort,nullptr } });
 }
 
 TextureBase* MultiRenderEngine::Create_RenderTarget(int StartX, int StartY, int Width, int Height)
@@ -383,38 +383,25 @@ TextureBase* MultiRenderEngine::Create_RenderTarget(int StartX, int StartY, int 
 
 void MultiRenderEngine::BeginRender()
 {
-	ID3D11DepthStencilView* mPostDSV = Test00->GetDSV();
-	ID3D11RenderTargetView* mPostRTV = Test00->GetRTV();
-	D3D11_VIEWPORT*			mPostVP = Test00->GetView();
-
-	m_DeviceContext->OMSetRenderTargets(1, &mPostRTV, mPostDSV);
-	m_DeviceContext->RSSetViewports(1, mPostVP);
-
 	//클리어
 	XMVECTORF32 DeepDarkGray = { 1, 1, 0, 1.0f };
-	m_DeviceContext->ClearRenderTargetView(mPostRTV, DeepDarkGray);
-	m_DeviceContext->ClearDepthStencilView(mPostDSV, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	m_DeviceContext->ClearRenderTargetView(m_RenderTargetView, DeepDarkGray);
+	m_DeviceContext->ClearDepthStencilView(m_DepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+
+	
+	m_DeviceContext->OMSetRenderTargets(1, &m_RenderTargetView, m_DepthStencilView);
+
 }
 
 void MultiRenderEngine::EndRender()
 {
-	//여기까지왔으면 오브젝트 렌더링은 mPostRTV 여기에 그려져있을거임
-	ID3D11DepthStencilView* ENGINE_DSV	= m_DepthStencilView;
-	ID3D11RenderTargetView* ENGINE_RTV	= m_RenderTargetView;
-	D3D11_VIEWPORT			ENGINE_VP	= *m_ViewPort;
-	
-	//이제 스왑체인에 연결된 백버퍼로 연결해주고 클리어
-	XMVECTORF32 DeepDarkGray = { 1.0f, 1.0f, 0.0f, 1.0f };
-	m_DeviceContext->OMSetRenderTargets(1, &ENGINE_RTV, ENGINE_DSV);
-	
-	
-	m_DeviceContext->RSSetViewports(1, &ENGINE_VP);
-	m_DeviceContext->ClearRenderTargetView(ENGINE_RTV, DeepDarkGray);
-	m_DeviceContext->ClearDepthStencilView(ENGINE_DSV, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-
-
-	//엔진 랜더링 종료
 	m_SwapChain->Present(0, 0);
+	//엔진 랜더링 종료
+}
+
+int MultiRenderEngine::GetWindowCount()
+{
+	return WindowCount;
 }
 
 

@@ -3,6 +3,7 @@
 #include "GraphicsEngine.h"
 #include "EngineData.h"
 #include "ParserData.h"
+#include "ObjectManager.h"
 #include "MultiRenderEngine.h"
 
 GraphicEngineManager::GraphicEngineManager()
@@ -23,15 +24,22 @@ void GraphicEngineManager::Update()
 
 }
 
-void GraphicEngineManager::Initialize(HWND Hwnd, int WinSizeWidth, int WinSizeHeight)
+void GraphicEngineManager::Initialize(HWND Hwnd, int WinSizeWidth, int WinSizeHeight, ObjectManager* GM)
 {
+	ObjManager = GM;
 	MultiEngine = MultiRenderEngine::Initialize(Hwnd, WinSizeWidth, WinSizeHeight);
- 	int size = MultiEngine->SplitWindow(1, 1);
+ 	
 }
 
 void GraphicEngineManager::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 {
-	MultiEngine->Render(meshList, global);
+	MultiEngine->BeginRender();
+	for (int i = 0; i < MultiEngine->GetWindowCount(); i++)
+	{
+		ObjManager->CreateRenderQueue();
+		MultiEngine->Render(i,ObjManager->GetRenderQueue(), global);
+	}
+	MultiEngine->EndRender();
 }
 
 void GraphicEngineManager::ShadowRender(std::queue<MeshData*>* meshList, GlobalData* global)
@@ -82,7 +90,13 @@ void GraphicEngineManager::OnReSize(int Change_Width, int Change_Height)
 	//NowEngine->OnReSize(Change_Width, Change_Height);
 }
 
-void GraphicEngineManager::PushEngine(GraphicEngine* Engine, std::string Name)
+void GraphicEngineManager::PushEngine(int Number, GraphicEngine* Engine, std::string Name)
 {
 	MultiEngine->RegisterRenderer(Engine, Name);
+	MultiEngine->SetRenderer(Number, Name);
+}
+
+void GraphicEngineManager::SplitWindow(int X, int Y)
+{
+	MultiEngine->SplitWindow(X, Y);
 }

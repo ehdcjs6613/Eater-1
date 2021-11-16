@@ -22,7 +22,7 @@ public:
 	virtual HS_GRAPHICDLL void OnReSize(int Change_Width, int Change_Height) override;
 	virtual HS_GRAPHICDLL void Render(std::queue<MeshData*>* meshList, GlobalData* global) override;
 	virtual HS_GRAPHICDLL void Delete() override;
-	virtual HS_GRAPHICDLL void SetRenderTarget(void* RTV, void* DSV, void* VPT);
+	virtual HS_GRAPHICDLL void SetViewPort(void* VPT);
 	virtual HS_GRAPHICDLL void SetDevice(void* Devie, void* DevieContext);
 
 	//텍스쳐 버퍼를생성
@@ -50,7 +50,7 @@ private:
 	ID3D11DeviceContext*	DeviceContext;		//디바이스 컨텍스트
 	ID3D11RenderTargetView* mRenderTargetView;	//랜더 타겟
 	ID3D11DepthStencilView* mDepthStencilView;	//뎁스 스텐실뷰
-	D3D11_VIEWPORT			mScreenViewport;	//뷰포트
+	D3D11_VIEWPORT*			mScreenViewport;	//뷰포트
 	IDXGISwapChain*			mSwapChain;			//스왑체인	
 
 
