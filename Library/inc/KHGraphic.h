@@ -26,6 +26,8 @@ public:
 	GRAPHIC_DLL Vertexbuffer* CreateVertexBuffer(ParserData::Mesh* mesh) override;
 	GRAPHIC_DLL TextureBuffer* CreateTextureBuffer(std::string path) override;
 
+	GRAPHIC_DLL void SetViewPort(void* VPT) override;
+	GRAPHIC_DLL void SetDevice(void* Devie, void* DevieContext) override;
 private:
 	IGraphicResourceFactory* m_ResourceFactory;
 

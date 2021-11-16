@@ -28,6 +28,16 @@ ForwardPass::~ForwardPass()
 
 }
 
+void ForwardPass::Initialize()
+{
+	// Shader 설정..
+	m_MeshVS = g_Shader->GetShader("MeshVS");
+	m_SkinVS = g_Shader->GetShader("SkinVS");
+	m_ForwardPS = g_Shader->GetShader("ForwardPS");
+
+	m_RasterizerState = g_Resource->GetRasterizerState(eRasterizerState::SOLID);
+}
+
 void ForwardPass::Initialize(int width, int height)
 {
 	// Shader 설정..
@@ -36,10 +46,10 @@ void ForwardPass::Initialize(int width, int height)
 	m_ForwardPS = g_Shader->GetShader("ForwardPS");
 
 	// DepthStencilView 설정..
-	m_DSV = g_Resource->GetDepthStencilView(eDepthStencilView::DEFALT);
-	m_DepthStencilView = m_DSV->GetDSV();
-
-	m_DepthStencilState = g_Resource->GetDepthStencilState(eDepthStencilState::DEFALT);
+	//m_DSV = g_Resource->GetDepthStencilView(eDepthStencilView::DEFALT);
+	//m_DepthStencilView = m_DSV->GetDSV();
+	//
+	//m_DepthStencilState = g_Resource->GetDepthStencilState(eDepthStencilState::DEFALT);
 	m_RasterizerState = g_Resource->GetRasterizerState(eRasterizerState::SOLID);
 	m_BlendState = g_Resource->GetBlendState(eBlendState::BLEND_ONE);
 
@@ -71,12 +81,12 @@ void ForwardPass::Release()
 
 void ForwardPass::BeginRender()
 {
-	g_Context->OMSetRenderTargets(1, &m_BackBufferRTV, m_DepthStencilView);
-	g_Context->OMSetDepthStencilState(m_DepthStencilState, 0);
-	g_Context->OMSetBlendState(m_BlendState, 0, 0xffffffff);
-	g_Context->ClearRenderTargetView(m_BackBufferRTV, reinterpret_cast<const float*>(&DXColors::DeepDarkGray));
-	g_Context->ClearDepthStencilView(m_DepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-	g_Context->RSSetViewports(1, m_ScreenViewport);
+	//g_Context->OMSetRenderTargets(1, &m_BackBufferRTV, m_DepthStencilView);
+	//g_Context->OMSetDepthStencilState(m_DepthStencilState, 0);
+	//g_Context->OMSetBlendState(m_BlendState, 0, 0xffffffff);
+	//g_Context->ClearRenderTargetView(m_BackBufferRTV, reinterpret_cast<const float*>(&DXColors::DeepDarkGray));
+	//g_Context->ClearDepthStencilView(m_DepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	//g_Context->RSSetViewports(1, m_ScreenViewport);
 	g_Context->RSSetState(m_RasterizerState);
 }
 

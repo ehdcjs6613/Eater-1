@@ -4,7 +4,7 @@
 LightManager::LightManager()
 	:m_DirectionCount(0), m_PointCount(0), m_SpotCount(0)
 {
-
+	m_LightData = new LightData();
 }
 
 LightManager::~LightManager()
@@ -14,8 +14,6 @@ LightManager::~LightManager()
 
 void LightManager::Initialize()
 {
-	m_LightData = new LightData();
-	
 	// Light 관련 Global Data 등록..
 	Global->mLightData = m_LightData;
 	Global->mLightViewMX = DirectionLight::g_DirLight->GetView();

@@ -20,6 +20,7 @@ public:
 	virtual ~RenderPassBase() = default;
 
 public:
+	virtual void Initialize() {}
 	virtual void Initialize(int width, int height) abstract;
 	virtual void OnResize(int width, int height) abstract;
 	virtual void Release() abstract;
@@ -30,10 +31,12 @@ public:
 
 public:
 	friend class RenderManager;
+	friend class KHGraphic;
 
 protected:
 	static Microsoft::WRL::ComPtr<ID3D11DeviceContext> g_Context;
 	static IGraphicResourceFactory* g_Factory;
 	static IGraphicResourceManager* g_Resource;
 	static IShaderManager* g_Shader;
+	static D3D11_VIEWPORT* g_ViewPort;
 };

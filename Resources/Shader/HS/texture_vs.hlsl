@@ -3,8 +3,8 @@
 struct VertexInputType
 {
 	float3 PosL			: POSITION;
-	float2 Tex			: TEXCOORD;
     float3 Nomal		: NORMAL;
+	float2 Tex			: TEXCOORD;
     float3 Tangent		: TANGENT;
 };
 

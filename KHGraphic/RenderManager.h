@@ -13,6 +13,7 @@ public:
 	~RenderManager();
 
 public:
+	void Initialize() override;
 	void Initialize(int width, int height) override;
 	void Release() override;
 
@@ -24,8 +25,6 @@ public:
 	void OnResize(int width, int height) override;
 
 private:
-	Microsoft::WRL::ComPtr<IDXGISwapChain> m_SwapChain;
-
 	std::vector<RenderPassBase*> m_RenderPassList;
 
 	ForwardPass* m_Farward;

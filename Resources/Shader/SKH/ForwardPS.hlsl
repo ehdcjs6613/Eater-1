@@ -107,6 +107,5 @@ float4 main(PixelIn pin) : SV_Target0
     // Common to take alpha from diffuse material and texture.
     litColor.a = gMaterials[0].Diffuse.a * albedo.a;
     
-    
-    return float4(1.0f, 0.0f, 0.0f, 1.0f);
+    return albedo;
 }
