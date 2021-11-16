@@ -80,7 +80,8 @@ TextureBuffer* KHGraphic::CreateTextureBuffer(std::string path)
 
 GRAPHIC_DLL void KHGraphic::SetViewPort(void* VPT)
 {
-	RenderPassBase::g_ViewPort = reinterpret_cast<D3D11_VIEWPORT*>(VPT);
+	RenderManager* rm = (RenderManager*)m_RenderManager;
+	rm->m_ViewPort = reinterpret_cast<D3D11_VIEWPORT*>(VPT);
 }
 
 GRAPHIC_DLL void KHGraphic::SetDevice(void* Devie, void* DevieContext)

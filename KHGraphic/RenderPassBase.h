@@ -38,5 +38,4 @@ protected:
 	static IGraphicResourceFactory* g_Factory;
 	static IGraphicResourceManager* g_Resource;
 	static IShaderManager* g_Shader;
-	static D3D11_VIEWPORT* g_ViewPort;
 };
