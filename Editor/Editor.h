@@ -9,7 +9,8 @@
 
 #include "resource.h"       // 주 기호입니다.
 
-
+class DockableBase;
+class DockableView;
 // CEditorApp:
 // 이 클래스의 구현에 대해서는 Editor.cpp을(를) 참조하세요.
 //
@@ -19,8 +20,6 @@ class CEditorApp : public CWinApp
 public:
 	CEditorApp() noexcept;
 
-	HWND	   m_Hwnd;
-	CWnd	   m_cwnd;
 
 // 재정의입니다.
 public:
@@ -38,7 +37,6 @@ public:
 	afx_msg void OnFileNew();
 	DECLARE_MESSAGE_MAP()
 	virtual BOOL OnIdle(LONG lCount);
-	virtual int Run();
 };
 
 extern CEditorApp theApp;

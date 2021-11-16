@@ -7,8 +7,9 @@ class EWGameView;
 class DockableView : public CDockablePane
 {
 	DECLARE_DYNAMIC(DockableView)
-
 	EWGameView* m_pXGameView;
+public:
+	HWND		m_hWnd;
 public:
 	DockableView();
 	virtual ~DockableView();
@@ -22,6 +23,10 @@ public:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	virtual void PostNcDestroy();
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
+
+public:
+	EWGameView* GetGameView();
+	DockableView* GetDockableView();
 };
 
 

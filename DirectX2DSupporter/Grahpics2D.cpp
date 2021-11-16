@@ -124,14 +124,15 @@ void Grahpics2D::LoadBitMap(std::wstring _Image_Name, std::wstring _File_Path)
 
 	ID2D1Bitmap* _Img_Data = nullptr;
 	// 디버깅용
-	HRESULT hr;
+	HRESULT hr = S_OK;
 
 	// 디코더 생성
 	hr = pWICFactory->CreateDecoderFromFilename(_File_Path.c_str(), nullptr,
 		GENERIC_READ, WICDecodeMetadataCacheOnDemand, &pDecodePtr);
 
 	// 디코더에서 프레임 획득
-	pDecodePtr->GetFrame(0, &pFramePtr);
+
+	hr = pDecodePtr->GetFrame(0, &pFramePtr);
 
 	// 프레임 기반으로 포맷 컨버터 생성
 

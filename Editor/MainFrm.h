@@ -9,6 +9,7 @@ class EDInspector;
 class DockableView;
 class DockableBase;
 class GameDlg;
+class GameManager;
 
 class SaveData;
 
@@ -23,7 +24,7 @@ public:
 
 	//CWnd			 m_pGameView;
 	DockableBase*   m_pDlg;
-	DockableView*   m_pDlgV;
+	DockableView*   m_pDockableView;
 	//GameDlg* m_pGameView;
 
 	CPaneDialog*	   m_pDialog;
@@ -60,6 +61,8 @@ protected:
 
 public:
 	afx_msg void OnDockTable();
+public:
+	DockableView* GetDockableView();
 };
 
 

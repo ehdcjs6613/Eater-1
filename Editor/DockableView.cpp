@@ -11,9 +11,9 @@
 
 IMPLEMENT_DYNAMIC(DockableView, CDockablePane)
 
-DockableView::DockableView()
+DockableView::DockableView() : m_pXGameView(nullptr) , m_hWnd{}
 {
-
+	m_pXGameView = new EWGameView();
 }
 
 DockableView::~DockableView()
@@ -66,10 +66,10 @@ int DockableView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	if (CDockablePane::OnCreate(lpCreateStruct) == -1)
 		return -1;
 
-	m_pXGameView = new EWGameView();
-
+	m_hWnd = this->GetSafeHwnd();
+	
 	m_pXGameView->Create(nullptr, L"ㅋㅋ",
-		WS_SYSMENU |WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_LEFT | CBRS_FLOAT_MULTI,
+		WS_SYSMENU |WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN  | CBRS_FLOAT_MULTI,
 		CRect(0, 0, 1920, 1080), this, 50001);
 	m_pXGameView->OnInitialUpdate();
 	m_pXGameView->ShowWindow(SW_SHOW);
@@ -92,4 +92,18 @@ BOOL DockableView::PreCreateWindow(CREATESTRUCT& cs)
 	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
 
 	return CDockablePane::PreCreateWindow(cs);
+}
+
+EWGameView* DockableView::GetGameView()
+{
+	if (nullptr == m_pXGameView)
+	{
+		return nullptr;
+	}
+	return m_pXGameView;
+}
+
+DockableView* DockableView::GetDockableView()
+{
+	return this;
 }

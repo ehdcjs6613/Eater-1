@@ -37,6 +37,15 @@
     <Filter Include="WorkableClass\GameView">
       <UniqueIdentifier>{9b2f08cc-261b-4055-bf70-043730a4a0eb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Editor">
+      <UniqueIdentifier>{349c06ec-4da1-4d9a-a207-9d01954a441b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Editor\0.System">
+      <UniqueIdentifier>{97dcf595-e5ae-444c-a727-dab8cf5800f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Editor\1.Scene">
+      <UniqueIdentifier>{cf208ff9-5225-43b5-897d-f3b13664f558}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -78,6 +87,12 @@
     <ClInclude Include="DockableView.h">
       <Filter>DockableClass\1.GameView</Filter>
     </ClInclude>
+    <ClInclude Include="EditorSystem.h">
+      <Filter>Editor\0.System</Filter>
+    </ClInclude>
+    <ClInclude Include="TScene.h">
+      <Filter>Editor\1.Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Editor.cpp">
@@ -109,6 +124,12 @@
     </ClCompile>
     <ClCompile Include="DockableView.cpp">
       <Filter>DockableClass\1.GameView</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorSystem.cpp">
+      <Filter>Editor\0.System</Filter>
+    </ClCompile>
+    <ClCompile Include="TScene.cpp">
+      <Filter>Editor\1.Scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

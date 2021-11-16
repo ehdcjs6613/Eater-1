@@ -7,6 +7,7 @@
 #include "resource.h"
 #include "Editor.h"
 
+#include "../../GameClient/GameManager.h"
 #include "EWGameView.h"
 #include "EDDockableBase.h"
 #include "DockableView.h"
@@ -44,7 +45,7 @@ CMainFrame::CMainFrame() noexcept
 {
 	// TODO: 여기에 멤버 초기화 코드를 추가합니다.
 	m_pDlg = nullptr;
-	m_pDlgV = nullptr;
+	m_pDockableView = nullptr;
 }
 
 CMainFrame::~CMainFrame()
@@ -82,15 +83,6 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_wndStatusBar.EnableDocking(CBRS_ALIGN_ANY);
 	EnableDocking(CBRS_ALIGN_ANY);
 
-	//m_pCGameView->ShowWindow(SW_SHOW);
-	//m_pCGameView->UpdateWindow();
-
-
-	//m_pGameView = new GameView(this);
-	//
-	//m_pGameView->Create(IDD_GAME_VIEW_0, this);
-	//
-	//m_pGameView->ShowWindow(SW_SHOW);
 
 
 	return 0;
@@ -137,6 +129,8 @@ void CMainFrame::OnDockTable()
 	//m_pDialog.EnableDocking(CBRS_ALIGN_ANY);
 	//DockPane(&m_pDialog);
 
+	
+
 	if (nullptr == m_pDlg && m_Num==0)
 	{
 		m_pDlg = new DockableBase();
@@ -154,25 +148,35 @@ void CMainFrame::OnDockTable()
 		m_Num++;
 
 	}
-	else if ( nullptr == m_pDlgV && m_Num == 1)
+	else if ( nullptr == m_pDockableView && m_Num == 1)
 	{
-		m_pDlgV = new DockableView();
-
-		m_pDlgV->Create(_T("DDDDD"), this, CRect(0, 0, 1920, 1080), TRUE, ID_FILE_NEW,
+		m_pDockableView = new DockableView();
+		m_pDockableView->Create(_T("DDDDD"), this, CRect(0, 0, 1920, 1080), TRUE, ID_FILE_NEW,
 			WS_SYSMENU | WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_RIGHT | CBRS_FLOAT_MULTI);
 
-		m_pDlgV->EnableDocking(CBRS_ALIGN_ANY);
+		m_pDockableView->m_pXGameView->m_hWnd;// = m_pDockableView->m_hWnd;//this->GetSafeHwnd();
+		m_pDockableView->EnableDocking(CBRS_ALIGN_ANY);
 
-		DockPane(m_pDlgV);
+		DockPane(m_pDockableView);
 
-		m_pDlgV->SetAutoHideMode(false, CBRS_ALIGN_ANY);
+		m_pDockableView->SetAutoHideMode(false, CBRS_ALIGN_ANY);
 
-		m_pDlgV->ShowPane(true, false, true);
+		m_pDockableView->ShowPane(true, false, true);
 		m_Num++;
+		//m_pDockableView->m_pXGameView->m_pGameManger->Start(this->GetSafeHwnd());
 	}
 
 	//해당 프레임 및 자식창의 크기를 재조절함
 	RecalcLayout();
 
 	//m_pGameView->OnInitDialog();
+}
+
+DockableView* CMainFrame::GetDockableView()
+{
+	if (nullptr == m_pDockableView)
+	{
+		return nullptr;
+	}
+	return m_pDockableView;
 }

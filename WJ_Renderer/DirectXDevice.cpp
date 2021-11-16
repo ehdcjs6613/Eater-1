@@ -200,6 +200,7 @@ void DirectXDevice::CreateDepthBuffer(ID3D11Texture2D* _pDepthStencilBuffer)
 {
 	// Set up the description of the depth buffer.
 	// 깊이 버퍼에 대한 설명을 설정합니다.
+	HRESULT hr;
 
 	D3D11_TEXTURE2D_DESC depthStencilDesc;
 
@@ -220,7 +221,7 @@ void DirectXDevice::CreateDepthBuffer(ID3D11Texture2D* _pDepthStencilBuffer)
 
 	// Create the texture for the depth buffer using the filled out description.
 	// 작성한 설명을 사용하여 깊이 버퍼의 텍스처를 만듭니다.
-	HR(m_pDX11Device->CreateTexture2D
+	hr = (m_pDX11Device->CreateTexture2D
 	(
 		&depthStencilDesc,
 		0,

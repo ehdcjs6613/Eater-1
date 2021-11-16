@@ -2,10 +2,9 @@
 //
 
 #include "pch.h"
+#include "EWGameView.h"
+#include "EditorSystem.h"
 #include "Editor.h"
-#include "../../GameClient/GameManager.h"
-#include "EWGameView.h".h"
-
 
 // XGameView
 
@@ -13,7 +12,7 @@ IMPLEMENT_DYNCREATE(EWGameView, CView)
 
 EWGameView::EWGameView()
 {
-	//m_pGameView = new GameManager();
+	
 }
 
 EWGameView::~EWGameView()
@@ -22,6 +21,7 @@ EWGameView::~EWGameView()
 
 BEGIN_MESSAGE_MAP(EWGameView, CView)
 	ON_WM_CREATE()
+	ON_WM_SIZE()
 END_MESSAGE_MAP()
 
 
@@ -60,9 +60,12 @@ void EWGameView::Dump(CDumpContext& dc) const
 void EWGameView::OnInitialUpdate()
 {
 	CView::OnInitialUpdate();
+	m_hWnd = this->GetSafeHwnd();
 
-
+	m_EditorSystem = new EditorSystem();
 	
+	
+	m_EditorSystem->Start(m_hWnd);
 
 	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
 }
@@ -85,4 +88,35 @@ int EWGameView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	
 
 	return 0;
+}
+
+void EWGameView::ViewSetting(HWND _hWnd)
+{
+	m_hWnd = _hWnd;
+}
+
+bool EWGameView::Update(float)
+{
+	return false;
+}
+
+bool EWGameView::Render()
+{
+	if (nullptr == m_EditorSystem) { return true; }
+
+	m_EditorSystem->Update();
+	return false;
+}
+
+bool EWGameView::Finalize()
+{
+	return false;
+}
+
+
+void EWGameView::OnSize(UINT nType, int cx, int cy)
+{
+	CView::OnSize(nType, cx, cy);
+
+	// TODO: 여기에 메시지 처리기 코드를 추가합니다.
 }

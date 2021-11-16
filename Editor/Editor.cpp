@@ -8,6 +8,8 @@
 #include "afxdialogex.h"
 #include "Editor.h"
 #include "EDDockableBase.h"
+#include "DockableView.h"
+#include "EWGameView.h"
 #include "MainFrm.h"
 
 #include "ChildFrm.h"
@@ -115,8 +117,7 @@ BOOL CEditorApp::InitInstance()
 	pFrame->ShowWindow(m_nCmdShow);
 	pFrame->UpdateWindow();
 
-	ShowWindow(m_Hwnd,SW_SHOW);
-	UpdateWindow(m_Hwnd);
+
 
 	return TRUE;
 }
@@ -196,14 +197,16 @@ void CEditorApp::OnAppAbout()
 BOOL CEditorApp::OnIdle(LONG lCount)
 {
 
+	//0일때는 GetMsg  메세지를 받을때까지 대기;
+	//1일때는 PeekMsg 메세지를 있으면 받고 대기하지않고 종료;
 
-	return 0;
+	CMainFrame* frm = (CMainFrame*)AfxGetMainWnd();
+
+	if (nullptr != frm->GetDockableView())
+	{
+		frm->GetDockableView()->m_pXGameView->Render();
+	}
+
+	return 1;
 }
 
-
-int CEditorApp::Run()
-{
-	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
-
-	return CWinApp::Run();
-}

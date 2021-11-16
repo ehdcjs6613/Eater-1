@@ -115,7 +115,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)Library\inc</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Library\inc;$(SolutionDir)Library\inc\Component</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -191,6 +191,7 @@
     <ClInclude Include="ChildFrm.h" />
     <ClInclude Include="ChildView.h" />
     <ClInclude Include="Editor.h" />
+    <ClInclude Include="EditorSystem.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="GameDlg.h" />
     <ClInclude Include="MainFrm.h" />
@@ -199,6 +200,7 @@
     <ClInclude Include="SaveData.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="EWGameView.h" />
+    <ClInclude Include="TScene.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DockableView.cpp" />
@@ -206,6 +208,7 @@
     <ClCompile Include="ChildFrm.cpp" />
     <ClCompile Include="ChildView.cpp" />
     <ClCompile Include="Editor.cpp" />
+    <ClCompile Include="EditorSystem.cpp" />
     <ClCompile Include="GameDlg.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="pch.cpp">
@@ -216,6 +219,7 @@
     </ClCompile>
     <ClCompile Include="SaveData.cpp" />
     <ClCompile Include="EWGameView.cpp" />
+    <ClCompile Include="TScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Editor.rc" />
