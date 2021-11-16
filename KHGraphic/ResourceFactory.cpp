@@ -34,6 +34,16 @@ GraphicResourceFactory::GraphicResourceFactory(D3D11Graphic* graphic)
 	m_SwapChain = graphic->GetSwapChain();
 }
 
+GraphicResourceFactory::GraphicResourceFactory(ID3D11Device** device, ID3D11DeviceContext** context)
+{
+	// Graphic Resource & Shader Manager 생성..
+	m_ShaderManager = new ShaderManager();
+	m_ResourceManager = new GraphicResourceManager();
+
+	m_Device = *device;
+	m_Context = *context;
+}
+
 GraphicResourceFactory::~GraphicResourceFactory()
 {
 
@@ -62,6 +72,17 @@ void GraphicResourceFactory::Initialize(int width, int height)
 	// FullScreen Buffer..
 	CreateQuadBuffer();
 	CreateSSAOQuadBuffer();
+}
+
+void GraphicResourceFactory::Initialize()
+{
+	// Shader Manager 초기화..
+	m_ShaderManager->Initialize(m_Device, m_Context);
+
+	// Graphic Resource Manager 초기화..
+	m_ResourceManager->Initialize(m_Device, m_SwapChain);
+
+	CreateRasterizerState();
 }
 
 void GraphicResourceFactory::Release()

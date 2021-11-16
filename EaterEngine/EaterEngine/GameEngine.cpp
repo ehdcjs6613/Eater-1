@@ -69,8 +69,10 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 
 	//그래픽 엔진 생성
 	//pTest_Engine = new DH3DEngine();
+	MeshFilter::SetManager(mObjectManager, mMaterialManager);
+	Light::SetManager(mLightManager);
 
-
+	CreateObject();
 
 	//매니저들 초기화
 	BaseManager::Initialize();
@@ -82,8 +84,7 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 	mTimeManager->Initialize();
 	mLightManager->Initialize();
 
-	MeshFilter::SetManager(mObjectManager, mMaterialManager);
-	Light::SetManager(mLightManager);
+
 
 	mGraphicManager->Initialize(Hwnd, WinSizeWidth, WinSizeHeight, mObjectManager);
 
@@ -104,6 +105,7 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 	mGraphicManager->SplitWindow(2, 2);
 	//엔진을 지정된 넘버로 넣는다
 	mGraphicManager->PushEngine(2, new HsGraphic(), "형선");
+	mGraphicManager->PushEngine(0, new KHGraphic(), "규황");
 
 	/////////////////////////////////////////////////////////////////
 }

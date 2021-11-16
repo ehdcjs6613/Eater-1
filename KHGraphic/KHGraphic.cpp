@@ -11,7 +11,6 @@
 KHGraphic::KHGraphic()
 	:m_ResourceFactory(nullptr), m_RenderManager(nullptr)
 {
-
 }
 
 KHGraphic::~KHGraphic()
@@ -77,4 +76,25 @@ Vertexbuffer* KHGraphic::CreateVertexBuffer(ParserData::Mesh* mesh)
 TextureBuffer* KHGraphic::CreateTextureBuffer(std::string path)
 {
 	return m_ResourceFactory->CreateTextureBuffer(path);
+}
+
+GRAPHIC_DLL void KHGraphic::SetViewPort(void* VPT)
+{
+	RenderPassBase::g_ViewPort = reinterpret_cast<D3D11_VIEWPORT*>(VPT);
+}
+
+GRAPHIC_DLL void KHGraphic::SetDevice(void* Devie, void* DevieContext)
+{
+	ID3D11Device** device = reinterpret_cast<ID3D11Device**>(&Devie);
+	ID3D11DeviceContext** context = reinterpret_cast<ID3D11DeviceContext**>(&DevieContext);
+
+	// Resource Factory 생성 및 초기화..
+	m_ResourceFactory = new GraphicResourceFactory(device, context);
+	m_ResourceFactory->Initialize();
+
+	// Render Manager 생성 및 초기화..
+	m_RenderManager = new RenderManager(nullptr, m_ResourceFactory);
+	m_RenderManager->Initialize();
+
+	RenderPassBase::g_Context = *context;
 }

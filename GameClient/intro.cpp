@@ -38,7 +38,6 @@ void intro::Awake()
 	testobj->GetTransform()->Scale = { 1 , 1, 1 };
 	testobj->GetTransform()->Rotation = { 0 ,0,0 };
 	//매쉬 필터로 매쉬의 정보만 읽은 오브젝트
-	
 	//
 	//
 	////스키닝필터로 본과 매쉬정보 둘다 읽은 오브젝트

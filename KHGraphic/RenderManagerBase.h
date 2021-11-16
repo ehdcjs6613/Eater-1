@@ -16,6 +16,7 @@
 interface IRenderManager
 {
 public:
+	virtual void Initialize() {}
 	virtual void Initialize(int width, int height) abstract;
 	virtual void Release() abstract;
 

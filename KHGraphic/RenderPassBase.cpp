@@ -8,6 +8,7 @@ Microsoft::WRL::ComPtr<ID3D11DeviceContext> RenderPassBase::g_Context = nullptr;
 IGraphicResourceFactory* RenderPassBase::g_Factory = nullptr;
 IGraphicResourceManager* RenderPassBase::g_Resource = nullptr;
 IShaderManager* RenderPassBase::g_Shader = nullptr;
+D3D11_VIEWPORT* RenderPassBase::g_ViewPort = nullptr;
 
 void RenderPassBase::Initialize(Microsoft::WRL::ComPtr<ID3D11DeviceContext> context, IGraphicResourceFactory* factory, IGraphicResourceManager* resourceManager, IShaderManager* shaderManager)
 {
