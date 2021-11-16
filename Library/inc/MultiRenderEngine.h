@@ -37,10 +37,9 @@ private:
 	~MultiRenderEngine();
 
 	static MultiRenderEngine* m_Engine;
-	
 private:
 	// 쪼갠 화면의 수
-	std::map<int, std::pair<ID3D11RenderTargetView* , GraphicEngine*>> Split_Window;
+	std::map<int, std::pair<D3D11_VIEWPORT* , GraphicEngine*>> Split_Window;
 	// 현재 등록되어있는 엔진들을 관리.
 	std::map<std::string, GraphicEngine*> Registered_Engine_List;
 
@@ -66,16 +65,17 @@ public:
 	MULTIENGINE_DLL BOOL RegisterRenderer(GraphicEngine* _Renderer, std::string _Engine_Name);
 	MULTIENGINE_DLL BOOL SetRenderer(int _ViewPort_Number, std::string _Engine_Name);
 
-	MULTIENGINE_DLL void Render(std::queue<MeshData*>* meshList, GlobalData* global);
+	MULTIENGINE_DLL void Render(int count, std::queue<MeshData*>* meshList, GlobalData* global);
 	MULTIENGINE_DLL void Delete();
 
 
 
 	MULTIENGINE_DLL Vertexbuffer* CreateVertexBuffer(ParserData::Mesh* mModel);
 	MULTIENGINE_DLL Indexbuffer*  CreateIndexBuffer(ParserData::Mesh* mModel);
+	MULTIENGINE_DLL void EndRender();
+	MULTIENGINE_DLL	void BeginRender();
+	MULTIENGINE_DLL int GetWindowCount();
 private:
-	void BeginRender();
-	void EndRender();
 
 
 	//그래픽 엔진 디바이스와 컨텍스트를 생성해줌
@@ -83,6 +83,8 @@ private:
 
 	//스왑체인에 붙어있는 랜더타겟을 생성해준다
 	void Create_SwapChain_RenderTarget();
+
+	void Create_ViewPort(int count, int StartX, int StartY, int Width, int Height);
 	
 	//사용하기위한 랜더타겟을 만들어줌
 	TextureBase* Create_RenderTarget(int StartX,int StartY,int Width,int Height);
@@ -91,6 +93,7 @@ private:
 
 	int m_ScreenHeight;
 	int m_ScreenWidth;
+	int WindowCount;
 
 	ID3D11Device*			m_Device;
 	ID3D11DeviceContext*	m_DeviceContext;
@@ -100,8 +103,8 @@ private:
 	ID3D11DepthStencilView* m_DepthStencilView;
 	D3D11_VIEWPORT*			m_ViewPort;
 
-	TextureBase* Test00;
-	TextureBase* Test01;
+	//뷰포트 리스트
+	std::map<int,D3D11_VIEWPORT*> ViewPortList;
 };
 
 

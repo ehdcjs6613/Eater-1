@@ -76,7 +76,7 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 	mLoadManager->Initialize(mGraphicManager);
 	mTimeManager->Initialize();
 
-	mGraphicManager->Initialize(Hwnd, WinSizeWidth, WinSizeHeight);
+	mGraphicManager->Initialize(Hwnd, WinSizeWidth, WinSizeHeight, mObjectManager);
 	MeshFilter::SetObjMananager(mObjectManager);
 	//처음시작하기전 엔진의 구조간략설명
 
@@ -85,11 +85,10 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 	/// 다만 그래픽엔진의 순수가상함수로된건 무조건다만들어놔야함
 	/// </summary>
 	/////////////////////////////////////////////////////////////////
-	//mGraphicManager->PushEngine<HsGraphic>("형선");
-	//mGraphicManager->PushEngine<DH3DEngine>("동혁");
-	//mGraphicManager->PushEngine<KHGraphic>("규황");
-	//mGraphicManager->ChoiceEngine("형선");
-	mGraphicManager->PushEngine(new HsGraphic(), "형선");
+	//윈도를 가로 2 	세로3번으로 분할시키겠다 (총 윈도우의 수 = 2 * 3)
+	mGraphicManager->SplitWindow(2, 2);
+	//엔진을 지정된 넘버로 넣는다
+	mGraphicManager->PushEngine(2, new HsGraphic(), "형선");
 	/////////////////////////////////////////////////////////////////
 }
 

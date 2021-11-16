@@ -8,6 +8,7 @@
 ///	여러개의 그래픽엔진을 쉽게 사용하기위해 만든 그래픽엔진 관리 매니저.
 /// </summary>
 
+class ObjectManager;
 class MeshData;
 class GlobalData;
 class GraphicEngine;
@@ -32,7 +33,7 @@ public:
 
 public:
 	//선택한 그래픽엔진을 초기화
-	void Initialize(HWND Hwnd, int WinSizeWidth, int WinSizeHeight);
+	void Initialize(HWND Hwnd, int WinSizeWidth, int WinSizeHeight,ObjectManager* GM);
 
 	//선택한 그래픽엔진 랜더링
 	void Render(std::queue<MeshData*>* meshList, GlobalData* global);
@@ -53,12 +54,16 @@ public:
 	void OnReSize(int Change_Width, int Change_Height);
 
 	//엔진을 넣어준다
-	void PushEngine(GraphicEngine* Engine,std::string Name);
+	void PushEngine(int Number, GraphicEngine* Engine, std::string Name);
+
+	void SplitWindow(int X, int Y);
 private:
 	MultiRenderEngine* MultiEngine;
 
 	//현재 선택된 그래픽 엔진
 	GraphicEngine* NowEngine;
+
+	ObjectManager* ObjManager;
 
 	std::string EngineName;
 	//그래픽 엔진들을 관리할 리스트
