@@ -114,18 +114,23 @@ void LoadManager::LoadMesh(std::string Name, bool Scale, bool LoadAnime)
 
 void LoadManager::LoadTexture(std::string Name)
 {
-	std::string TextureName = TexturePath + Name + ".dds";
-	TextureBuffer* Tbuffer = GEngine->CreateTextureBuffer(TextureName);
+	std::string TextureName = TexturePath + Name;
 
+
+	TextureBuffer* Tbuffer = GEngine->CreateTextureBuffer(TextureName);
+	
 	if (Tbuffer == nullptr || Tbuffer->TextureBufferPointer == nullptr)
 	{
 		DebugManager::Print(TextureName, 0, 0, DebugManager::MSG_TYPE::MSG_LOAD, true);
 	}
 	else
 	{
-		std::string strTemp = "텍스쳐를 로드합니다 :" + Name;
-		DebugManager::Print(strTemp, 0, 0, DebugManager::MSG_TYPE::MSG_LOAD);
-		TextureList.insert({ Name,Tbuffer });
+		//이름은 .dds , .png 를 빼고 저장한다
+		std::string::size_type End = Name.rfind('.');
+		std::string::size_type start = 0;
+		std::string SaveName = Name.substr(start, End);
+
+		TextureList.insert({ SaveName,Tbuffer });
 	}
 }
 
@@ -184,17 +189,17 @@ LoadMeshData* LoadManager::CreateMeshObjeect(ParserData::Mesh* mesh)
 	// Texture Buffer 삽입..
 	CMaterial* mat = mesh->m_MaterialData;
 
-	if (mat)
-	{
-		if (mat->m_IsDiffuseMap)
-		{
-			box->Diffuse = GEngine->CreateTextureBuffer(mat->m_DiffuseMap->m_BitMap);
-		}
-		if (mat->m_IsBumpMap)
-		{
-			box->Normal = GEngine->CreateTextureBuffer(mat->m_BumpMap->m_BitMap);
-		}
-	}
+	//if (mat)
+	//{
+	//	if (mat->m_IsDiffuseMap)
+	//	{
+	//		box->Diffuse = GEngine->CreateTextureBuffer(mat->m_DiffuseMap->m_BitMap);
+	//	}
+	//	if (mat->m_IsBumpMap)
+	//	{
+	//		box->Normal = GEngine->CreateTextureBuffer(mat->m_BumpMap->m_BitMap);
+	//	}
+	//}
 
 	//자식객체가 있다면 정보읽어옴
 	int ChildCount = mesh->m_ChildList.size();

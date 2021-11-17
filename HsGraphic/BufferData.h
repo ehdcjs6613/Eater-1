@@ -13,6 +13,7 @@ struct CameraBuffer
 struct ObjectBuffer
 {
 	DirectX::XMMATRIX world;
+	DirectX::XMMATRIX TexMatrix;
 };
 
 //스키닝 버퍼
