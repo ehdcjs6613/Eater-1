@@ -40,6 +40,9 @@ extern "C" EATER_ENGINEDLL bool  GetTogle(byte number);		//키 토글
 extern "C" EATER_ENGINEDLL float GetMousePosX();			//마우스 위치 X
 extern "C" EATER_ENGINEDLL float GetMousePosY();			//마우스 위치 Y
 
+///시간 관련
+extern "C" EATER_ENGINEDLL float GetDeltaTime();
+
 
 template<typename T>
 inline void CreateScene(std::string Name)

@@ -7,6 +7,9 @@
 #include "SceneManager.h"
 #include "DebugManager.h"
 #include "GraphicEngineManager.h"
+#include "TimeManager.h"
+#include "MaterialManager.h"
+#include "LightManager.h"
 
 #include "ParserData.h"
 #include "EngineData.h"
@@ -17,14 +20,13 @@
 #include "Transform.h"
 #include "Camera.h"
 #include "MeshFilter.h"
+#include "SkinningFilter.h"
+#include "Light.h"
 
 //테스트용
-#include "HsGraphic.h";
-#include "X3Engine.h"
-
-//#include "X3Engine.h"
-
-
+#include "HsGraphic.h"
+#include "DH3DEngine.h"
+#include "KHGraphic.h"
 
 GameEngine::GameEngine()
 {
@@ -53,65 +55,100 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 {
 	//클라쪽에서 넘겨준 데이터 받기
 	mHwnd = Hwnd;
-	
+
 	//매니저들 생성
-	mKeyManager		= new KeyinputManager();
-	mLoadManager	= new LoadManager();
-	mObjectManager	= new ObjectManager();
-	mSceneManager	= new SceneManager();
-	mDebugManager	= new DebugManager();
-	mGraphicManager = new GraphicEngineManager();
-	
+	mKeyManager			= new KeyinputManager();
+	mLoadManager		= new LoadManager();
+	mObjectManager		= new ObjectManager();
+	mSceneManager		= new SceneManager();
+	mDebugManager		= new DebugManager();
+	mGraphicManager		= new GraphicEngineManager();
+	mTimeManager		= new TimeManager();
+	mMaterialManager	= new MaterialManager();
+	mLightManager		= new LightManager();
+
 	//그래픽 엔진 생성
 	//pTest_Engine = new DH3DEngine();
-	
-	
-	
+	MeshFilter::SetManager(mObjectManager, mMaterialManager);
+	Light::SetManager(mLightManager);
+
+	CreateObject();
+
 	//매니저들 초기화
+	BaseManager::Initialize();
 	mKeyManager->Initialize(mHwnd);
 	mDebugManager->Initialize(mKeyManager,mConsoleDebug);
 	mSceneManager->Initialize();
 	mObjectManager->Initialize(mHwnd);
 	mLoadManager->Initialize(mGraphicManager);
-	
-	MeshFilter::SetObjMananager(mObjectManager);
+	mTimeManager->Initialize();
+	mLightManager->Initialize();
+
+
+
+	mGraphicManager->Initialize(Hwnd, WinSizeWidth, WinSizeHeight, mObjectManager);
+
 	//처음시작하기전 엔진의 구조간략설명
-	//mDebugManager->printStart();
-
-
-
 
 	/// <summary>
 	/// 여기 두부분만 해주면 그래픽엔진 매니저에서 알아서 해줄꺼임
 	/// 다만 그래픽엔진의 순수가상함수로된건 무조건다만들어놔야함
 	/// </summary>
 	/////////////////////////////////////////////////////////////////
+
 	//mGraphicManager->PushEngine<HsGraphic>("형선");
+	//mGraphicManager->PushEngine<DH3DEngine>("동혁");
+	//mGraphicManager->PushEngine<KHGraphic>("규황");
 	//mGraphicManager->ChoiceEngine("형선");
 
-	mGraphicManager->PushEngine<X3Engine>("우진");
-	mGraphicManager->ChoiceEngine("우진");
+	//윈도를 가로 2 	세로3번으로 분할시키겠다 (총 윈도우의 수 = 2 * 3)
+	mGraphicManager->SplitWindow(4, 4);
+	//엔진을 지정된 넘버로 넣는다
+	mGraphicManager->PushEngine(0, new DH3DEngine(), "동혁0");
+	mGraphicManager->PushEngine(1, new HsGraphic(), "형선0");
+	mGraphicManager->PushEngine(2, new HsGraphic(), "형선1");
+	mGraphicManager->PushEngine(3, new DH3DEngine(), "동혁1");
+	mGraphicManager->PushEngine(4, new HsGraphic(), "형선2");
+	mGraphicManager->PushEngine(5, new KHGraphic(), "규황0");
+	mGraphicManager->PushEngine(6, new KHGraphic(), "규황1");
+	mGraphicManager->PushEngine(7, new HsGraphic(), "형선3");
+	mGraphicManager->PushEngine(8, new HsGraphic(), "형선4");
+	mGraphicManager->PushEngine(9, new KHGraphic(), "규황2");
+	mGraphicManager->PushEngine(10, new KHGraphic(), "규황3");
+	mGraphicManager->PushEngine(11, new HsGraphic(), "형선5");
+	mGraphicManager->PushEngine(12, new DH3DEngine(), "동혁2");
+	mGraphicManager->PushEngine(13, new HsGraphic(), "형선6");
+	mGraphicManager->PushEngine(14, new HsGraphic(), "형선7");
+	mGraphicManager->PushEngine(15, new DH3DEngine(), "동혁3");
+
 
 	/////////////////////////////////////////////////////////////////
-
-
-
-	mGraphicManager->Initialize(Hwnd, WinSizeWidth, WinSizeHeight);
 }
 
 void GameEngine::Update()
 {
+	mDebugManager->Clear();
+	//mDebugManager->printStart();
 	//매니저들 업데이트 (컨퍼넌트 업데이트후 변경된 사항을 각각의 게임오브젝트 OneMeshData에 전달)
 	mKeyManager->Update();
 	mSceneManager->Update();
 	mObjectManager->PlayUpdate();
+
 	mDebugManager->Update();
+	mTimeManager->Update();
+	mGraphicManager->Update();
+
+
+	mDebugManager->End();
 	//컨퍼넌트 업데이트 끝
 	//그래픽엔진으로 넘겨줄 랜더큐도 생성완료
 
-
+	
 	//랜더큐 넘겨줌
+	mGraphicManager->ShadowRender(mObjectManager->GetShadowQueue(), mObjectManager->GetGlobalData());
 	mGraphicManager->Render(mObjectManager->GetRenderQueue(), mObjectManager->GetGlobalData());
+	mGraphicManager->SSAORender(mObjectManager->GetRenderQueue(), mObjectManager->GetGlobalData());
+	mGraphicManager->UIRender(mObjectManager->GetRenderQueue(), mObjectManager->GetGlobalData());
 
 
 	//랜더링이 끝나고 오브젝트 Delete
@@ -126,6 +163,8 @@ void GameEngine::Finish()
 
 	mDebugManager->Delete();
 	mSceneManager->Delete();
+
+	BaseManager::Reset();
 }
 
 void GameEngine::OnResize(int Change_Width, int Change_Height)
@@ -134,7 +173,6 @@ void GameEngine::OnResize(int Change_Width, int Change_Height)
 	WinSizeWidth	= Change_Width;
 	WinSizeHeight	= Change_Height;
 		
-	
 
 	//카메라의 변화할 사이즈를 넣어준다
 	Camera::SetSize(Change_Width, Change_Height);
@@ -148,7 +186,7 @@ void GameEngine::OnResize(int Change_Width, int Change_Height)
 	std::string temp = "윈도우 사이즈 변경:"+ Width+","+ Height;
 	Camera::SetSize(Change_Width, Change_Height);
 
-	mDebugManager->Print(temp,DebugManager::MSG_TYPE::MSG_ENGINE);
+	mDebugManager->Print(temp,0,0, DebugManager::MSG_TYPE::MSG_ENGINE);
 }
 
 ///오브젝트 생성 삭제
@@ -164,7 +202,7 @@ GameObject* GameEngine::Instance(std::string ObjName)
 	temp->transform = Tr;
 
 
-	mDebugManager->Print(ObjName, DebugManager::MSG_TYPE::MSG_CREATE);
+	mDebugManager->Print(ObjName,0,1,DebugManager::MSG_TYPE::MSG_CREATE);
 	return temp;
 }
 
@@ -184,16 +222,15 @@ void GameEngine::Destroy(GameObject* obj)
 /// 스크린 관련 함수들
 void GameEngine::PushScene(Scene* mScene, std::string name)
 {
-	
 	std::string mStr = "씬 생성 :" + name;
-	mDebugManager->Print(mStr,DebugManager::MSG_TYPE::MSG_ENGINE);
+	mDebugManager->Print(mStr,0,0,DebugManager::MSG_TYPE::MSG_ENGINE);
 	mSceneManager->PushScene(mScene,name);
 }
 
 void GameEngine::ChoiceScene(std::string name)
 {
 	std::string mStr = "현재 씬 선택 :" + name;
-	mDebugManager->Print(mStr, DebugManager::MSG_TYPE::MSG_ENGINE);
+	mDebugManager->Print(mStr, 0, 0 ,DebugManager::MSG_TYPE::MSG_ENGINE);
 	
 	//씬 선택후 이전 씬 의 정보들을 모두지움
 	mObjectManager->AllDeleteObject();
@@ -210,7 +247,7 @@ void GameEngine::LoadMesh(std::string mMeshName, bool Scale, bool LoadAnime)
 {
 	std::string temp = "매쉬를 로드합니다 : " + mMeshName;
 	mLoadManager->LoadMesh(mMeshName, Scale, LoadAnime);
-	mDebugManager->Print(temp, DebugManager::MSG_TYPE::MSG_LOAD);
+	mDebugManager->Print(temp,0,0, DebugManager::MSG_TYPE::MSG_LOAD);
 }
 
 void GameEngine::LoadTexture(std::string mTextureName)
@@ -263,4 +300,15 @@ float GameEngine::GetMousePosY()
 {
 	//마우스 위치 y좌표
 	return (float)mKeyManager->GetMousePos()->y;
+}
+
+float GameEngine::GetdeltaTime()
+{
+	return mTimeManager->DeltaTime();
+}
+
+void GameEngine::CreateObject()
+{
+	GameObject* light = Instance();
+	light->AddComponent<DirectionLight>();
 }

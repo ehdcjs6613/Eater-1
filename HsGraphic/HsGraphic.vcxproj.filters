@@ -123,5 +123,11 @@
     <FxCompile Include="..\Resources\Shader\HS\texture_vs.hlsl">
       <Filter>소스 파일\Shader\hlsl</Filter>
     </FxCompile>
+    <FxCompile Include="..\Resources\Shader\HS\Skinning_ps.hlsl">
+      <Filter>소스 파일\Shader\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Resources\Shader\HS\Skinning_vs.hlsl">
+      <Filter>소스 파일\Shader\hlsl</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

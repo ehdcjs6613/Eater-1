@@ -11,9 +11,9 @@ using namespace DirectX;
 using namespace SimpleMath;
 
 ASEParser::ASEParser()
-	: m_Token(0), m_parsingmode(eNone), m_data_asciiexport(0), m_materialcount(0),
-	m_MaterialData(nullptr), m_materialmap(nullptr), m_OneMesh(nullptr), m_IsAnimation(false), m_Animation(nullptr), m_lexer(nullptr)
+	: m_MaterialData(nullptr), m_materialmap(nullptr), m_OneMesh(nullptr), m_IsAnimation(false), m_Animation(nullptr), m_lexer(nullptr)
 {
+
 }
 
 ASEParser::~ASEParser()
@@ -26,14 +26,41 @@ void ASEParser::Initialize()
 	m_lexer = new ASE::CASELexer;
 }
 
-void ASEParser::SetTextureRoute(std::string texRoute)
-{
-	m_TexRoute = texRoute;
-}
-
 void ASEParser::Release()
 {
 	SAFE_DELETE(m_lexer);
+
+	for (Model* model : m_ModelList)
+	{
+		for (Mesh* mesh : model->m_MeshList)
+		{
+			ASEMesh* aseMesh = static_cast<ASEMesh*>(mesh);
+
+			for (TVertex* tvertex : aseMesh->m_Mesh_TVertex)
+			{
+				SAFE_DELETE(tvertex);
+			}
+			for (Bone* bone : aseMesh->m_BoneList)
+			{
+				SAFE_DELETE(bone);
+			}
+			for (Face* face : aseMesh->m_MeshFace)
+			{
+				SAFE_DELETE(face);
+			}
+			for (Vertex* vertex : aseMesh->m_VertexList)
+			{
+				SAFE_DELETE(vertex);
+			}
+			for (IndexList* index : aseMesh->m_IndexList)
+			{
+				SAFE_DELETE(index);
+			}
+			aseMesh->m_MeshFace.clear();
+			aseMesh->m_VertexList.clear();
+			aseMesh->m_IndexList.clear();
+		}
+	}
 }
 
 ParserData::Model* ASEParser::LoadModel(std::string fileName)
@@ -63,7 +90,7 @@ ParserData::Model* ASEParser::LoadModel(std::string fileName)
 void ASEParser::OptimizeVertex(ASEMesh* pMesh)
 {
 	bool new_VertexSet = true;
-	unsigned int resize_VertexIndex = pMesh->m_VertexList.size();
+	size_t resize_VertexIndex = pMesh->m_VertexList.size();
 
 	// 각각 Face마다 존재하는 3개의 Vertex 비교..
 	for (unsigned int i = 0; i < pMesh->m_MeshFace.size(); i++)
@@ -109,7 +136,7 @@ void ASEParser::OptimizeVertex(ASEMesh* pMesh)
 				// 추가된 Vertex가 있다면 체크..
 				if (resize_VertexIndex > pMesh->m_VertexList.size())
 				{
-					for (unsigned int k = pMesh->m_VertexList.size(); k < resize_VertexIndex; k++)
+					for (size_t k = pMesh->m_VertexList.size(); k < resize_VertexIndex; k++)
 					{
 						// 새로 추가한 Vertex와 동일한 데이터를 갖고있는 Face 내의 Vertex Index 수정..
 						if ((pMesh->m_VertexList[k]->m_Indices == pMesh->m_MeshFace[i]->m_VertexIndex[j]) &&
@@ -154,7 +181,7 @@ void ASEParser::OptimizeVertex(ASEMesh* pMesh)
 					}
 
 					pMesh->m_VertexList.push_back(newVertex);
-					pMesh->m_MeshFace[i]->m_VertexIndex[j] = resize_VertexIndex;
+					pMesh->m_MeshFace[i]->m_VertexIndex[j] = (int)resize_VertexIndex;
 					resize_VertexIndex++;
 				}
 			}
@@ -306,7 +333,7 @@ void ASEParser::OptimizeData()
 	m_Model->m_MaterialList = m_MaterialList;
 	m_Model->m_MeshList.resize(m_MeshList.size());
 
-	for (unsigned int i = 0; i< m_MeshList.size(); i++)
+	for (unsigned int i = 0; i < m_MeshList.size(); i++)
 	{
 		m_Model->m_MeshList[i] = m_MeshList[i];
 	}
@@ -342,8 +369,9 @@ void ASEParser::SetBoneTM(ParserData::ASEMesh* pMesh)
 
 void ASEParser::CreateModel()
 {
-	m_Model = nullptr; 
+	m_Model = nullptr;
 	m_Model = new Model();
+	m_ModelList.push_back(m_Model);
 }
 
 void ASEParser::ResetData()
@@ -386,7 +414,7 @@ void ASEParser::DataParsing()
 			//--------------------
 
 		case TOKENR_3DSMAX_ASCIIEXPORT:
-			m_data_asciiexport = Parsing_NumberInt();
+			Parsing_NumberInt();
 			break;
 
 			//--------------------
@@ -461,7 +489,7 @@ void ASEParser::DataParsing()
 			///----------------------------------
 
 		case TOKENR_MATERIAL_COUNT:
-			m_materialcount = Parsing_NumberInt();
+			Parsing_NumberInt();
 			break;
 		case TOKENR_MATERIAL_NAME:
 		{
@@ -472,13 +500,31 @@ void ASEParser::DataParsing()
 		case TOKENR_MATERIAL_CLASS:
 			break;
 		case TOKENR_MATERIAL_AMBIENT:
-			m_MaterialData->m_Material_Ambient = Parsing_ChangeNumberVector3();
+		{
+			Vector3 ambient = Parsing_ChangeNumberVector3();
+			m_MaterialData->m_Material_Ambient.x = ambient.x;
+			m_MaterialData->m_Material_Ambient.y = ambient.y;
+			m_MaterialData->m_Material_Ambient.z = ambient.z;
+			m_MaterialData->m_Material_Ambient.w = 1.0f;
+		}
 			break;
 		case TOKENR_MATERIAL_DIFFUSE:
-			m_MaterialData->m_Material_Diffuse = Parsing_ChangeNumberVector3();
+		{
+			Vector3 diffuse = Parsing_ChangeNumberVector3();
+			m_MaterialData->m_Material_Diffuse.x = diffuse.x;
+			m_MaterialData->m_Material_Diffuse.y = diffuse.y;
+			m_MaterialData->m_Material_Diffuse.z = diffuse.z;
+			m_MaterialData->m_Material_Diffuse.w = 1.0f;
+		}
 			break;
 		case TOKENR_MATERIAL_SPECULAR:
-			m_MaterialData->m_Material_Specular = Parsing_ChangeNumberVector3();
+		{
+			Vector3 specular = Parsing_ChangeNumberVector3();
+			m_MaterialData->m_Material_Specular.x = specular.x;
+			m_MaterialData->m_Material_Specular.y = specular.y;
+			m_MaterialData->m_Material_Specular.z = specular.z;
+			m_MaterialData->m_Material_Specular.w = 1.0f;
+		}
 			break;
 		case TOKENR_MATERIAL_SHINE:
 			break;
@@ -881,6 +927,7 @@ void ASEParser::DataParsing()
 			break;
 		case TOKENR_CONTROL_SCALE_SAMPLE:
 		{
+			m_Animation->m_AniData.back()->m_Scale = Parsing_ChangeNumberVector3();
 			//m_animation->m_scale.push_back(new CAnimation_scl);
 			//m_animation->m_scale.back()->m_time = (Parsing_NumberFloat() / m_OneMesh->m_scenedata.m_ticksperframe) - m_OneMesh->m_scenedata.m_firstframe;
 			//m_animation->m_scale.back()->m_scale = Parsing_ChangeNumberVector3();
@@ -921,8 +968,6 @@ void ASEParser::DataParsing()
 		i++;
 		if (i > 1000000)
 		{
-			// 루프를 1000000번이상이나 돌 이유가 없다. (데이터가 100000개가 아닌이상)
-			// 만약 1000000이상 돌았다면 확실히 뭔가 문제가 있는 것이므로
 			TRACE("루프를 백만번 돌았습니다!");
 			return;
 		}
@@ -977,8 +1022,8 @@ int ASEParser::Parsing_NumberInt() {
 
 Vector3 ASEParser::Parsing_ChangeNumberVector3()
 {
-	LONG				token;
-	Vector3			tempVector3;
+	LONG	token;
+	Vector3	tempVector3;
 
 	token = m_lexer->GetToken(m_TokenString);
 	tempVector3.x = (float)atof(m_TokenString);
@@ -987,22 +1032,7 @@ Vector3 ASEParser::Parsing_ChangeNumberVector3()
 	token = m_lexer->GetToken(m_TokenString);
 	tempVector3.y = (float)atof(m_TokenString);
 
-	return			tempVector3;		// 스태틱 변수의 레퍼런스보다는 값 전달을 하자.
-}
-
-Vector3 ASEParser::Parsing_NormalNumberVector3()
-{
-	LONG				token;
-	Vector3			tempVector3;
-
-	token = m_lexer->GetToken(m_TokenString);
-	tempVector3.x = (float)atof(m_TokenString);
-	token = m_lexer->GetToken(m_TokenString);
-	tempVector3.y = (float)atof(m_TokenString);
-	token = m_lexer->GetToken(m_TokenString);
-	tempVector3.z = (float)atof(m_TokenString);
-
-	return			tempVector3;
+	return tempVector3;
 }
 
 void ASEParser::Create_OneMesh_to_list()
@@ -1064,13 +1094,6 @@ void ASEParser::Create_AnimationData_to_mesh(Mesh* nowMesh)
 	m_Animation->m_EndFrame = m_scenedata.m_LastFrame;
 	nowMesh->m_Animation = m_Animation;
 	m_IsAnimation = true;
-}
-
-// 정점 하나를..
-void ASEParser::Create_OneVertex_to_list()
-{
-	Vertex* temp = new Vertex;
-	m_OneMesh->m_VertexList.push_back(temp);
 }
 
 void ASEParser::Create_BoneData_to_list()

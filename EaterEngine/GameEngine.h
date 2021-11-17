@@ -15,10 +15,10 @@ class ObjectManager;
 class SceneManager;
 class KeyinputManager;
 class GraphicEngineManager;
-//형선이형꺼
-class HsGraphic;
-//내꺼
-class X3Engine;
+class TimeManager;
+class MaterialManager;
+class LightManager;
+
 class Scene;
 //게임 오브젝트
 class GameObject;
@@ -59,6 +59,13 @@ public:
 	bool  GetTogle(byte number);	//키 on/off
 	float GetMousePosX();			//마우스 위치 X
 	float GetMousePosY();			//마우스 위치 Y
+public:
+	///시간 관련
+	float GetdeltaTime();
+
+private:
+	void CreateObject();			//기본 생성 오브젝트
+
 private:
 	///각종 매니저들
 	ObjectManager*			mObjectManager;		//오브젝트 관리 매니저
@@ -67,6 +74,9 @@ private:
 	SceneManager*			mSceneManager;		//스크린 관리 매니저
 	KeyinputManager*		mKeyManager;		//키인풋 관련 매니저
 	GraphicEngineManager*	mGraphicManager;	//그래픽엔진 관리 매니저
+	TimeManager*			mTimeManager;		//시간 관련 타임매니저
+	MaterialManager*		mMaterialManager;	// 메테리얼 관리 매니저
+	LightManager*			mLightManager;		// 라이트 관리 매니저
 private:
 	///클라쪽에서 받아야 하는 데이터
 	HWND mHwnd; //핸들
@@ -74,14 +84,5 @@ private:
 	int WinSizeHeight;	//윈도우 사이즈 세로
 	bool ConsoleDebug;
 private:
-
-	
-	//테스트용 엔진
-	//DH3DEngine*			pTest_Engine;
-	//OneFrameData*		pTest_OFD;
-	//SharedRenderData*	pTest_SRD;
-	//DHParser::Mesh*		pTest_Mesh;
-
 };
-
 

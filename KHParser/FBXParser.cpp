@@ -43,12 +43,6 @@ void FBXParser::Initialize()
 		throw std::exception("error: unable to create FBX scene\n");
 }
 
-void FBXParser::SetTextureRoute(std::string texRoute)
-{
-	// 기본 Texture 파일 루트 설정
-	m_TextureRoute = texRoute;
-}
-
 void FBXParser::Release()
 {
 	pImporter->Destroy();
@@ -293,8 +287,16 @@ void FBXParser::ProcessSkeleton(fbxsdk::FbxNode* node)
 	Mesh* parentMesh = FindMesh(parentName);
 	m_OneMesh->m_ParentName = parentName;
 
+	// 부모의 Mesh가 존재한다면 ChildList에 추가..
 	if (parentMesh == nullptr)
+	{
 		m_OneMesh->m_TopNode = true;
+	}
+	else
+	{
+		m_OneMesh->m_Parent = parentMesh;
+		parentMesh->m_ChildList.push_back(m_OneMesh);
+	}
 
 	// Node TRS 설정..
 	SetTransform(node);
@@ -321,7 +323,7 @@ void FBXParser::ProcessSkeleton(fbxsdk::FbxNode* node)
 	const char* boneName = node->GetName();
 	newBone.m_BoneName = boneName;
 	newBone.m_parent_bone_number = parentBoneIndex;
-	newBone.m_BoneNumber = m_AllBoneList.size();
+	newBone.m_BoneNumber = (int)m_AllBoneList.size();
 	m_AllBoneList.push_back(BonePair(boneName, newBone));
 }
 
@@ -338,13 +340,22 @@ void FBXParser::ProcessMesh(fbxsdk::FbxNode* node)
 	if (m_OnlyAni) return;
 
 	// 현 Node Parent 찾기..
+	
 	const char* parentName = node->GetParent()->GetName();
+
 	Mesh* parentMesh = FindMesh(parentName);
 	m_OneMesh->m_ParentName = parentName;
 
 	// 부모의 Mesh가 존재한다면 ChildList에 추가..
 	if (parentMesh == nullptr)
+	{
 		m_OneMesh->m_TopNode = true;
+	}
+	else
+	{
+		m_OneMesh->m_Parent = parentMesh;
+		parentMesh->m_ChildList.push_back(m_OneMesh);
+	}
 
 	// Node TRS 설정..
 	SetTransform(node);
@@ -476,7 +487,7 @@ bool FBXParser::ProcessBoneWeights(fbxsdk::FbxNode* node, std::vector<BoneWeight
 					int m_Index = cluster->GetControlPointIndices()[j];
 					double weight = cluster->GetControlPointWeights()[j];
 
-					if (weight == 0) continue;
+					//if (weight == 0) continue;
 
 					skinBoneWeights[m_Index].AddBoneWeight(clusterIndex, (float)weight);
 				}
@@ -586,7 +597,7 @@ void FBXParser::OptimizeVertex(ParserData::Mesh* pMesh)
 	if (pMesh->m_VertexList.empty()) return;
 
 	bool new_VertexSet = false;
-	unsigned int resize_VertexIndex = pMesh->m_VertexList.size();
+	size_t resize_VertexIndex = pMesh->m_VertexList.size();
 
 	// 각각 Face마다 존재하는 3개의 Vertex 비교..
 	for (unsigned int i = 0; i < pMesh->m_MeshFace.size(); i++)
@@ -627,9 +638,9 @@ void FBXParser::OptimizeVertex(ParserData::Mesh* pMesh)
 			if (new_VertexSet)
 			{
 				// 추가된 Vertex가 있다면 체크..
-				if (resize_VertexIndex > (int)pMesh->m_VertexList.size())
+				if (resize_VertexIndex > pMesh->m_VertexList.size())
 				{
-					for (unsigned int k = pMesh->m_VertexList.size(); k < resize_VertexIndex; k++)
+					for (size_t k = pMesh->m_VertexList.size(); k < resize_VertexIndex; k++)
 					{
 						// 새로 추가한 Vertex와 동일한 데이터를 갖고있는 Face 내의 Vertex Index 수정..
 						if ((pMesh->m_VertexList[k]->m_Indices == pMesh->m_MeshFace[i]->m_VertexIndex[j]) &&
@@ -663,7 +674,7 @@ void FBXParser::OptimizeVertex(ParserData::Mesh* pMesh)
 				newVertex->m_IsTextureSet = true;
 
 				pMesh->m_VertexList.push_back(newVertex);
-				pMesh->m_MeshFace[i]->m_VertexIndex[j] = resize_VertexIndex;
+				pMesh->m_MeshFace[i]->m_VertexIndex[j] = (int)resize_VertexIndex;
 				resize_VertexIndex++;
 				new_VertexSet = false;
 			}
@@ -955,14 +966,6 @@ void FBXParser::SetTransform(fbxsdk::FbxNode* node)
 	m_OneMesh->m_LocalTM = local;
 }
 
-DirectX::SimpleMath::Matrix FBXParser::GetGlobalAnimationTransform(fbxsdk::FbxNode* node, fbxsdk::FbxTime time)
-{
-	if (node == nullptr) return DirectX::SimpleMath::Matrix();
-
-	FbxAMatrix matrix = node->EvaluateGlobalTransform(time);
-	return ConvertMatrix(matrix);
-}
-
 int FBXParser::GetMaterialIndex(fbxsdk::FbxSurfaceMaterial* material)
 {
 	for (unsigned int m_Index = 0; m_Index < fbxMaterials.size(); m_Index++)
@@ -981,24 +984,28 @@ void FBXParser::SetMaterial(fbxsdk::FbxSurfaceMaterial* material)
 	if (material->GetClassId().Is(FbxSurfacePhong::ClassId))
 	{
 		// Ambient Data
-		m_MaterialData->m_Material_Ambient.x = static_cast<float>(((FbxSurfacePhong*)material)->Ambient.Get()[0]) * 10.0f;
-		m_MaterialData->m_Material_Ambient.y = static_cast<float>(((FbxSurfacePhong*)material)->Ambient.Get()[1]) * 10.0f;
-		m_MaterialData->m_Material_Ambient.z = static_cast<float>(((FbxSurfacePhong*)material)->Ambient.Get()[2]) * 10.0f;
+		m_MaterialData->m_Material_Ambient.x = static_cast<float>(((FbxSurfacePhong*)material)->Ambient.Get()[0]);
+		m_MaterialData->m_Material_Ambient.y = static_cast<float>(((FbxSurfacePhong*)material)->Ambient.Get()[1]);
+		m_MaterialData->m_Material_Ambient.z = static_cast<float>(((FbxSurfacePhong*)material)->Ambient.Get()[2]);
+		m_MaterialData->m_Material_Ambient.w = 1.0f;
 
 		// Diffuse Data
 		m_MaterialData->m_Material_Diffuse.x = static_cast<float>(((FbxSurfacePhong*)material)->Diffuse.Get()[0]);
 		m_MaterialData->m_Material_Diffuse.y = static_cast<float>(((FbxSurfacePhong*)material)->Diffuse.Get()[1]);
 		m_MaterialData->m_Material_Diffuse.z = static_cast<float>(((FbxSurfacePhong*)material)->Diffuse.Get()[2]);
+		m_MaterialData->m_Material_Diffuse.w = 1.0f;
 
 		// Specular Data
 		m_MaterialData->m_Material_Specular.x = static_cast<float>(((FbxSurfacePhong*)material)->Specular.Get()[0]);
 		m_MaterialData->m_Material_Specular.y = static_cast<float>(((FbxSurfacePhong*)material)->Specular.Get()[1]);
 		m_MaterialData->m_Material_Specular.z = static_cast<float>(((FbxSurfacePhong*)material)->Specular.Get()[2]);
+		m_MaterialData->m_Material_Specular.w = 1.0f;
 
 		// Emissive Data
 		m_MaterialData->m_Material_Emissive.x = static_cast<float>(((FbxSurfacePhong*)material)->Emissive.Get()[0]);
 		m_MaterialData->m_Material_Emissive.y = static_cast<float>(((FbxSurfacePhong*)material)->Emissive.Get()[1]);
 		m_MaterialData->m_Material_Emissive.z = static_cast<float>(((FbxSurfacePhong*)material)->Emissive.Get()[2]);
+		m_MaterialData->m_Material_Emissive.w = 1.0f;
 
 		// Transparecy Data
 		m_MaterialData->m_Material_Transparency = static_cast<float>(((FbxSurfacePhong*)material)->TransparencyFactor.Get());
@@ -1015,16 +1022,19 @@ void FBXParser::SetMaterial(fbxsdk::FbxSurfaceMaterial* material)
 		m_MaterialData->m_Material_Ambient.x = static_cast<float>(((FbxSurfaceLambert*)material)->Ambient.Get()[0]);
 		m_MaterialData->m_Material_Ambient.y = static_cast<float>(((FbxSurfaceLambert*)material)->Ambient.Get()[1]);
 		m_MaterialData->m_Material_Ambient.z = static_cast<float>(((FbxSurfaceLambert*)material)->Ambient.Get()[2]);
+		m_MaterialData->m_Material_Ambient.w = 1.0f;
 
 		// Diffuse Data
 		m_MaterialData->m_Material_Diffuse.x = static_cast<float>(((FbxSurfaceLambert*)material)->Diffuse.Get()[0]);
 		m_MaterialData->m_Material_Diffuse.y = static_cast<float>(((FbxSurfaceLambert*)material)->Diffuse.Get()[1]);
 		m_MaterialData->m_Material_Diffuse.z = static_cast<float>(((FbxSurfaceLambert*)material)->Diffuse.Get()[2]);
+		m_MaterialData->m_Material_Diffuse.w = 1.0f;
 
 		// Emissive Data
 		m_MaterialData->m_Material_Emissive.x = static_cast<float>(((FbxSurfaceLambert*)material)->Emissive.Get()[0]);
 		m_MaterialData->m_Material_Emissive.y = static_cast<float>(((FbxSurfaceLambert*)material)->Emissive.Get()[1]);
 		m_MaterialData->m_Material_Emissive.z = static_cast<float>(((FbxSurfaceLambert*)material)->Emissive.Get()[2]);
+		m_MaterialData->m_Material_Emissive.w = 1.0f;
 
 		// Transparecy Data
 		m_MaterialData->m_Material_Transparency = static_cast<float>(((FbxSurfaceLambert*)material)->TransparencyFactor.Get());
@@ -1110,12 +1120,7 @@ void FBXParser::CreateVertex(fbxsdk::FbxMesh* mesh, std::vector<BoneWeights>& bo
 
 		fbxPos = mesh->GetControlPointAt(vertexIndex);
 
-		DirectX::SimpleMath::Vector3 pos = ConvertVector3(fbxPos);
-
-		// Bounding Box 체크용 Position
-		DirectX::SimpleMath::Vector3 nowPos = NoConvertVector3(fbxPos);
-
-		m_OneMesh->m_VertexList[vertexIndex]->m_Pos = pos;
+		m_OneMesh->m_VertexList[vertexIndex]->m_Pos = ConvertVector3(fbxPos);
 		m_OneMesh->m_VertexList[vertexIndex]->m_Indices = vertexIndex;
 
 		// Bone Weight Data

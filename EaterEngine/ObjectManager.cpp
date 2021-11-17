@@ -19,18 +19,10 @@ Delegate_Map<Component> ObjectManager::EndUpdate;
 
 ObjectManager::ObjectManager()
 {
-	Global = nullptr;
 }
 
 ObjectManager::~ObjectManager()
 {
-	delete Global;
-	Global = nullptr;
-}
-
-GlobalData* ObjectManager::GetGlobalData()
-{
-	return Global;
 }
 
 void ObjectManager::PushCreateObject(GameObject* obj)
@@ -88,7 +80,6 @@ void ObjectManager::AllDeleteObject()
 
 void ObjectManager::Initialize(HWND _g_hWnd)
 {
-	Global = new GlobalData();
 }
 
 void ObjectManager::PushStartUpdate(Component* mComponent)
@@ -152,6 +143,7 @@ void ObjectManager::PlayUpdate()
 	//글로벌 데이터
 	Global->mProj = Camera::GetProj();
 	Global->mViewMX = Camera::GetMainView();
+	Global->mPos = Camera::GetMainPos();
 
 	///모든오브젝트의 데이터를 랜더큐에 담는다
 	CreateRenderQueue();
@@ -170,6 +162,11 @@ void ObjectManager::PlayStart()
 void ObjectManager::CreateRenderQueue()
 {
 	//오브젝트의 사이즈 만큼 돌면서 랜더큐에 MeshData를 전달해준다
+	for (int i = 0; i < ShadowData.size(); i++)
+	{
+		ShadowData.pop();
+	}
+	
 
 	int count = ObjectList.size();
 	
@@ -177,6 +174,7 @@ void ObjectManager::CreateRenderQueue()
 	for (it; it != ObjectList.end(); it++)
 	{
 		RenderData.push((*it)->OneMeshData);
+		ShadowData.push((*it)->OneMeshData);
 	}
 }
 
@@ -215,6 +213,11 @@ void ObjectManager::DeleteObject()
 std::queue<MeshData*>* ObjectManager::GetRenderQueue()
 {
 	return &RenderData;
+}
+
+std::queue<MeshData*>* ObjectManager::GetShadowQueue()
+{
+	return &ShadowData;
 }
 
 

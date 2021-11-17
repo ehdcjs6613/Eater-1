@@ -1,6 +1,9 @@
 #include "DebugManager.h"
 #include "KeyinputManager.h"
-HANDLE DebugManager::hConsole;
+
+HANDLE DebugManager::hConsole[2];
+int	DebugManager::ConsoleIndex = 0;
+
 bool DebugManager::DebugON = true;
 DebugManager::DebugManager()
 {
@@ -18,8 +21,17 @@ void DebugManager::Initialize(KeyinputManager* mkeyManager, bool mDebugOn)
 	if (DebugON == true)
 	{
 		AllocConsole();
-		hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+		//콘솔의 버퍼를 가져온다
+		hConsole[0] = CreateConsoleScreenBuffer(GENERIC_READ | GENERIC_WRITE, 0, NULL, CONSOLE_TEXTMODE_BUFFER, NULL);
+		hConsole[1] = CreateConsoleScreenBuffer(GENERIC_READ | GENERIC_WRITE, 0, NULL, CONSOLE_TEXTMODE_BUFFER, NULL);
 		KeyManager = mkeyManager;
+
+		CONSOLE_CURSOR_INFO cci;
+		cci.dwSize = 1;
+		cci.bVisible = FALSE;
+
+		SetConsoleCursorInfo(hConsole[0], &cci);
+		SetConsoleCursorInfo(hConsole[1], &cci);
 	}
 }
 
@@ -60,12 +72,13 @@ void DebugManager::printStart()
 	Msg += "EndUpdate			(프레임 호출)\n";
 	Msg += "------------------------------\n";
 	
-
-
-	WriteFile(hConsole, Msg.c_str(), Msg.size(), &dwByte, NULL);
+	COORD CursorPosition = { 0, 0 };
+	DWORD dw;
+	SetConsoleCursorPosition(hConsole[ConsoleIndex], CursorPosition);
+	WriteFile(hConsole[ConsoleIndex], Msg.c_str(), Msg.size(), &dw, NULL);
 }
 
-void DebugManager::Print(std::string mMsg, MSG_TYPE type, bool Error)
+void DebugManager::Print(std::string Msg, int X, int Y, MSG_TYPE type, bool Error)
 {
 	if (DebugON == false) { return; }
 
@@ -74,19 +87,19 @@ void DebugManager::Print(std::string mMsg, MSG_TYPE type, bool Error)
 	switch ((int)type)
 	{
 	case (int)MSG_TYPE::MSG_LOAD:
-		MSG = "[로드]" + mMsg;
+		MSG = "[로드]" + Msg;
 		break;
 	case (int)MSG_TYPE::MSG_CREATE:
-		MSG = "[생성]" + mMsg;
+		MSG = "[생성]" + Msg;
 		break;
 	case (int)MSG_TYPE::MSG_DELETE:
-		MSG = "[삭제]" + mMsg;
+		MSG = "[삭제]" + Msg;
 		break;
 	case (int)MSG_TYPE::MSG_ENGINE:
-		MSG = "[엔진]" + mMsg;
+		MSG = "[엔진]" + Msg;
 		break;
 	case (int)MSG_TYPE::MSG_ERROR:
-		MSG = "[에러]" + mMsg;
+		MSG = "[에러]" + Msg;
 		break;
 	}
 
@@ -102,24 +115,55 @@ void DebugManager::Print(std::string mMsg, MSG_TYPE type, bool Error)
 	}
 	
 
-	DWORD dwByte(0);
-	WriteFile(hConsole, MSG.c_str(), MSG.size(), &dwByte, NULL);
+
+	COORD CursorPosition = { X, Y };
+	DWORD dw;
+	SetConsoleCursorPosition(hConsole[ConsoleIndex], CursorPosition);
+	WriteFile(hConsole[ConsoleIndex], MSG.c_str(), MSG.size(), &dw, NULL);
+}
+
+void DebugManager::Begin()
+{
+	//그릴곳 설정
+	COORD CursorPosition = { 0, 0 };
+	DWORD dw;
+	SetConsoleCursorPosition(hConsole[ConsoleIndex], CursorPosition);
+	std::string temp = "ㅎㅇ";
+	WriteFile(hConsole[ConsoleIndex], temp.c_str(), temp.size(), &dw, NULL);
+
+}
+
+void DebugManager::End()
+{
+	//화면에 보여줄 콘솔을 스위칭 해준다
+	SetConsoleActiveScreenBuffer(hConsole[ConsoleIndex]);
+
+	ConsoleIndex = !ConsoleIndex;
+}
+
+void DebugManager::Clear()
+{
+	//그릴곳을 지워준다
+	COORD Coor = { 0, 0 };
+	DWORD dw;
+	FillConsoleOutputCharacter(hConsole[ConsoleIndex], ' ', 80 * 25, Coor, &dw);
 }
 
 void DebugManager::Update()
 {
-	if (DebugON == false) { return; }
+	
+	
 
-	if (KeyManager->GetKeyDown('C'))
-	{
-		Print("테스트용 메세지", MSG_TYPE::MSG_ENGINE);
-	}
+	
+
+
+
 }
 
 void DebugManager::Delete()
 {
-	
-
+	CloseHandle(hConsole[0]);
+	CloseHandle(hConsole[1]);
 }
 
 

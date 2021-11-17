@@ -8,7 +8,7 @@
 /// </summary>
 
 class MeshData;
-struct GlobalData;
+class GlobalData;
 class Indexbuffer;
 class Vertexbuffer;
 class TextureBuffer;
@@ -16,9 +16,8 @@ class Grahpics2D;
 
 namespace ParserData 
 {
-	struct Mesh;
+	class Mesh;
 }
-
 
 class GraphicEngine
 {
@@ -28,11 +27,15 @@ protected:
 
 public:
 	GraphicEngine() {};
+<<<<<<< HEAD:EaterEngine/GraphicsEngine.h
 	virtual ~GraphicEngine() 
 	{
 		//delete m_p2DSupport;
 		//m_p2DSupport = nullptr;
 	};
+=======
+	virtual ~GraphicEngine() {};
+>>>>>>> main:Library/inc/Component/GraphicsEngine.h
 
 	/// <summary>
 	/// 무조건 그래픽 엔진쪽에서 만들어야 하는것들
@@ -41,7 +44,6 @@ public:
 	//게임 엔진쪽에서 윈도우 핸들을 넘겨줄것임
 	virtual void Initialize(HWND _hWnd, int screenWidth, int screenHeight)= 0;
 
-
 	///그래픽 엔진과 게임엔진에서 주고받아야할 함수들
 	virtual Indexbuffer* CreateIndexBuffer(ParserData::Mesh* mModel)	= 0;	//인덱스 버퍼를 만들어준다
 	virtual Vertexbuffer* CreateVertexBuffer(ParserData::Mesh* mModel)	= 0;	//버텍스 버퍼를 만들어준다
@@ -49,9 +51,9 @@ public:
 	virtual void OnReSize(int Change_Width, int Change_Height) = 0;			//리사이즈
 	virtual void Delete() = 0;
 
-	
-	
-
 	/// 랜더링을 한다 매쉬 랜더데이터 리스트, 글로벌 데이터
-	virtual void Render(std::queue<MeshData*>* meshList, GlobalData* global) = 0;
+	virtual void Render(std::queue<MeshData*>* meshList,GlobalData* global) = 0;
+	virtual void ShadowRender(std::queue<MeshData*>* meshList, GlobalData* global) { return; };
+	virtual void SSAORender() { return; };
+	virtual void UIRender(std::queue<MeshData*>* meshList, GlobalData* global) { return; };
 };

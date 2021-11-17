@@ -12,17 +12,21 @@
 #include <string>
 #include <map>
 #include "ParserData.h"
+#include "SimpleMath.h"
 namespace ParserData
 {
 	struct Model;
+	class Mesh;
 }
+
+
+
 
 class LoadMeshData;
 class ModelData;
 class ModelParser;
 class FBXParser;
 class FBXModel;
-class GraphicEngine;
 class TextureBuffer;
 class GraphicEngineManager;
 
@@ -62,8 +66,16 @@ public:
 	//모든 매쉬정보를 삭제
 	void DeleteMeshAll();
 private:
-	//매쉬 데이터를 저장할 구조체를 만든다
-	LoadMeshData* CreateMesh(ParserData::Mesh* mesh);
+	//매쉬 데이터를 저장할 구조체를 만든다(재귀)
+	//LoadMeshData* CreateMesh(ParserData::Mesh* mesh, ModelData* data);
+	// 
+	//계층 구조를 타지않고 탑오브젝트들만 읽어온다
+	LoadMeshData* CreateMeshObjeect(ParserData::Mesh* mesh);
+	LoadMeshData* CreateBoneObjeect(ParserData::Mesh* mesh, ModelData* SaveData);
+	
+	//파싱한데이터에서 값을 변경하지않은것들을 그대로 복사함
+	void SetData(LoadMeshData* MeshData, ParserData::Mesh* LoadData);
+
 
 	//모델이 들어있는 경로
 	std::string MeshPath;

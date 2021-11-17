@@ -167,7 +167,7 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\lib"
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)Library\inc;$(ProjectDir)Export</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Library\inc;$(ProjectDir)Export;$(SolutionDir)Library\inc\DHEngine</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
@@ -175,7 +175,8 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\lib"
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib;$(SolutionDir)lib\DirectXTK2021_06_14;$(SolutionDir)lib\FX11_2021_06_14</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Library\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy /Y "$(ProjectDir)Export\*.h" "$(SolutionDir)Library\inc\Component"
@@ -185,14 +186,8 @@ copy /Y "$(ProjectDir)GraphicsEngine.h" "$(SolutionDir)Library\inc"
 copy /Y "$(ProjectDir)ResourcesData.h" "$(SolutionDir)Library\inc"
 copy /Y "$(ProjectDir)EngineData.h" "$(SolutionDir)Library\inc"
 
-
 copy /Y "$(TargetDir)*.dll" "$(SolutionDir)Library\lib"
 copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\lib"
-
-
-
-
-
 
 
 
@@ -210,7 +205,7 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\lib"
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)Library\inc;$(ProjectDir)Export</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Library\inc;$(ProjectDir)Export;$(SolutionDir)Library\inc\DHEngine</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -220,6 +215,7 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\lib"
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalLibraryDirectories>$(SolutionDir)Library\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy /Y "$(ProjectDir)Export\*.h" "$(SolutionDir)Library\inc\Component"
@@ -239,6 +235,9 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\lib"
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Library\inc\GraphicsEngine.h" />
+    <ClInclude Include="Animation.h" />
+    <ClInclude Include="BaseManager.h" />
     <ClInclude Include="ComponentHeader.h" />
     <ClInclude Include="DebugManager.h" />
     <ClInclude Include="Delegate.h" />
@@ -248,23 +247,28 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\lib"
     <ClInclude Include="Export\Component.h" />
     <ClInclude Include="Export\EaterEngineDLL.h" />
     <ClInclude Include="Export\GameObject.h" />
+    <ClInclude Include="Export\Light.h" />
     <ClInclude Include="Export\MainHeader.h" />
     <ClInclude Include="Export\MeshFilter.h" />
+    <ClInclude Include="Export\ResourcesData.h" />
     <ClInclude Include="Export\Scene.h" />
+    <ClInclude Include="Export\SkinningFilter.h" />
     <ClInclude Include="Export\Transform.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="GraphicEngineManager.h" />
-    <ClInclude Include="GraphicsEngine.h" />
     <ClInclude Include="KeyinputManager.h" />
+    <ClInclude Include="LightManager.h" />
+    <ClInclude Include="Material.h" />
+    <ClInclude Include="MaterialManager.h" />
     <ClInclude Include="ObjectManager.h" />
     <ClInclude Include="LoadManager.h" />
-    <ClInclude Include="ResourcesData.h" />
     <ClInclude Include="SceneManager.h" />
-    <ClInclude Include="SkinningFilter.h" />
     <ClInclude Include="TimeManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Animation.cpp" />
+    <ClCompile Include="BaseManager.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="DebugManager.cpp" />
@@ -273,9 +277,12 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\lib"
     <ClCompile Include="GameEngine.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GraphicEngineManager.cpp" />
-    <ClCompile Include="GraphicsEngine.cpp" />
     <ClCompile Include="KeyinputManager.cpp" />
+    <ClCompile Include="Light.cpp" />
+    <ClCompile Include="LightManager.cpp" />
     <ClCompile Include="MainHeader.cpp" />
+    <ClCompile Include="Material.cpp" />
+    <ClCompile Include="MaterialManager.cpp" />
     <ClCompile Include="MeshFilter.cpp" />
     <ClCompile Include="ObjectManager.cpp" />
     <ClCompile Include="LoadManager.cpp" />

@@ -8,17 +8,16 @@
 #include <functional>
 #include "Delegate.h"
 #include "EaterEngineDLL.h"
+#include "BaseManager.h"
 
 
 class Camera;
 class FBXModel;
 class GameObject;
 class Component;
-class DH3DEngine;
 class MeshFilter;
-class D2DSupport;
 
-class ObjectManager
+class ObjectManager : public BaseManager
 {
 public:
 	~ObjectManager();
@@ -61,19 +60,16 @@ public:
 	void DeleteObject();
 
 	std::queue<MeshData*>* GetRenderQueue();
+	std::queue<MeshData*>* GetShadowQueue();
 	
-
-	///매쉬마다 없어도되는 데이터들
-	GlobalData* GetGlobalData();
 private:
 	std::vector<GameObject*> ObjectList;
 	std::queue<GameObject*> DeleteList;
 
 	///그래픽엔진쪽으로 던저줄 데이터들
 	std::queue<MeshData*> RenderData;
-
-	GlobalData* Global;
-	D2DSupport* m_pD2DSupport;
+	std::queue<MeshData*> ShadowData;
+	std::queue<MeshData*> UIData;
 
 
 	/// 시작단계 한번만 실행됨
