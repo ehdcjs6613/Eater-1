@@ -27,15 +27,12 @@ protected:
 
 public:
 	GraphicEngine() {};
-<<<<<<< HEAD:EaterEngine/GraphicsEngine.h
 	virtual ~GraphicEngine() 
 	{
 		//delete m_p2DSupport;
 		//m_p2DSupport = nullptr;
 	};
-=======
-	virtual ~GraphicEngine() {};
->>>>>>> main:Library/inc/Component/GraphicsEngine.h
+	
 
 	/// <summary>
 	/// 무조건 그래픽 엔진쪽에서 만들어야 하는것들

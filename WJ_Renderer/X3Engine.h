@@ -53,7 +53,7 @@ private:
 ///------------------------------------------------	
 	DirectXDevice*			m_pDevice;			///
 	DirectXDeviceContext*	m_pDeviceContext;	///
-	//DirectXSwapChain*		m_pSwapChain;		///
+	//D3D11_VIEWPORT*			m_ViewPort;			///
 ///---------------------------------------------///
 	DirectXRasterizerState* m_pRasterizerState; ///
 	DirectXRasterizerState* m_pRasterizerSolid; ///
@@ -63,6 +63,11 @@ private:
 ///---------------------------------------------///
 	
 	D3D_FEATURE_LEVEL	    m_FeatureLevel;
+
+
+	ID3D11Device*			m_pNewDevice;
+	ID3D11DeviceContext*	m_pNewDeviceContext;
+	 D3D11_VIEWPORT*		m_pNewViewPort;
 
 
 private:
@@ -104,6 +109,9 @@ public:
 
 	/// 랜더링을 한다 매쉬 랜더데이터 리스트, 글로벌 데이터
 	X3Engine_DLL virtual void		  Render(std::queue<MeshData*>* meshList, GlobalData* global) override;
+	virtual void SetViewPort(void* VPT); //랜더타겟뷰, 뎁스스텐실,뷰포트
+	virtual void SetDevice(void* Devie, void* DevieContext); //디바이스,컨텍스트
+
 
 #pragma endregion Parents Overriding Function List
 public:

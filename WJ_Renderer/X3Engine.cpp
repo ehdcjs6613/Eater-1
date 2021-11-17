@@ -11,7 +11,8 @@
 
 #include "XRenderer.h"
 #include "ParserData.h"
-#include "Grahpics2D.h"
+#include "EngineData.h"
+//#include "Grahpics2D.h"
 #include "ResourcesData.h"
 #include "X3Engine.h"
 //스마트포인터 인클르드
@@ -30,7 +31,7 @@ X3Engine::X3Engine() : m_pDevice(nullptr), m_pDeviceContext(nullptr)
 	m_pRasterizerSolid = new DirectXRasterizerState();
 	m_pRasterizerWire = new DirectXRasterizerState();
 	m_pAdapter = new DirectXAdapter();
-	m_p2DSupport = new Grahpics2D();
+	//m_p2DSupport = new Grahpics2D();
 
 	
 }
@@ -115,15 +116,15 @@ void X3Engine::Initialize(HWND _hWnd, int _iWidth, int _iHeight)
 	m_pAdapter->GetAdapterInfo();
 
 	
-	m_p2DSupport->initialize(m_hWnd, m_pRenderer->m_pDirectXSwapChain->m_pSwapChain);
-
-	m_p2DSupport->LoadBitMap(L"../Image/apple_1.png", L"../Image/apple_1.png");
-	m_p2DSupport->LoadBitMap(L"../Image/atk_1.png", L"../Image/atk_1.png");
-
-	if (nullptr == m_pRenderer->m_pDirectXSwapChain->m_pSwapChain)
-	{
-		
-	}
+	//m_p2DSupport->initialize(m_hWnd, m_pRenderer->m_pDirectXSwapChain->m_pSwapChain);
+	//
+	//m_p2DSupport->LoadBitMap(L"../Image/apple_1.png", L"../Image/apple_1.png");
+	//m_p2DSupport->LoadBitMap(L"../Image/atk_1.png", L"../Image/atk_1.png");
+	//
+	//if (nullptr == m_pRenderer->m_pDirectXSwapChain->m_pSwapChain)
+	//{
+	//	
+	//}
 	InitializeShaders();
 
 	TestScene();
@@ -167,8 +168,8 @@ Indexbuffer* X3Engine::CreateIndexBuffer(ParserData::Mesh* mModel)
 	m_pDevice->m_pDX11Device->CreateBuffer(&ibd, &iinitData, &mIB);
 
 	//인덱스버퍼를 보낼수있도록 변경
-	indexbuffer->IndexBufferPointer = mIB;
-	indexbuffer->size = sizeof(ID3D11Buffer);
+	//indexbuffer->IndexBufferPointer = mIB;
+	//indexbuffer->size = sizeof(ID3D11Buffer);
 
 	return indexbuffer;
 }
@@ -209,7 +210,7 @@ Vertexbuffer* X3Engine::CreateVertexBuffer(ParserData::Mesh* mModel)
 
 
 	vertexbuffer->VertexbufferPointer = mVB;
-	vertexbuffer->size = sizeof(ID3D11Buffer);
+	//vertexbuffer->size = sizeof(ID3D11Buffer);
 
 	return vertexbuffer;
 }
@@ -260,25 +261,65 @@ void X3Engine::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 {
 	//렌더링시작의 순서.
 	//나중에 렌더 큐? 같은걸로 해보자,
-	m_pRenderer->Render_Begin(m_pDeviceContext->m_pDX11DeviceContext);
+	//m_pRenderer->Render_Begin(m_pDeviceContext->m_pDX11DeviceContext);
+	
+	while (meshList->size() != 0 )
+	{
+		MeshData* data = meshList->front();
+
+		if (data->ObjType == OBJECT_TYPE::Base)
+		{
+		
+			//m_pRenderer->Render_FrmUpdate(m_pDeviceContext->m_pDX11DeviceContext, m_pRasterizerSolid->m_pFrameRS, m_pSamplerState);
+			//
+			//ID3D11Buffer* IBuffer = reinterpret_cast<ID3D11Buffer*>(data->IB->IndexBufferPointer);
+			//ID3D11Buffer* VBuffer = reinterpret_cast<ID3D11Buffer*>(data->VB->VertexbufferPointer);
+			//
+			//
+			//m_pRenderer->Render_Update(this->m_pDevice->m_pDX11Device,
+			//	m_pDeviceContext->m_pDX11DeviceContext, m_XVertexShader.GetShader(),
+			//	m_XPexelShader.GetShader(), m_XVertexShader.GetInputLayout(), VBuffer, IBuffer,
+			//	m_pSamplerState);
+		}
+		
+
+
+		
+
+
+
+		meshList->pop();
+	}
+
+
+
+	//TestScene();
 	
 
+
+	//m_pRenderer->Render_2D(m_p2DSupport, this->m_pAdapter);
+	
+	//m_pRenderer->Render_End(m_p2DSupport,m_pRenderer->m_pDirectXSwapChain->m_pSwapChain);
 	
 
-	TestScene();
-	m_pRenderer->Render_FrmUpdate(m_pDeviceContext->m_pDX11DeviceContext, m_pRasterizerSolid->m_pFrameRS,m_pSamplerState);
-	
-	m_pRenderer->Render_Update(this->m_pDevice->m_pDX11Device, 
-		m_pDeviceContext->m_pDX11DeviceContext,m_XVertexShader.GetShader(),
-		m_XPexelShader.GetShader(),m_XVertexShader.GetInputLayout(),m_pVertexBuffer, 
-		m_pVertexBuffer2, m_pSamplerState);
+}
+
+void X3Engine::SetViewPort(void* VPT)
+{
+	m_pNewViewPort = reinterpret_cast<D3D11_VIEWPORT*>(VPT);
+}
+
+void X3Engine::SetDevice(void* Devie, void* DevieContext)
+{
+	m_pNewDevice		= reinterpret_cast<ID3D11Device*>(Devie);
+	m_pNewDeviceContext = reinterpret_cast<ID3D11DeviceContext*>(DevieContext);
+
+	m_pDevice->SetDevice(m_pNewDevice);
+	m_pDeviceContext->SetDeviceContext(m_pNewDeviceContext);
 
 
-	m_pRenderer->Render_2D(m_p2DSupport, this->m_pAdapter);
+	CreateRenderState();
 	
-	m_pRenderer->Render_End(m_p2DSupport,m_pRenderer->m_pDirectXSwapChain->m_pSwapChain);
-	
-
 }
 
 void X3Engine::CreateRenderState()
