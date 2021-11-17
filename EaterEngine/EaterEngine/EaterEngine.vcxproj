@@ -235,13 +235,13 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\lib"
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Library\inc\EngineData.h" />
     <ClInclude Include="..\..\Library\inc\GraphicsEngine.h" />
     <ClInclude Include="Animation.h" />
     <ClInclude Include="BaseManager.h" />
     <ClInclude Include="ComponentHeader.h" />
     <ClInclude Include="DebugManager.h" />
     <ClInclude Include="Delegate.h" />
-    <ClInclude Include="EngineData.h" />
     <ClInclude Include="EnumClass.h" />
     <ClInclude Include="Export\Camera.h" />
     <ClInclude Include="Export\Component.h" />

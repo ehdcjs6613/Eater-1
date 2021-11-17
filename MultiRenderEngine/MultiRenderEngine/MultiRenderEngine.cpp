@@ -10,9 +10,9 @@
 
 #ifdef _WIN64
 #ifdef _DEBUG
-#pragma comment( lib, "../lib/DirectXTK_x64d.lib" )
+#pragma comment( lib, "DirectXTK_x64d.lib" )
 #else
-#pragma comment( lib, "../lib/DirectXTK_x64r.lib" )
+#pragma comment( lib, "DirectXTK_x64r.lib" )
 #endif
 #endif
 
@@ -268,19 +268,37 @@ Indexbuffer* MultiRenderEngine::CreateIndexBuffer(ParserData::Mesh* mModel)
 	return indexbuffer;
 }
 
-TextureBuffer* MultiRenderEngine::CreateTextureBuffer(std::string Name)
+TextureBuffer* MultiRenderEngine::CreateTextureBuffer(std::string path)
 {
-	TextureBuffer* temp = nullptr;
-	if (0)
+	TextureBuffer* buffer = new TextureBuffer();
+
+	ID3D11Resource* texResource = nullptr;
+	ID3D11ShaderResourceView* newTex = nullptr;
+
+	//해당 문자열에 dds가있다면 (rfind 는 뒤에서부터 찾는다)
+	if (path.rfind(".dds") != std::string::npos)
 	{
-		temp = CreateDDSTexture(Name);
+		//문자열 변환
+		std::wstring _path = std::wstring(path.begin(), path.end());
+		const wchar_t* w_path = _path.c_str();
+
+		//생성
+		HR(DirectX::CreateDDSTextureFromFile(m_Device, w_path, &texResource, &newTex));
 	}
-	else
+	else if (path.rfind(".png") != std::string::npos)
 	{
-		temp = CreateWICTexture(Name);
+		//문자열 변환
+		std::wstring _path = std::wstring(path.begin(), path.end());
+		const wchar_t* w_path = _path.c_str();
+
+		//생성
+		HR(DirectX::CreateWICTextureFromFile(m_Device, w_path, &texResource, &newTex));
 	}
 
-	return temp;
+	buffer->TextureBufferPointer = newTex;
+	texResource->Release();
+
+	return buffer;
 }
 
 void MultiRenderEngine::CreateDevice(HWND hwnd,int screenWidth, int screenHeight)
@@ -375,12 +393,12 @@ void MultiRenderEngine::Create_SwapChain_RenderTarget()
 void MultiRenderEngine::Create_ViewPort(int KeyNumber ,int StartX, int StartY, int Width, int Height)
 {
 	m_ViewPort = new D3D11_VIEWPORT();
-	m_ViewPort->TopLeftX = StartX;
-	m_ViewPort->TopLeftY = StartY;
-	m_ViewPort->Width = static_cast<float>(Width);
-	m_ViewPort->Height = static_cast<float>(Height);
-	m_ViewPort->MinDepth = 0.0f;
-	m_ViewPort->MaxDepth = 1.0f;
+	m_ViewPort->TopLeftX	= StartX;
+	m_ViewPort->TopLeftY	= StartY;
+	m_ViewPort->Width		= static_cast<float>(Width);
+	m_ViewPort->Height		= static_cast<float>(Height);
+	m_ViewPort->MinDepth	= 0.0f;
+	m_ViewPort->MaxDepth	= 1.0f;
 
 	Split_Window.insert({ KeyNumber, {m_ViewPort,nullptr } });
 }
@@ -546,23 +564,8 @@ Vertexbuffer* MultiRenderEngine::SkinningVertexBuffer(ParserData::Mesh* mModel)
 	return vertexbuffer;
 }
 
-TextureBuffer* MultiRenderEngine::CreateDDSTexture(std::string Name)
-{
-	TextureBuffer* buffer = new TextureBuffer();
 
-	ID3D11Resource* texResource = nullptr;
-	ID3D11ShaderResourceView* newTex = nullptr;
 
-	CreateDDSTextureFromFile(m_Device,Name.c_str(), &texResource, &newTex);
-
-	buffer->TextureBufferPointer;
-	return nullptr;
-}
-
-TextureBuffer* MultiRenderEngine::CreateWICTexture(std::string Name)
-{
-	return nullptr;
-}
 
 void MultiRenderEngine::BeginRender()
 {

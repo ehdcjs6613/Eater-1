@@ -7,9 +7,9 @@ struct Deferred32
 	//위치
 	DirectX::SimpleMath::Vector3 Pos;
 	//노말
-	DirectX::SimpleMath::Vector3 Nomal;
-	//텍스쳐
 	DirectX::SimpleMath::Vector2 Tex;
+	//텍스쳐
+	DirectX::SimpleMath::Vector3 Nomal;
 	//탄젠트
 	DirectX::SimpleMath::Vector3 Tangent;
 };

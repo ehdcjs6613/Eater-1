@@ -71,17 +71,14 @@ public:
 	MULTIENGINE_DLL void Delete();
 
 
-
-	//인덱스 버퍼와 버텍스 버퍼를 생성한다
-	MULTIENGINE_DLL Vertexbuffer* CreateVertexBuffer(ParserData::Mesh* mModel);
-	MULTIENGINE_DLL Indexbuffer*  CreateIndexBuffer(ParserData::Mesh* mModel);
-	MULTIENGINE_DLL TextureBuffer* CreateTextureBuffer(std::string Name);
+	MULTIENGINE_DLL Vertexbuffer* CreateVertexBuffer(ParserData::Mesh* mModel);	//버텍스 버퍼를 생성한다
+	MULTIENGINE_DLL Indexbuffer*  CreateIndexBuffer(ParserData::Mesh* mModel);	//인덱스 버퍼를 생성한다
+	MULTIENGINE_DLL TextureBuffer* CreateTextureBuffer(std::string Name);		//텍스쳐를 생성한다
 
 	MULTIENGINE_DLL void EndRender();
 	MULTIENGINE_DLL	void BeginRender();
 	MULTIENGINE_DLL int GetWindowCount();
 private:
-
 	//그래픽 엔진 디바이스와 컨텍스트를 생성해줌
 	void CreateDevice(HWND hwnd,int screenWidth, int screenHeight);
 
@@ -102,6 +99,11 @@ private:
 
 	//스키닝 버텍스 버퍼를 생성
 	Vertexbuffer* SkinningVertexBuffer(ParserData::Mesh* mModel);
+
+	//DDS 텍스쳐를 생성
+	TextureBuffer* CreateDDSTexture(std::string Name);
+	//WICT 텍스쳐를 생성
+	TextureBuffer* CreateWICTexture(std::string Name);
 private:
 	HWND m_Hwnd;
 

@@ -1,4 +1,4 @@
-//#include "MainHeader.hlsli"
+#include "MainHeader.hlsli"
 
 #define TEXTURE_MASK_MAIN   0x00000001 //메인텍스쳐 여부
 #define TEXTURE_MASK_SUB    0x00000010 //서브텍스쳐 여부
@@ -12,15 +12,16 @@ struct PixelInputType
 };
 
 
-struct PixeloutputType
-{
-    float4 color : SV_Target0;
-};
+//struct PixeloutputType
+//{
+//    float4 color : SV_Target0;
+//};
 
-PixeloutputType main(PixelInputType input)
+float4 main(PixelInputType input) : SV_TARGET
 { 
-    PixeloutputType output;
-	output.color = float4(1, 0, 0, 1);
+    //PixeloutputType output;
+    float4 color = { 0, 0, 0, 0 };
+    color = MainTexture.Sample(SampleType, input.Tex);
 
-	return output;
+    return color;
 }

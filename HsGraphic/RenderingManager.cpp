@@ -71,11 +71,29 @@ void RenderingManager::SkinningUpdate(MeshData* data)
 void RenderingManager::MeshUpdate(MeshData* data)
 {
 	///오브젝트 버퍼 업데이트
+	if (data->Diffuse != nullptr)
+	{
+		ID3D11ShaderResourceView* SRV = reinterpret_cast<ID3D11ShaderResourceView*>(data->Diffuse->TextureBufferPointer);
+		DeviceContext->PSSetShaderResources(0, 1, &SRV);
+		DeviceContext->VSSetShaderResources(0, 1, &SRV);
+	}
+
+	XMFLOAT4X4 offet =
+	{
+		1			,0			,0			,0,
+		0			,1			,0			,0,
+		0			,0			,1			,0,
+		0			,0			,0			,1
+	};
+	XMMATRIX offetMT = XMLoadFloat4x4(&offet);
+
+
+
 	ID3D11Buffer* buffer = mShaderManager->GetConstantBuffer("ObjectBuffer");
 	//버퍼 업데이트
 	ObjectBuffer mbuffer;
-	mbuffer.world = DirectX::XMMatrixTranspose(data->mWorld); //HLSL에서만
-
+	mbuffer.world		= DirectX::XMMatrixTranspose(data->mWorld); //HLSL에서만
+	mbuffer.TexMatrix	= DirectX::XMMatrixTranspose(offetMT);
 	DeviceContext->UpdateSubresource(buffer, 0, nullptr, &mbuffer, 0, 0);
 	DeviceContext->VSSetConstantBuffers(1, 1, &buffer);
 	DeviceContext->PSSetConstantBuffers(1, 1, &buffer);
@@ -98,7 +116,7 @@ void RenderingManager::Rendering(MeshData* data, ShaderType type)
 
 	///그리는 방식 설정
 	DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	DeviceContext->RSSetState(mWireframe);
+	DeviceContext->RSSetState(mSolid);
 
 	
 	ShaderData Shaderdata;

@@ -109,119 +109,119 @@ ID3D11DepthStencilView* HsGraphic::GetEngineDSV()
 
 void HsGraphic::CreateDevice()
 {
-	//UINT createDeviceFlags = 0;
-	//D3D_FEATURE_LEVEL featureLevel;
-	//
-	//HRESULT hr = D3D11CreateDevice
-	//(
-	//	0,							//디스플레이 어뎁터  0 = 디폴트 
-	//	D3D_DRIVER_TYPE_HARDWARE,	// ???
-	//	0,							// 소프트웨어 구동기 지정
-	//	createDeviceFlags,			// ???
-	//	0,							// 점검순서
-	//	0,							// ???
-	//	D3D11_SDK_VERSION,			//항상 D3D11_SDK_VERSION 을 지정
-	//	&Device,					//함수가 생성한장치 돌려줌
-	//	&featureLevel,				//null 값으로 한경우 지원하는 가장 높은 기능수준으로
-	//	&DeviceContext			//원래값 돌려줌
-	//);
-	//
-	////생성 여부
-	//if (FAILED(hr))
-	//{
-	//	return;
-	//}
-	//
-	////버전확인
-	//if (featureLevel != D3D_FEATURE_LEVEL_11_0)
-	//{
-	//	//MessageBox(0, L"Direct3D LEVEL 11", 0, MB_OK);
-	//	return;
-	//}
-	//
-	//
-	////4xMSAA 품질 수준 지원 점검??
-	////하드웨어가 4xMSAA를 위한 품질 수준을 지원하는지 점검
-	//
-	//UINT m4xMsaaQuality;
-	//Device->CheckMultisampleQualityLevels
-	//(
-	//	DXGI_FORMAT_R8G8_B8G8_UNORM,
-	//	4,
-	//	&m4xMsaaQuality
-	//);
-	//
-	////assert를 몰라서 써놓음
-	////assert는 조건이 맞지않을때 프로그램을 중단하며 참일때는 계속 실행시킴
-	////assert(m4xMsaaQuality > 0);
-	//
-	////교환 사슬 설정?
-	////구조체 값 설정
-	//DXGI_SWAP_CHAIN_DESC sd;
-	//ZeroMemory(&sd, sizeof(sd));
-	////BufferDesc = 생성하고자 하는 후면 버퍼의 속성들을 서술하는 개별적인 구조체
-	//
-	//sd.BufferCount = 1;  //교환 사슬에서 사용할 후면 버퍼의 개수
-	//sd.BufferDesc.Width = WinSizeX;
-	//sd.BufferDesc.Height = WinSizeY;
-	//sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	//sd.BufferDesc.RefreshRate.Numerator = 60;
-	//sd.BufferDesc.RefreshRate.Denominator = 1;
-	//sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT; //버퍼의 용도
-	//sd.OutputWindow = hwnd; //랜더링 결과를 표시할 창의 핸들
-	//
-	////sampleDesc = 다중 표본화를 이해 추출할 표본 개수와 품질수준
-	//sd.SampleDesc.Count = 1;
-	//sd.SampleDesc.Quality = 0;	//
-	//sd.Windowed = true;			//윈도우 창모드를 원하면 true 전체모드 false
-	//
-	////교환 사슬의 생성
-	//
-	////이과정에서 오류를 피하려면 장치의 생성에 쓰인 IDXGIFactory 인스턴스를 사용해야한다
-	////그리고 그 인스턴스를 얻으려면 다음과 같이 일련의 COM 질의 과정을 거쳐야함..
-	//IDXGIDevice* dxgiDevice = 0;
-	//Device->QueryInterface
-	//(
-	//	__uuidof(IDXGIDevice),
-	//	(void**)&dxgiDevice
-	//);
-	//
-	//
-	//IDXGIAdapter* dxgiAdapter = 0;
-	//dxgiDevice->GetParent
-	//(
-	//	__uuidof(IDXGIAdapter),
-	//	(void**)&dxgiAdapter
-	//);
-	//
-	////IDXGIFactory 인터페이스 얻음
-	//IDXGIFactory* dxgiFactory = 0;
-	//dxgiAdapter->GetParent
-	//(
-	//	__uuidof(IDXGIFactory),
-	//	(void**)&dxgiFactory
-	//);
-	//
-	////사슬 교환 생성
-	//dxgiFactory->CreateSwapChain(Device, &sd, &mSwapChain);
-	//
-	////필요없는건 삭제
-	//dxgiAdapter->Release();
-	//dxgiDevice->Release();
-	//dxgiFactory->Release();
+	UINT createDeviceFlags = 0;
+	D3D_FEATURE_LEVEL featureLevel;
+
+	HRESULT hr = D3D11CreateDevice
+	(
+		0,							//디스플레이 어뎁터  0 = 디폴트 
+		D3D_DRIVER_TYPE_HARDWARE,	// ???
+		0,							// 소프트웨어 구동기 지정
+		createDeviceFlags,			// ???
+		0,							// 점검순서
+		0,							// ???
+		D3D11_SDK_VERSION,			//항상 D3D11_SDK_VERSION 을 지정
+		&Device,					//함수가 생성한장치 돌려줌
+		&featureLevel,				//null 값으로 한경우 지원하는 가장 높은 기능수준으로
+		&DeviceContext			//원래값 돌려줌
+	);
+
+	//생성 여부
+	if (FAILED(hr))
+	{
+		return;
+	}
+
+	//버전확인
+	if (featureLevel != D3D_FEATURE_LEVEL_11_0)
+	{
+		//MessageBox(0, L"Direct3D LEVEL 11", 0, MB_OK);
+		return;
+	}
+
+
+	//4xMSAA 품질 수준 지원 점검??
+	//하드웨어가 4xMSAA를 위한 품질 수준을 지원하는지 점검
+
+	UINT m4xMsaaQuality;
+	Device->CheckMultisampleQualityLevels
+	(
+		DXGI_FORMAT_R8G8_B8G8_UNORM,
+		4,
+		&m4xMsaaQuality
+	);
+
+	//assert를 몰라서 써놓음
+	//assert는 조건이 맞지않을때 프로그램을 중단하며 참일때는 계속 실행시킴
+	//assert(m4xMsaaQuality > 0);
+
+	//교환 사슬 설정?
+	//구조체 값 설정
+	DXGI_SWAP_CHAIN_DESC sd;
+	ZeroMemory(&sd, sizeof(sd));
+	//BufferDesc = 생성하고자 하는 후면 버퍼의 속성들을 서술하는 개별적인 구조체
+
+	sd.BufferCount = 1;  //교환 사슬에서 사용할 후면 버퍼의 개수
+	sd.BufferDesc.Width = WinSizeX;
+	sd.BufferDesc.Height = WinSizeY;
+	sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	sd.BufferDesc.RefreshRate.Numerator = 60;
+	sd.BufferDesc.RefreshRate.Denominator = 1;
+	sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT; //버퍼의 용도
+	sd.OutputWindow = hwnd; //랜더링 결과를 표시할 창의 핸들
+
+	//sampleDesc = 다중 표본화를 이해 추출할 표본 개수와 품질수준
+	sd.SampleDesc.Count = 1;
+	sd.SampleDesc.Quality = 0;	//
+	sd.Windowed = true;			//윈도우 창모드를 원하면 true 전체모드 false
+
+	//교환 사슬의 생성
+
+	//이과정에서 오류를 피하려면 장치의 생성에 쓰인 IDXGIFactory 인스턴스를 사용해야한다
+	//그리고 그 인스턴스를 얻으려면 다음과 같이 일련의 COM 질의 과정을 거쳐야함..
+	IDXGIDevice* dxgiDevice = 0;
+	Device->QueryInterface
+	(
+		__uuidof(IDXGIDevice),
+		(void**)&dxgiDevice
+	);
+
+
+	IDXGIAdapter* dxgiAdapter = 0;
+	dxgiDevice->GetParent
+	(
+		__uuidof(IDXGIAdapter),
+		(void**)&dxgiAdapter
+	);
+
+	//IDXGIFactory 인터페이스 얻음
+	IDXGIFactory* dxgiFactory = 0;
+	dxgiAdapter->GetParent
+	(
+		__uuidof(IDXGIFactory),
+		(void**)&dxgiFactory
+	);
+
+	//사슬 교환 생성
+	dxgiFactory->CreateSwapChain(Device, &sd, &mSwapChain);
+
+	//필요없는건 삭제
+	dxgiAdapter->Release();
+	dxgiDevice->Release();
+	dxgiFactory->Release();
 }
 
 void HsGraphic::BeginRender()
 {
-	//XMVECTORF32 DeepDarkGray = { 0, 0, 0, 1.0f };
-	//DeviceContext->ClearRenderTargetView(mRenderTargetView, DeepDarkGray);
-	//DeviceContext->ClearDepthStencilView(mDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	XMVECTORF32 DeepDarkGray = { 0, 0, 0, 1.0f };
+	DeviceContext->ClearRenderTargetView(mRenderTargetView, DeepDarkGray);
+	DeviceContext->ClearDepthStencilView(mDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 }
 
 void HsGraphic::EndRender()
 {
 	//엔진 랜더링 종료
-	//mSwapChain->Present(0, 0);
+	mSwapChain->Present(0, 0);
 }
 
 Vertexbuffer* HsGraphic::CreateBasicVertexBuffer(ParserData::Mesh* mModel)

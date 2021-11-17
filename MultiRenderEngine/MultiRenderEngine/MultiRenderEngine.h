@@ -71,11 +71,9 @@ public:
 	MULTIENGINE_DLL void Delete();
 
 
-
-	//인덱스 버퍼와 버텍스 버퍼를 생성한다
-	MULTIENGINE_DLL Vertexbuffer* CreateVertexBuffer(ParserData::Mesh* mModel);
-	MULTIENGINE_DLL Indexbuffer*  CreateIndexBuffer(ParserData::Mesh* mModel);
-	MULTIENGINE_DLL TextureBuffer* CreateTextureBuffer(std::string Name);
+	MULTIENGINE_DLL Vertexbuffer* CreateVertexBuffer(ParserData::Mesh* mModel);	//버텍스 버퍼를 생성한다
+	MULTIENGINE_DLL Indexbuffer*  CreateIndexBuffer(ParserData::Mesh* mModel);	//인덱스 버퍼를 생성한다
+	MULTIENGINE_DLL TextureBuffer* CreateTextureBuffer(std::string Name);		//텍스쳐를 생성한다
 
 	MULTIENGINE_DLL void EndRender();
 	MULTIENGINE_DLL	void BeginRender();
