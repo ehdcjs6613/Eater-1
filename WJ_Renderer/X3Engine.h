@@ -44,31 +44,31 @@ class GlobalData;
 #include "GraphicsEngine.h"
 #include "XShader.h"
 
-class X3Engine : public  GraphicEngine 
+class X3Engine : public  GraphicEngine
 {
 private:
 	//
 ///-----------[엔진이 지니는 변수들]------------///
 	HWND					m_hWnd;				///
 ///------------------------------------------------	
-	DirectXDevice*			m_pDevice;			///
-	DirectXDeviceContext*	m_pDeviceContext;	///
+	DirectXDevice* m_pDevice;			///
+	DirectXDeviceContext* m_pDeviceContext;	///
 	//DirectXSwapChain*		m_pSwapChain;		///
 ///---------------------------------------------///
 	DirectXRasterizerState* m_pRasterizerState; ///
 	DirectXRasterizerState* m_pRasterizerSolid; ///
 	DirectXRasterizerState* m_pRasterizerWire;  ///
 ///---------------------------------------------///
-	DirectXAdapter*			m_pAdapter;			///
+	DirectXAdapter* m_pAdapter;			///
 ///---------------------------------------------///
-	
+
 	D3D_FEATURE_LEVEL	    m_FeatureLevel;
 
 
 private:
 	//렌더러 기능
-	XRenderer*				m_pRenderer;
-	
+	XRenderer* m_pRenderer;
+
 
 	DirectX::XMMATRIX		m_ProjectionMatrix;
 	DirectX::XMMATRIX		m_WorldMatrix;
@@ -88,7 +88,7 @@ public:
 #pragma region Parents Overriding Function List
 
 	///GraphicEngine class로부터 상속된 함수들
-	
+
 	///게임 엔진쪽에서 윈도우 핸들을 넘겨줄것임
 	X3Engine_DLL virtual void Initialize(HWND _hWnd, int _iWidth, int _iHeight) override;
 
@@ -132,7 +132,7 @@ public:
 	ID3D11Buffer* m_pVertexBuffer2;
 	bool TestScene();
 private:
-	
+
 	//-----------------------------------
 
 public:
