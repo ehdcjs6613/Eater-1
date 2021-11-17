@@ -266,12 +266,13 @@ void X3Engine::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 	
 
 	TestScene();
+	m_pRenderer->Render_FrmUpdate(m_pDeviceContext->m_pDX11DeviceContext, m_pRasterizerSolid->m_pFrameRS,m_pSamplerState);
+	
 	m_pRenderer->Render_Update(this->m_pDevice->m_pDX11Device, 
 		m_pDeviceContext->m_pDX11DeviceContext,m_XVertexShader.GetShader(),
 		m_XPexelShader.GetShader(),m_XVertexShader.GetInputLayout(),m_pVertexBuffer, 
 		m_pVertexBuffer2, m_pSamplerState);
 
-	m_pRenderer->Render_LateUpdate(m_pDeviceContext->m_pDX11DeviceContext, m_pRasterizerSolid->m_pFrameRS);
 
 	m_pRenderer->Render_2D(m_p2DSupport, this->m_pAdapter);
 	
@@ -339,8 +340,8 @@ void X3Engine::InitializeShaders()
 	*/
 	D3D11_INPUT_ELEMENT_DESC layout[] =
 	{
-		{ "POSITION",	0,DXGI_FORMAT::DXGI_FORMAT_R32G32_FLOAT,0,0, D3D11_INPUT_CLASSIFICATION::D3D11_INPUT_PER_VERTEX_DATA,0 } ,
-		{ "TEXCOORD",		0,DXGI_FORMAT::DXGI_FORMAT_R32G32_FLOAT,0,D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_CLASSIFICATION::D3D11_INPUT_PER_VERTEX_DATA,0 } ,
+		{ "POSITION",	0,DXGI_FORMAT::DXGI_FORMAT_R32G32B32_FLOAT,0,0, D3D11_INPUT_CLASSIFICATION::D3D11_INPUT_PER_VERTEX_DATA,0 } ,
+		{ "TEXCOORD",	0,DXGI_FORMAT::DXGI_FORMAT_R32G32_FLOAT,0,D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_CLASSIFICATION::D3D11_INPUT_PER_VERTEX_DATA,0 } ,
 	};
 
 

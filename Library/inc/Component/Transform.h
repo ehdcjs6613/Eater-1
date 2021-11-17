@@ -4,6 +4,7 @@
 #include "SimpleMath.h"
 #include <DirectXMath.h>
 #include "Component.h"
+#include <vector>
 
 class Transform :public Component
 {

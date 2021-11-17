@@ -22,7 +22,11 @@ __interface IRenderableFunc
 	) = 0;
 	
 	
-	bool Render_LateUpdate	(ID3D11DeviceContext* _pD3DeviceContext , ID3D11RasterizerState* _pRasterizerState) = 0;
+	bool Render_FrmUpdate	(
+		ID3D11DeviceContext* _pD3DeviceContext , 
+		ID3D11RasterizerState* _pRasterizerState,
+		ID3D11SamplerState*	   _pSamplerState
+	) = 0;
 	bool Render_2D			(Grahpics2D* _pGrahpics2D, DirectXAdapter* _pAdapter) = 0;
 	bool Render_End			(Grahpics2D* _pGrahpics2D, IDXGISwapChain* _pSwapChain) = 0;
 };
@@ -66,7 +70,12 @@ public:
 	)override;
 	
 	
-	bool Render_LateUpdate   (ID3D11DeviceContext* _pD3DeviceContext,  ID3D11RasterizerState* _pRasterizerState)override;
+	bool Render_FrmUpdate   
+	(
+		ID3D11DeviceContext* _pD3DeviceContext, 
+		ID3D11RasterizerState* _pRasterizerState,
+		ID3D11SamplerState* _pSamplerState
+	)override;
 	bool Render_2D			 (Grahpics2D* _pGrahpics2D, DirectXAdapter* _pAdapter)override;
 	bool Render_End			 (Grahpics2D* _pGrahpics2D, IDXGISwapChain* _pSwapChain)override;
 	

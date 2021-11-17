@@ -22,6 +22,7 @@ EWGameView::~EWGameView()
 BEGIN_MESSAGE_MAP(EWGameView, CView)
 	ON_WM_CREATE()
 	ON_WM_SIZE()
+	ON_WM_MOUSEACTIVATE()
 END_MESSAGE_MAP()
 
 
@@ -61,6 +62,7 @@ void EWGameView::OnInitialUpdate()
 {
 	CView::OnInitialUpdate();
 	m_hWnd = this->GetSafeHwnd();
+	m_CWnd  = CWnd::FromHandle(m_hWnd);
 
 	m_EditorSystem = new EditorSystem();
 	
@@ -93,6 +95,9 @@ int EWGameView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 void EWGameView::ViewSetting(HWND _hWnd)
 {
 	m_hWnd = _hWnd;
+	m_hWnd = this->GetSafeHwnd();
+	m_CWnd = CWnd::FromHandle(m_hWnd);
+
 }
 
 bool EWGameView::Update(float)
@@ -119,4 +124,12 @@ void EWGameView::OnSize(UINT nType, int cx, int cy)
 	CView::OnSize(nType, cx, cy);
 
 	// TODO: 여기에 메시지 처리기 코드를 추가합니다.
+}
+
+
+int EWGameView::OnMouseActivate(CWnd* pDesktopWnd, UINT nHitTest, UINT message)
+{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+
+	return CWnd::OnMouseActivate(pDesktopWnd, nHitTest, message);
 }

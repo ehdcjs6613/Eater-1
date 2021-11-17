@@ -70,82 +70,9 @@ bool XRenderer::Render_Update(
 	_pD3DeviceContext->VSSetShader(_vs, nullptr, 0);
 	_pD3DeviceContext->PSSetShader(_ps, nullptr, 0);
 	
-	
-	//=======================================================================
-	///삼각형 그리기 1
-	//=======================================================================
-	XVertex v[] =
-	{
-		XVertex(-0.5f,  -0.5f,   0.0f,1.0f,  0.0f,   0.0f),//B L
-		XVertex(0.0f,   +0.5f,	 0.0f,1.0f, +0.0f,   0.0f),  //T M
-		XVertex(+0.5f,  -0.5f,	 0.0f,1.0f,  0.0f,  +0.0f),  //B R
-		//XVertex(0.0f,  +0.1f),	 //T
-	};
-
-
-	UINT stride = sizeof(XVertex);
+	UINT stride = sizeof(XVertexTex);
 	UINT offset = 0;
-
-	D3D11_BUFFER_DESC vertexBufferDESC;
-	ZeroMemory(&vertexBufferDESC, sizeof(D3D11_BUFFER_DESC));
-
-	vertexBufferDESC.Usage = D3D11_USAGE_DEFAULT;
-	vertexBufferDESC.ByteWidth = sizeof(XVertex) * ARRAYSIZE(v);//* ARRAYSIZE(v);
-	vertexBufferDESC.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	vertexBufferDESC.CPUAccessFlags = 0;
-	vertexBufferDESC.MiscFlags = 0;
-
-	D3D11_SUBRESOURCE_DATA vertexBufferData;
-	ZeroMemory(&vertexBufferData, sizeof(D3D11_SUBRESOURCE_DATA));
-	vertexBufferData.pSysMem = v;
-	vertexBufferData.SysMemPitch = 0;
-	vertexBufferData.SysMemSlicePitch = 0;
-
-	hr = m_pDevice->CreateBuffer(&vertexBufferDESC, &vertexBufferData, &_vb);
-
-
-	_pD3DeviceContext->IASetVertexBuffers(0, 1, &_vb, &stride, &offset);
-
-	_pD3DeviceContext->Draw(3, 0);
-	//=======================================================================
-	///삼각형 그리기 2
-	//=======================================================================
-
-	//XVertex v2[] =
-	//{
-	//	XVertex(-0.250f,  -0.250f,  0.0f, 0.0f,  1.0f,   0.0f),//B L
-	//	XVertex(0.000f,   +0.250f,	0.0f, 0.0f, +1.0f,   0.0f),  //T M
-	//	XVertex(+0.250f,  -0.250f,	0.0f, 0.0f,  1.0f,  +0.0f),  //B R
-	//	//XVertex(0.0f,  +0.1f),	 //T
-	//};
-	//
-	//
-	//
-	//
-	//D3D11_BUFFER_DESC vertexBufferDESC2;
-	//ZeroMemory(&vertexBufferDESC2, sizeof(D3D11_BUFFER_DESC));
-	//
-	//vertexBufferDESC2.Usage = D3D11_USAGE_DEFAULT;
-	//vertexBufferDESC2.ByteWidth = sizeof(XVertex) * ARRAYSIZE(v2);//* ARRAYSIZE(v);
-	//vertexBufferDESC2.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	//vertexBufferDESC2.CPUAccessFlags = 0;
-	//vertexBufferDESC2.MiscFlags = 0;
-	//
-	//D3D11_SUBRESOURCE_DATA vertexBufferData2;
-	//ZeroMemory(&vertexBufferData2, sizeof(D3D11_SUBRESOURCE_DATA));
-	//vertexBufferData2.pSysMem = v2;
-	//vertexBufferData2.SysMemPitch = 0;
-	//vertexBufferData2.SysMemSlicePitch = 0;
-	//
-	//hr = m_pDevice->CreateBuffer(&vertexBufferDESC2, &vertexBufferData2, &_vb2);
-	//=======================================================================
-
-
-
-	//_pD3DeviceContext->IASetVertexBuffers(0, 1, &_vb2, &stride, &offset);
-	//
-	//_pD3DeviceContext->Draw(3, 0);
-	// 
+	
 	//=======================================================================
 	///삼각형 그리기 3
 	//=======================================================================
@@ -164,7 +91,7 @@ bool XRenderer::Render_Update(
 	ZeroMemory(&vertexBufferDESC2, sizeof(D3D11_BUFFER_DESC));
 
 	vertexBufferDESC2.Usage = D3D11_USAGE_DEFAULT;
-	vertexBufferDESC2.ByteWidth = sizeof(XVertex) * ARRAYSIZE(v);//* ARRAYSIZE(v);
+	vertexBufferDESC2.ByteWidth = sizeof(XVertexTex) * ARRAYSIZE(v2);//* ARRAYSIZE(v);
 	vertexBufferDESC2.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vertexBufferDESC2.CPUAccessFlags = 0;
 	vertexBufferDESC2.MiscFlags = 0;
@@ -190,9 +117,11 @@ bool XRenderer::Render_Update(
 	return 0;
 }
 
-bool XRenderer::Render_LateUpdate(ID3D11DeviceContext* _pD3DeviceContext, ID3D11RasterizerState* _pRasterizerState)
+bool XRenderer::Render_FrmUpdate(ID3D11DeviceContext* _pD3DeviceContext, ID3D11RasterizerState* _pRasterizerState, ID3D11SamplerState* _pSamplerState)
 {
 	_pD3DeviceContext->RSSetState(_pRasterizerState);
+	_pD3DeviceContext->OMSetDepthStencilState(m_pDepthStencil_State, 0);
+	_pD3DeviceContext->PSSetSamplers(0, 1, &_pSamplerState);
 
 	return 0;
 }

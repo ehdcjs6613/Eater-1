@@ -18,7 +18,7 @@ private:
 	EditorSystem* m_EditorSystem;
 
 	HWND			m_hWnd;
-	CWnd			m_CWnd;
+	CWnd*			m_CWnd;
 
 public:
 	EWGameView();           // 동적 만들기에 사용되는 protected 생성자입니다.
@@ -49,6 +49,7 @@ public:
 	bool Finalize();
 
 	afx_msg void OnSize(UINT nType, int cx, int cy);
+	afx_msg int OnMouseActivate(CWnd* pDesktopWnd, UINT nHitTest, UINT message);
 };
 
 
