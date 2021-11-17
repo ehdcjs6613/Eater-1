@@ -74,17 +74,6 @@ void GraphicResourceFactory::Initialize(int width, int height)
 	CreateSSAOQuadBuffer();
 }
 
-void GraphicResourceFactory::Initialize()
-{
-	// Shader Manager 초기화..
-	m_ShaderManager->Initialize(m_Device, m_Context);
-
-	// Graphic Resource Manager 초기화..
-	m_ResourceManager->Initialize(m_Device, m_SwapChain);
-
-	CreateRasterizerState();
-}
-
 void GraphicResourceFactory::Release()
 {
 	RESET_COM(m_Device);

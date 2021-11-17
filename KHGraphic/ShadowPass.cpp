@@ -2,17 +2,21 @@
 #include "RenderPassBase.h"
 #include "ShaderBase.h"
 #include "VertexShader.h"
+#include "PixelShader.h"
 #include "ViewPort.h"
 #include "Texture2D.h"
 #include "DepthStencilView.h"
 #include "RenderTargetBase.h"
 #include "BasicRenderTarget.h"
 #include "MathDefine.h"
+#include "EngineData.h"
 #include "ShadowPass.h"
 
 #include "ResourceFactoryBase.h"
 #include "ResourceManagerBase.h"
 #include "ShaderManagerBase.h"
+#include "ConstantBufferDefine.h"
+#include "ShaderResourceViewDefine.h"
 
 ShadowPass::ShadowPass()
 	:m_ShadowDSV(nullptr), m_ShadowSRV(nullptr)
@@ -27,8 +31,9 @@ ShadowPass::~ShadowPass()
 void ShadowPass::Initialize(int width, int height)
 {
 	// Shader 설정..
-	m_MeshShadowVS = g_Shader->GetShader("NormalShadowVS");
-	m_SkinShadowVS = g_Shader->GetShader("SkinShadowVS");
+	m_MeshShadowVS = g_Shader->GetShader("ShadowMeshVS");
+	m_SkinShadowVS = g_Shader->GetShader("ShadowSkinVS");
+	m_ForwardPS = g_Shader->GetShader("ForwardPS");
 
 	// ViewPort 설정..
 	m_ShadowViewport = g_Factory->CreateViewPort(0.0f, 0.0f, (float)width, (float)height, 4.0f, 4.0f);
@@ -67,6 +72,9 @@ void ShadowPass::Initialize(int width, int height)
 	m_ShadowRT = g_Factory->CreateBasicRenderTarget(nullptr, &m_ShadowSRV);
 	m_ShadowRT->SetRatio(4.0f, 4.0f);
 
+	// Shadow Map 등록..
+	m_ForwardPS->SetShaderResourceView<gShadowMap>(&m_ShadowSRV);
+
 	// Texture2D Resource Reset..
 	RESET_COM(tex2D);
 }
@@ -78,6 +86,9 @@ void ShadowPass::OnResize(int width, int height)
 
 	// Shadow ShaderResourceView 재설성..
 	m_ShadowSRV = m_ShadowRT->GetSRV();
+
+	// Shadow Map 등록..
+	m_ForwardPS->SetShaderResourceView<gShadowMap>(&m_ShadowSRV);
 }
 
 void ShadowPass::Release()
@@ -94,16 +105,63 @@ void ShadowPass::BeginRender()
 	// 깊이 버퍼, null Rendering 대상을 설정하면 색상 쓰기가 비활성화 된다..
 	g_Context->OMSetRenderTargets(0, nullptr, m_ShadowDSV);
 	g_Context->ClearDepthStencilView(m_ShadowDSV, D3D11_CLEAR_DEPTH, 1.0f, 0);
+	g_Context->RSSetState(m_RasterizerState);
 }
 
-void ShadowPass::Render(DirectX::XMMATRIX view, DirectX::XMMATRIX proj, DirectX::XMMATRIX world, ID3D11Buffer* vb, ID3D11Buffer* ib, UINT size, UINT offset, UINT indexCount)
+void ShadowPass::Update(MeshData* mesh, GlobalData* global)
+{
+	Matrix world = mesh->mWorld;
+	Matrix view = *global->mLightViewMX;
+	Matrix proj = *global->mLightProj;
+
+	switch (mesh->ObjType)
+	{
+	case OBJECT_TYPE::Base:
+	{
+		cbShadowObject shadowBuf;
+		shadowBuf.gWorldViewProj = world * view * proj;
+
+		m_MeshShadowVS->SetConstantBuffer(shadowBuf);
+
+		m_MeshShadowVS->Update();
+	}
+	break;
+	case OBJECT_TYPE::Skinning:
+	{
+		cbShadowObject shadowBuf;
+		shadowBuf.gWorldViewProj = world * view * proj;
+
+		cbSkinned skinBuf;
+		for (int i = 0; i < mesh->BoneOffsetTM.size(); i++)
+		{
+			skinBuf.gBoneTransforms[i] = mesh->BoneOffsetTM[i];
+		}
+
+		m_SkinShadowVS->SetConstantBuffer(shadowBuf);
+		m_SkinShadowVS->SetConstantBuffer(skinBuf);
+
+		m_SkinShadowVS->Update();
+	}
+	break;
+	default:
+		break;
+	}
+}
+
+void ShadowPass::Render(MeshData* mesh)
 {
 	/// 실제 렌더링 추가
+	ID3D11Buffer* iBuffer = reinterpret_cast<ID3D11Buffer*>(mesh->IB->IndexBufferPointer);
+	ID3D11Buffer* vBuffer = reinterpret_cast<ID3D11Buffer*>(mesh->VB->VertexbufferPointer);
 
-	//g_Context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	//g_Context->IASetVertexBuffers(0, 1, m_VB.GetAddressOf(), &m_Stride, &m_Offset);
-	//g_Context->IASetIndexBuffer(m_IB.Get(), DXGI_FORMAT_R32_UINT, 0);
-	//
-	//// Draw..
-	//g_Context->DrawIndexed(m_IndexCount, 0, 0);
+	UINT indexCount = mesh->IB->Count;
+	UINT stride = mesh->VB->VertexDataSize;
+	UINT offset = 0;
+
+	g_Context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	g_Context->IASetVertexBuffers(0, 1, &vBuffer, &stride, &offset);
+	g_Context->IASetIndexBuffer(iBuffer, DXGI_FORMAT_R32_UINT, 0);
+
+	// Draw..
+	g_Context->DrawIndexed(indexCount, 0, 0);
 }

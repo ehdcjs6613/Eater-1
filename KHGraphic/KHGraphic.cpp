@@ -80,8 +80,11 @@ TextureBuffer* KHGraphic::CreateTextureBuffer(std::string path)
 
 GRAPHIC_DLL void KHGraphic::SetViewPort(void* VPT)
 {
-	RenderManager* rm = (RenderManager*)m_RenderManager;
+	RenderManager* rm = reinterpret_cast<RenderManager*>(m_RenderManager);
 	rm->m_ViewPort = reinterpret_cast<D3D11_VIEWPORT*>(VPT);
+
+	//m_ResourceFactory->Initialize(width, height);
+	//m_RenderManager->Initialize(width, height);
 }
 
 GRAPHIC_DLL void KHGraphic::SetDevice(void* Devie, void* DevieContext)
@@ -91,11 +94,9 @@ GRAPHIC_DLL void KHGraphic::SetDevice(void* Devie, void* DevieContext)
 
 	// Resource Factory 생성 및 초기화..
 	m_ResourceFactory = new GraphicResourceFactory(device, context);
-	m_ResourceFactory->Initialize();
 
 	// Render Manager 생성 및 초기화..
 	m_RenderManager = new RenderManager(nullptr, m_ResourceFactory);
-	m_RenderManager->Initialize();
 
 	RenderPassBase::g_Context = *context;
 }

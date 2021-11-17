@@ -31,6 +31,10 @@ void intro::Awake()
 	testobj->AddComponent<Keyinput>();
 	testobj->AddComponent<Camera>();
 
+	///¶óÀÌÆ®
+	testobj = Instance();
+	testobj->AddComponent<DirectionLight>();
+
 	testobj = Instance("obj");
 	testobj->AddComponent<MeshFilter>()->SetMeshName("Table");
 	//testobj->AddComponent<AI>();

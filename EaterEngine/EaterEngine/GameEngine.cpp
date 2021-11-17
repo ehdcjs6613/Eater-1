@@ -72,8 +72,6 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 	MeshFilter::SetManager(mObjectManager, mMaterialManager);
 	Light::SetManager(mLightManager);
 
-	CreateObject();
-
 	//매니저들 초기화
 	BaseManager::Initialize();
 	mKeyManager->Initialize(mHwnd);

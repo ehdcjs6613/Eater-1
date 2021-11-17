@@ -7,6 +7,7 @@
 #include "EngineData.h"
 #include "KeyinputManager.h"
 #include "MeshFilter.h"
+#include "Light.h"
 
 //함수포인터 리스트들
 Delegate_Map<Component> ObjectManager::AwakeFunction;
@@ -144,6 +145,11 @@ void ObjectManager::PlayUpdate()
 	Global->mProj = Camera::GetProj();
 	Global->mViewMX = Camera::GetMainView();
 	Global->mPos = Camera::GetMainPos();
+
+	//라이트 데이터
+	Global->mLightViewMX = DirectionLight::g_DirLight->GetView();
+	Global->mLightProj = DirectionLight::g_DirLight->GetProj();
+	Global->mShadowTrans = DirectionLight::g_DirLight->GetShadowTranspose();
 
 	///모든오브젝트의 데이터를 랜더큐에 담는다
 	CreateRenderQueue();
