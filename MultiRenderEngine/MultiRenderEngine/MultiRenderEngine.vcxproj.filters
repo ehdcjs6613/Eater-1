@@ -8,9 +8,6 @@
     <Filter Include="Define">
       <UniqueIdentifier>{3514b07a-a938-4e9b-900e-18bec5576fa2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="TextureMap">
-      <UniqueIdentifier>{2a504d12-32e8-4a33-9f3a-f7181de87cfd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="LayoutData">
       <UniqueIdentifier>{3f773d62-eeb7-43f9-9fa2-10afbdfe59e7}</UniqueIdentifier>
     </Filter>
@@ -19,9 +16,6 @@
     <ClCompile Include="MultiRenderEngine.cpp">
       <Filter>MultiRenderEngine</Filter>
     </ClCompile>
-    <ClCompile Include="TextureBase.cpp">
-      <Filter>TextureMap</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MultiRenderEngine.h">
@@ -29,9 +23,6 @@
     </ClInclude>
     <ClInclude Include="MacroDefine.h">
       <Filter>Define</Filter>
-    </ClInclude>
-    <ClInclude Include="TextureBase.h">
-      <Filter>TextureMap</Filter>
     </ClInclude>
     <ClInclude Include="MultiRenderDefine.h">
       <Filter>Define</Filter>

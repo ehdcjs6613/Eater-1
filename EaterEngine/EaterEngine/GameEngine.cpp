@@ -104,6 +104,7 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 	//윈도를 가로 2 	세로3번으로 분할시키겠다 (총 윈도우의 수 = 2 * 3)
 	mGraphicManager->SplitWindow(4, 4);
 	//엔진을 지정된 넘버로 넣는다
+	//mGraphicManager->PushEngine(0, new HsGraphic(), "형선");
 	mGraphicManager->PushEngine(0, new DH3DEngine(), "동혁0");
 	mGraphicManager->PushEngine(1, new HsGraphic(), "형선0");
 	mGraphicManager->PushEngine(2, new HsGraphic(), "형선1");
@@ -136,8 +137,7 @@ void GameEngine::Update()
 
 	mDebugManager->Update();
 	mTimeManager->Update();
-	mGraphicManager->Update();
-
+	
 
 	mDebugManager->End();
 	//컨퍼넌트 업데이트 끝
@@ -186,6 +186,7 @@ void GameEngine::OnResize(int Change_Width, int Change_Height)
 	std::string temp = "윈도우 사이즈 변경:"+ Width+","+ Height;
 	Camera::SetSize(Change_Width, Change_Height);
 
+	
 	mDebugManager->Print(temp,0,0, DebugManager::MSG_TYPE::MSG_ENGINE);
 }
 

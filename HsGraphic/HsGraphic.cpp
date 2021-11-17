@@ -227,37 +227,37 @@ void HsGraphic::EndRender()
 Vertexbuffer* HsGraphic::CreateBasicVertexBuffer(ParserData::Mesh* mModel)
 {
 	///스키닝이없는 기본 오브젝트를 생성해줌
-	//ID3D11Buffer* mVB = nullptr;
-	//Vertexbuffer* vertexbuffer = new Vertexbuffer();
-	//
-	////포지션 , 노말, uv, 탄젠타 값만 읽어옴
-	//std::vector<Deferred32> temp;
-	//int Vcount = mModel->m_VertexList.size();
-	//temp.resize(Vcount);
-	//for (int i = 0; i < Vcount; i++)
-	//{
-	//	temp[i].Pos = mModel->m_VertexList[i]->m_Pos;
-	//	temp[i].Nomal = mModel->m_VertexList[i]->m_Normal;
-	//	temp[i].Tex = { mModel->m_VertexList[i]->m_U ,mModel->m_VertexList[i]->m_V };
-	//	temp[i].Tangent = mModel->m_VertexList[i]->m_Tanget;
-	//}
-	//
-	////버퍼 생성
-	//D3D11_BUFFER_DESC vbd;
-	//vbd.Usage = D3D11_USAGE_IMMUTABLE;
-	//vbd.ByteWidth = sizeof(Deferred32) * Vcount;
-	//vbd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	//vbd.CPUAccessFlags = 0;
-	//vbd.MiscFlags = 0;
-	//D3D11_SUBRESOURCE_DATA vinitData;
-	//vinitData.pSysMem = &temp[0];
-	//Device->CreateBuffer(&vbd, &vinitData, &mVB);
-	//
-	//vertexbuffer->VertexbufferPointer = mVB;
-	//
-	///////////////////////////////////////////////////// 중요함 꼭넣어주세요
-	//vertexbuffer->VertexDataSize = sizeof(Deferred32);
-	////////////////////////////////////////////////////
+	ID3D11Buffer* mVB = nullptr;
+	Vertexbuffer* vertexbuffer = new Vertexbuffer();
+
+	//포지션 , 노말, uv, 탄젠타 값만 읽어옴
+	std::vector<Deferred32> temp;
+	int Vcount = mModel->m_VertexList.size();
+	temp.resize(Vcount);
+	for (int i = 0; i < Vcount; i++)
+	{
+		temp[i].Pos = mModel->m_VertexList[i]->m_Pos;
+		temp[i].Nomal = mModel->m_VertexList[i]->m_Normal;
+		temp[i].Tex = { mModel->m_VertexList[i]->m_U ,mModel->m_VertexList[i]->m_V };
+		temp[i].Tangent = mModel->m_VertexList[i]->m_Tanget;
+	}
+
+	//버퍼 생성
+	D3D11_BUFFER_DESC vbd;
+	vbd.Usage = D3D11_USAGE_IMMUTABLE;
+	vbd.ByteWidth = sizeof(Deferred32) * Vcount;
+	vbd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	vbd.CPUAccessFlags = 0;
+	vbd.MiscFlags = 0;
+	D3D11_SUBRESOURCE_DATA vinitData;
+	vinitData.pSysMem = &temp[0];
+	Device->CreateBuffer(&vbd, &vinitData, &mVB);
+
+	vertexbuffer->VertexbufferPointer = mVB;
+
+	/////////////////////////////////////////////////// 중요함 꼭넣어주세요
+	vertexbuffer->VertexDataSize = sizeof(Deferred32);
+	//////////////////////////////////////////////////
 	
 
 	return nullptr;
@@ -266,52 +266,52 @@ Vertexbuffer* HsGraphic::CreateBasicVertexBuffer(ParserData::Mesh* mModel)
 Vertexbuffer* HsGraphic::CreateSkinngingVertexBuffer(ParserData::Mesh* mModel)
 {
 	///스키닝이 오브젝트를 생성해줌
-	//ID3D11Buffer* mVB = nullptr;
-	//Vertexbuffer* vertexbuffer = new Vertexbuffer();
-	//
-	////포지션 , 노말, uv, 탄젠타 값만 읽어옴
-	//std::vector<Skinning32> temp;
-	//int Vcount = mModel->m_VertexList.size();
-	//temp.resize(Vcount);
-	//
-	//
-	//for (int i = 0; i < Vcount; i++)
-	//{
-	//	ParserData::Vertex* One = mModel->m_VertexList[i];
-	//
-	//	temp[i].Pos		= One->m_Pos;
-	//	temp[i].Nomal	= One->m_Normal;
-	//	temp[i].Tex		= { One->m_U ,One->m_V };
-	//	temp[i].Tangent = One->m_Tanget;
-	//
-	//	
-	//	int Count =  (int)One->m_BoneIndices.size();
-	//	for (int j = 0; j < Count; j++)
-	//	{
-	//		temp[i].BoneWeights[j] = One->m_BoneWeights[j];
-	//		temp[i].BoneIndex[j] = One->m_BoneIndices[j];
-	//
-	//	}
-	//}
-	//
-	//
-	//
-	////버퍼 생성
-	//D3D11_BUFFER_DESC vbd;
-	//vbd.Usage = D3D11_USAGE_IMMUTABLE;
-	//vbd.ByteWidth = sizeof(Skinning32) * Vcount;
-	//vbd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	//vbd.CPUAccessFlags = 0;
-	//vbd.MiscFlags = 0;
-	//D3D11_SUBRESOURCE_DATA vinitData;
-	//vinitData.pSysMem = &temp[0];
-	//Device->CreateBuffer(&vbd, &vinitData, &mVB);
-	//
-	//vertexbuffer->VertexbufferPointer = mVB;
-	//
-	///////////////////////////////////////////////////// 중요함 꼭넣어주세요
-	//vertexbuffer->VertexDataSize = sizeof(Skinning32);
-	////////////////////////////////////////////////////
+	ID3D11Buffer* mVB = nullptr;
+	Vertexbuffer* vertexbuffer = new Vertexbuffer();
+
+	//포지션 , 노말, uv, 탄젠타 값만 읽어옴
+	std::vector<Skinning32> temp;
+	int Vcount = mModel->m_VertexList.size();
+	temp.resize(Vcount);
+
+
+	for (int i = 0; i < Vcount; i++)
+	{
+		ParserData::Vertex* One = mModel->m_VertexList[i];
+
+		temp[i].Pos = One->m_Pos;
+		temp[i].Nomal = One->m_Normal;
+		temp[i].Tex = { One->m_U ,One->m_V };
+		temp[i].Tangent = One->m_Tanget;
+
+
+		int Count = (int)One->m_BoneIndices.size();
+		for (int j = 0; j < Count; j++)
+		{
+			temp[i].BoneWeights[j] = One->m_BoneWeights[j];
+			temp[i].BoneIndex[j] = One->m_BoneIndices[j];
+
+		}
+	}
+
+
+
+	//버퍼 생성
+	D3D11_BUFFER_DESC vbd;
+	vbd.Usage = D3D11_USAGE_IMMUTABLE;
+	vbd.ByteWidth = sizeof(Skinning32) * Vcount;
+	vbd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	vbd.CPUAccessFlags = 0;
+	vbd.MiscFlags = 0;
+	D3D11_SUBRESOURCE_DATA vinitData;
+	vinitData.pSysMem = &temp[0];
+	Device->CreateBuffer(&vbd, &vinitData, &mVB);
+
+	vertexbuffer->VertexbufferPointer = mVB;
+
+	/////////////////////////////////////////////////// 중요함 꼭넣어주세요
+	vertexbuffer->VertexDataSize = sizeof(Skinning32);
+	//////////////////////////////////////////////////
 
 	return nullptr;
 }
@@ -340,37 +340,37 @@ TextureBuffer* HsGraphic::CreateTextureBuffer(std::string path)
 
 void HsGraphic::OnReSize(int Change_Width, int Change_Height)
 {
-	//WinSizeX = Change_Width;
-	//WinSizeY = Change_Height;
-	//
-	//assert(DeviceContext);
-	//assert(Device);
-	//assert(mSwapChain);
-	//
-	////랜더타겟 삭제
-	//if (mRenderTargetView != nullptr)
-	//{
-	//	mRenderTargetView->Release();
-	//	mRenderTargetView = nullptr;
-	//}
-	//
-	////뎁스스텐실 삭제
-	//if (mDepthStencilView != nullptr)
-	//{
-	//	mDepthStencilView->Release();	
-	//	mDepthStencilView = nullptr;
-	//}
-	//
-	//
-	////스왑체인 재설정
-	//mSwapChain->ResizeBuffers(1, WinSizeX, WinSizeY, DXGI_FORMAT_R8G8B8A8_UNORM, 0);
-	//
-	////뎁스스텐실 랜더타겟 재생성
-	////CreateRenderTarget();
-	//
-	////재설정
-	//DeviceContext->OMSetRenderTargets(1, &mRenderTargetView, mDepthStencilView);
-	//DeviceContext->RSSetViewports(1, mScreenViewport);
+	WinSizeX = Change_Width;
+	WinSizeY = Change_Height;
+
+	assert(DeviceContext);
+	assert(Device);
+	assert(mSwapChain);
+
+	//랜더타겟 삭제
+	if (mRenderTargetView != nullptr)
+	{
+		mRenderTargetView->Release();
+		mRenderTargetView = nullptr;
+	}
+
+	//뎁스스텐실 삭제
+	if (mDepthStencilView != nullptr)
+	{
+		mDepthStencilView->Release();
+		mDepthStencilView = nullptr;
+	}
+
+
+	//스왑체인 재설정
+	mSwapChain->ResizeBuffers(1, WinSizeX, WinSizeY, DXGI_FORMAT_R8G8B8A8_UNORM, 0);
+
+	//뎁스스텐실 랜더타겟 재생성
+	//CreateRenderTarget();
+
+	//재설정
+	DeviceContext->OMSetRenderTargets(1, &mRenderTargetView, mDepthStencilView);
+	DeviceContext->RSSetViewports(1, mScreenViewport);
 }
 
 void HsGraphic::Render(std::queue<MeshData*>* meshList, GlobalData* global)
@@ -420,7 +420,7 @@ void HsGraphic::Delete()
 	mSolid->Release();
 }
 
-void HsGraphic::SetViewPort(void* VPT)
+void HsGraphic::SetViewPort(void* VPT, int Change_Width, int Change_Height)
 {
 	//랜더타겟과 뎁스스텐실 뷰포트를 받아온다
 	mScreenViewport		= reinterpret_cast<D3D11_VIEWPORT*>(VPT);

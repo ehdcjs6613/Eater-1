@@ -23,6 +23,7 @@ class GlobalData;
 class TextureBase;
 class Vertexbuffer;
 class Indexbuffer;
+class TextureBuffer;
 
 namespace ParserData
 {
@@ -64,19 +65,22 @@ public:
 	MULTIENGINE_DLL BOOL SplitWindow(int _Horizontal, int _Vertical);
 	MULTIENGINE_DLL BOOL RegisterRenderer(GraphicEngine* _Renderer, std::string _Engine_Name);
 	MULTIENGINE_DLL BOOL SetRenderer(int _ViewPort_Number, std::string _Engine_Name);
+	MULTIENGINE_DLL BOOL OnResize(int Change_Width, int Change_Height);
 
 	MULTIENGINE_DLL void Render(int count, std::queue<MeshData*>* meshList, GlobalData* global);
 	MULTIENGINE_DLL void Delete();
 
 
 
+	//인덱스 버퍼와 버텍스 버퍼를 생성한다
 	MULTIENGINE_DLL Vertexbuffer* CreateVertexBuffer(ParserData::Mesh* mModel);
 	MULTIENGINE_DLL Indexbuffer*  CreateIndexBuffer(ParserData::Mesh* mModel);
+	MULTIENGINE_DLL TextureBuffer* CreateTextureBuffer(std::string Name);
+
 	MULTIENGINE_DLL void EndRender();
 	MULTIENGINE_DLL	void BeginRender();
 	MULTIENGINE_DLL int GetWindowCount();
 private:
-
 
 	//그래픽 엔진 디바이스와 컨텍스트를 생성해줌
 	void CreateDevice(HWND hwnd,int screenWidth, int screenHeight);
@@ -84,16 +88,29 @@ private:
 	//스왑체인에 붙어있는 랜더타겟을 생성해준다
 	void Create_SwapChain_RenderTarget();
 
+	//뷰포트를 생성한다
 	void Create_ViewPort(int count, int StartX, int StartY, int Width, int Height);
 	
-	//사용하기위한 랜더타겟을 만들어줌
-	TextureBase* Create_RenderTarget(int StartX,int StartY,int Width,int Height);
+	//뷰포트를 리사이즈 값으로 재설정
+	void ReSetting_ViewPort(int count, int StartX, int StartY, int Width, int Height);
+
+	//뷰포트를 생성하기 전 셋팅값을 설정 (마지막 Create는 Resize 를할건지 새로 생성할것인지)
+	void ViewPortSetting(int m_Horizontal, int m_Vertical,BOOL Create = true);
+
+	//매쉬 버텍스 버퍼를 생성
+	Vertexbuffer* BasicVertexBuffer(ParserData::Mesh* mModel);
+
+	//스키닝 버텍스 버퍼를 생성
+	Vertexbuffer* SkinningVertexBuffer(ParserData::Mesh* mModel);
 private:
 	HWND m_Hwnd;
 
 	int m_ScreenHeight;
 	int m_ScreenWidth;
 	int WindowCount;
+
+	int Split_X_Count;
+	int Split_Y_Count;
 
 	ID3D11Device*			m_Device;
 	ID3D11DeviceContext*	m_DeviceContext;
@@ -102,9 +119,6 @@ private:
 	ID3D11RenderTargetView* m_RenderTargetView;
 	ID3D11DepthStencilView* m_DepthStencilView;
 	D3D11_VIEWPORT*			m_ViewPort;
-
-	//뷰포트 리스트
-	std::map<int,D3D11_VIEWPORT*> ViewPortList;
 };
 
 
