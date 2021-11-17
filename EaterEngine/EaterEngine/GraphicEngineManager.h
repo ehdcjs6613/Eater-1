@@ -28,9 +28,6 @@ class GraphicEngineManager
 public:
 	GraphicEngineManager();
 	~GraphicEngineManager();
-
-	void Update();
-
 public:
 	//선택한 그래픽엔진을 초기화
 	void Initialize(HWND Hwnd, int WinSizeWidth, int WinSizeHeight,ObjectManager* GM);
@@ -59,9 +56,6 @@ public:
 	void SplitWindow(int X, int Y);
 private:
 	MultiRenderEngine* MultiEngine;
-
-	//현재 선택된 그래픽 엔진
-	GraphicEngine* NowEngine;
 
 	ObjectManager* ObjManager;
 

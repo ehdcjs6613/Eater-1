@@ -37,7 +37,7 @@ public:
 	/// 랜더링을 한다 매쉬 랜더데이터 리스트, 글로벌 데이터
 	DHENGINE_DLL void Render(std::queue<MeshData*>* meshList, GlobalData* global);
 
-	DHENGINE_DLL void SetViewPort(void* VPT);
+	DHENGINE_DLL void SetViewPort(void* VPT, int Change_Width, int Change_Height);
 	DHENGINE_DLL void SetDevice(void* Devie, void* DevieContext);
 
 
