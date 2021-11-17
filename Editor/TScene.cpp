@@ -17,26 +17,31 @@ TScene::~TScene()
 
 void TScene::Awake()
 {
-	//불러오는 매쉬의 경로 파악
 	LoadMeshPath("../Resources/Mesh/");
 	LoadTesturePath("../Resources/Texture/");
 
 	//LoadMesh("Player");
-	//LoadMesh("Table");
-	LoadMesh("box");
-	LoadTesture("WoodCrate01");
-
+	LoadMesh("Table");
+	//LoadMesh("Dome_v03");
+	//LoadMesh("1s_table_long_lower");
+	//LoadMesh("EnemyB");
+	//LoadMesh("Player");
+	//LoadMesh("Skinning");
+	//LoadMesh("Enemy");
+	//LoadMesh("box");
+	//LoadTesture("WoodCrate01");
 
 	///카메라
 	testobj = Instance();
 	//testobj->AddComponent<Keyinput>();
 	testobj->AddComponent<Camera>();
 
-	///테스트 오브젝트
-	testobj = Instance("box");
-	testobj->AddComponent<MeshFilter>()->SetMeshName("box");
-	testobj->GetTransform()->Position = { 0,1,0 };
-	testobj->GetTransform()->Scale = { 0.5f,0.5f,0.5f };
+	testobj = Instance("obj");
+	testobj->AddComponent<MeshFilter>()->SetMeshName("Table");
+	//testobj->AddComponent<AI>();
+	testobj->GetTransform()->Position = { 0 ,0, 0 };
+	testobj->GetTransform()->Scale = { 1 , 1, 1 };
+	testobj->GetTransform()->Rotation = { 0 ,0,0 };
 }
 
 void TScene::Start()

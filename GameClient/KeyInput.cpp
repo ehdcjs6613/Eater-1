@@ -1,8 +1,8 @@
+#include "KeyInput.h"
 #include "MainHeader.h"
 #include "Directxmath.h"
 #include "GameObject.h"
 #include "Transform.h"
-#include "KeyInput.h"
 
 Keyinput::Keyinput()
 {

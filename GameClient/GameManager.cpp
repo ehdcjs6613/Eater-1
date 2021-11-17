@@ -1,5 +1,6 @@
-#include "GameManager.h"
+#pragma
 #include "MainHeader.h"
+#include "GameManager.h"
 #include "intro.h"
 #include "inGame.h"
 
@@ -19,9 +20,7 @@ void GameManager::Start(HWND _g_hWnd)
 {
 	//엔진 초기화 (매니저들 생성)
 	EngineInitialize(_g_hWnd);
-	int num = 0;
 	
-
 	CreateScene<intro>("intro");
 	CreateScene<InGame>("inGame");
 	ChoiceScene("intro");

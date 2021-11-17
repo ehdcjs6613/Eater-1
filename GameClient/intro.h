@@ -1,13 +1,12 @@
 #pragma once
-class Texture;
-class GameObject;
 #include "Scene.h"
 
 
+class GameObject;
 class  intro :public Scene
 {
 public:
-	intro();
+	intro() {};
 	~intro() {};
 	virtual void Awake();
 	virtual void Start();

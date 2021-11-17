@@ -24,7 +24,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	wcex.hInstance = hInstance;
 	wcex.hIcon = NULL;			// LoadIcon(hInstance, MAKEINTRESOURCE(IDI_PROJECT1));
 	wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
-	wcex.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH); //(COLOR_WINDOW + 1);
+	wcex.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH); //(COLOR_WINDOW + 1);
 	wcex.lpszMenuName = NULL;		// MAKEINTRESOURCEW(IDC_PROJECT1);
 	wcex.lpszClassName = L"PROJECT1";
 	wcex.hIconSm = NULL;			//LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));

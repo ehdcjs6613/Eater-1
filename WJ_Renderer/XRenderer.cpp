@@ -1,4 +1,4 @@
-//#include "Grahpics2D.h"
+#include "Grahpics2D.h"
 #include "DirectXRenderTargeter.h"
 #include "DirectXAdapter.h"
 #include "DirectXSwapChain.h"
@@ -61,9 +61,10 @@ bool XRenderer::Render_Update(
 )
 {
 	HRESULT hr = S_OK;
-	
+
 	_pD3DeviceContext->IASetInputLayout(_il);
-	_pD3DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	_pD3DeviceContext->IASetPrimitiveTopology
+	(D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	//(D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_POINTLIST);
 	
 	_pD3DeviceContext->VSSetShader(_vs, nullptr, 0);
@@ -75,41 +76,40 @@ bool XRenderer::Render_Update(
 	//=======================================================================
 	///삼각형 그리기 3
 	//=======================================================================
-	//XVertexTex v2[] =
-	//{
-	//	XVertexTex(-0.5f,  -0.5f,    1.f, 0.0f,1.0f),//B L
-	//	XVertexTex(0.0f,   +0.5f,	 1.f, 0.5f,0.0f),  //T M
-	//	XVertexTex(+0.5f,  -0.5f,	 1.f, 1.0f,1.0f),  //B R
-	//	//XVertex(0.0f,  +0.1f),	 //T
-	//};
-	//
-	//
-	//
-	//
-	//D3D11_BUFFER_DESC vertexBufferDESC2;
-	//ZeroMemory(&vertexBufferDESC2, sizeof(D3D11_BUFFER_DESC));
-	//
-	//vertexBufferDESC2.Usage = D3D11_USAGE_DEFAULT;
-	//vertexBufferDESC2.ByteWidth = sizeof(XVertexTex) * ARRAYSIZE(v2);//* ARRAYSIZE(v);
-	//vertexBufferDESC2.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	//vertexBufferDESC2.CPUAccessFlags = 0;
-	//vertexBufferDESC2.MiscFlags = 0;
-	//
-	//D3D11_SUBRESOURCE_DATA vertexBufferData2;
-	//ZeroMemory(&vertexBufferData2, sizeof(D3D11_SUBRESOURCE_DATA));
-	//vertexBufferData2.pSysMem = v2;
-	//vertexBufferData2.SysMemPitch = 0;
-	//vertexBufferData2.SysMemSlicePitch = 0;
-	
+	XVertexTex v2[] =
+	{
+		XVertexTex(-0.5f,  -0.5f,    1.f, 0.0f,1.0f),//B L
+		XVertexTex(0.0f,   +0.5f,	 1.f, 0.5f,0.0f),  //T M
+		XVertexTex(+0.5f,  -0.5f,	 1.f, 1.0f,1.0f),  //B R
+		//XVertex(0.0f,  +0.1f),	 //T
+	};
+
+
+
+
+	D3D11_BUFFER_DESC vertexBufferDESC2;
+	ZeroMemory(&vertexBufferDESC2, sizeof(D3D11_BUFFER_DESC));
+
+	vertexBufferDESC2.Usage = D3D11_USAGE_DEFAULT;
+	vertexBufferDESC2.ByteWidth = sizeof(XVertexTex) * ARRAYSIZE(v2);//* ARRAYSIZE(v);
+	vertexBufferDESC2.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	vertexBufferDESC2.CPUAccessFlags = 0;
+	vertexBufferDESC2.MiscFlags = 0;
+
+	D3D11_SUBRESOURCE_DATA vertexBufferData2;
+	ZeroMemory(&vertexBufferData2, sizeof(D3D11_SUBRESOURCE_DATA));
+	vertexBufferData2.pSysMem = v2;
+	vertexBufferData2.SysMemPitch = 0;
+	vertexBufferData2.SysMemSlicePitch = 0;
+
 	//DirectX::CreateWICTextureFromFile
-	
-	//hr = m_pDevice->CreateBuffer(&vertexBufferDESC2, &vertexBufferData2, &_vb);
-	
+
+	hr = m_pDevice->CreateBuffer(&vertexBufferDESC2, &vertexBufferData2, &_vb);
+
 	_pD3DeviceContext->PSSetSamplers(1, 0, &_pSampler);
-	
-	
+
+
 	_pD3DeviceContext->IASetVertexBuffers(0, 1, &_vb, &stride, &offset);
-	_pD3DeviceContext->IASetIndexBuffer(_vb2, DXGI_FORMAT_R32_UINT, 0);
 
 	_pD3DeviceContext->Draw(3, 0);
 	
@@ -131,44 +131,44 @@ bool XRenderer::Render_2D(Grahpics2D* _pGrahpics2D, DirectXAdapter* _pAdapter)
 	int _yPos = 50;
 	int _Text_Offset = 21;
 	//
-	//_pGrahpics2D->Push_DrawText({ 10, _yPos }, 500, 1, 0, 0, 1, 20, (TCHAR*)L"Description: %s", _pAdapter->GetAdapter().Description);
-	//_pGrahpics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 1, 0, 1, 20, (TCHAR*) L"VendorID: %u", _pAdapter->GetAdapter().VendorId);
-	//_pGrahpics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 1, 0, 1, 20, (TCHAR*) L"DeviceID: %u", _pAdapter->GetAdapter().DeviceId);
-	//_pGrahpics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 1, 0, 1, 20, (TCHAR*) L"SubSysID: %u", _pAdapter->GetAdapter().SubSysId);
-	//_pGrahpics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 1, 0, 1, 20, (TCHAR*) L"Revision: %u", _pAdapter->GetAdapter().Revision);
-	//_pGrahpics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 0, 1, 1, 20, (TCHAR*) L"VideoMemory: %lu MB", _pAdapter->GetAdapter().DedicatedVideoMemory / 1024 / 1024);
-	//_pGrahpics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 0, 1, 1, 20, (TCHAR*) L"SystemMemory: %lu MB", _pAdapter->GetAdapter().DedicatedSystemMemory / 1024 / 1024);
-	//_pGrahpics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 0, 1, 1, 20, (TCHAR*) L"SharedSysMemory: %lu MB", _pAdapter->GetAdapter().SharedSystemMemory / 1024 / 1024);
-	//_pGrahpics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 1, 1, 0, 1, 20, (TCHAR*) L"AdpaterLuid: %u.%d", _pAdapter->GetAdapter().AdapterLuid.HighPart, _pAdapter->GetAdapter().AdapterLuid.LowPart);
-	//
-	//_pGrahpics2D->Push_DrawImage
-	//(
-	//	L"../Image/apple_1.png", //name
-	//	{ 1000,1 },				//Image Position
-	//	{ 1,1 },				//Image Scale//
-	//	0,
-	//	1.0f,
-	//	{ 0,0 }, //POS
-	//	{ 0.1f, 0.1f }, //SCALE
-	//	0,
-	//	1.0f
-	//);
-	//
-	//_pGrahpics2D->Push_DrawSprite
-	//(
-	//	L"../Image/atk_1.png", //name
-	//	{ 1000,800 },				//Image Position
-	//	{ 1,1 },				//Image Scale//
-	//	0,
-	//	1.0f,
-	//	{ 0,0 }, //POS
-	//	{ 1.0f, 1.0f }, //SCALE/
-	//	0,
-	//	1.0f,
-	//	6,
-	//	171,
-	//	144
-	//);
+	_pGrahpics2D->Push_DrawText({ 10, _yPos }, 500, 1, 0, 0, 1, 20, (TCHAR*)L"Description: %s", _pAdapter->GetAdapter().Description);
+	_pGrahpics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 1, 0, 1, 20, (TCHAR*) L"VendorID: %u", _pAdapter->GetAdapter().VendorId);
+	_pGrahpics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 1, 0, 1, 20, (TCHAR*) L"DeviceID: %u", _pAdapter->GetAdapter().DeviceId);
+	_pGrahpics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 1, 0, 1, 20, (TCHAR*) L"SubSysID: %u", _pAdapter->GetAdapter().SubSysId);
+	_pGrahpics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 1, 0, 1, 20, (TCHAR*) L"Revision: %u", _pAdapter->GetAdapter().Revision);
+	_pGrahpics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 0, 1, 1, 20, (TCHAR*) L"VideoMemory: %lu MB", _pAdapter->GetAdapter().DedicatedVideoMemory / 1024 / 1024);
+	_pGrahpics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 0, 1, 1, 20, (TCHAR*) L"SystemMemory: %lu MB", _pAdapter->GetAdapter().DedicatedSystemMemory / 1024 / 1024);
+	_pGrahpics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 0, 0, 1, 1, 20, (TCHAR*) L"SharedSysMemory: %lu MB", _pAdapter->GetAdapter().SharedSystemMemory / 1024 / 1024);
+	_pGrahpics2D->Push_DrawText({ 10, _yPos += _Text_Offset }, 500, 1, 1, 0, 1, 20, (TCHAR*) L"AdpaterLuid: %u.%d", _pAdapter->GetAdapter().AdapterLuid.HighPart, _pAdapter->GetAdapter().AdapterLuid.LowPart);
+
+	_pGrahpics2D->Push_DrawImage
+	(
+		L"../Image/apple_1.png", //name
+		{ 1000,1 },				//Image Position
+		{ 1,1 },				//Image Scale//
+		0,
+		1.0f,
+		{ 0,0 }, //POS
+		{ 0.1f, 0.1f }, //SCALE
+		0,
+		1.0f
+	);
+
+	_pGrahpics2D->Push_DrawSprite
+	(
+		L"../Image/atk_1.png", //name
+		{ 1000,800 },				//Image Position
+		{ 1,1 },				//Image Scale//
+		0,
+		1.0f,
+		{ 0,0 }, //POS
+		{ 1.0f, 1.0f }, //SCALE/
+		0,
+		1.0f,
+		6,
+		171,
+		144
+	);
 
 
 	return false;
@@ -176,11 +176,11 @@ bool XRenderer::Render_2D(Grahpics2D* _pGrahpics2D, DirectXAdapter* _pAdapter)
 
 bool XRenderer::Render_End(Grahpics2D* _pGrahpics2D, IDXGISwapChain* _pSwapChain)
 {
-	//_pGrahpics2D->Draw_AllImage();
-	//_pGrahpics2D->Draw_AllSprite();
-	//_pGrahpics2D->Draw_AllText();
+	_pGrahpics2D->Draw_AllImage();
+	_pGrahpics2D->Draw_AllSprite();
+	_pGrahpics2D->Draw_AllText();
 
-	//_pSwapChain->Present(0, false);
+	_pSwapChain->Present(0, false);
 
 	
 
