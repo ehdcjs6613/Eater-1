@@ -45,7 +45,8 @@ public:
 	//매쉬 가져오기
 	static ModelData* GetMesh(std::string Name);
 	//텍스쳐 가져오기
-	TextureBuffer* GetTexture(std::string Name);
+	static TextureBuffer* GetTexture(std::string Name);
+	
 
 	///Load
 	//모델 로드(스크린 이름,모델의 이름,스케일 여부,애니메이션 여부)

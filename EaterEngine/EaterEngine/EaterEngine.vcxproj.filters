@@ -126,9 +126,6 @@
     <ClInclude Include="LoadManager.h">
       <Filter>소스 파일\Manager\LoadManager</Filter>
     </ClInclude>
-    <ClInclude Include="EngineData.h">
-      <Filter>소스 파일\Data</Filter>
-    </ClInclude>
     <ClInclude Include="GameEngine.h">
       <Filter>소스 파일\Engine\GameEngine</Filter>
     </ClInclude>
@@ -189,8 +186,11 @@
     <ClInclude Include="Export\Light.h">
       <Filter>소스 파일\Component\Light</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Library\inc\EngineData.h">
+      <Filter>소스 파일\Data</Filter>
+    </ClInclude>
     <ClInclude Include="Export\MeshFilter.h">
-      <Filter>소스 파일\Component\SkinningFilter</Filter>
+      <Filter>소스 파일\Component\MeshFilter</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

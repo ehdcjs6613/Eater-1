@@ -402,7 +402,7 @@ void DH3DEngine::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 	//EndDraw();
 }
 
-void DH3DEngine::SetViewPort(void* VPT)
+void DH3DEngine::SetViewPort(void* VPT, int Change_Width, int Change_Height)
 {
 	DX11_View_Port = *(D3D11_VIEWPORT*)(VPT);
 }

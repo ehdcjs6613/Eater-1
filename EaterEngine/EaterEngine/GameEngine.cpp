@@ -100,24 +100,31 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 	//mGraphicManager->ChoiceEngine("형선");
 
 	//윈도를 가로 2 	세로3번으로 분할시키겠다 (총 윈도우의 수 = 2 * 3)
-	mGraphicManager->SplitWindow(4, 4);
+	mGraphicManager->SplitWindow(2, 2);
+
 	//엔진을 지정된 넘버로 넣는다
-	mGraphicManager->PushEngine(0, new DH3DEngine(), "동혁0");
-	mGraphicManager->PushEngine(1, new HsGraphic(), "형선0");
-	mGraphicManager->PushEngine(2, new HsGraphic(), "형선1");
-	mGraphicManager->PushEngine(3, new DH3DEngine(), "동혁1");
-	mGraphicManager->PushEngine(4, new HsGraphic(), "형선2");
-	mGraphicManager->PushEngine(5, new KHGraphic(), "규황0");
-	mGraphicManager->PushEngine(6, new KHGraphic(), "규황1");
-	mGraphicManager->PushEngine(7, new HsGraphic(), "형선3");
-	mGraphicManager->PushEngine(8, new HsGraphic(), "형선4");
-	mGraphicManager->PushEngine(9, new KHGraphic(), "규황2");
-	mGraphicManager->PushEngine(10, new KHGraphic(), "규황3");
-	mGraphicManager->PushEngine(11, new HsGraphic(), "형선5");
-	mGraphicManager->PushEngine(12, new DH3DEngine(), "동혁2");
-	mGraphicManager->PushEngine(13, new HsGraphic(), "형선6");
-	mGraphicManager->PushEngine(14, new HsGraphic(), "형선7");
-	mGraphicManager->PushEngine(15, new DH3DEngine(), "동혁3");
+	mGraphicManager->PushEngine(0, new HsGraphic(), "형선");
+	mGraphicManager->PushEngine(1, new KHGraphic(), "규황");
+	mGraphicManager->PushEngine(2, new DH3DEngine(), "동혁");
+	mGraphicManager->PushEngine(3, new DH3DEngine(), "동혁0");
+
+
+
+	//mGraphicManager->PushEngine(1, new HsGraphic(), "형선0");
+	//mGraphicManager->PushEngine(2, new HsGraphic(), "형선1");
+	//mGraphicManager->PushEngine(3, new DH3DEngine(), "동혁1");
+	//mGraphicManager->PushEngine(4, new HsGraphic(), "형선2");
+	//mGraphicManager->PushEngine(5, new KHGraphic(), "규황0");
+	//mGraphicManager->PushEngine(6, new KHGraphic(), "규황1");
+	//mGraphicManager->PushEngine(7, new HsGraphic(), "형선3");
+	//mGraphicManager->PushEngine(8, new HsGraphic(), "형선4");
+	//mGraphicManager->PushEngine(9, new KHGraphic(), "규황2");
+	//mGraphicManager->PushEngine(10, new KHGraphic(), "규황3");
+	//mGraphicManager->PushEngine(11, new HsGraphic(), "형선5");
+	//mGraphicManager->PushEngine(12, new DH3DEngine(), "동혁2");
+	//mGraphicManager->PushEngine(13, new HsGraphic(), "형선6");
+	//mGraphicManager->PushEngine(14, new HsGraphic(), "형선7");
+	//mGraphicManager->PushEngine(15, new DH3DEngine(), "동혁3");
 
 
 	/////////////////////////////////////////////////////////////////
@@ -134,8 +141,7 @@ void GameEngine::Update()
 
 	mDebugManager->Update();
 	mTimeManager->Update();
-	mGraphicManager->Update();
-
+	
 
 	mDebugManager->End();
 	//컨퍼넌트 업데이트 끝
@@ -184,6 +190,7 @@ void GameEngine::OnResize(int Change_Width, int Change_Height)
 	std::string temp = "윈도우 사이즈 변경:"+ Width+","+ Height;
 	Camera::SetSize(Change_Width, Change_Height);
 
+	
 	mDebugManager->Print(temp,0,0, DebugManager::MSG_TYPE::MSG_ENGINE);
 }
 

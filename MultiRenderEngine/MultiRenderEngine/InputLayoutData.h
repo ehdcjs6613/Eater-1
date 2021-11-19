@@ -1,14 +1,34 @@
 #pragma once
 
 #include "SimpleMath.h"
-struct Deferred32
+struct MeshVertex
 {
 	//위치
 	DirectX::SimpleMath::Vector3 Pos;
-	//텍스쳐
+	//uv
 	DirectX::SimpleMath::Vector2 Tex;
 	//노말
-	DirectX::SimpleMath::Vector3 Nomal;
+	DirectX::SimpleMath::Vector3 Normal;
+	//탄젠트
+	DirectX::SimpleMath::Vector3 Tangent;
+};
+
+struct SkinVertex
+{
+	//본 인덱스
+	UINT BoneIndex1[4];
+	UINT BoneIndex2[4];
+
+	//본 웨이팅
+	float BoneWeight1[4];
+	float BoneWeight2[4];
+
+	//위치
+	DirectX::SimpleMath::Vector3 Pos;
+	//uv
+	DirectX::SimpleMath::Vector2 Tex;
+	//노말
+	DirectX::SimpleMath::Vector3 Normal;
 	//탄젠트
 	DirectX::SimpleMath::Vector3 Tangent;
 };

@@ -9,6 +9,7 @@ cbuffer CameraBuffer : register(b0)
 cbuffer ObjectBuffer : register(b1)
 {
     float4x4    world;
+    float4x4    TexMatrix;
 };
 
 //스키닝 관련 버퍼

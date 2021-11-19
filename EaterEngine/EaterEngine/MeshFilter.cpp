@@ -25,7 +25,7 @@ MeshFilter::~MeshFilter()
 
 void MeshFilter::Awake()
 {
-	if (isLoad == true)
+	if (isLoadMesh == true)
 	{
 		////ÃÖ»óÀ§ °´Ã¼¸¦ °¡Á®¿È
 		ModelData* data = LoadManager::GetMesh(MeshName);
@@ -46,6 +46,8 @@ void MeshFilter::Awake()
 			CreateChild_Mesh(data->TopMeshList[i], MyTr, data);
 		}
 	}
+
+	
 }
 
 void MeshFilter::SetManager(ObjectManager* obj, MaterialManager* mat)
@@ -56,8 +58,20 @@ void MeshFilter::SetManager(ObjectManager* obj, MaterialManager* mat)
 
 void MeshFilter::SetMeshName(std::string mMeshName)
 {
-	isLoad = true;
+	isLoadMesh = true;
 	MeshName = mMeshName;
+}
+
+void MeshFilter::SetTextureName(std::string mTextureName)
+{
+	isLoadTexture = true;
+	TextureName = mTextureName;
+}
+
+void MeshFilter::SetNormalTextureName(std::string mTextureName)
+{
+	
+
 }
 
 void MeshFilter::PushModelData(LoadMeshData* mModel)
@@ -72,6 +86,9 @@ void MeshFilter::PushModelData(LoadMeshData* mModel)
 
 	data->mLocal = *(mModel->LocalTM);
 	data->mWorld = *(mModel->WorldTM);
+
+	TextureBuffer* Base = LoadManager::GetTexture("WoodCrate01");
+	data->Diffuse = Base;
 }
 
 void MeshFilter::CreateChild_Mesh(LoadMeshData* data, Transform* parent, ModelData* modeldata)

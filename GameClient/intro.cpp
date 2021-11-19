@@ -16,40 +16,36 @@ void intro::Awake()
 	LoadTesturePath("../Resources/Texture/");
 	
 	//LoadMesh("Player");
-	LoadMesh("Table");
-	//LoadMesh("Dome_v03");
+	//LoadMesh("box");
+	LoadMesh("Dome_v03");
 	//LoadMesh("1s_table_long_lower");
 	//LoadMesh("EnemyB");
 	//LoadMesh("Player");
 	//LoadMesh("Skinning");
 	//LoadMesh("Enemy");
 	//LoadMesh("box");
-	//LoadTesture("WoodCrate01");
+	//LoadTesture("body_normal_tangent_Base_color.png");
+	LoadTesture("WoodCrate01.dds");
 
 	///카메라
 	testobj = Instance();
 	testobj->AddComponent<Keyinput>();
 	testobj->AddComponent<Camera>();
+	testobj->GetTransform()->Position = { 0,0,-100 };
 
 	///라이트
 	testobj = Instance();
 	testobj->AddComponent<DirectionLight>();
 
 	testobj = Instance("obj");
-	testobj->AddComponent<MeshFilter>()->SetMeshName("Table");
-	//testobj->AddComponent<AI>();
-	testobj->GetTransform()->Position = { 0 ,0, 0 };
-	testobj->GetTransform()->Scale = { 1 , 1, 1 };
-	testobj->GetTransform()->Rotation = { 0 ,0,0 };
-	//매쉬 필터로 매쉬의 정보만 읽은 오브젝트
-	//
-	//
-	////스키닝필터로 본과 매쉬정보 둘다 읽은 오브젝트
-	//testobj = Instance("Table");
-	//testobj->AddComponent<SkinningFilter>()->SetMeshName("EnemyB");
-	//testobj->GetTransform()->Position = { 1 ,0,0 };
-	//testobj->GetTransform()->Scale = { 100 ,100,100 };
-	//testobj->GetTransform()->Rotation = { 90 ,0,0 };
+	MeshFilter* Filter = testobj->AddComponent<MeshFilter>();
+	Filter->SetMeshName("Dome_v03");
+	Filter->SetTextureName("WoodCrate01");
+
+
+	testobj->GetTransform()->Position	= { 0 ,0, 0 };
+	testobj->GetTransform()->Scale		= { 1 , 1, 1 };
+	testobj->GetTransform()->Rotation	= { 90 ,0,0 };
 }
 
 void intro::Start()

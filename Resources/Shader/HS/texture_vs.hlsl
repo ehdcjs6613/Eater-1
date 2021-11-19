@@ -3,8 +3,8 @@
 struct VertexInputType
 {
 	float3 PosL			: POSITION;
-    float3 Nomal		: NORMAL;
 	float2 Tex			: TEXCOORD;
+    float3 Nomal		: NORMAL;
     float3 Tangent		: TANGENT;
 };
 
@@ -27,14 +27,13 @@ PixelInputType main(VertexInputType input)
     output.posH = mul(float4(output.posH.xyz, 1.0f), view);
     output.posH = mul(float4(output.posH.xyz, 1.0f), proj);
     
-    output.Tex = float2(0, 0);
+    output.Tex = mul(float4(input.Tex, 0.0f, 1.0f),TexMatrix);
+    
     output.Nomal = mul(input.Nomal, (float3x3) view);
     output.Nomal = mul(output.Nomal, (float3x3) proj);
     
     output.Tangent = mul(input.Tangent, (float3x3) world);
     
-    
-    
-   
+
     return output;
 }
