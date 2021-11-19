@@ -17,15 +17,16 @@ void intro::Awake()
 	
 	//LoadMesh("Player");
 	//LoadMesh("box");
-	LoadMesh("Dome_v03");
+	LoadMesh("Field");
+	//LoadMesh("Dome_v03");
 	//LoadMesh("1s_table_long_lower");
 	//LoadMesh("EnemyB");
-	//LoadMesh("Player");
+	LoadMesh("Player");
 	//LoadMesh("Skinning");
 	//LoadMesh("Enemy");
 	//LoadMesh("box");
 	//LoadTesture("body_normal_tangent_Base_color.png");
-	LoadTesture("WoodCrate01.dds");
+	//LoadTesture("WoodCrate01.dds");
 
 	///Ä«¸Þ¶ó
 	testobj = Instance();
@@ -39,13 +40,19 @@ void intro::Awake()
 
 	testobj = Instance("obj");
 	MeshFilter* Filter = testobj->AddComponent<MeshFilter>();
-	Filter->SetMeshName("Dome_v03");
-	Filter->SetTextureName("WoodCrate01");
+	Filter->SetMeshName("Player");
+	//Filter->SetTextureName("WoodCrate01");
+	testobj->GetTransform()->Position = { 0 ,0, 0 };
+	testobj->GetTransform()->Scale = { 2 , 2, 2 };
+	testobj->GetTransform()->Rotation = { 45 ,0,0 };
 
+	testobj = Instance("obj1");
+	MeshFilter* Filter1 = testobj->AddComponent<MeshFilter>();
+	Filter1->SetMeshName("Field");
 
 	testobj->GetTransform()->Position	= { 0 ,0, 0 };
-	testobj->GetTransform()->Scale		= { 1 , 1, 1 };
-	testobj->GetTransform()->Rotation	= { 90 ,0,0 };
+	testobj->GetTransform()->Scale		= { 10 , 1, 10 };
+	testobj->GetTransform()->Rotation	= { 0 ,0,0 };
 }
 
 void intro::Start()

@@ -189,17 +189,17 @@ LoadMeshData* LoadManager::CreateMeshObjeect(ParserData::Mesh* mesh)
 	// Texture Buffer »ðÀÔ..
 	CMaterial* mat = mesh->m_MaterialData;
 
-	//if (mat)
-	//{
-	//	if (mat->m_IsDiffuseMap)
-	//	{
-	//		box->Diffuse = GEngine->CreateTextureBuffer(mat->m_DiffuseMap->m_BitMap);
-	//	}
-	//	if (mat->m_IsBumpMap)
-	//	{
-	//		box->Normal = GEngine->CreateTextureBuffer(mat->m_BumpMap->m_BitMap);
-	//	}
-	//}
+	if (mat)
+	{
+		if (mat->m_IsDiffuseMap)
+		{
+			box->Diffuse = GEngine->CreateTextureBuffer(mat->m_DiffuseMap->m_BitMap);
+		}
+		if (mat->m_IsBumpMap)
+		{
+			box->Normal = GEngine->CreateTextureBuffer(mat->m_BumpMap->m_BitMap);
+		}
+	}
 
 	//ÀÚ½Ä°´Ã¼°¡ ÀÖ´Ù¸é Á¤º¸ÀÐ¾î¿È
 	int ChildCount = mesh->m_ChildList.size();

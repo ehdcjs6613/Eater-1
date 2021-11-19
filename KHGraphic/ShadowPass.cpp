@@ -35,18 +35,19 @@ void ShadowPass::Initialize(int width, int height)
 	m_SkinShadowVS = g_Shader->GetShader("ShadowSkinVS");
 	m_ForwardPS = g_Shader->GetShader("ForwardPS");
 
+	m_RasterizerState = g_Resource->GetRasterizerState(eRasterizerState::DEPTH);
+
 	// ViewPort 설정..
 	m_ShadowViewport = g_Factory->CreateViewPort(0.0f, 0.0f, (float)width, (float)height, 4.0f, 4.0f);
 
 	// DepthStencilView 설정..
-	m_ShadowDepthStencilView = g_Resource->GetDepthStencilView(eDepthStencilView::SHADOW);
-	m_ShadowDepthStencilView->SetRatio(4.0f, 4.0f);
-
 	D3D11_TEXTURE2D_DESC texDesc;
+	ZeroMemory(&texDesc, sizeof(texDesc));
 	texDesc.Width = width * 4;
 	texDesc.Height = height * 4;
 	texDesc.MipLevels = 1;
 	texDesc.ArraySize = 1;
+	//texDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
 	texDesc.Format = DXGI_FORMAT_R24G8_TYPELESS;
 	texDesc.SampleDesc.Count = 1;
 	texDesc.SampleDesc.Quality = 0;
@@ -58,6 +59,15 @@ void ShadowPass::Initialize(int width, int height)
 	// Texture 2D 생성..
 	Microsoft::WRL::ComPtr<ID3D11Texture2D> tex2D = nullptr;
 	g_Factory->CreateTexture2D(&texDesc, tex2D.GetAddressOf());
+
+	D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc;
+	dsvDesc.Flags = 0;
+	dsvDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	dsvDesc.Texture2D.MipSlice = 0;
+
+	// Shadow DepthStencilView 생성..
+	g_Factory->CreateDSV(tex2D.Get(), &dsvDesc, nullptr);
 
 	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
 	srvDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
@@ -71,6 +81,12 @@ void ShadowPass::Initialize(int width, int height)
 	// RenderTarget 생성..
 	m_ShadowRT = g_Factory->CreateBasicRenderTarget(nullptr, &m_ShadowSRV);
 	m_ShadowRT->SetRatio(4.0f, 4.0f);
+
+	m_ShadowDepthStencilView = g_Resource->GetDepthStencilView(eDepthStencilView::SHADOW);
+	m_ShadowDepthStencilView->SetRatio(4.0f, 4.0f);
+
+	// Shadow DepthStencilView 설정..
+	m_ShadowDSV = m_ShadowDepthStencilView->GetDSV();
 
 	// Shadow Map 등록..
 	m_ForwardPS->SetShaderResourceView<gShadowMap>(&m_ShadowSRV);
@@ -146,6 +162,10 @@ void ShadowPass::Update(MeshData* mesh, GlobalData* global)
 	default:
 		break;
 	}
+
+		// Shadow Map 등록..
+	m_ForwardPS->SetShaderResourceView<gShadowMap>(&m_ShadowSRV);
+
 }
 
 void ShadowPass::Render(MeshData* mesh)

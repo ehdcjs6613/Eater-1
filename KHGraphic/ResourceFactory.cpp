@@ -58,7 +58,7 @@ void GraphicResourceFactory::Initialize(int width, int height)
 	m_ResourceManager->Initialize(m_Device, m_SwapChain);
 
 	// Back Buffer 持失..
-	CreateMainRenderTarget(width, height);
+	//CreateMainRenderTarget(width, height);
 
 	/// Global Resource 持失..
 	CreateDepthStencilState();

@@ -108,7 +108,7 @@ void ForwardPass::Update(MeshData* mesh, GlobalData* global)
 		// Vertex Shader Update..
 		m_MeshVS->Update();
 	}
-	break;
+		break;
 	case OBJECT_TYPE::Skinning:
 	{
 		cbPerObject objectBuf;
@@ -131,7 +131,7 @@ void ForwardPass::Update(MeshData* mesh, GlobalData* global)
 		// Vertex Shader Update..
 		m_SkinVS->Update();
 	}
-	break;
+		break;
 	default:
 		break;
 	}
@@ -172,7 +172,7 @@ void ForwardPass::Update(MeshData* mesh, GlobalData* global)
 	{
 		normal_srv = reinterpret_cast<ID3D11ShaderResourceView*>(mesh->Normal->TextureBufferPointer);
 	}
-	
+
 	m_ForwardPS->SetShaderResourceView<gDiffuseMap>(&diffuse_srv);
 	m_ForwardPS->SetShaderResourceView<gNormalMap>(&normal_srv);
 

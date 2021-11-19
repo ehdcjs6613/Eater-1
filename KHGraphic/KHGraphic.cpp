@@ -83,8 +83,8 @@ GRAPHIC_DLL void KHGraphic::SetViewPort(void* VPT, int Change_Width, int Change_
 	RenderManager* rm = reinterpret_cast<RenderManager*>(m_RenderManager);
 	rm->m_ViewPort = reinterpret_cast<D3D11_VIEWPORT*>(VPT);
 
-	//m_ResourceFactory->Initialize(width, height);
-	//m_RenderManager->Initialize(width, height);
+	m_ResourceFactory->Initialize(Change_Width, Change_Height);
+	m_RenderManager->Initialize(Change_Width, Change_Height);
 }
 
 GRAPHIC_DLL void KHGraphic::SetDevice(void* Devie, void* DevieContext)

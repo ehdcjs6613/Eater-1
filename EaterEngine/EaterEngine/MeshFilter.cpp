@@ -87,8 +87,8 @@ void MeshFilter::PushModelData(LoadMeshData* mModel)
 	data->mLocal = *(mModel->LocalTM);
 	data->mWorld = *(mModel->WorldTM);
 
-	TextureBuffer* Base = LoadManager::GetTexture("WoodCrate01");
-	data->Diffuse = Base;
+	//TextureBuffer* Base = LoadManager::GetTexture("WoodCrate01");
+	//data->Diffuse = Base;
 }
 
 void MeshFilter::CreateChild_Mesh(LoadMeshData* data, Transform* parent, ModelData* modeldata)

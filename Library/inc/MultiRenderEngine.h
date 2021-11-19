@@ -67,6 +67,7 @@ public:
 	MULTIENGINE_DLL BOOL SetRenderer(int _ViewPort_Number, std::string _Engine_Name);
 	MULTIENGINE_DLL BOOL OnResize(int Change_Width, int Change_Height);
 
+	MULTIENGINE_DLL void ShadowRender(int count, std::queue<MeshData*>* meshList, GlobalData* global);
 	MULTIENGINE_DLL void Render(int count, std::queue<MeshData*>* meshList, GlobalData* global);
 	MULTIENGINE_DLL void Delete();
 

@@ -44,10 +44,14 @@ void GraphicEngineManager::Render(std::queue<MeshData*>* meshList, GlobalData* g
 
 void GraphicEngineManager::ShadowRender(std::queue<MeshData*>* meshList, GlobalData* global)
 {
-	//if (NowEngine != nullptr)
-	//{
-	//	NowEngine->ShadowRender(meshList, global);
-	//}
+	//스플릿된 개수 만큼 랜더
+	for (int i = 0; i < MultiEngine->GetWindowCount(); i++)
+	{
+		//하나의 엔진이 끝날때마다 ReQueue는 사라짐 계속 넣어준다
+		ObjManager->CreateRenderQueue();
+		//해당 엔진을 랜더링
+		MultiEngine->ShadowRender(i, ObjManager->GetRenderQueue(), global);
+	}
 }
 
 void GraphicEngineManager::SSAORender(std::queue<MeshData*>* meshList, GlobalData* global)
