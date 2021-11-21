@@ -10,13 +10,13 @@
 #include "Light.h"
 
 //함수포인터 리스트들
-Delegate_Map<Component> ObjectManager::AwakeFunction;
-Delegate_Map<Component> ObjectManager::StartFunction;
-Delegate_Map<Component> ObjectManager::StartUpdate;
-Delegate_Map<Component> ObjectManager::TransformUpdate;
-Delegate_Map<Component> ObjectManager::PhysicsUpdate;
-Delegate_Map<Component> ObjectManager::Update;
-Delegate_Map<Component> ObjectManager::EndUpdate;
+Delegate_Map ObjectManager::AwakeFunction;
+Delegate_Map ObjectManager::StartFunction;
+Delegate_Map ObjectManager::StartUpdate;
+Delegate_Map ObjectManager::TransformUpdate;
+Delegate_Map ObjectManager::PhysicsUpdate;
+Delegate_Map ObjectManager::Update;
+Delegate_Map ObjectManager::EndUpdate;
 
 ObjectManager::ObjectManager()
 {
@@ -44,6 +44,22 @@ void ObjectManager::PushCreateObject(GameObject* obj)
 	ObjectList.push_back(obj);
 }
 
+void ObjectManager::PushDontDeleteObject(GameObject* obj)
+{
+	std::vector<GameObject*>::iterator it = ObjectList.begin();
+	for (it; it != ObjectList.end(); it++)
+	{
+		//오브젝트를 찾았다면 옮겨준다
+		if ((*it) == obj)
+		{
+			GameObject* temp = (*it);
+			(*it) = nullptr;
+
+			DontDeleteObjectList.push_back(temp);
+		}
+	}
+}
+
 void ObjectManager::PushDeleteObject(GameObject* obj)
 {
 	//오브젝트를 넣어줄때 빈곳이 있는지부터 확인
@@ -64,7 +80,7 @@ void ObjectManager::PushDeleteObject(GameObject* obj)
 
 void ObjectManager::AllDeleteObject()
 {
-	int count = ObjectList.size();
+	int count = (int)ObjectList.size();
 	for (int i = 0; i < count; i++)
 	{
 		int comSize =  ObjectList[i]->GetComponentCount();
@@ -73,55 +89,116 @@ void ObjectManager::AllDeleteObject()
 			DeleteComponent(ObjectList[i]->GetDeleteComponent(j));
 		}
 	}
-
-
+	
 	ObjectList.clear();
-	//DHRenderData.clear();
 }
 
 void ObjectManager::Initialize(HWND _g_hWnd)
 {
+
 }
 
 void ObjectManager::PushStartUpdate(Component* mComponent)
 {
 	//컨퍼넌트들의 업데이트 함수만 모아놓은 리스트에 들어온 컨퍼넌트 업데이트 함수를 넣어줌
-	StartUpdate.Push(mComponent, std::bind(&Component::StartUpdate, mComponent));
+
+	ComponentFunctionData data;
+	//활성화 여부
+	data.Enabled = &mComponent->Enabled;
+	//함수 포인터
+	data.FunctionPointer = std::bind(&Component::StartUpdate, mComponent);
+	//컨퍼넌트 포인터
+	data.ComponentPoiner = mComponent;
+
+	StartUpdate.Push(data);
 }
 
-void ObjectManager::PushTransformUpdate(Component* obj)
+void ObjectManager::PushTransformUpdate(Component* mComponent)
 {
-	TransformUpdate.Push(obj, std::bind(&Component::TransformUpdate, obj));
+	ComponentFunctionData data;
+	//활성화 여부
+	data.Enabled = &mComponent->Enabled;
+	//함수 포인터
+	data.FunctionPointer = std::bind(&Component::TransformUpdate, mComponent);
+	//컨퍼넌트 포인터
+	data.ComponentPoiner = mComponent;
+
+	TransformUpdate.Push(data);
 }
 
-void ObjectManager::PushPhysicsUpdate(Component* obj)
+void ObjectManager::PushPhysicsUpdate(Component* mComponent)
 {
-	PhysicsUpdate.Push(obj, std::bind(&Component::PhysicsUpdate, obj));
+	ComponentFunctionData data;
+	//활성화 여부
+	data.Enabled = &mComponent->Enabled;
+	//함수 포인터
+	data.FunctionPointer = std::bind(&Component::PhysicsUpdate, mComponent);
+	//컨퍼넌트 포인터
+	data.ComponentPoiner = mComponent;
+
+	PhysicsUpdate.Push(data);
 }
 
 void ObjectManager::PushUpdate(Component* mComponent)
 {
-	Update.Push(mComponent, std::bind(&Component::Update, mComponent));
+	ComponentFunctionData data;
+	//활성화 여부
+	data.Enabled = &mComponent->Enabled;
+	//함수 포인터
+	data.FunctionPointer = std::bind(&Component::Update, mComponent);
+	//컨퍼넌트 포인터
+	data.ComponentPoiner = mComponent;
+
+
+	Update.Push(data);
 }
 
 void ObjectManager::PushEndUpdate(Component* mComponent)
 {
 	//가장 마지막에 실행되는 업데이트 함수리스트에 넣는다
-	EndUpdate.Push(mComponent, std::bind(&Component::EndUpdate, mComponent));
+	ComponentFunctionData data;
+	//활성화 여부
+	data.Enabled = &mComponent->Enabled;
+	//함수 포인터
+	data.FunctionPointer = std::bind(&Component::EndUpdate, mComponent);
+	//컨퍼넌트 포인터
+	data.ComponentPoiner = mComponent;
+
+	EndUpdate.Push(data);
 }
 
 void ObjectManager::PushStart(Component* mComponent)
 {
-	StartFunction.Push(mComponent, std::bind(&Component::Start, mComponent));
+	ComponentFunctionData data;
+	//활성화 여부
+	data.Enabled = &mComponent->Enabled;
+	//함수 포인터
+	data.FunctionPointer = std::bind(&Component::Start, mComponent);
+	//컨퍼넌트 포인터
+	data.ComponentPoiner = mComponent;
+
+	StartFunction.Push(data);
 }
 
 void ObjectManager::PushAwake(Component* mComponent)
 {
-	AwakeFunction.Push(mComponent, std::bind(&Component::Awake, mComponent));
+	ComponentFunctionData data;
+	//활성화 여부
+	data.Enabled = &mComponent->Enabled;
+	//함수 포인터
+	data.FunctionPointer = std::bind(&Component::Awake, mComponent);
+	//컨퍼넌트 포인터
+	data.ComponentPoiner = mComponent;
+
+	AwakeFunction.Push(data);
 }
 
 void ObjectManager::PlayUpdate()
 {
+	//한번만 실행되는 함수포인터 리스트
+	AwakeFunction.Play(true);
+	StartFunction.Play(true);
+
 	///가장 먼저실행되는 StartUpdate 함수 리스트(각 컨퍼넌트들의 초기화작업을 해줄때)
 	StartUpdate.Play();
 
@@ -137,7 +214,7 @@ void ObjectManager::PlayUpdate()
 	///가장 마지막에 실행되는 Update 함수 리스트
 	EndUpdate.Play();
 
-	///업데이트 작업끝 그래픽엔진으로 넘겨줄 데이터 정리
+
 
 
 
@@ -157,14 +234,6 @@ void ObjectManager::PlayUpdate()
 	///모든 오브젝트 업데이트 완료
 }
 
-void ObjectManager::PlayStart()
-{
-	AwakeFunction.Play();
-	StartFunction.Play();
-
-	//Test();
-}
-
 void ObjectManager::CreateRenderQueue()
 {
 	//오브젝트의 사이즈 만큼 돌면서 랜더큐에 MeshData를 전달해준다
@@ -173,12 +242,11 @@ void ObjectManager::CreateRenderQueue()
 		ShadowData.pop();
 	}
 	
-
-	int count = ObjectList.size();
+	int count = (int)ObjectList.size();
 	
 	std::vector<GameObject*>::iterator it = ObjectList.begin();
 	for (it; it != ObjectList.end(); it++)
-	{
+	{	
 		RenderData.push((*it)->OneMeshData);
 		ShadowData.push((*it)->OneMeshData);
 	}
@@ -204,12 +272,16 @@ void ObjectManager::DeleteObject()
 		//큐에서 가장먼저들어온 오브젝트를 꺼낸다
 		GameObject* temp = DeleteList.front();
 		int count = temp->GetComponentCount();
+
 		for (int j = 0; j < count; j++)
 		{
 			Component* cpt = temp->GetDeleteComponent(j);
 			//컨퍼넌트 삭제 함수포인터 리스트에서 그컨퍼넌트의 함수포인터를찾아서 삭제
 			DeleteComponent(cpt);
 		}
+		//게임오브젝트도 삭제
+		delete temp;
+		temp = nullptr;
 
 		//삭제 했으니 삭제할 리스트에서도 빼준다
 		DeleteList.pop();

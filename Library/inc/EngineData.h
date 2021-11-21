@@ -1,18 +1,22 @@
 #pragma once
 #include "ResourcesData.h"
 #include "ParserData.h"
+#include <functional>
 #include "LightHelper.h"
+
 
 using namespace DirectX;
 using namespace SimpleMath;
 using namespace ParserData;
 
+class Component;
 enum class OBJECT_TYPE
 {
 	///현재 기본형으로 넣어둔 오브젝트 종류
 	///나중에 필요한건 넣고 필요없는건 빼자
 	
 	Default,		//값을 넣지않았을때 기본형
+	GameObject,		//다른 오브젝트들을 묶어놓는 용도
 	Base,			//상속구조로 되어있는 오브젝트
 	Skinning,		//스키닝이 추가된 오브젝트
 	Bone,			//본만 있는 오브젝트
@@ -145,6 +149,20 @@ public:
 
 	std::vector<Matrix>*	BoneOffsetList	= nullptr;	//본 매트릭스
 	std::vector<Mesh*>*		BoneList		= nullptr;	//본 매쉬
+};
+
+//컨퍼넌트들의 함수포인터를 저장할 구조체
+class ComponentFunctionData
+{
+public:
+	//함수 활성화 여부
+	bool* Enabled = nullptr;
+
+	//함수 포인터 
+	std::function<void()> FunctionPointer;
+
+	//컨퍼넌트 포인터
+	Component* ComponentPoiner;
 };
 
 

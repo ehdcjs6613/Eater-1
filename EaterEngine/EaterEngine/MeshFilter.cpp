@@ -4,7 +4,7 @@
 #include "LoadManager.h"
 #include "Transform.h"
 #include "EngineData.h"
-#include "Animation.h"
+#include "Animator.h"
 #include "ObjectManager.h"
 #include "Material.h"
 #include "MaterialManager.h"
@@ -30,7 +30,7 @@ void MeshFilter::Awake()
 		////최상위 객체를 가져옴
 		ModelData* data = LoadManager::GetMesh(MeshName);
 		Transform* MyTr = gameobject->transform;
-
+		gameobject->OneMeshData->ObjType = OBJECT_TYPE::GameObject;
 
 
 		//본 오브젝트 만들기
@@ -87,7 +87,7 @@ void MeshFilter::PushModelData(LoadMeshData* mModel)
 	data->mLocal = *(mModel->LocalTM);
 	data->mWorld = *(mModel->WorldTM);
 
-	//TextureBuffer* Base = LoadManager::GetTexture("WoodCrate01");
+	//TextureBuffer* Base = LoadManager::GetTexture("body_normal_tangent_Base_color");
 	//data->Diffuse = Base;
 }
 
@@ -97,7 +97,6 @@ void MeshFilter::CreateChild_Mesh(LoadMeshData* data, Transform* parent, ModelDa
 
 	GameObject* OBJ		= new GameObject();
 	OBJ->Name			= data->Name;
-	
 	
 	//컨퍼넌트 생성
 	Transform*	Tr		= OBJ->AddComponent<Transform>();
@@ -109,10 +108,9 @@ void MeshFilter::CreateChild_Mesh(LoadMeshData* data, Transform* parent, ModelDa
 	//스키닝 매쉬라면
 	if (data->Skinning_Object == true)
 	{
-		SkinningFilter* SF = OBJ->AddComponent<SkinningFilter>();
-		//본 리스트 넘겨주기
+		SkinningFilter*			SF = OBJ->AddComponent<SkinningFilter>();
+		//본 오프셋 넘겨주기 ,본 리스트 넘겨주기
 		SF->PushBoneList(&BoneList);
-		//본 오프셋 넘겨주기
 		SF->PushBone_OffsetList(&BoneOffsetList);
 
 		OBJ->OneMeshData->ObjType = OBJECT_TYPE::Skinning;
@@ -169,9 +167,9 @@ void MeshFilter::CreateChild_Bone(LoadMeshData* data, Transform* parent, std::ve
 	MeshFilter* Filter	= OBJ->AddComponent<MeshFilter>();
 
 
-	//Animation*	Anime	= OBJ->AddComponent<Animation>();
+	Animator*	Anime	= OBJ->AddComponent<Animator>();
 	//애니메이션 데이터 넣어주기
-	//Anime->SetAnimation(data->Animation);
+	Anime->SetAnimation(data->Animation);
 
 	//Transform 연결
 	OBJ->transform = Tr;
