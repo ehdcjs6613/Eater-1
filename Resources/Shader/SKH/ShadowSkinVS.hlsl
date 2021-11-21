@@ -32,6 +32,5 @@ float4 main(SkinVertexIn vin) : SV_POSITION
         posL += vin.BoneWeights2[j] * mul(gBoneTransforms[vin.BoneIndices2[j]], float4(vin.PosL, 1.0f)).xyz;
     }
 	
-    
     return mul(gWorldViewProj, float4(posL, 1.0f));
 };

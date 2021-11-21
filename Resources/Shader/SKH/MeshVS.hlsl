@@ -20,7 +20,8 @@ struct VertexIn
 
 struct VertexOut
 {
-    float4 PosW : SV_POSITION;
+    float4 PosH : SV_POSITION;
+    float3 PosW : POSITIONW;
     float2 Tex : TEXCOORD;
     float3 NormalW : NORMALW;
     float3 ShadowPosH : POS_SHADOW;
@@ -31,17 +32,20 @@ struct VertexOut
 VertexOut main(VertexIn vin)
 {
     VertexOut vout;
-
+        
+    // 동차 공간 변환
+    vout.PosH = mul(gWorldViewProj, float4(vin.PosL, 1.0f));
+    
 	// 세계 공간 변환
-    vout.PosW = mul(gWorldViewProj, float4(vin.PosL, 1.0f));
+    vout.PosW = mul((float3x3) gWorld, vin.PosL);
 
-    vout.NormalW = mul((float3x3) gWorld, vin.NormalL);
+    vout.NormalW = mul((float3x3)gWorld, vin.NormalL);
     vout.NormalW = normalize(vout.NormalW);
 	
 	// Output vertex attributes for interpolation across triangle.
     vout.Tex = mul(gTexTransform, float4(vin.Tex, 0.0f, 1.0f)).xy;
     
-    float3 TangentW = mul((float3x3) gWorld, vin.TangentL);
+    float3 TangentW = mul((float3x3)gWorld, vin.TangentL);
     
     // Vertex Shader 에서 TBN을 구해주자..
 	// Pixel Shader에서 연산은 최소한으로 해야하기 때문..
