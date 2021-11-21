@@ -85,6 +85,9 @@ void ShadowPass::Initialize(int width, int height)
 	m_ShadowDepthStencilView = g_Resource->GetDepthStencilView(eDepthStencilView::SHADOW);
 	m_ShadowDepthStencilView->SetRatio(4.0f, 4.0f);
 
+	// Shadow DepthStencilView 설정..
+	m_ShadowDSV = m_ShadowDepthStencilView->GetDSV();
+
 	// Shadow Map 등록..
 	m_ForwardPS->SetShaderResourceView<gShadowMap>(&m_ShadowSRV);
 
