@@ -67,8 +67,7 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 	mMaterialManager	= new MaterialManager();
 	mLightManager		= new LightManager();
 
-	//그래픽 엔진 생성
-	//pTest_Engine = new DH3DEngine();
+	//매니저들 인풋
 	MeshFilter::SetManager(mObjectManager, mMaterialManager);
 	Light::SetManager(mLightManager);
 
@@ -84,9 +83,11 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 	mTimeManager->Initialize();
 	mLightManager->Initialize();
 
+	Component::SetManager(mTimeManager, mKeyManager);
 
 
 	mGraphicManager->Initialize(Hwnd, WinSizeWidth, WinSizeHeight, mObjectManager);
+
 
 	//처음시작하기전 엔진의 구조간략설명
 
@@ -102,13 +103,13 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 	//mGraphicManager->ChoiceEngine("형선");
 
 	//윈도를 가로 2 	세로3번으로 분할시키겠다 (총 윈도우의 수 = 2 * 3)
-	mGraphicManager->SplitWindow(2, 2);
+	mGraphicManager->SplitWindow(1, 1);
 
 	//엔진을 지정된 넘버로 넣는다
 	mGraphicManager->PushEngine(0, new HsGraphic(), "형선");
-	mGraphicManager->PushEngine(1, new KHGraphic(), "규황");
-	mGraphicManager->PushEngine(2, new DH3DEngine(), "동혁");
-	mGraphicManager->PushEngine(3, new DH3DEngine(), "동혁0");
+	//mGraphicManager->PushEngine(1, new KHGraphic(), "규황");
+	//mGraphicManager->PushEngine(2, new DH3DEngine(), "동혁");
+	//mGraphicManager->PushEngine(3, new DH3DEngine(), "동혁0");
 
 
 
@@ -135,14 +136,14 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 void GameEngine::Update()
 {
 	mDebugManager->Clear();
-	//mDebugManager->printStart();
 	//매니저들 업데이트 (컨퍼넌트 업데이트후 변경된 사항을 각각의 게임오브젝트 OneMeshData에 전달)
+	//타임매니저는 먼저실행되어야함
+	mTimeManager->Update();
 	mKeyManager->Update();
 	mSceneManager->Update();
 	mObjectManager->PlayUpdate();
 
 	mDebugManager->Update();
-	mTimeManager->Update();
 	
 
 	mDebugManager->End();
@@ -159,7 +160,6 @@ void GameEngine::Update()
 
 	//랜더링이 끝나고 오브젝트 Delete
 	mObjectManager->DeleteObject();
-	//mObjectManager->DeleteRenderQueue();
 }
 
 void GameEngine::Finish()
@@ -187,6 +187,7 @@ void GameEngine::OnResize(int Change_Width, int Change_Height)
 	mGraphicManager->OnReSize(Change_Width, Change_Height);
 	Camera::CreateProj(Change_Width, Change_Height);
 
+
 	std::string Width = std::to_string(Change_Width);
 	std::string Height = std::to_string(Change_Height);;
 	std::string temp = "윈도우 사이즈 변경:"+ Width+","+ Height;
@@ -211,14 +212,6 @@ GameObject* GameEngine::Instance(std::string ObjName)
 
 	mDebugManager->Print(ObjName,0,1,DebugManager::MSG_TYPE::MSG_CREATE);
 	return temp;
-}
-
-GameObject* GameEngine::InstanceModel(std::string ObjName)
-{
-	ModelData* mModel =	mLoadManager->GetMesh(ObjName);
-	
-
-	return nullptr;
 }
 
 void GameEngine::Destroy(GameObject* obj)
@@ -246,7 +239,7 @@ void GameEngine::ChoiceScene(std::string name)
 
 	//씬 선택이 되면 씬자체의 Awack와 Start 함수 실행 그리고나서 컨퍼넌트의 Awack와 Start 도 실행 
 	mSceneManager->SceneStart();
-	mObjectManager->PlayStart();
+	//mObjectManager->PlayStart();
 }
 
 ///로드 관련 함수들

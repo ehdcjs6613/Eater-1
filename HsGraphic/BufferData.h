@@ -20,5 +20,6 @@ struct ObjectBuffer
 struct SkinningBuffer
 {
 	DirectX::XMMATRIX world;
+	DirectX::XMMATRIX TexMatrix;
 	DirectX::XMMATRIX BoneOffset[96];
 };

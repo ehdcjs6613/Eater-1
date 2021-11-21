@@ -6,7 +6,7 @@
 
 class ShaderManager;
 class RenderingManager;
-
+class GraphicDebugManager;
 class TextureBuffer;
 class Indexbuffer;
 class Vertexbuffer;
@@ -64,6 +64,7 @@ private:
 	ID3D11RasterizerState* mSolid;
 
 	//매니저들
-	ShaderManager*		mShaderManager;
-	RenderingManager*	mRenderManager;
+	ShaderManager*			mShaderManager;
+	RenderingManager*		mRenderManager;
+	GraphicDebugManager*	mDebugManager;
 };
