@@ -1,4 +1,5 @@
 #include "GraphicsEngine.h"
+#include "GraphicDebugManager.h"
 #include "HsGraphic.h"
 #include "HsEngineHelper.h"
 #include "ParserData.h"
@@ -285,15 +286,22 @@ Vertexbuffer* HsGraphic::CreateSkinngingVertexBuffer(ParserData::Mesh* mModel)
 		temp[i].Tangent = One->m_Tanget;
 
 
-		int Count = (int)One->m_BoneIndices.size();
+		int Count = (int)One->m_BoneWeights.size();
 		for (int j = 0; j < Count; j++)
 		{
-			temp[i].BoneWeights[j] = One->m_BoneWeights[j];
-			temp[i].BoneIndex[j] = One->m_BoneIndices[j];
-
+			if (j <= 3)
+			{
+				temp[i].BoneWeights01[j] = One->m_BoneWeights[j];
+				temp[i].BoneIndex01[j] = One->m_BoneIndices[j];
+			}
+			else
+			{
+				temp[i].BoneWeights02[j - 4] = One->m_BoneWeights[j];
+				temp[i].BoneIndex02[j - 4] = One->m_BoneIndices[j];
+			}
 		}
-	}
 
+	}
 
 
 	//버퍼 생성
@@ -313,7 +321,7 @@ Vertexbuffer* HsGraphic::CreateSkinngingVertexBuffer(ParserData::Mesh* mModel)
 	vertexbuffer->VertexDataSize = sizeof(Skinning32);
 	//////////////////////////////////////////////////
 
-	return nullptr;
+	return vertexbuffer;
 }
 
 
@@ -390,6 +398,9 @@ void HsGraphic::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 			case OBJECT_TYPE::Camera: //카메라 오브젝트
 			{
 				mRenderManager->CameraUpdate(global);
+				#ifdef _DEBUG
+				mRenderManager->DebugUpdate();
+				#endif
 				break;
 			}
 
@@ -404,6 +415,13 @@ void HsGraphic::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 			{
 				mRenderManager->MeshUpdate(Mesh);
 				mRenderManager->Rendering(Mesh, RenderingManager::ShaderType::BASIC);
+				break;
+			}
+
+			case OBJECT_TYPE::Bone: //기본 매쉬
+			{
+				//mRenderManager->BoneUpdate(Mesh);
+				//mRenderManager->Rendering(Mesh, RenderingManager::ShaderType::BASIC);
 				break;
 			}
 		}
@@ -424,6 +442,9 @@ void HsGraphic::SetViewPort(void* VPT, int Change_Width, int Change_Height)
 {
 	//랜더타겟과 뎁스스텐실 뷰포트를 받아온다
 	mScreenViewport		= reinterpret_cast<D3D11_VIEWPORT*>(VPT);
+
+	WinSizeX = Change_Width;
+	WinSizeY = Change_Height;
 }
 	
 void HsGraphic::SetDevice(void* mDevie, void* mDevieContext)
@@ -437,8 +458,13 @@ void HsGraphic::SetDevice(void* mDevie, void* mDevieContext)
 	mShaderManager = new ShaderManager();
 	mShaderManager->Initialize(Device, DeviceContext);
 
+	//디버깅 매니저 초기화
+	mDebugManager = new GraphicDebugManager();
+	mDebugManager->Initialize(Device, DeviceContext);
+
+	//랜더링 매니저 초기화
 	mRenderManager = new RenderingManager();
-	mRenderManager->Initialize(Device, DeviceContext, mShaderManager);
+	mRenderManager->Initialize(Device, DeviceContext, mShaderManager, mDebugManager);
 }
 
 
