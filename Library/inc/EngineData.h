@@ -38,7 +38,6 @@ public:
 	//카메라 정보들
 	DirectX::XMMATRIX* mViewMX;
 	DirectX::XMMATRIX* mProj;
-	DirectX::XMFLOAT3* mPos;
 
 	DirectX::XMMATRIX* mLightViewMX;
 	DirectX::XMMATRIX* mLightProj;

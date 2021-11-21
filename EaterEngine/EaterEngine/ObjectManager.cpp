@@ -221,7 +221,6 @@ void ObjectManager::PlayUpdate()
 	//글로벌 데이터
 	Global->mProj = Camera::GetProj();
 	Global->mViewMX = Camera::GetMainView();
-	Global->mPos = Camera::GetMainPos();
 
 	//라이트 데이터
 	Global->mLightViewMX = DirectionLight::g_DirLight->GetView();

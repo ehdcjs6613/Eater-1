@@ -16,8 +16,8 @@ void intro::Awake()
 	LoadMeshPath("../Resources/Mesh/");
 	LoadTesturePath("../Resources/Texture/");
 	
-	LoadMesh("Player_Idle");
-	//LoadMesh("Player_Attack");
+	//LoadMesh("Player_Idle");
+	LoadMesh("Player_Attack");
 	LoadMesh("Field");
 	//LoadMesh("box");
 	//LoadMesh("Dome_v03");
@@ -50,7 +50,7 @@ void intro::Awake()
 	testobj = Instance("obj");
 	MeshFilter* Filter		= testobj->AddComponent<MeshFilter>();
 	AnimationController* AC = testobj->AddComponent<AnimationController>();
-	Filter->SetMeshName("Player_Idle");
+	Filter->SetMeshName("Player_Attack");
 	//Filter->SetTextureName("body_normal_tangent_Base_color");
 	//testobj->SetActive(false);
 	
