@@ -72,7 +72,7 @@ void ForwardPass::Release()
 void ForwardPass::BeginRender()
 {
 	//g_Context->OMSetRenderTargets(1, &m_BackBufferRTV, m_DepthStencilView);
-	g_Context->OMSetDepthStencilState(m_DepthStencilState, 0);
+	//g_Context->OMSetDepthStencilState(m_DepthStencilState, 0);
 	g_Context->OMSetBlendState(m_BlendState, 0, 0xffffffff);
 	//g_Context->ClearRenderTargetView(m_BackBufferRTV, reinterpret_cast<const float*>(&DXColors::DeepDarkGray));
 	//g_Context->ClearDepthStencilView(m_DepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);

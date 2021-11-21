@@ -38,21 +38,18 @@ void intro::Awake()
 	testobj = Instance();
 	testobj->AddComponent<DirectionLight>();
 
-	testobj = Instance("obj");
-	MeshFilter* Filter = testobj->AddComponent<MeshFilter>();
-	Filter->SetMeshName("Player");
-	//Filter->SetTextureName("WoodCrate01");
-	testobj->GetTransform()->Position = { 0 ,0, 0 };
-	testobj->GetTransform()->Scale = { 2 , 2, 2 };
-	testobj->GetTransform()->Rotation = { 45 ,0,0 };
-
 	testobj = Instance("obj1");
-	MeshFilter* Filter1 = testobj->AddComponent<MeshFilter>();
-	Filter1->SetMeshName("Field");
+	testobj->AddComponent<MeshFilter>()->SetMeshName("Field");
+	//testobj->AddComponent<AI>();
+	testobj->GetTransform()->Position = { 0 ,0, 0 };
+	testobj->GetTransform()->Scale = { 1 , 1, 1 };
 
-	testobj->GetTransform()->Position	= { 0 ,0, 0 };
-	testobj->GetTransform()->Scale		= { 10 , 1, 10 };
-	testobj->GetTransform()->Rotation	= { 0 ,0,0 };
+	testobj = Instance("obj");
+	testobj->AddComponent<MeshFilter>()->SetMeshName("Player");
+	//testobj->AddComponent<AI>();
+	testobj->GetTransform()->Position = { 0 ,0, 0 };
+	testobj->GetTransform()->Scale = { 1 , 1, 1 };
+	testobj->GetTransform()->Rotation = { 45 ,0,0 };
 }
 
 void intro::Start()
