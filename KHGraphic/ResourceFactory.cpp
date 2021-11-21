@@ -58,7 +58,7 @@ void GraphicResourceFactory::Initialize(int width, int height)
 	m_ResourceManager->Initialize(m_Device, m_SwapChain);
 
 	// Back Buffer 积己..
-	CreateMainRenderTarget(width, height);
+	//CreateMainRenderTarget(width, height);
 
 	/// Global Resource 积己..
 	CreateDepthStencilState();
@@ -72,17 +72,6 @@ void GraphicResourceFactory::Initialize(int width, int height)
 	// FullScreen Buffer..
 	CreateQuadBuffer();
 	CreateSSAOQuadBuffer();
-}
-
-void GraphicResourceFactory::Initialize()
-{
-	// Shader Manager 檬扁拳..
-	m_ShaderManager->Initialize(m_Device, m_Context);
-
-	// Graphic Resource Manager 檬扁拳..
-	m_ResourceManager->Initialize(m_Device, m_SwapChain);
-
-	CreateRasterizerState();
 }
 
 void GraphicResourceFactory::Release()
@@ -788,30 +777,6 @@ void GraphicResourceFactory::CreateDepthStencilView(int width, int height)
 
 	// Defalt DepthStencilView 积己..
 	CreateDSV(tex2D.Get(), nullptr, nullptr);
-
-	ZeroMemory(&texDesc, sizeof(texDesc));
-	texDesc.Width = width * 4;
-	texDesc.Height = height * 4;
-	texDesc.MipLevels = 1;
-	texDesc.ArraySize = 1;
-	//texDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
-	texDesc.Format = DXGI_FORMAT_R24G8_TYPELESS;
-	texDesc.SampleDesc.Count = 1;
-	texDesc.SampleDesc.Quality = 0;
-	texDesc.Usage = D3D11_USAGE_DEFAULT;
-	texDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
-	texDesc.CPUAccessFlags = 0;
-	texDesc.MiscFlags = 0;
-	CreateTexture2D(&texDesc, tex2D.GetAddressOf());
-
-	D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc;
-	dsvDesc.Flags = 0;
-	dsvDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-	dsvDesc.Texture2D.MipSlice = 0;
-
-	// Shadow DepthStencilView 积己..
-	CreateDSV(tex2D.Get(), &dsvDesc, nullptr);
 
 	RESET_COM(tex2D);
 }

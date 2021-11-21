@@ -19,6 +19,7 @@ void ShaderResourceHashTable::Initialize()
 {
 	// Constant Buffer Hash Table Create..
 	ADD_CONSTANT_BUFFER(cbPerObject)
+	ADD_CONSTANT_BUFFER(cbShadowObject)
 	ADD_CONSTANT_BUFFER(cbLights)
 	ADD_CONSTANT_BUFFER(cbMaterial)
 	ADD_CONSTANT_BUFFER(cbCamera)
@@ -35,7 +36,7 @@ void ShaderResourceHashTable::Initialize()
 	ADD_CONSTANT_BUFFER(cbAlpha)
 
 	// Sampler State Hash Table Create..
-	//ADD_SAMPLER_STATE(gShadowSam)
+	ADD_SAMPLER_STATE(gShadowSam)
 	ADD_SAMPLER_STATE(samWrapMinLinear)
 	ADD_SAMPLER_STATE(samWrapAnisotropic)
 	ADD_SAMPLER_STATE(samClampMinLinear)

@@ -349,5 +349,11 @@
     <FxCompile Include="..\Resources\Shader\SKH\SkinVS.hlsl">
       <Filter>소스 파일\Shader\HLSL</Filter>
     </FxCompile>
+    <FxCompile Include="..\Resources\Shader\SKH\ShadowMeshVS.hlsl">
+      <Filter>소스 파일\Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Resources\Shader\SKH\ShadowSkinVS.hlsl">
+      <Filter>소스 파일\Shader\HLSL</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

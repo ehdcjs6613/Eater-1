@@ -71,8 +71,6 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 	MeshFilter::SetManager(mObjectManager, mMaterialManager);
 	Light::SetManager(mLightManager);
 
-	CreateObject();
-
 	//매니저들 초기화
 	BaseManager::Initialize();
 	mKeyManager->Initialize(mHwnd);
@@ -82,6 +80,7 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 	mLoadManager->Initialize(mGraphicManager);
 	mTimeManager->Initialize();
 	mLightManager->Initialize();
+	mMaterialManager->Initialize();
 
 	Component::SetManager(mTimeManager, mKeyManager);
 
@@ -103,13 +102,13 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 	//mGraphicManager->ChoiceEngine("형선");
 
 	//윈도를 가로 2 	세로3번으로 분할시키겠다 (총 윈도우의 수 = 2 * 3)
-	mGraphicManager->SplitWindow(1, 1);
+	mGraphicManager->SplitWindow(2, 2);
 
 	//엔진을 지정된 넘버로 넣는다
 	mGraphicManager->PushEngine(0, new HsGraphic(), "형선");
-	//mGraphicManager->PushEngine(1, new KHGraphic(), "규황");
-	//mGraphicManager->PushEngine(2, new DH3DEngine(), "동혁");
-	//mGraphicManager->PushEngine(3, new DH3DEngine(), "동혁0");
+	mGraphicManager->PushEngine(1, new KHGraphic(), "규황");
+	mGraphicManager->PushEngine(2, new DH3DEngine(), "동혁");
+	mGraphicManager->PushEngine(3, new DH3DEngine(), "동혁0");
 
 
 
@@ -152,7 +151,7 @@ void GameEngine::Update()
 
 	
 	//랜더큐 넘겨줌
-	mGraphicManager->ShadowRender(mObjectManager->GetShadowQueue(), mObjectManager->GetGlobalData());
+	mGraphicManager->ShadowRender(mObjectManager->GetRenderQueue(), mObjectManager->GetGlobalData());
 	mGraphicManager->Render(mObjectManager->GetRenderQueue(), mObjectManager->GetGlobalData());
 	mGraphicManager->SSAORender(mObjectManager->GetRenderQueue(), mObjectManager->GetGlobalData());
 	mGraphicManager->UIRender(mObjectManager->GetRenderQueue(), mObjectManager->GetGlobalData());

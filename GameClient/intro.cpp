@@ -16,8 +16,9 @@ void intro::Awake()
 	LoadMeshPath("../Resources/Mesh/");
 	LoadTesturePath("../Resources/Texture/");
 	
-	//LoadMesh("Player");
+	//LoadMesh("Player_Idle");
 	LoadMesh("Player_Attack");
+	LoadMesh("Field");
 	//LoadMesh("box");
 	//LoadMesh("Dome_v03");
 	//LoadMesh("1s_table_long_lower");
@@ -37,11 +38,20 @@ void intro::Awake()
 	testobj->AddComponent<Keyinput>();
 	testobj->GetTransform()->Position = { 0,0,-50 };
 
+	///¶óÀÌÆ®
+	testobj = Instance();
+	testobj->AddComponent<DirectionLight>();
+
+	testobj = Instance("obj1");
+	testobj->AddComponent<MeshFilter>()->SetMeshName("Field");
+	testobj->GetTransform()->Position = { 0 ,0, 0 };
+	testobj->GetTransform()->Scale = { 1 , 1, 1 };
+
 	testobj = Instance("obj");
 	MeshFilter* Filter		= testobj->AddComponent<MeshFilter>();
 	AnimationController* AC = testobj->AddComponent<AnimationController>();
 	Filter->SetMeshName("Player_Attack");
-	Filter->SetTextureName("body_normal_tangent_Base_color");
+	//Filter->SetTextureName("body_normal_tangent_Base_color");
 	//testobj->SetActive(false);
 	
 	testobj->GetTransform()->Position	= { 0 ,0, 0 };
