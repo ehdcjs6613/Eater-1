@@ -84,8 +84,8 @@ private:
 	std::string TexturePath;
 	
 	///리스트
-	static std::map<std::string, ModelData*>		ModelList;
-	static std::map<std::string, TextureBuffer*>	TextureList;
+	static std::map<std::string, ModelData*>					ModelList;
+	static std::map<std::string, TextureBuffer*>				TextureList;
 	static std::map<std::string, ParserData::OneAnimation*>		AnimationList;
 private:
 	//규황이 파서

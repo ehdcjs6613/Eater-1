@@ -21,7 +21,7 @@ void intro::Awake()
 	//LoadMesh("box");
 	//LoadMesh("Dome_v03");
 	//LoadMesh("1s_table_long_lower");
-	//LoadMesh("Enemy");
+	LoadMesh("Enemy");
 	//LoadMesh("Player_Idle");
 	//LoadMesh("Skinning");
 	//LoadMesh("Enemy");
@@ -40,12 +40,12 @@ void intro::Awake()
 	testobj = Instance("obj");
 	MeshFilter* Filter		= testobj->AddComponent<MeshFilter>();
 	AnimationController* AC = testobj->AddComponent<AnimationController>();
-	Filter->SetMeshName("Player_Attack");
+	Filter->SetMeshName("Enemy");
 	Filter->SetTextureName("body_normal_tangent_Base_color");
 	//testobj->SetActive(false);
 	
 	testobj->GetTransform()->Position	= { 0 ,0, 0 };
-	testobj->GetTransform()->Scale		= { 1 ,1, 1 };
+	testobj->GetTransform()->Scale		= { 100 ,100, 100 };
 	testobj->GetTransform()->Rotation	= {0 ,0,0 };
 }
 

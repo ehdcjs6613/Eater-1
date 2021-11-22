@@ -34,7 +34,7 @@ void Animator::Start()
 	SetPlayTime(1,true);
 }
 
-void Animator::Update()
+void Animator::StartUpdate()
 {
 	if (NowAnimationData != nullptr)
 	{

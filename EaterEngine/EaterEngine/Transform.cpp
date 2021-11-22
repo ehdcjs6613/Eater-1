@@ -30,6 +30,7 @@ void Transform::TransformUpdate()
 {
 	//월드 좌표들을 기반으로 월드 행렬을 구한다
 	gameobject->Name;
+
 	UpdateWorldXM();
 
 	UpdateLocalPosition();

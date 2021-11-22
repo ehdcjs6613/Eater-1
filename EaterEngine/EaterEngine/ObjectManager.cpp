@@ -55,8 +55,12 @@ void ObjectManager::PushDontDeleteObject(GameObject* obj)
 			(*it) = nullptr;
 
 			DontDeleteObjectList.push_back(temp);
+			return;
 		}
 	}
+
+	//오브젝트 리스트에서 찾지못했다면 그냥 넣어줌
+	DontDeleteObjectList.push_back(obj);
 }
 
 void ObjectManager::PushDeleteObject(GameObject* obj)
