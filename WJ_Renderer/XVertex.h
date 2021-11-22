@@ -1,4 +1,7 @@
 #pragma once
+
+#include "OneCompile.h"
+
 struct XVertex
 {
 	XVertex();
@@ -9,6 +12,12 @@ struct XVertex
 	DirectX::XMFLOAT3 m_Pos;
 	DirectX::XMFLOAT3 m_Color;
 };
+struct XVertexGrid
+{
+	DirectX::XMFLOAT3 Pos;
+	DirectX::XMFLOAT4 Color;
+};
+
 
 struct XVertexDef
 {

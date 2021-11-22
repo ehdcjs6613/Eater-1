@@ -1,6 +1,7 @@
 #include <wrl/client.h>
 
 #include "OneCompile.h"
+#include "d3dx11effect.h"
 #include "WICTextureLoader.h"
 #include "XVertex.h"
 #include "DirectXDefine.h"
@@ -15,6 +16,7 @@
 #include "ParserData.h"
 //#include "Grahpics2D.h"
 #include "ResourcesData.h"
+#include "ViewGrid.h"
 #include "X3Engine.h"
 //스마트포인터 인클르드
 
@@ -101,7 +103,9 @@ void X3Engine::Initialize(HWND _hWnd, int _iWidth, int _iHeight)
 
 	}
 	InitializeShaders();
-
+	ViewGrid* m_pViewGrid = new ViewGrid();
+	m_pViewGrid->Initialize(m_pDevice->GetDevice(), m_pDeviceContext->GetDeviceContext(), m_pRasterizerWire->GetFrameRS());
+	
 
 	//OnReSize(this->m_iWidth, m_iHeight);
 }
@@ -368,58 +372,42 @@ HRESULT X3Engine::LoopRender()
 {
 	HRESULT hr = S_OK;
 
+	/// 용책 예제 - 구면좌표계를 카티지안 좌표계로 바꾼다.
+	DirectX::XMMATRIX I = DirectX::XMMatrixIdentity();
+	DirectX::XMStoreFloat4x4(&mWorld, I);
+	DirectX::XMStoreFloat4x4(&mView, I);
+	DirectX::XMStoreFloat4x4(&mProj, I);
 
-	m_pDeviceContext->GetDeviceContext()->IASetInputLayout(m_XVertexShader.GetInputLayout());
-	m_pDeviceContext->GetDeviceContext()->IASetPrimitiveTopology
-	(D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	//(D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_POINTLIST);
+	/// WVP TM등을 셋팅
+	// Set constants
+	DirectX::XMMATRIX world = DirectX::XMLoadFloat4x4(&mWorld);
+	DirectX::XMMATRIX view = DirectX::XMLoadFloat4x4(&mView);
+	DirectX::XMMATRIX proj = DirectX::XMLoadFloat4x4(&mProj);
 
-	m_pDeviceContext->GetDeviceContext()->VSSetShader(m_XVertexShader.m_pShader, nullptr, 0);
-	m_pDeviceContext->GetDeviceContext()->PSSetShader(m_XPexelShader.m_pShader, nullptr, 0);
+	m_pViewGrid->Update(world, view, proj);
 
-	UINT stride = sizeof(XVertexTex);
-	UINT offset = 0;
+	/// 카메라 만드는 중
+	//m_pCamera->UpdateViewMatrix();
+	//view = m_pCamera->View();
+	//proj = m_pCamera->Proj();
 
-	//=======================================================================
-	///삼각형 그리기 3
-	//=======================================================================
-	XVertexTex v2[] =
-	{
-		XVertexTex(-0.5f,  -0.5f,    1.f, 0.0f,1.0f),//B L
-		XVertexTex(0.0f,   +0.5f,	 1.f, 0.5f,0.0f),  //T M
-		XVertexTex(+0.5f,  -0.5f,	 1.f, 1.0f,1.0f),  //B R
-		//XVertex(0.0f,  +0.1f),	 //T
-	};
+	// 상수 버퍼 변수를 통해서 윌드뷰프로젝션 행렬을 셋팅해준다. (객체의 캐시를 바꾸는 것이며 GPU의 상수버퍼가 바로 갱신되는 것은 아니다.)
+	DirectX::XMMATRIX worldViewProj = world * view * proj;
+	mfxWorldViewProj->SetMatrix(reinterpret_cast<float*>(&worldViewProj));
 
+	///----------------------------------------------------------------------------------------------------
+	/// 오브젝트들을 그린다. (Draw Primitive)
 
+	//-----
+	// 용책 예제 (사각형)
 
+	// 입력 배치 객체 셋팅
+	m_pDeviceContext->GetDeviceContext()->IASetInputLayout(mInputLayout);
+	m_pDeviceContext->GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	D3D11_BUFFER_DESC vertexBufferDESC2;
-	ZeroMemory(&vertexBufferDESC2, sizeof(D3D11_BUFFER_DESC));
+	m_pDeviceContext->GetDeviceContext()->OMSetDepthStencilState(NormalDSS, 0);
 
-	vertexBufferDESC2.Usage = D3D11_USAGE_DEFAULT;
-	vertexBufferDESC2.ByteWidth = sizeof(XVertexTex) * ARRAYSIZE(v2);//* ARRAYSIZE(v);
-	vertexBufferDESC2.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	vertexBufferDESC2.CPUAccessFlags = 0;
-	vertexBufferDESC2.MiscFlags = 0;
-
-	D3D11_SUBRESOURCE_DATA vertexBufferData2;
-	ZeroMemory(&vertexBufferData2, sizeof(D3D11_SUBRESOURCE_DATA));
-	vertexBufferData2.pSysMem = v2;
-	vertexBufferData2.SysMemPitch = 0;
-	vertexBufferData2.SysMemSlicePitch = 0;
-
-	//DirectX::CreateWICTextureFromFile
-
-	hr = m_pDevice->GetDevice()->CreateBuffer(&vertexBufferDESC2, &vertexBufferData2, &m_pVertexBuffer);
-
-	m_pDeviceContext->GetDeviceContext()->PSSetSamplers(1, 0, &m_pSamplerState->m_pSamplerState);
-
-
-	m_pDeviceContext->GetDeviceContext()->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &stride, &offset);
-
-	m_pDeviceContext->GetDeviceContext()->Draw(3, 0);
-
+	m_pViewGrid->Render();
 
 	return hr;
 }

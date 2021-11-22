@@ -15,7 +15,7 @@ class DirectXAdapter;
 //	  어떻게 그릴지의 레스터라이져 클래스
 class DirectXRasterizerState;
 //	  렌더러 클래스
-class XRenderer;
+class DirectXRenderTargeter;
 //	  샘플러 스테이트 클래스
 class DirectXSamplerState;
 
@@ -29,6 +29,8 @@ class Indexbuffer;
 class TextureBuffer;
 class MeshData;
 class GlobalData;
+//개인그리기
+class ViewGrid;
 
 
 
@@ -146,7 +148,20 @@ private:
 	HRESULT EndRender();
 	//-----------------------------------
 
-public:
+
+	ViewGrid* m_pViewGrid;
+private:
+	ID3DX11Effect* m_FX;
+	ID3DX11EffectTechnique* mTech;
+	ID3DX11EffectMatrixVariable* mfxWorldViewProj;
+
+	ID3D11InputLayout* mInputLayout;
+	// 폰트때문에 뎁스스탠실 스테이트가 강제가 됐다.
+	ID3D11DepthStencilState* NormalDSS;
+
+	DirectX::XMFLOAT4X4 mWorld;	// Transform Matrix
+	DirectX::XMFLOAT4X4 mView;
+	DirectX::XMFLOAT4X4 mProj;
 
 
 
