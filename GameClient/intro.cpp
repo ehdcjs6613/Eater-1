@@ -16,7 +16,7 @@ void intro::Awake()
 	LoadMeshPath("../Resources/Mesh/");
 	LoadTesturePath("../Resources/Texture/");
 	
-	//LoadMesh("Player_Idle");
+	LoadMesh("Player_Idle");
 	//LoadMesh("EnemyB");
 	LoadMesh("Field");
 	LoadMesh("Table");
@@ -24,13 +24,13 @@ void intro::Awake()
 	//LoadMesh("Dome_v03");
 	//LoadMesh("1s_table_long_lower");
 	//LoadMesh("Enemy");
-	LoadMesh("Player_Attack");
+	//LoadMesh("Player_Attack");
 	//LoadMesh("Skinning");
 	//LoadMesh("Enemy");
 	//LoadMesh("box");
 	//LoadMesh("AnimeBox");
 	//LoadTesture("body_normal_tangent_Base_color.png");
-	LoadTesture("body_normal_tangent_Base_color.png");
+	LoadTesture("Dump.png");
 
 	///Ä«¸Þ¶ó
 	testobj = Instance();
@@ -53,16 +53,16 @@ void intro::Awake()
 	testobj->GetTransform()->Position = { 5 ,0, 0 };
 	testobj->GetTransform()->Scale = { 1 , 1, 1 };
 
-	testobj = Instance("obj");
-	MeshFilter* Filter		= testobj->AddComponent<MeshFilter>();
-	AnimationController* AC = testobj->AddComponent<AnimationController>();
-	Filter->SetMeshName("Player_Attack");
-	//Filter->SetTextureName("body_normal_tangent_Base_color");
-	//testobj->SetActive(false);
-	
-	testobj->GetTransform()->Position	= { 0 ,0, 0 };
-	testobj->GetTransform()->Scale		= { 1 ,1, 1 };
-	testobj->GetTransform()->Rotation	= {0 ,0,0 };
+	//testobj = Instance("obj");
+	//MeshFilter* Filter		= testobj->AddComponent<MeshFilter>();
+	////AnimationController* AC = testobj->AddComponent<AnimationController>();
+	//Filter->SetMeshName("Player_Idle");
+	////Filter->SetTextureName("body_normal_tangent_Base_color");
+	////testobj->SetActive(false);
+	//
+	//testobj->GetTransform()->Position	= { 0 ,0, 0 };
+	//testobj->GetTransform()->Scale		= { 1 ,1, 1 };
+	//testobj->GetTransform()->Rotation	= {0 ,0,0 };
 }
 
 void intro::Start()

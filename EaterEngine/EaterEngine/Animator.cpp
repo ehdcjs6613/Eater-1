@@ -39,7 +39,7 @@ void Animator::Update()
 	if (NowAnimationData != nullptr)
 	{
 		AnimeFrameIndex();
-
+	
 		DirectX::SimpleMath::Vector3	pos = NowAnimationData->m_AniData[AnimeIndex]->m_Pos;
 		DirectX::SimpleMath::Quaternion rot = NowAnimationData->m_AniData[AnimeIndex]->m_RotQt;
 		DirectX::SimpleMath::Vector3	scl = NowAnimationData->m_AniData[AnimeIndex]->m_Scale;
@@ -50,12 +50,12 @@ void Animator::Update()
 		
 		transfrom->Load_Local = XM_SCL * XM_ROT * XM_POS;
 	}
-
+	
 	if (mKeyInputManger->GetKeyDown(VK_NUMPAD1))
 	{
 		Stop();
 	}
-
+	
 	if (mKeyInputManger->GetKeyDown(VK_NUMPAD2))
 	{
 		ReStart();

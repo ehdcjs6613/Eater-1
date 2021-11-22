@@ -70,17 +70,6 @@ void LoadManager::LoadMesh(std::string Name, bool Scale, bool LoadAnime)
 	//파서를 통해서 매쉬를 로드
 	ParserData::Model* temp = EaterParser->LoadModel(FullName, Scale, LoadAnime);
 
-		//애니메이션정보 저장
-	OneAnimation* data = temp->m_MeshList[0]->m_Animation;
-	AnimationList.insert({ Name,data });
-
-	if (temp->m_isAnimation == true && LoadAnime == true)
-	{
-		//애니메이션 정보만 읽어온다면 다른정보는 읽지않는다
-		return;
-	}
-
-
 	//본오프셋 TM과 본리스트를 먼저읽어오기위해 
 	int MeshCount = temp->m_MeshList.size();
 	for (int i = 0; i < MeshCount; i++)

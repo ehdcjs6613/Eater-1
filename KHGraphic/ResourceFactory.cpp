@@ -17,7 +17,6 @@
 #include "ResourceFactory.h"
 
 #include "VertexDefine.h"
-#include "ResourceBufferHashTable.h"
 #include "SamplerBufferDefine.h"
 #include "ToolKitDefine.h"
 
@@ -55,7 +54,7 @@ void GraphicResourceFactory::Initialize(int width, int height)
 	m_ShaderManager->Initialize(m_Device, m_Context);
 
 	// Graphic Resource Manager 초기화..
-	m_ResourceManager->Initialize(m_Device, m_SwapChain);
+	m_ResourceManager->Initialize(m_Device, nullptr);
 
 	// Back Buffer 생성..
 	//CreateMainRenderTarget(width, height);

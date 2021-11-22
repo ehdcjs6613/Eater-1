@@ -53,12 +53,6 @@ void MeshFilter::Awake()
 		}
 	}
 
-	for (auto k : BoneList)
-	{
-
-		std::string name = k->gameobject->Name;
-	}
-
 }
 
 void MeshFilter::SetManager(ObjectManager* obj, MaterialManager* mat)
@@ -98,8 +92,8 @@ void MeshFilter::PushModelData(LoadMeshData* mModel)
 	data->mLocal = *(mModel->LocalTM);
 	data->mWorld = *(mModel->WorldTM);
 
-	//TextureBuffer* Base = LoadManager::GetTexture("body_normal_tangent_Base_color");
-	//data->Diffuse = Base;
+	TextureBuffer* Base = LoadManager::GetTexture("Dump");
+	data->Diffuse = Base;
 }
 
 void MeshFilter::CreateChild_Mesh(LoadMeshData* data, Transform* parent, ModelData* modeldata)
