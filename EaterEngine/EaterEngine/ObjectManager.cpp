@@ -56,8 +56,12 @@ void ObjectManager::PushDontDeleteObject(GameObject* obj)
 			(*it) = nullptr;
 
 			DontDeleteObjectList.push_back(temp);
+			return;
 		}
 	}
+
+	//오브젝트 리스트에서 찾지못했다면 그냥 넣어줌
+	DontDeleteObjectList.push_back(obj);
 }
 
 void ObjectManager::PushDeleteObject(GameObject* obj)
@@ -219,13 +223,13 @@ void ObjectManager::PlayUpdate()
 
 
 	//글로벌 데이터
-	Global->mProj = Camera::GetProj();
+	Global->mProj	= Camera::GetProj();
 	Global->mViewMX = Camera::GetMainView();
 
 	//라이트 데이터
-	Global->mLightViewMX = DirectionLight::g_DirLight->GetView();
-	Global->mLightProj = DirectionLight::g_DirLight->GetProj();
-	Global->mShadowTrans = DirectionLight::g_DirLight->GetShadowTranspose();
+	Global->mLightViewMX	= DirectionLight::g_DirLight->GetView();
+	Global->mLightProj		= DirectionLight::g_DirLight->GetProj();
+	Global->mShadowTrans	= DirectionLight::g_DirLight->GetShadowTranspose();
 
 	///모든오브젝트의 데이터를 랜더큐에 담는다
 	CreateRenderQueue();

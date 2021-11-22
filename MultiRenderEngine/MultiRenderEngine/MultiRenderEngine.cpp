@@ -546,14 +546,15 @@ Vertexbuffer* MultiRenderEngine::SkinningVertexBuffer(ParserData::Mesh* mModel)
 		{
 			if (j <= 3)
 			{
-				temp[i].BoneWeight1[j] = One->m_BoneWeights[j];
-				temp[i].BoneIndex1[j] = One->m_BoneIndices[j];
+				temp[i].BoneWeight1[j]	= One->m_BoneWeights[j];
+				temp[i].BoneIndex1[j]	= One->m_BoneIndices[j];
 			}
 			else
 			{
-				temp[i].BoneWeight2[j - 4] = One->m_BoneWeights[j];
-				temp[i].BoneIndex2[j - 4] = One->m_BoneIndices[j];
+				temp[i].BoneWeight2[j - 4]	= One->m_BoneWeights[j];
+				temp[i].BoneIndex2[j - 4]	= One->m_BoneIndices[j];
 			}
+
 		}
 	}
 

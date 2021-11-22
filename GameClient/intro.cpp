@@ -16,54 +16,43 @@ void intro::Awake()
 	LoadMeshPath("../Resources/Mesh/");
 	LoadTesturePath("../Resources/Texture/");
 	
-	LoadMesh("Player_Idle");
+	//LoadMesh("Player_Idle");
 	//LoadMesh("EnemyB");
-	LoadMesh("Field");
-	LoadMesh("Table");
+	//LoadMesh("Field");
+	//LoadMesh("Table");
 	//LoadMesh("box");
 	//LoadMesh("Dome_v03");
 	//LoadMesh("1s_table_long_lower");
-	//LoadMesh("Enemy");
+	LoadMesh("Enemy_Run",false);
 	//LoadMesh("Player_Attack");
 	//LoadMesh("Skinning");
-	//LoadMesh("Enemy");
+	//LoadMesh("Enemy_Run",false,false);
 	//LoadMesh("box");
 	//LoadMesh("AnimeBox");
+	//LoadTesture("body_normal_tangent_Base_color.png");
 	LoadTesture("body_normal_tangent_Base_color.png");
-	LoadTesture("Dump.png");
 
 	///카메라
 	testobj = Instance();
 	//testobj->AddComponent<Keyinput>();
 	testobj->AddComponent<Camera>();
 	testobj->AddComponent<Keyinput>();
-	testobj->GetTransform()->Position = { 0,0,-50 };
+	testobj->GetTransform()->Position = { 0,0,-25 };
 
 	///라이트
 	testobj = Instance();
 	testobj->AddComponent<DirectionLight>();
 
-	testobj = Instance("obj1");
-	testobj->AddComponent<MeshFilter>()->SetMeshName("Field");
-	testobj->GetTransform()->Position = { 0 ,0, 0 };
-	testobj->GetTransform()->Scale = { 1 , 1, 1 };
-
-	testobj = Instance("obj2");
-	testobj->AddComponent<MeshFilter>()->SetMeshName("Table");
-	testobj->GetComponent<MeshFilter>()->SetTextureName("body_normal_tangent_Base_color");
-	testobj->GetTransform()->Position = { 5 ,0, 0 };
-	testobj->GetTransform()->Scale = { 1 , 1, 1 };
-
-	//testobj = Instance("obj");
-	//MeshFilter* Filter		= testobj->AddComponent<MeshFilter>();
-	////AnimationController* AC = testobj->AddComponent<AnimationController>();
-	//Filter->SetMeshName("Player_Idle");
-	////Filter->SetTextureName("body_normal_tangent_Base_color");
-	////testobj->SetActive(false);
-	//
-	//testobj->GetTransform()->Position	= { 0 ,0, 0 };
-	//testobj->GetTransform()->Scale		= { 1 ,1, 1 };
-	//testobj->GetTransform()->Rotation	= {0 ,0,0 };
+	testobj = Instance("obj");
+	MeshFilter* Filter		= testobj->AddComponent<MeshFilter>();
+	AnimationController* AC = testobj->AddComponent<AnimationController>();
+	Filter->SetMeshName("Enemy_Run");
+	//Filter->SetTextureName("body_normal_tangent_Base_color");
+	//testobj->SetActive(false);
+	
+	testobj->GetTransform()->Position	= { 0 ,0, 0 };
+	testobj->GetTransform()->Scale		= { 2 ,2, 2 };
+	testobj->GetTransform()->Rotation	= {90 ,0,0 };
 }
 
 void intro::Start()

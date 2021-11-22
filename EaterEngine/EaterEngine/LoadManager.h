@@ -23,7 +23,7 @@ namespace ParserData
 
 
 
-
+class ModelAnimationData;
 class LoadMeshData;
 class ModelData;
 class ModelParser;
@@ -37,8 +37,6 @@ class LoadManager
 public:
 	LoadManager();
 	~LoadManager();
-
-	
 
 	//초기화 및 경로 설정
 	void Initialize(GraphicEngineManager* Graphic);
@@ -73,6 +71,9 @@ private:
 	LoadMeshData* CreateMeshObjeect(ParserData::Mesh* mesh);
 	LoadMeshData* CreateBoneObjeect(ModelData* SaveData);
 
+
+	void LoadAnimation(ModelData* SaveMesh,ParserData::Model* MeshData,std::string Name);
+
 	
 	//파싱한데이터에서 값을 변경하지않은것들을 그대로 복사함
 	void SetData(LoadMeshData* MeshData, ParserData::Mesh* LoadData);
@@ -84,9 +85,9 @@ private:
 	std::string TexturePath;
 	
 	///리스트
-	static std::map<std::string, ModelData*>		ModelList;
-	static std::map<std::string, TextureBuffer*>	TextureList;
-	static std::map<std::string, ParserData::OneAnimation*>		AnimationList;
+	static std::map<std::string, ModelData*>			ModelList;
+	static std::map<std::string, TextureBuffer*>		TextureList;
+	static std::map<std::string, std::pair<std::string, ModelAnimationData*>>	AnimationList;
 private:
 	//규황이 파서
 	ModelParser* EaterParser;

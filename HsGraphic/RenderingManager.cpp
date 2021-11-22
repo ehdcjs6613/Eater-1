@@ -144,7 +144,7 @@ void RenderingManager::BoneUpdate(MeshData* Meshdata)
 	ID3D11Buffer* buffer = mShaderManager->GetConstantBuffer("ObjectBuffer");
 	//버퍼 업데이트
 	ObjectBuffer mbuffer;
-	mbuffer.world = DirectX::XMMatrixTranspose(DirectX::XMMatrixRotationQuaternion(rot) * DirectX::XMMatrixTranslation(_pos.x, _pos.y, _pos.z)); //HLSL에서만
+	mbuffer.world = DirectX::XMMatrixTranspose(Meshdata->mWorld); //HLSL에서만
 	mbuffer.TexMatrix = DirectX::XMMatrixTranspose(XMMatrixIdentity());
 	DeviceContext->UpdateSubresource(buffer, 0, nullptr, &mbuffer, 0, 0);
 	DeviceContext->VSSetConstantBuffers(1, 1, &buffer);

@@ -222,6 +222,7 @@ namespace ParserData
 
 		bool m_isAnimation;											// Animation À¯¹«
 
+		std::vector<ParserData::OneAnimation*> m_AnimationList;		// Animation List
 		std::vector<ParserData::CMaterial*> m_MaterialList;			// Material List
 		std::vector<ParserData::Mesh*> m_MeshList;	 				// Mesh List
 	};

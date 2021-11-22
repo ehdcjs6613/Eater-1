@@ -252,6 +252,9 @@ void FBXParser::LoadAnimation(fbxsdk::FbxNode* node)
 		// 새로운 Animaiton Data 생성..
 		m_OneAnimation = new OneAnimation();
 
+		// 애니메이션 삽입(본 인덱스와 애니메이션 인덱스 일치)..
+		m_Model->m_AnimationList.push_back(m_OneAnimation);
+
 		// 한 프레임 재생 시간..
 		m_OneAnimation->m_TicksPerFrame = (float)ticksperFrame;
 
@@ -440,6 +443,11 @@ bool FBXParser::ProcessBoneWeights(fbxsdk::FbxNode* node, std::vector<BoneWeight
 
 			// Skin Mesh 체크..
 			Mesh* skinMesh = FindMesh(node->GetName());
+
+			// Bone 개수만큼 List Size 설정..
+			skinMesh->m_BoneTMList.resize(m_AllBoneList.size());
+			skinMesh->m_BoneMeshList.resize(m_AllBoneList.size());
+
 			std::vector<BoneWeights> skinBoneWeights(meshBoneWeights.size());
 			for (int clusterIndex = 0; clusterIndex < clusterCount; clusterIndex++)
 			{
@@ -455,7 +463,9 @@ bool FBXParser::ProcessBoneWeights(fbxsdk::FbxNode* node, std::vector<BoneWeight
 
 				// Bone Mesh 체크..
 				Mesh* boneMesh = FindMesh(lineNodeName);
+				int boneIndex = FindBoneIndex(lineNodeName);
 
+				if (boneIndex == -1) continue;
 				if (boneMesh == nullptr) continue;
 				if (boneMesh->m_IsBone == false) continue;
 
@@ -478,10 +488,12 @@ bool FBXParser::ProcessBoneWeights(fbxsdk::FbxNode* node, std::vector<BoneWeight
 
 				DirectX::SimpleMath::Matrix offsetMatrix = clusterMatrix * clusterlinkMatrix.Invert() * geometryMatrix;
 
-				boneMesh->m_BoneIndex = skinMesh->m_BoneMeshList.size();
+				// Bone Index가 -1일 경우 가중치 없는 본
+				boneMesh->m_BoneIndex = boneIndex;
 
-				skinMesh->m_BoneTMList.emplace_back(offsetMatrix);
-				skinMesh->m_BoneMeshList.emplace_back(boneMesh);
+				// 해당 Bone Index에 Bone Offset & Mesh Data 삽입..
+				skinMesh->m_BoneTMList[boneIndex] = offsetMatrix;
+				skinMesh->m_BoneMeshList[boneIndex] = boneMesh;
 
 
 				int c = cluster->GetControlPointIndicesCount();

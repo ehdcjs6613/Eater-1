@@ -39,9 +39,10 @@ public:
 
 	//오브젝트의 컨퍼넌트 갯수를 가져옴
 	int GetComponentCount();
-
+	//
 	void PushChildList(GameObject* obj);
 	
+
 	MeshData* OneMeshData;
 	Transform* transform;
 public:
@@ -63,7 +64,6 @@ protected:
 	bool IsActive;				//기능 중지여부
 	unsigned int FunctionMask;	//어떤 함수포인터에 넣었는지 여부
 private:
-
 	//컨퍼넌트 리스트
 	std::vector<Component*> ComponentList;
 	std::vector<GameObject*> ChildList;

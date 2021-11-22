@@ -48,7 +48,7 @@ public:
 };
 
 /// <summary>
-/// 게임엔진에서 그래픽엔진으로 던저줄 한개의 매쉬 데이터
+/// 게임엔진에서 그래픽엔진으로 던저줄 한개의 메쉬 데이터
 /// </summary>
 class MeshData
 {
@@ -105,7 +105,7 @@ public:
 	bool Bone_Object		= false;		//본오브젝트 여부
 	bool Skinning_Object	= false;		//스키닝 오브젝트 여부
 
-	int BoneIndex;							//본일경우 자신의 인덱스
+	int BoneIndex = -1;						//본일경우 자신의 인덱스
 
 	std::string ParentName	= "";			//부모의 이름
 	std::string	Name		= "";			//자기자신의 이름
@@ -113,11 +113,11 @@ public:
 	DirectX::SimpleMath::Matrix* WorldTM = nullptr;	//월드 매트릭스
 	DirectX::SimpleMath::Matrix* LocalTM = nullptr;	//로컬 매트릭스
 	
-	Indexbuffer*	IB = nullptr;	//인덱스 버퍼
-	Vertexbuffer*	VB = nullptr;	//버텍스 버퍼
+	Indexbuffer*	IB = nullptr;			//인덱스 버퍼
+	Vertexbuffer*	VB = nullptr;			//버텍스 버퍼
 
-	TextureBuffer* Diffuse = nullptr;	// Diffuse Texture
-	TextureBuffer* Normal = nullptr;	// NormalMap Texture
+	TextureBuffer* Diffuse = nullptr;		//Diffuse Texture
+	TextureBuffer* Normal = nullptr;		//NormalMap Texture
 
 	ParserData::CMaterial*		Material	= nullptr;	//메테리얼 정보
 	ParserData::OneAnimation*	Animation	= nullptr;	//애니메이션 정보
@@ -125,12 +125,12 @@ public:
 	std::vector<Matrix>*	BoneTMList		= nullptr;	//본 매트릭스
 	std::vector<Mesh*>*		BoneList		= nullptr;	//본 매쉬
 
-	LoadMeshData* Parent = nullptr;		//부모 매쉬
-	std::vector<LoadMeshData*> Child;	//자식 매쉬 리스트
+	LoadMeshData* Parent = nullptr;			//부모 매쉬
+	std::vector<LoadMeshData*> Child;		//자식 매쉬 리스트
 
 
-	Matrix* BoneOffset	= nullptr;	//본 매트릭스
-	Mesh*	BoneNumber	= nullptr;	//본 매쉬
+	Matrix* BoneOffset	= nullptr;			//본 매트릭스
+	Mesh*	BoneNumber	= nullptr;			//본 매쉬
 };
 
 /// <summary>
@@ -150,6 +150,18 @@ public:
 
 	std::vector<Matrix>*	BoneOffsetList	= nullptr;	//본 매트릭스
 	std::vector<Mesh*>*		BoneList		= nullptr;	//본 매쉬
+};
+
+class ModelAnimationData
+{
+public:
+	~ModelAnimationData()
+	{
+		
+	}
+
+	//한개의 모델 애니메이션 정보
+	std::vector<OneAnimation*>* AnimList;
 };
 
 //컨퍼넌트들의 함수포인터를 저장할 구조체

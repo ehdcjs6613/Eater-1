@@ -32,28 +32,29 @@ void MeshFilter::Awake()
 		Transform* MyTr = gameobject->transform;
 		gameobject->OneMeshData->ObjType = OBJECT_TYPE::GameObject;
 
-
-		//본 오브젝트 만들기
-		if (data->TopMeshList[0]->Skinning_Object)
+		
+		if(data->TopMeshList[0]->Skinning_Object)
 		{
 			BoneList.resize(data->BoneList->size());
 			BoneOffsetList.resize(data->BoneOffsetList->size());
 		}
 
-		for (int i = 0; i < data->TopBoneList.size(); i++)
+		//본 오브젝트 만들기
+		for(int i = 0; i < data->TopBoneList.size(); i++)
 		{
 			CreateChild_Bone(data->TopBoneList[i], MyTr, &BoneList, &BoneOffsetList);
 		}
 
 
 		//매쉬 오브젝트 만들기
-		for (int i = 0; i < data->TopMeshList.size(); i++)
+		for(int i = 0; i < data->TopMeshList.size(); i++)
 		{
 			CreateChild_Mesh(data->TopMeshList[i], MyTr, data);
 		}
 
 		//Texture Check & Setting..
 		CheckTexture();
+
 	}
 }
 
@@ -177,7 +178,7 @@ void MeshFilter::CreateChild_Mesh(LoadMeshData* data, Transform* parent, ModelDa
 	Tr->Load_World = *data->WorldTM;
 
 	//Transform 끼리 연결
-	LinkHierarchy(Tr, parent);
+	//LinkHierarchy(Tr, parent);
 	//오브젝트 매니저에서 관리할수있도록 넣어준다
 	OBJ_Manager->PushCreateObject(OBJ);
 
@@ -196,8 +197,8 @@ void MeshFilter::CreateChild_Bone(LoadMeshData* data, Transform* parent, std::ve
 	OBJ->OneMeshData->ObjType = OBJECT_TYPE::Bone;
 
 	//컨퍼넌트 생성
-	Transform* Tr = OBJ->AddComponent<Transform>();
-	MeshFilter* Filter = OBJ->AddComponent<MeshFilter>();
+	Transform* Tr		= OBJ->AddComponent<Transform>();
+	MeshFilter* Filter	= OBJ->AddComponent<MeshFilter>();
 
 
 	Animator* Anime = OBJ->AddComponent<Animator>();
@@ -216,8 +217,9 @@ void MeshFilter::CreateChild_Bone(LoadMeshData* data, Transform* parent, std::ve
 	//오브젝트 매니저에서 관리할수있도록 넣어준다
 	OBJ_Manager->PushCreateObject(OBJ);
 
+	//본에 해당하는 Transform과 오프셋을
 	(*mBoneList)[data->BoneIndex] = Tr;
-	(*BoneOffsetList)[data->BoneIndex] = *data->BoneOffset;
+	(*BoneOffsetList)[data->BoneIndex] = (*data->BoneOffset);
 
 	//자식객체 개수만큼 실행
 	int ChildCount = data->Child.size();
