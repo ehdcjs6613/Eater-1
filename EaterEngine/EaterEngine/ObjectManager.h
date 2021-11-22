@@ -67,12 +67,11 @@ public:
 private:
 	///오브젝트 리스트
 	std::vector<GameObject*> ObjectList;
-
 	///삭제되면 안되는 오브젝트 리스트
 	std::vector<GameObject*> DontDeleteObjectList;
-
 	///랜더링까지 모두끝나고 마지막에 삭제될 오브젝트리스트
 	std::queue<GameObject*> DeleteList;
+
 
 	///그래픽엔진쪽으로 던저줄 데이터들
 	std::queue<MeshData*> RenderData;
@@ -93,4 +92,5 @@ private:
 
 	//컨퍼넌트 를넣으면 해당 함수포인터에 넣었던 포인터를 삭제시켜줌
 	void DeleteComponent(Component* cpt);
+	
 };
