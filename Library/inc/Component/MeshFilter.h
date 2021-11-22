@@ -8,12 +8,18 @@
 /// 매쉬정보를 파서에서 받아오고 저장해두는 컨퍼넌트
 /// </summary>
 
+
 namespace DirectX
 {
 	namespace SimpleMath
 	{
 		struct Matrix;
 	}
+}
+
+namespace ParserData
+{
+	class OneAnimation;	
 }
 
 class ModelData;
@@ -47,6 +53,8 @@ private:
 	//LoadMeshData를 게임에 사용할 오브젝트로 생성하면서 값을 넣어준다
 	void CreateChild_Bone(LoadMeshData* data, Transform* parent, std::vector<Transform*>* mBoneList, std::vector<DirectX::SimpleMath::Matrix>* BoneOffsetList);
 
+	void BoneDataResize();
+
 	//게임오브젝트의 LoadData를 합쳐준다
 	void PushModelData(LoadMeshData* mModel);
 
@@ -61,5 +69,6 @@ private:
 
 	std::vector<Transform*> BoneList;
 	std::vector<DirectX::SimpleMath::Matrix> BoneOffsetList;
+	std::vector<ParserData::OneAnimation*> AnimData;
 };
 

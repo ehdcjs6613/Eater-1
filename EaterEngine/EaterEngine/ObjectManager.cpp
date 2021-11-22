@@ -223,13 +223,13 @@ void ObjectManager::PlayUpdate()
 
 
 	//글로벌 데이터
-	Global->mProj = Camera::GetProj();
+	Global->mProj	= Camera::GetProj();
 	Global->mViewMX = Camera::GetMainView();
 
 	//라이트 데이터
-	Global->mLightViewMX = DirectionLight::g_DirLight->GetView();
-	Global->mLightProj = DirectionLight::g_DirLight->GetProj();
-	Global->mShadowTrans = DirectionLight::g_DirLight->GetShadowTranspose();
+	Global->mLightViewMX	= DirectionLight::g_DirLight->GetView();
+	Global->mLightProj		= DirectionLight::g_DirLight->GetProj();
+	Global->mShadowTrans	= DirectionLight::g_DirLight->GetShadowTranspose();
 
 	///모든오브젝트의 데이터를 랜더큐에 담는다
 	CreateRenderQueue();

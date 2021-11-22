@@ -7,9 +7,9 @@
 
 using namespace ParserData;
 
-std::map<std::string, ModelData*> LoadManager::ModelList;
-std::map<std::string, TextureBuffer*> LoadManager::TextureList;
-std::map<std::string, OneAnimation*> LoadManager::AnimationList;
+std::map<std::string, ModelData*>			LoadManager::ModelList;
+std::map<std::string, TextureBuffer*>		LoadManager::TextureList;
+std::map<std::string, ModelAnimationData*>	LoadManager::AnimationList;
 LoadManager::LoadManager()
 {
 	GEngine = nullptr;
@@ -70,16 +70,12 @@ void LoadManager::LoadMesh(std::string Name, bool Scale, bool LoadAnime)
 	//파서를 통해서 매쉬를 로드
 	ParserData::Model* temp = EaterParser->LoadModel(FullName, Scale, LoadAnime);
 
-		//애니메이션정보 저장
-	OneAnimation* data = temp->m_MeshList[0]->m_Animation;
-	AnimationList.insert({ Name,data });
-
-	if (temp->m_isAnimation == true && LoadAnime == true)
+	//애니메이션만 로드를 한다면 데이터만 읽고 나머지는 하지않는다
+	if (LoadAnime == true)
 	{
-		//애니메이션 정보만 읽어온다면 다른정보는 읽지않는다
+
 		return;
 	}
-
 
 	//본오프셋 TM과 본리스트를 먼저읽어오기위해 
 	int MeshCount = temp->m_MeshList.size();
@@ -95,8 +91,8 @@ void LoadManager::LoadMesh(std::string Name, bool Scale, bool LoadAnime)
 		if (mesh->m_IsBone == false && mesh->m_IsSkinningObject == true)
 		{
 			//본과 오프셋 정보만 읽어옴 생성은 밑에서 
-			SaveMesh->BoneOffsetList = &mesh->m_BoneTMList;
-			SaveMesh->BoneList = &mesh->m_BoneMeshList;
+			SaveMesh->BoneOffsetList	= &mesh->m_BoneTMList;
+			SaveMesh->BoneList			= &mesh->m_BoneMeshList;
 		}
 
 		//매쉬이고 탑 오브젝트라면
@@ -110,8 +106,6 @@ void LoadManager::LoadMesh(std::string Name, bool Scale, bool LoadAnime)
 	//읽어온 BoneOffset 과 리스트를 기반으로 생성하고 계층구조 연결후 최상위만뽑아온다
 	LoadMeshData* TopBone = CreateBoneObjeect(SaveMesh);
 	if (TopBone != nullptr) { SaveMesh->TopBoneList.push_back(TopBone); }
-
-
 
 
 	//최상위 오브젝트의 리스트를 넣어준다
@@ -249,6 +243,31 @@ LoadMeshData* LoadManager::CreateBoneObjeect(ModelData* SaveData)
 
 	///모두 연결된 상태에서 최상위 오브젝트만 내보내준다
 	return TOP_BONE;
+}
+
+ModelAnimationData* LoadManager::LoadAnimation(ParserData::Model* MeshData)
+{
+	ModelAnimationData* Anim = nullptr;
+	//애니메이션이 있다면
+	if (MeshData->m_isAnimation == true)
+	{
+		//애니메이션을 저장할 데이터
+		Anim = new ModelAnimationData();
+		int count = (int)MeshData->m_MeshList.size();
+		for (int i = 0; i < count; i++)
+		{
+			//한개의 매쉬로 접근
+			ParserData::Mesh* temp = MeshData->m_MeshList[i];
+			
+			//본이라면 애니메이션 정보를 가져옴
+			if (temp->m_IsBone == true)
+			{
+				Anim->AnimList.push_back(temp->m_Animation);
+			}
+		}
+	}
+
+	return Anim;
 }
 
 void LoadManager::SetData(LoadMeshData* MeshData, ParserData::Mesh* LoadData)
