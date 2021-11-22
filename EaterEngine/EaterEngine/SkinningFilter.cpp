@@ -26,6 +26,7 @@ void SkinningFilter::Update()
 {
 	MeshData* data = gameobject->OneMeshData;
 	
+	//(*BoneList)[1]->SetRotate(0.01f, 0, 0);
 	//데이터 넣어주기
 	for (int i = 0; i < BoneSize; i++)
 	{

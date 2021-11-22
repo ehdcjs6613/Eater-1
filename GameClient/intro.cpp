@@ -17,13 +17,14 @@ void intro::Awake()
 	LoadTesturePath("../Resources/Texture/");
 	
 	//LoadMesh("Player_Idle");
-	LoadMesh("Player_Attack");
+	//LoadMesh("EnemyB");
 	LoadMesh("Field");
+	LoadMesh("Table");
 	//LoadMesh("box");
 	//LoadMesh("Dome_v03");
 	//LoadMesh("1s_table_long_lower");
 	//LoadMesh("Enemy");
-	//LoadMesh("Player_Idle");
+	LoadMesh("Player_Attack");
 	//LoadMesh("Skinning");
 	//LoadMesh("Enemy");
 	//LoadMesh("box");
@@ -45,6 +46,11 @@ void intro::Awake()
 	testobj = Instance("obj1");
 	testobj->AddComponent<MeshFilter>()->SetMeshName("Field");
 	testobj->GetTransform()->Position = { 0 ,0, 0 };
+	testobj->GetTransform()->Scale = { 1 , 1, 1 };
+
+	testobj = Instance("obj2");
+	testobj->AddComponent<MeshFilter>()->SetMeshName("Table");
+	testobj->GetTransform()->Position = { 5 ,0, 0 };
 	testobj->GetTransform()->Scale = { 1 , 1, 1 };
 
 	testobj = Instance("obj");

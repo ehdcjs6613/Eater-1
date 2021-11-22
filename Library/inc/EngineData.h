@@ -105,6 +105,8 @@ public:
 	bool Bone_Object		= false;		//본오브젝트 여부
 	bool Skinning_Object	= false;		//스키닝 오브젝트 여부
 
+	int BoneIndex;							//본일경우 자신의 인덱스
+
 	std::string ParentName	= "";			//부모의 이름
 	std::string	Name		= "";			//자기자신의 이름
 

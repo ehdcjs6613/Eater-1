@@ -46,8 +46,8 @@ public:
 	EATER_ENGINEDLL void SetObject(GameObject* obj);
 
 	static void SetManager(TimeManager* time, KeyinputManager* key);
-private:
-protected:
+
+public:
 	//이컨퍼넌트를 가지고 있는 게임오브젝트
 	GameObject* gameobject;
 	size_t ComponentType;

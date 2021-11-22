@@ -258,6 +258,7 @@ void LoadManager::SetData(LoadMeshData* MeshData, ParserData::Mesh* LoadData)
 	MeshData->Top_Object = LoadData->m_TopNode;
 	MeshData->Bone_Object = LoadData->m_IsBone;
 	MeshData->Skinning_Object = LoadData->m_IsSkinningObject;
+	MeshData->BoneIndex = LoadData->m_BoneIndex;
 
 	//기존 데이터 그냥 읽어옴
 	MeshData->Animation = LoadData->m_Animation;
