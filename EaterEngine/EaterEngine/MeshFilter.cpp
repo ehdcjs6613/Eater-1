@@ -168,8 +168,8 @@ void MeshFilter::CreateChild_Bone(LoadMeshData* data, Transform* parent, std::ve
 	OBJ->OneMeshData->ObjType = OBJECT_TYPE::Bone;
 
 	//컨퍼넌트 생성
-	Transform* Tr = OBJ->AddComponent<Transform>();
-	MeshFilter* Filter = OBJ->AddComponent<MeshFilter>();
+	Transform* Tr		= OBJ->AddComponent<Transform>();
+	MeshFilter* Filter	= OBJ->AddComponent<MeshFilter>();
 
 
 	Animator* Anime = OBJ->AddComponent<Animator>();
@@ -190,7 +190,7 @@ void MeshFilter::CreateChild_Bone(LoadMeshData* data, Transform* parent, std::ve
 
 	//본에 해당하는 Transform과 오프셋을
 	(*mBoneList)[data->BoneIndex] = Tr;
-	(*BoneOffsetList)[data->BoneIndex] = *data->BoneOffset;
+	(*BoneOffsetList)[data->BoneIndex] = (*data->BoneOffset);
 
 	//자식객체 개수만큼 실행
 	int ChildCount = data->Child.size();

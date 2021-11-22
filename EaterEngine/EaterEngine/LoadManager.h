@@ -70,7 +70,9 @@ private:
 	//계층 구조를 타지않고 탑오브젝트들만 읽어온다
 	LoadMeshData* CreateMeshObjeect(ParserData::Mesh* mesh);
 	LoadMeshData* CreateBoneObjeect(ModelData* SaveData);
-	ModelAnimationData* LoadAnimation(ParserData::Model* MeshData);
+
+
+	void LoadAnimation(ModelData* SaveMesh,ParserData::Model* MeshData,std::string Name);
 
 	
 	//파싱한데이터에서 값을 변경하지않은것들을 그대로 복사함
@@ -85,7 +87,7 @@ private:
 	///리스트
 	static std::map<std::string, ModelData*>			ModelList;
 	static std::map<std::string, TextureBuffer*>		TextureList;
-	static std::map<std::string, ModelAnimationData*>	AnimationList;
+	static std::map<std::string, std::pair<std::string, ModelAnimationData*>>	AnimationList;
 private:
 	//규황이 파서
 	ModelParser* EaterParser;
