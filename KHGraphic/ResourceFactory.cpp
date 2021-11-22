@@ -18,7 +18,7 @@
 
 #include "VertexDefine.h"
 #include "ResourceBufferHashTable.h"
-#include "SamplerStateDefine.h"
+#include "SamplerBufferDefine.h"
 #include "ToolKitDefine.h"
 
 using namespace DirectX::SimpleMath;

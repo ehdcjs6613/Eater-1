@@ -15,7 +15,7 @@ cbuffer cbCamera : register(b1)
     float3 gEyePosW : packoffset(c0);
 };
 
-cbuffer cbMaterial : register(b2)
+cbuffer cbMaterials : register(b2)
 {
     Material gMaterials[5];
 }
@@ -29,8 +29,7 @@ SamplerState samWrapMinLinear : register(s1);
 
 struct PixelIn
 {
-    float4 PosH : SV_POSITION;
-    float3 PosW : POSITIONW;
+    float4 PosW : SV_POSITION;
     float2 Tex : TEXCOORD;
     float3 NormalW : NORMALW;
     float3 ShadowPosH : POS_SHADOW;
@@ -45,16 +44,16 @@ float4 main(PixelIn pin) : SV_Target0
     // Gamma Correction
 	// Gamma Space -> Linear Space
 	// 모든 라이팅 연산은 선형 공간에서 이루어져야 한다..
-    albedo.rgb = pow(albedo.rgb, 2.2f);
+    albedo.rgb = pow(albedo.rgb, 2.2);
     
     float3 normalMapSample = 2.0f * gNormalMap.Sample(samWrapMinLinear, pin.Tex).rgb - 1.0f;
     float3 bumpedNormalW = mul(normalMapSample, pin.TBN);
     
     // Shadow
-    float shadows = CalcShadowFactor(gShadowSam, gShadowMap, pin.ShadowPosH.xyz);
+    float shadows = CalcShadowFactor(gShadowSam, gShadowMap, pin.ShadowPosH);
     
     // View Direction
-    float3 ViewDirection = gEyePosW - pin.PosW;
+    float3 ViewDirection = pin.PosW.xyz - gEyePosW;
     ViewDirection = normalize(ViewDirection);
     
     // Start with a sum of zero.
@@ -64,7 +63,7 @@ float4 main(PixelIn pin) : SV_Target0
     
     float4 A, D, S;
     
-    float4 litColor = albedo;
+	float4 litColor = albedo;
     
     // Directional Light
 	[unroll]
@@ -81,7 +80,7 @@ float4 main(PixelIn pin) : SV_Target0
     // Point Light
     if (gPointLightCount > 0)
     {
-		[unroll]
+			[unroll]
         for (uint i = 0; i < gPointLightCount; ++i)
         {
             ComputePointLight(gMaterials[0], gPointLights[i], pin.PosW.xyz, bumpedNormalW, ViewDirection,
@@ -96,7 +95,7 @@ float4 main(PixelIn pin) : SV_Target0
     // Spot Light
     if (gSpotLightCount > 0)
     {
-		[unroll]
+			[unroll]
         for (uint i = 0; i < gSpotLightCount; ++i)
         {
             ComputeSpotLight(gMaterials[0], gSpotLights[i], pin.PosW.xyz, bumpedNormalW, ViewDirection,
@@ -114,7 +113,7 @@ float4 main(PixelIn pin) : SV_Target0
     // Common to take alpha from diffuse material and texture.
     litColor.a = gMaterials[0].Diffuse.a * albedo.a;
     
-    //litColor.rgb = pow(litColor.rgb, 1.0f / 2.2f);
     
     return litColor;
+    //return float4(1.0f, 0.0f, 0.0f, 1.0f);
 }
