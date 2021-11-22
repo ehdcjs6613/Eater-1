@@ -11,6 +11,7 @@
 KHGraphic::KHGraphic()
 	:m_ResourceFactory(nullptr), m_RenderManager(nullptr)
 {
+
 }
 
 KHGraphic::~KHGraphic()

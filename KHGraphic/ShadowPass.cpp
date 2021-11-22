@@ -12,11 +12,12 @@
 #include "EngineData.h"
 #include "ShadowPass.h"
 
+#include "VertexDefine.h"
+#include "ConstantBufferDefine.h"
+#include "ShaderResourceBufferDefine.h"
 #include "ResourceFactoryBase.h"
 #include "ResourceManagerBase.h"
 #include "ShaderManagerBase.h"
-#include "ConstantBufferDefine.h"
-#include "ShaderResourceViewDefine.h"
 
 ShadowPass::ShadowPass()
 	:m_ShadowDSV(nullptr), m_ShadowSRV(nullptr)
@@ -67,7 +68,7 @@ void ShadowPass::Initialize(int width, int height)
 	dsvDesc.Texture2D.MipSlice = 0;
 
 	// Shadow DepthStencilView 생성..
-	g_Factory->CreateDSV(tex2D.Get(), &dsvDesc, &m_ShadowDSV);
+	g_Factory->CreateDSV(tex2D.Get(), &dsvDesc, nullptr);
 
 	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
 	srvDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
@@ -97,10 +98,10 @@ void ShadowPass::Initialize(int width, int height)
 
 void ShadowPass::OnResize(int width, int height)
 {
-	// Shadow DepthStencilView 재설성..
+	// Shadow DepthStencilView 재설정..
 	m_ShadowDSV = m_ShadowDepthStencilView->GetDSV();
 
-	// Shadow ShaderResourceView 재설성..
+	// Shadow ShaderResourceView 재설정..
 	m_ShadowSRV = m_ShadowRT->GetSRV();
 
 	// Shadow Map 등록..
@@ -134,7 +135,7 @@ void ShadowPass::Update(MeshData* mesh, GlobalData* global)
 	{
 	case OBJECT_TYPE::Base:
 	{
-		cbShadowObject shadowBuf;
+		CB_ShadowObject shadowBuf;
 		shadowBuf.gWorldViewProj = world * view * proj;
 
 		m_MeshShadowVS->SetConstantBuffer(shadowBuf);
@@ -144,10 +145,10 @@ void ShadowPass::Update(MeshData* mesh, GlobalData* global)
 	break;
 	case OBJECT_TYPE::Skinning:
 	{
-		cbShadowObject shadowBuf;
+		CB_ShadowObject shadowBuf;
 		shadowBuf.gWorldViewProj = world * view * proj;
 
-		cbSkinned skinBuf;
+		CB_Skinned skinBuf;
 		for (int i = 0; i < mesh->BoneOffsetTM.size(); i++)
 		{
 			skinBuf.gBoneTransforms[i] = mesh->BoneOffsetTM[i];
@@ -177,7 +178,7 @@ void ShadowPass::Render(MeshData* mesh)
 	g_Context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	g_Context->IASetVertexBuffers(0, 1, &vBuffer, &stride, &offset);
 	g_Context->IASetIndexBuffer(iBuffer, DXGI_FORMAT_R32_UINT, 0);
-
+	
 	// Draw..
 	g_Context->DrawIndexed(indexCount, 0, 0);
 }

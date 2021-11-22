@@ -1,4 +1,4 @@
-cbuffer cbPerObject : register(b0)
+cbuffer cbObject : register(b0)
 {
     float4x4 gWorld : packoffset(c0);
     float4x4 gWorldViewProj : packoffset(c4);
@@ -30,8 +30,7 @@ struct VertexIn
 
 struct VertexOut
 {
-    float4 PosH : SV_POSITION;
-    float3 PosW : POSITIONW;
+    float4 PosW : SV_POSITION;
     float2 Tex : TEXCOORD;
     float3 NormalW : NORMALW;
     float3 ShadowPosH : POS_SHADOW;
@@ -61,12 +60,9 @@ VertexOut main(VertexIn vin)
         tangentL += vin.BoneWeights2[j] * mul((float3x3) gBoneTransforms[vin.BoneIndices2[j]], vin.TangentL);
     }
     
-    // 동차 공간 변환
-    vout.PosH = mul(gWorldViewProj, float4(posL, 1.0f));
-    
-    // 세계 공간 변환
-    vout.PosW = mul((float3x3)gWorld, posL);
-    
+	// 세계 공간 변환
+    vout.PosW = mul(gWorldViewProj, float4(posL, 1.0f));
+
     vout.NormalW = mul((float3x3)gWorld, normalL);
     vout.NormalW = normalize(vout.NormalW);
 	
