@@ -1,7 +1,6 @@
 ﻿// DockableView.cpp: 구현 파일
 //
-
-#include "pch.h"
+#include "framework.h"
 #include "Editor.h"
 #include "EWGameView.h" 
 #include "DockableView.h"

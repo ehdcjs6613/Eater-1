@@ -1,7 +1,6 @@
 ﻿// CDockalbePannel.cpp: 구현 파일
 //
-
-#include "pch.h"
+#include "framework.h"
 #include "Editor.h"
 #include "MainFrm.h"
 #include "GameDlg.h"
@@ -49,18 +48,7 @@ int DockableBase::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return -1;
 
 
-	BOOL bRet = m_pDialog.Create(this, MAKEINTRESOURCE(IDD_GAME_VIEW_0),
-		WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN  | CBRS_FLOAT_MULTI,
-		ID_WINDOW_GAME
-	);
 	
-	m_pDialog.ShowWindow(SW_SHOW);
-	m_pDialog.EnableDocking(CBRS_ALIGN_ANY);
-
-
-	m_pDialog.SetAutoHideMode(false, CBRS_ALIGN_ANY);
-
-	m_pDialog.ShowPane(true, false, true);
 	// TODO:  여기에 특수화된 작성 코드를 추가합니다.
 	
 
@@ -100,4 +88,20 @@ BOOL DockableBase::PreCreateWindow(CREATESTRUCT& cs)
 	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
 
 	return CDockablePane::PreCreateWindow(cs);
+}
+
+void DockableBase::CreateDlg()
+{
+	BOOL bRet = m_pDialog.Create(this, MAKEINTRESOURCE(IDD_GAME_VIEW_0),
+		WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_FLOAT_MULTI,
+		ID_WINDOW_GAME
+	);
+
+	m_pDialog.ShowWindow(SW_SHOW);
+	m_pDialog.EnableDocking(CBRS_ALIGN_ANY);
+
+
+	m_pDialog.SetAutoHideMode(false, CBRS_ALIGN_ANY);
+
+	m_pDialog.ShowPane(true, false, true);
 }

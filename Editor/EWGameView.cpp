@@ -1,7 +1,6 @@
 ﻿// XGameView.cpp: 구현 파일
 //
-
-#include "pch.h"
+#include "framework.h"
 #include "EWGameView.h"
 #include "EditorSystem.h"
 #include "Editor.h"

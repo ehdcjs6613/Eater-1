@@ -2,7 +2,6 @@
 // ChildFrm.cpp: CChildFrame 클래스의 구현
 //
 
-#include "pch.h"
 #include "framework.h"
 #include "Editor.h"
 

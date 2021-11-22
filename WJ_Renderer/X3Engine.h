@@ -16,6 +16,8 @@ class DirectXAdapter;
 class DirectXRasterizerState;
 //	  렌더러 클래스
 class XRenderer;
+//	  샘플러 스테이트 클래스
+class DirectXSamplerState;
 
 class SharedRenderData;
 
@@ -44,30 +46,40 @@ class GlobalData;
 #include "GraphicsEngine.h"
 #include "XShader.h"
 
+/// <summary>
+/// 개별 렌더러 엔진?
+/// </summary>
 class X3Engine : public  GraphicEngine
 {
+private:
+	FLOAT					 m_ArrColor[4];
 private:
 	//
 ///-----------[엔진이 지니는 변수들]------------///
 	HWND					m_hWnd;				///
 ///------------------------------------------------	
-	DirectXDevice* m_pDevice;			///
-	DirectXDeviceContext* m_pDeviceContext;	///
-	//DirectXSwapChain*		m_pSwapChain;		///
+	DirectXDevice* m_pDevice;					///
+	DirectXDeviceContext* m_pDeviceContext;		///
 ///---------------------------------------------///
 	DirectXRasterizerState* m_pRasterizerState; ///
 	DirectXRasterizerState* m_pRasterizerSolid; ///
 	DirectXRasterizerState* m_pRasterizerWire;  ///
 ///---------------------------------------------///
-	DirectXAdapter* m_pAdapter;			///
+	DirectXAdapter*			m_pAdapter;			///
 ///---------------------------------------------///
-
+private:
 	D3D_FEATURE_LEVEL	    m_FeatureLevel;
 
+	ID3D11Texture2D*		 m_pDepthStencil_Buffer;
+	ID3D11DepthStencilState* m_pDepthStencil_State;
+	ID3D11DepthStencilView*  m_pDepthStencil_View;
+private:
+	//사용자 재정의로 다시한번 매핑 한? 클래스변수
+	DirectXSwapChain*		m_pDirectXSwapChain;
+	DirectXRenderTargeter*	m_pRenderTargeter;
+	DirectXSamplerState*	m_pSamplerState;
 
 private:
-	//렌더러 기능
-	XRenderer* m_pRenderer;
 
 
 	DirectX::XMMATRIX		m_ProjectionMatrix;
@@ -122,22 +134,20 @@ public:
 
 private:
 	////정점셰이더를 저장하기 위한 변수를 추가
-	//Microsoft::WRL::ComPtr<ID3D10Blob> m_pVertexShaderBuffer;
-	IDXGISwapChain* m_pSwapChain;
 	XVertexShader m_XVertexShader;
 	XPixelShader  m_XPexelShader;
 public:
 	//test
 	ID3D11Buffer* m_pVertexBuffer;
-	ID3D11Buffer* m_pVertexBuffer2;
-	bool TestScene();
-private:
 
+private:
+	HRESULT BeginRender();
+	HRESULT LoopRender();
+	HRESULT EndRender();
 	//-----------------------------------
 
 public:
-	ID3D11SamplerState* m_pSamplerState;
-	ID3D11SamplerState* CreateDXSamplerState();
+
 
 
 };

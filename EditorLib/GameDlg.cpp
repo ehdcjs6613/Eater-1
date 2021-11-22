@@ -1,15 +1,8 @@
-ï»¿// GameView.cpp: êµ¬í˜„ íŒŒì¼
-//
-
-
-#include "framework.h"
-#include "Editor.h"
-#include "EWGameView.h"
-#include "GameDlg.h"
+#include "LibDefine.h"
+#include "afxwinappex.h"
 #include "afxdialogex.h"
+#include "GameDlg.h"
 
-
-// GameView ëŒ€í™” ìƒì
 
 IMPLEMENT_DYNAMIC(GameDlg, CPaneDialog)
 
@@ -28,7 +21,7 @@ void GameDlg::DoDataExchange(CDataExchange* pDX)
 }
 
 
-// GameView ë©”ì‹œì§€ ì²˜ë¦¬ê¸°
+// GameView ¸Ş½ÃÁö Ã³¸®±â
 
 
 
@@ -44,7 +37,7 @@ BEGIN_MESSAGE_MAP(GameDlg, CPaneDialog)
 END_MESSAGE_MAP()
 
 
-// GameView ë©”ì‹œì§€ ì²˜ë¦¬ê¸°
+// GameView ¸Ş½ÃÁö Ã³¸®±â
 
 
 
@@ -55,11 +48,8 @@ int GameDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	if (CPaneDialog::OnCreate(lpCreateStruct) == -1)
 		return -1;
 
-	// TODO:  ì—¬ê¸°ì— íŠ¹ìˆ˜í™”ëœ ì‘ì„± ì½”ë“œë¥¼ ì¶”ê°€í•©ë‹ˆë‹¤.
+	// TODO:  ¿©±â¿¡ Æ¯¼öÈ­µÈ ÀÛ¼º ÄÚµå¸¦ Ãß°¡ÇÕ´Ï´Ù.
 
-
-	
-	
 
 
 	return 0;

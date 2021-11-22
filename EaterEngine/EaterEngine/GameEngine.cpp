@@ -107,24 +107,11 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 	//엔진을 지정된 넘버로 넣는다
 
 	mGraphicManager->PushEngine(0, new X3Engine(), "X3Engine");
-	mGraphicManager->PushEngine(1, new DH3DEngine(), "동혁1");
-	//mGraphicManager->PushEngine(0, new DH3DEngine(), "동혁0");
-	//mGraphicManager->PushEngine(1, new HsGraphic(), "형선0");
-	//mGraphicManager->PushEngine(2, new HsGraphic(), "형선1");
-	//mGraphicManager->PushEngine(3, new DH3DEngine(), "동혁1");
-	//mGraphicManager->PushEngine(4, new HsGraphic(), "형선2");
-	//mGraphicManager->PushEngine(5, new KHGraphic(), "규황0");
-	//mGraphicManager->PushEngine(6, new KHGraphic(), "규황1");
-	//mGraphicManager->PushEngine(7, new HsGraphic(), "형선3");
-	//mGraphicManager->PushEngine(8, new HsGraphic(), "형선4");
-	//mGraphicManager->PushEngine(9, new KHGraphic(), "규황2");
-	//mGraphicManager->PushEngine(10, new KHGraphic(), "규황3");
-	//mGraphicManager->PushEngine(11, new HsGraphic(), "형선5");
-	//mGraphicManager->PushEngine(12, new DH3DEngine(), "동혁2");
-	//mGraphicManager->PushEngine(13, new HsGraphic(), "형선6");
-	//mGraphicManager->PushEngine(14, new HsGraphic(), "형선7");
-	//mGraphicManager->PushEngine(15, new DH3DEngine(), "동혁3");
-
+	//mGraphicManager->PushEngine(1, new DH3DEngine(), "동혁1");
+	mGraphicManager->PushEngine(1, new DH3DEngine(), "동혁0");
+	mGraphicManager->PushEngine(2, new HsGraphic(), "형선0");
+	mGraphicManager->PushEngine(3, new KHGraphic(), "규황0");
+	
 
 	/////////////////////////////////////////////////////////////////
 }

@@ -27,7 +27,7 @@ public:
 	DockableView*   m_pDockableView;
 	//GameDlg* m_pGameView;
 
-	CPaneDialog*	   m_pDialog;
+	CDockablePane	   m_pDialog;
 
 	int					m_Num = 0;
 	// 특성입니다.

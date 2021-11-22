@@ -18,10 +18,6 @@
     <Filter Include="DirectX\Define">
       <UniqueIdentifier>{045ea22a-cf30-45d2-88ec-dd738e26beeb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Renderer">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
     <Filter Include="ViewGird">
       <UniqueIdentifier>{266f6d07-0979-46a3-afd2-affccb8d17ea}</UniqueIdentifier>
     </Filter>
@@ -34,6 +30,33 @@
     <Filter Include="Shaders\HLSL">
       <UniqueIdentifier>{e1333fe0-808f-4b47-90d0-abace7ccd1d0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DirectX\Class%27s">
+      <UniqueIdentifier>{4875310d-663c-4f88-90ed-cabbd8ed455b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectX\Class%27s\Adapter">
+      <UniqueIdentifier>{dca8722f-3462-4b67-ae76-b1e8f5dd60b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectX\Class%27s\Device">
+      <UniqueIdentifier>{c7a629c7-7f53-4c5e-a383-11edcb151fb2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectX\Class%27s\DeviceContext">
+      <UniqueIdentifier>{7fbe15de-5789-4d8b-82c0-e17d3eea3e4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectX\Class%27s\Rasterize">
+      <UniqueIdentifier>{1e428538-24e2-4714-b676-96840ce7f5c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectX\Class%27s\RenderTarget">
+      <UniqueIdentifier>{6c60fd56-0889-4cc0-b7e7-eb430eb9c36b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectX\Class%27s\SamplerState">
+      <UniqueIdentifier>{39c09457-9f0b-4698-8f41-422a43195da2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectX\Class%27s\SwapChain">
+      <UniqueIdentifier>{d35d88eb-0ff5-479e-8e7b-1515363afdf0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectX\Class%27s\None">
+      <UniqueIdentifier>{b3268163-6b54-4379-9931-3a5014372ab2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -41,30 +64,6 @@
     </ClCompile>
     <ClCompile Include="X3Engine.cpp">
       <Filter>Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectXDevice.cpp">
-      <Filter>DirectX</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectXDeviceContext.cpp">
-      <Filter>DirectX</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectXSwapChain.cpp">
-      <Filter>DirectX</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectXAdapter.cpp">
-      <Filter>DirectX</Filter>
-    </ClCompile>
-    <ClCompile Include="XRenderer.cpp">
-      <Filter>Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectXRasterizerState.cpp">
-      <Filter>DirectX</Filter>
-    </ClCompile>
-    <ClCompile Include="RenderQueue.cpp">
-      <Filter>DirectX\Define</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectXRenderTargeter.cpp">
-      <Filter>DirectX</Filter>
     </ClCompile>
     <ClCompile Include="ViewGrid.cpp">
       <Filter>ViewGird</Filter>
@@ -75,46 +74,40 @@
     <ClCompile Include="XShader.cpp">
       <Filter>Shaders</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="DirectXDefine.cpp">
       <Filter>DirectX\Define</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXAdapter.cpp">
+      <Filter>DirectX\Class%27s\Adapter</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXDevice.cpp">
+      <Filter>DirectX\Class%27s\Device</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXDeviceContext.cpp">
+      <Filter>DirectX\Class%27s\DeviceContext</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXRasterizerState.cpp">
+      <Filter>DirectX\Class%27s\Rasterize</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXRenderTargeter.cpp">
+      <Filter>DirectX\Class%27s\RenderTarget</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXSamplerState.cpp">
+      <Filter>DirectX\Class%27s\SamplerState</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXSwapChain.cpp">
+      <Filter>DirectX\Class%27s\SwapChain</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="X3Engine.h">
       <Filter>Engine</Filter>
     </ClInclude>
-    <ClInclude Include="DirectXDeviceContext.h">
-      <Filter>DirectX</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectXSwapChain.h">
-      <Filter>DirectX</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectXAdapter.h">
-      <Filter>DirectX</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectXDevice.h">
-      <Filter>DirectX</Filter>
-    </ClInclude>
     <ClInclude Include="DirectXDefine.h">
       <Filter>DirectX\Define</Filter>
     </ClInclude>
     <ClInclude Include="OneCompile.h">
       <Filter>DirectX\Define</Filter>
-    </ClInclude>
-    <ClInclude Include="XRenderer.h">
-      <Filter>Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectXRasterizerState.h">
-      <Filter>DirectX</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderQueue.h">
-      <Filter>DirectX\Define</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectXRenderTargeter.h">
-      <Filter>DirectX</Filter>
     </ClInclude>
     <ClInclude Include="AlignedAllocationPolicy.h">
       <Filter>DirectX\Define</Filter>
@@ -128,11 +121,29 @@
     <ClInclude Include="XShader.h">
       <Filter>Shaders</Filter>
     </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
     <ClInclude Include="WJDefine.h">
       <Filter>DirectX\Define</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXAdapter.h">
+      <Filter>DirectX\Class%27s\Adapter</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXDevice.h">
+      <Filter>DirectX\Class%27s\Device</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXDeviceContext.h">
+      <Filter>DirectX\Class%27s\DeviceContext</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXRasterizerState.h">
+      <Filter>DirectX\Class%27s\Rasterize</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXRenderTargeter.h">
+      <Filter>DirectX\Class%27s\RenderTarget</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXSamplerState.h">
+      <Filter>DirectX\Class%27s\SamplerState</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXSwapChain.h">
+      <Filter>DirectX\Class%27s\SwapChain</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

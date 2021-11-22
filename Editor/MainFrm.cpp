@@ -2,7 +2,7 @@
 // MainFrm.cpp: CMainFrame 클래스의 구현
 //
 
-#include "pch.h"
+
 #include "framework.h"
 #include "resource.h"
 #include "Editor.h"
@@ -129,29 +129,33 @@ void CMainFrame::OnDockTable()
 	//m_pDialog.EnableDocking(CBRS_ALIGN_ANY);
 	//DockPane(&m_pDialog);
 
+	/*
 	
+	
+	*/
 
 	if (nullptr == m_pDlg && m_Num==0)
 	{
 		m_pDlg = new DockableBase();
 
-		m_pDlg->Create(_T("sss"), this, CRect(0, 0, 500, 500), TRUE, ID_FILE_NEW,
+		m_pDlg->Create(_T("Inst"), this, CRect(0, 0, 500, 500), TRUE, ID_FILE_NEW,
 			WS_SYSMENU | WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_RIGHT | CBRS_FLOAT_MULTI);
-
+		
 		m_pDlg->EnableDocking(CBRS_ALIGN_ANY);
-
+		
 		DockPane(m_pDlg);
-
+		
 		m_pDlg->SetAutoHideMode(false, CBRS_ALIGN_ANY);
-
+		
 		m_pDlg->ShowPane(true, false, true);
+		m_pDlg->CreateDlg();
 		m_Num++;
 
 	}
 	else if ( nullptr == m_pDockableView && m_Num == 1)
 	{
 		m_pDockableView = new DockableView();
-		m_pDockableView->Create(_T("DDDDD"), this, CRect(0, 0, 1920, 1080), 
+		m_pDockableView->Create(_T("Game"), this, CRect(0, 0, 1920, 1080), 
 			TRUE, ID_FILE_NEW,
 			WS_SYSMENU | WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS 
 			| WS_CLIPCHILDREN | CBRS_LEFT | CBRS_FLOAT_MULTI);
@@ -164,8 +168,28 @@ void CMainFrame::OnDockTable()
 		m_pDockableView->SetAutoHideMode(false, CBRS_ALIGN_ANY);
 
 		m_pDockableView->ShowPane(true, false, true);
+		m_pDockableView->ShowWindow(SW_SHOW);
 		m_Num++;
 		//m_pDockableView->m_pXGameView->m_pGameManger->Start(this->GetSafeHwnd());
+	}
+	else if(nullptr == m_pDialog && m_Num == 2)
+	{
+		//BOOL bRet = m_pDialog.Create(this, MAKEINTRESOURCE(IDD_GAME_VIEW_0),
+		//	WS_SYSMENU | WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS
+		//	| WS_CLIPCHILDREN | CBRS_LEFT | CBRS_FLOAT_MULTI,
+		//	ID_WINDOW_GAME
+		//);
+		//
+		//m_pDialog.ShowWindow(SW_SHOW);
+		//m_pDialog.EnableDocking(CBRS_ALIGN_ANY);
+		////DockPane(m_pDialog);
+		//
+		//m_pDialog.ShowPane(true, false, true);
+	}
+
+	if (nullptr != m_pDockableView)
+	{
+		m_pDockableView->ShowPane(true, false, true);
 	}
 
 	//해당 프레임 및 자식창의 크기를 재조절함

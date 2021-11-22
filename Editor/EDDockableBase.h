@@ -31,6 +31,8 @@ public:
 	afx_msg void OnClose();
 	virtual void PostNcDestroy();
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
+public:
+	void CreateDlg();
 };
 
 

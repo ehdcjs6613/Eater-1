@@ -2,7 +2,7 @@
 #include "DirectXDefine.h"
 #include "DirectXRenderTargeter.h"
 
-DirectXRenderTargeter::DirectXRenderTargeter()
+DirectXRenderTargeter::DirectXRenderTargeter() : m_pRenderTarget(nullptr)
 {
 
 	
@@ -11,6 +11,11 @@ DirectXRenderTargeter::DirectXRenderTargeter()
 
 DirectXRenderTargeter::~DirectXRenderTargeter()
 {
+}
+
+ID3D11RenderTargetView* DirectXRenderTargeter::GetRenderTarget()
+{
+	return this->m_pRenderTarget;
 }
 
 void DirectXRenderTargeter::Create(ID3D11Device* _pDevice, IDXGISwapChain* m_pSwapChain)

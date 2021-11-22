@@ -2,7 +2,7 @@
 #include "DirectXDefine.h"
 #include "DirectXSwapChain.h"
 
-DirectXSwapChain::DirectXSwapChain(ID3D11Device* _pDevice) :  m_pSwapChain(nullptr),m_4xMsaaQuality(0),m_Enable4xMsaa(false)
+DirectXSwapChain::DirectXSwapChain(ID3D11Device* _pDevice) :  m_pSwapChain(nullptr),m_4xMsaaQuality(0),m_Enable4xMsaa(false), m_FeatureLevel(D3D_FEATURE_LEVEL_11_0)
 {
 	if (nullptr == _pDevice)
 	{
@@ -26,6 +26,29 @@ DirectXSwapChain::~DirectXSwapChain()
 {
 	//ReleaseCOM(m_pSwapChain);
 	m_pSwapChain->Release();
+}
+
+bool DirectXSwapChain::MakeASwapChain(ID3D11Device* _pDevice, ID3D11DeviceContext* _pDeviceContext , DXGI_SWAP_CHAIN_DESC _swDesc)
+{
+	HRESULT hr = S_OK;
+	 m_FeatureLevel = D3D_FEATURE_LEVEL_11_0;
+
+	// 스왑 체인과 Device를 같이 생성. (D2D를 지원하기 위해 옵션으로 BGRA 를 셋팅 해 두었다.)
+	hr = 
+	(D3D11CreateDeviceAndSwapChain
+	(
+		NULL, D3D_DRIVER_TYPE_HARDWARE,
+		NULL, D3D11_CREATE_DEVICE_BGRA_SUPPORT,
+		&m_FeatureLevel, 1,
+		D3D11_SDK_VERSION,
+		&_swDesc,
+		&this->m_pSwapChain,
+		&_pDevice,
+		NULL,
+		&_pDeviceContext
+	));
+
+	return false;
 }
 
 bool DirectXSwapChain::MakeASwapChain(ID3D11Device* _pDevice, HWND _hWnd, int _iWidth, int _iHeight)
@@ -121,7 +144,7 @@ bool DirectXSwapChain::ReMakedASwapChain(int _iWidth, int _iHeight)
 
 IDXGISwapChain* DirectXSwapChain::GetSwapChain()
 {
-	return m_pSwapChain;
+	return this->m_pSwapChain;
 }
 
 

@@ -1,8 +1,8 @@
-#include "pch.h"
+#include "framework.h"
 #include "MainHeader.h"
 #include "MeshFilter.h"
 #include "Transform.h"
-//#include "KeyInput.h"
+#include "TKeyInput.h"
 #include "Camera.h"
 #include "GameObject.h"
 #include "TScene.h"
@@ -33,7 +33,7 @@ void TScene::Awake()
 
 	///Ä«¸Þ¶ó
 	testobj = Instance();
-	//testobj->AddComponent<Keyinput>();
+	testobj->AddComponent<TKeyInput>();
 	testobj->AddComponent<Camera>();
 
 	testobj = Instance("obj");

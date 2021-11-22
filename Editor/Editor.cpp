@@ -2,7 +2,6 @@
 // Editor.cpp: 애플리케이션에 대한 클래스 동작을 정의합니다.
 //
 
-#include "pch.h"
 #include "framework.h"
 #include "afxwinappex.h"
 #include "afxdialogex.h"

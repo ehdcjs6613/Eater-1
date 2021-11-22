@@ -10,6 +10,18 @@ struct XVertex
 	DirectX::XMFLOAT3 m_Color;
 };
 
+struct XVertexDef
+{
+	//위치
+	DirectX::SimpleMath::Vector3 Pos;
+	//노말
+	DirectX::SimpleMath::Vector3 Nomal;
+	//텍스쳐
+	DirectX::SimpleMath::Vector2 Tex;
+	//탄젠트
+	DirectX::SimpleMath::Vector3 Tangent;
+};
+
 struct XVertexTex
 {
 	XVertexTex();
@@ -19,3 +31,4 @@ struct XVertexTex
 	DirectX::XMFLOAT3 m_Pos;
 	DirectX::XMFLOAT2 m_TexCoord;
 };
+

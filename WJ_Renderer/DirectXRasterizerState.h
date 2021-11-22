@@ -21,9 +21,9 @@ class DirectXRasterizerState : public RasterizerState
 {
 private:
 	StateRS m_State;
+	ID3D11RasterizerState* m_pFrameRS;
 
 public:
-	ID3D11RasterizerState* m_pFrameRS;
 	DirectXRasterizerState();
 	~DirectXRasterizerState();
 
