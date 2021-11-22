@@ -44,8 +44,8 @@ MultiRenderEngine::MultiRenderEngine()
 	Split_Y_Count = 0;
 
 	WindowCount = 0;
-
 	m_Hwnd = NULL;
+
 }
 
 MultiRenderEngine::~MultiRenderEngine()
@@ -553,7 +553,6 @@ Vertexbuffer* MultiRenderEngine::SkinningVertexBuffer(ParserData::Mesh* mModel)
 				temp[i].BoneIndex2[j - 4] = One->m_BoneIndices[j];
 			}
 		}
-
 	}
 
 	//버퍼 생성

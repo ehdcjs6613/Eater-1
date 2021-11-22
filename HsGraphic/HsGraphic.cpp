@@ -420,7 +420,7 @@ void HsGraphic::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 
 			case OBJECT_TYPE::Bone: //기본 매쉬
 			{
-				//mRenderManager->BoneUpdate(Mesh);
+				mRenderManager->BoneUpdate(Mesh);
 				//mRenderManager->Rendering(Mesh, RenderingManager::ShaderType::BASIC);
 				break;
 			}

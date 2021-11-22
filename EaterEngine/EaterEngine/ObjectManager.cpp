@@ -29,16 +29,16 @@ ObjectManager::~ObjectManager()
 void ObjectManager::PushCreateObject(GameObject* obj)
 {
 	//오브젝트를 넣어줄때 빈곳이 있는지부터 확인
-	std::vector<GameObject*>::iterator it = ObjectList.begin();
-	for (it; it != ObjectList.end(); it++)
-	{
-		if ( (*it) == nullptr)
-		{
-			//빈곳을 찾았다면 빈곳에 넣어주고 함수 종료
-			(*it) = obj;
-			return;
-		}
-	}
+	//std::vector<GameObject*>::iterator it = ObjectList.begin();
+	//for (it; it != ObjectList.end(); it++)
+	//{
+	//	if ( (*it) == nullptr)
+	//	{
+	//		//빈곳을 찾았다면 빈곳에 넣어주고 함수 종료
+	//		(*it) = obj;
+	//		return;
+	//	}
+	//}
 
 	//빈곳이없다면 그냥 넣어줌
 	ObjectList.push_back(obj);

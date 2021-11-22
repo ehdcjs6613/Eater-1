@@ -64,5 +64,5 @@ bool ShaderResourceHashTable::Push(BufferType type, std::string name, Hash_Code 
 		break;
 	}
 
-	return false;
+	return true;
 }

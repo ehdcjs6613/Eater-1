@@ -29,7 +29,7 @@ Transform::~Transform()
 void Transform::TransformUpdate()
 {
 	//월드 좌표들을 기반으로 월드 행렬을 구한다
-	gameobject->Name;
+	//gameobject->Name;
 	UpdateWorldXM();
 
 	UpdateLocalPosition();
@@ -164,8 +164,8 @@ void Transform::Child_Local_Updata()
 	}
 	else
 	{
-		DirectX::XMMATRIX TM2_1 = DirectX::XMMatrixInverse(nullptr, Parent->Load_World);
-		Load_Local = Load_World * TM2_1;
+		//DirectX::XMMATRIX TM2_1 = DirectX::XMMatrixInverse(nullptr, Parent->Load_World);
+		Load_Local = Load_World * Parent->Load_Local;
 	}
 
 	for (int i = 0; i < ChildList.size(); i++) 

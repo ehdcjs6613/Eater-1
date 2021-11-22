@@ -79,8 +79,7 @@ bool ShaderResourceHashTable::CheckHashCode(std::unordered_map<std::string, Hash
 	if (table.find(name) == table.end())
 	{
 		table.insert(std::make_pair(name, hash_code));
-		return true;
 	}
 
-	return false;
+	return true;
 }
