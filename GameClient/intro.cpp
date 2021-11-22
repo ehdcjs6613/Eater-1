@@ -29,7 +29,7 @@ void intro::Awake()
 	//LoadMesh("Enemy");
 	//LoadMesh("box");
 	//LoadMesh("AnimeBox");
-	//LoadTesture("body_normal_tangent_Base_color.png");
+	LoadTesture("body_normal_tangent_Base_color.png");
 	LoadTesture("Dump.png");
 
 	///Ä«¸Þ¶ó
@@ -50,6 +50,7 @@ void intro::Awake()
 
 	testobj = Instance("obj2");
 	testobj->AddComponent<MeshFilter>()->SetMeshName("Table");
+	testobj->GetComponent<MeshFilter>()->SetTextureName("body_normal_tangent_Base_color");
 	testobj->GetTransform()->Position = { 5 ,0, 0 };
 	testobj->GetTransform()->Scale = { 1 , 1, 1 };
 

@@ -51,8 +51,10 @@ void MeshFilter::Awake()
 		{
 			CreateChild_Mesh(data->TopMeshList[i], MyTr, data);
 		}
-	}
 
+		//Texture Check & Setting..
+		CheckTexture();
+	}
 }
 
 void MeshFilter::SetManager(ObjectManager* obj, MaterialManager* mat)
@@ -92,8 +94,33 @@ void MeshFilter::PushModelData(LoadMeshData* mModel)
 	data->mLocal = *(mModel->LocalTM);
 	data->mWorld = *(mModel->WorldTM);
 
-	TextureBuffer* Base = LoadManager::GetTexture("Dump");
-	data->Diffuse = Base;
+	// Diffuse Map이 없는경우 Dump Map으로 기본 출력..
+	if (data->Diffuse == nullptr)
+	{
+		data->Diffuse = LoadManager::GetTexture("Dump");
+	}
+}
+
+void MeshFilter::CheckTexture()
+{
+	// 설정한 Texture가 있을경우 로드한 Diffuse 대신 해당 Texture 설정..
+	if (TextureName.empty() == false)
+	{
+		// 해당 Object Mesh Data..
+		MeshData* data = gameobject->OneMeshData;
+
+		// 설정 Texture Buffer..
+		TextureBuffer* texBuffer = LoadManager::GetTexture(TextureName);
+
+		// 해당 Texture가 Load되지 않은 경우 기존 Texture 사용..
+		if (texBuffer == nullptr)
+		{
+			return;
+		}
+
+		// Texture 설정..
+		data->Diffuse = texBuffer;
+	}
 }
 
 void MeshFilter::CreateChild_Mesh(LoadMeshData* data, Transform* parent, ModelData* modeldata)

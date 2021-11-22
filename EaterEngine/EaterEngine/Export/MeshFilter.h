@@ -50,6 +50,9 @@ private:
 	//게임오브젝트의 LoadData를 합쳐준다
 	void PushModelData(LoadMeshData* mModel);
 
+	//초기설정 Texture Setting
+	void CheckTexture();
+
 	static ObjectManager* OBJ_Manager;
 	static MaterialManager* MAT_Manager;
 private:

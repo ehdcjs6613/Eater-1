@@ -278,7 +278,7 @@ Indexbuffer* MultiRenderEngine::CreateIndexBuffer(ParserData::Mesh* mModel)
 
 TextureBuffer* MultiRenderEngine::CreateTextureBuffer(std::string path)
 {
-	TextureBuffer* buffer = new TextureBuffer();
+	TextureBuffer* buffer = nullptr;
 
 	ID3D11Resource* texResource = nullptr;
 	ID3D11ShaderResourceView* newTex = nullptr;
@@ -291,7 +291,7 @@ TextureBuffer* MultiRenderEngine::CreateTextureBuffer(std::string path)
 		const wchar_t* w_path = _path.c_str();
 
 		//持失
-		HR(DirectX::CreateDDSTextureFromFile(m_Device, w_path, &texResource, &newTex));
+		DirectX::CreateDDSTextureFromFile(m_Device, w_path, &texResource, &newTex);
 	}
 	else if (path.rfind(".png") != std::string::npos)
 	{
@@ -300,13 +300,15 @@ TextureBuffer* MultiRenderEngine::CreateTextureBuffer(std::string path)
 		const wchar_t* w_path = _path.c_str();
 
 		//持失
-		HR(DirectX::CreateWICTextureFromFile(m_Device, w_path, &texResource, &newTex));
+		DirectX::CreateWICTextureFromFile(m_Device, w_path, &texResource, &newTex);
 	}
 
-	buffer->TextureBufferPointer = newTex;
-
-	if (texResource)
+	// Texture 持失 失因獣 Texture Buffer 持失..
+	if (newTex)
 	{
+		buffer = new TextureBuffer();
+		buffer->TextureBufferPointer = newTex;
+
 		texResource->Release();
 	}
 
