@@ -7,7 +7,6 @@ public:
 	~ForwardPass();
 
 public:
-	void Initialize();
 	void Initialize(int width, int height) override;
 	void OnResize(int width, int height) override;
 	void Release() override;

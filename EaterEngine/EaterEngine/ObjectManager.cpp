@@ -7,6 +7,7 @@
 #include "EngineData.h"
 #include "KeyinputManager.h"
 #include "MeshFilter.h"
+#include "Light.h"
 
 //함수포인터 리스트들
 Delegate_Map ObjectManager::AwakeFunction;
@@ -28,16 +29,16 @@ ObjectManager::~ObjectManager()
 void ObjectManager::PushCreateObject(GameObject* obj)
 {
 	//오브젝트를 넣어줄때 빈곳이 있는지부터 확인
-	std::vector<GameObject*>::iterator it = ObjectList.begin();
-	for (it; it != ObjectList.end(); it++)
-	{
-		if ( (*it) == nullptr)
-		{
-			//빈곳을 찾았다면 빈곳에 넣어주고 함수 종료
-			(*it) = obj;
-			return;
-		}
-	}
+	//std::vector<GameObject*>::iterator it = ObjectList.begin();
+	//for (it; it != ObjectList.end(); it++)
+	//{
+	//	if ( (*it) == nullptr)
+	//	{
+	//		//빈곳을 찾았다면 빈곳에 넣어주고 함수 종료
+	//		(*it) = obj;
+	//		return;
+	//	}
+	//}
 
 	//빈곳이없다면 그냥 넣어줌
 	ObjectList.push_back(obj);
@@ -224,7 +225,11 @@ void ObjectManager::PlayUpdate()
 	//글로벌 데이터
 	Global->mProj = Camera::GetProj();
 	Global->mViewMX = Camera::GetMainView();
-	Global->mPos = Camera::GetMainPos();
+
+	//라이트 데이터
+	Global->mLightViewMX = DirectionLight::g_DirLight->GetView();
+	Global->mLightProj = DirectionLight::g_DirLight->GetProj();
+	Global->mShadowTrans = DirectionLight::g_DirLight->GetShadowTranspose();
 
 	///모든오브젝트의 데이터를 랜더큐에 담는다
 	CreateRenderQueue();

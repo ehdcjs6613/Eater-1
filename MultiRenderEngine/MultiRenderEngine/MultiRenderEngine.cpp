@@ -29,23 +29,23 @@ MultiRenderEngine* MultiRenderEngine::m_Engine = nullptr;
 
 MultiRenderEngine::MultiRenderEngine()
 {
-	m_Device		= nullptr;
+	m_Device = nullptr;
 	m_DeviceContext = nullptr;
-	m_SwapChain		= nullptr;
-	m_ViewPort		= nullptr;
+	m_SwapChain = nullptr;
+	m_ViewPort = nullptr;
 
 	m_RenderTargetView = nullptr;
 	m_DepthStencilView = nullptr;
 
-	m_ScreenHeight	= 0;
-	m_ScreenWidth	= 0;
+	m_ScreenHeight = 0;
+	m_ScreenWidth = 0;
 
-	Split_X_Count	= 0;
-	Split_Y_Count	= 0;
+	Split_X_Count = 0;
+	Split_Y_Count = 0;
 
 	WindowCount = 0;
-
 	m_Hwnd = NULL;
+
 }
 
 MultiRenderEngine::~MultiRenderEngine()
@@ -69,7 +69,7 @@ MultiRenderEngine* MultiRenderEngine::Initialize(HWND hwnd, int screenWidth, int
 BOOL MultiRenderEngine::SplitWindow(int _Horizontal, int _Vertical)
 {
 	// 이미 쪼개서 생성한 경우.. (추후 어떻게 관리될진 모르겠지만 일단 막아놨음)
-	if (!Split_Window.empty())							
+	if (!Split_Window.empty())
 	{
 		std::cout << "[MultiRenderEngine::SplitWindow() 오류] 이미 Split된 Window가 존재합니다. (중복호출)" << std::endl;
 		return false;
@@ -118,10 +118,10 @@ BOOL MultiRenderEngine::RegisterRenderer(GraphicEngine* _Renderer, std::string _
 BOOL MultiRenderEngine::SetRenderer(int _ViewPort_Number, std::string _Engine_Name)
 {
 	// 윈도우가 생성되어있지 않은경우 return false;
-	if (Split_Window.empty()) 
-	{ 
+	if (Split_Window.empty())
+	{
 		std::cout << "[MultiRenderEngine::SetRenderer() 오류] 아직 Split Window 를 하지 않았습니다." << std::endl;
-		return false; 
+		return false;
 	}
 
 	/// 입력받은 뷰포트의 데이터를 받아온다.
@@ -147,10 +147,10 @@ BOOL MultiRenderEngine::SetRenderer(int _ViewPort_Number, std::string _Engine_Na
 	GraphicEngine* Target_Engine = Find_Engine_Ptr->second;
 	Split_Window_Data->second.second = Target_Engine;
 
-	
+
 	/// 여기서 꼭!!!!!!!!!!!!!!!!!! 엔진에 ViewPort를 줘야함.
 	D3D11_VIEWPORT* Target_ViewPort = Split_Window_Data->second.first;
-	Target_Engine->SetViewPort(Target_ViewPort,m_ScreenWidth,m_ScreenHeight);
+	Target_Engine->SetViewPort(Target_ViewPort, m_ScreenWidth, m_ScreenHeight);
 	// ex) Target_Engine->SetViewPort(Target_ViewPort); 이런식으로..
 
 
@@ -191,18 +191,26 @@ MULTIENGINE_DLL BOOL MultiRenderEngine::OnResize(int Change_Width, int Change_He
 	m_DeviceContext->OMSetRenderTargets(1, &m_RenderTargetView, m_DepthStencilView);
 
 	//현재 들어있는 엔진들의 뷰포트 설정을 다시해준다
-	ViewPortSetting(Split_X_Count, Split_Y_Count,false);
+	ViewPortSetting(Split_X_Count, Split_Y_Count, false);
 
 	return true;
 }
 
+MULTIENGINE_DLL void MultiRenderEngine::ShadowRender(int count, std::queue<MeshData*>* meshList, GlobalData* global)
+{
+	if ((Split_Window[count]).second != nullptr)
+	{
+		(Split_Window[count]).second->ShadowRender(meshList, global);
+	}
+}
+
 void MultiRenderEngine::Render(int count, std::queue<MeshData*>* meshList, GlobalData* global)
 {
-	if ((Split_Window[count]).second != nullptr) 
+	if ((Split_Window[count]).second != nullptr)
 	{
 		(Split_Window[count]).second->Render(meshList, global);
 	}
-	
+
 }
 
 void MultiRenderEngine::Delete()
@@ -215,7 +223,7 @@ void MultiRenderEngine::Delete()
 
 Vertexbuffer* MultiRenderEngine::CreateVertexBuffer(ParserData::Mesh* mModel)
 {
-	
+
 	if (mModel->m_IsSkinningObject == true)
 	{
 		Vertexbuffer* vertexbuffer = SkinningVertexBuffer(mModel);
@@ -226,7 +234,7 @@ Vertexbuffer* MultiRenderEngine::CreateVertexBuffer(ParserData::Mesh* mModel)
 		Vertexbuffer* vertexbuffer = BasicVertexBuffer(mModel);
 		return vertexbuffer;
 	}
-	
+
 }
 
 Indexbuffer* MultiRenderEngine::CreateIndexBuffer(ParserData::Mesh* mModel)
@@ -296,16 +304,20 @@ TextureBuffer* MultiRenderEngine::CreateTextureBuffer(std::string path)
 	}
 
 	buffer->TextureBufferPointer = newTex;
-	texResource->Release();
+
+	if (texResource)
+	{
+		texResource->Release();
+	}
 
 	return buffer;
 }
 
-void MultiRenderEngine::CreateDevice(HWND hwnd,int screenWidth, int screenHeight)
+void MultiRenderEngine::CreateDevice(HWND hwnd, int screenWidth, int screenHeight)
 {
 	//데이터 받기
-	m_ScreenHeight	= screenHeight;
-	m_ScreenWidth	= screenWidth;
+	m_ScreenHeight = screenHeight;
+	m_ScreenWidth = screenWidth;
 	m_Hwnd = hwnd;
 
 	UINT createDeviceFlags = 0;
@@ -369,19 +381,19 @@ void MultiRenderEngine::Create_SwapChain_RenderTarget()
 
 	ID3D11Texture2D* mDepthStencilBuffer = nullptr;
 	D3D11_TEXTURE2D_DESC depthStencilDesc;
-	depthStencilDesc.Width		= m_ScreenWidth;
-	depthStencilDesc.Height		= m_ScreenHeight;
-	depthStencilDesc.MipLevels	= 1;							
-	depthStencilDesc.ArraySize	= 1;							
+	depthStencilDesc.Width = m_ScreenWidth;
+	depthStencilDesc.Height = m_ScreenHeight;
+	depthStencilDesc.MipLevels = 1;
+	depthStencilDesc.ArraySize = 1;
 
-	
-	depthStencilDesc.Format				= DXGI_FORMAT_D24_UNORM_S8_UINT;
-	depthStencilDesc.SampleDesc.Count	= 1;					
+
+	depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	depthStencilDesc.SampleDesc.Count = 1;
 	depthStencilDesc.SampleDesc.Quality = 0;
-	depthStencilDesc.Usage				= D3D11_USAGE_DEFAULT;
-	depthStencilDesc.BindFlags			= D3D11_BIND_DEPTH_STENCIL;
-	depthStencilDesc.CPUAccessFlags		= 0;
-	depthStencilDesc.MiscFlags			= 0;
+	depthStencilDesc.Usage = D3D11_USAGE_DEFAULT;
+	depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	depthStencilDesc.CPUAccessFlags = 0;
+	depthStencilDesc.MiscFlags = 0;
 
 
 	m_Device->CreateTexture2D(&depthStencilDesc, 0, &mDepthStencilBuffer);
@@ -390,15 +402,15 @@ void MultiRenderEngine::Create_SwapChain_RenderTarget()
 
 }
 
-void MultiRenderEngine::Create_ViewPort(int KeyNumber ,int StartX, int StartY, int Width, int Height)
+void MultiRenderEngine::Create_ViewPort(int KeyNumber, int StartX, int StartY, int Width, int Height)
 {
 	m_ViewPort = new D3D11_VIEWPORT();
-	m_ViewPort->TopLeftX	= StartX;
-	m_ViewPort->TopLeftY	= StartY;
-	m_ViewPort->Width		= static_cast<float>(Width);
-	m_ViewPort->Height		= static_cast<float>(Height);
-	m_ViewPort->MinDepth	= 0.0f;
-	m_ViewPort->MaxDepth	= 1.0f;
+	m_ViewPort->TopLeftX = StartX;
+	m_ViewPort->TopLeftY = StartY;
+	m_ViewPort->Width = static_cast<float>(Width);
+	m_ViewPort->Height = static_cast<float>(Height);
+	m_ViewPort->MinDepth = 0.0f;
+	m_ViewPort->MaxDepth = 1.0f;
 
 	Split_Window.insert({ KeyNumber, {m_ViewPort,nullptr } });
 }
@@ -463,7 +475,7 @@ void MultiRenderEngine::ReSetting_ViewPort(int count, int StartX, int StartY, in
 	m_ViewPort->MinDepth = 0.0f;
 	m_ViewPort->MaxDepth = 1.0f;
 
-	(Split_Window[count]).second->SetViewPort(m_ViewPort,m_ScreenWidth, m_ScreenHeight);
+	(Split_Window[count]).second->SetViewPort(m_ViewPort, m_ScreenWidth, m_ScreenHeight);
 }
 
 Vertexbuffer* MultiRenderEngine::BasicVertexBuffer(ParserData::Mesh* mModel)
@@ -541,7 +553,6 @@ Vertexbuffer* MultiRenderEngine::SkinningVertexBuffer(ParserData::Mesh* mModel)
 				temp[i].BoneIndex2[j - 4]	= One->m_BoneIndices[j];
 			}
 		}
-
 	}
 
 	//버퍼 생성
@@ -580,7 +591,7 @@ void MultiRenderEngine::BeginRender()
 	m_DeviceContext->ClearRenderTargetView(m_RenderTargetView, color);
 	m_DeviceContext->ClearDepthStencilView(m_DepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
-	
+
 	m_DeviceContext->OMSetRenderTargets(1, &m_RenderTargetView, m_DepthStencilView);
 
 }
