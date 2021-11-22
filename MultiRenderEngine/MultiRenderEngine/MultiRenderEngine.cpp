@@ -552,6 +552,7 @@ Vertexbuffer* MultiRenderEngine::SkinningVertexBuffer(ParserData::Mesh* mModel)
 				temp[i].BoneWeight2[j - 4]	= One->m_BoneWeights[j];
 				temp[i].BoneIndex2[j - 4]	= One->m_BoneIndices[j];
 			}
+
 		}
 	}
 

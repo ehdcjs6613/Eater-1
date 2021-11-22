@@ -23,10 +23,10 @@ void intro::Awake()
 	//LoadMesh("box");
 	//LoadMesh("Dome_v03");
 	//LoadMesh("1s_table_long_lower");
-	//LoadMesh("Enemy");
+	LoadMesh("Enemy_Run",false);
 	//LoadMesh("Player_Attack");
 	//LoadMesh("Skinning");
-	LoadMesh("Enemy",false,false);
+	//LoadMesh("Enemy_Run",false,false);
 	//LoadMesh("box");
 	//LoadMesh("AnimeBox");
 	//LoadTesture("body_normal_tangent_Base_color.png");
@@ -46,7 +46,7 @@ void intro::Awake()
 	testobj = Instance("obj");
 	MeshFilter* Filter		= testobj->AddComponent<MeshFilter>();
 	AnimationController* AC = testobj->AddComponent<AnimationController>();
-	Filter->SetMeshName("Enemy");
+	Filter->SetMeshName("Enemy_Run");
 	//Filter->SetTextureName("body_normal_tangent_Base_color");
 	//testobj->SetActive(false);
 	

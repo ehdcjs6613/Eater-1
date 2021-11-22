@@ -161,7 +161,7 @@ public:
 	}
 
 	//한개의 모델 애니메이션 정보
-	std::vector<OneAnimation*> AnimList;
+	std::vector<OneAnimation*>* AnimList;
 };
 
 //컨퍼넌트들의 함수포인터를 저장할 구조체
