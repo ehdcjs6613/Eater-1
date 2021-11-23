@@ -9,8 +9,9 @@ struct ShaderData
 	ID3D11InputLayout* Layout			= nullptr;
 };
 
-struct BufferData
+class BufferData
 {
+public:
 	ID3D11Buffer* IB;
 	ID3D11Buffer* VB;
 

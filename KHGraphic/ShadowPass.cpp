@@ -133,7 +133,7 @@ void ShadowPass::Update(MeshData* mesh, GlobalData* global)
 
 	switch (mesh->ObjType)
 	{
-	case OBJECT_TYPE::Base:
+	case OBJECT_TYPE::BASE:
 	{
 		CB_ShadowObject shadowBuf;
 		shadowBuf.gWorldViewProj = world * view * proj;
@@ -143,7 +143,7 @@ void ShadowPass::Update(MeshData* mesh, GlobalData* global)
 		m_MeshShadowVS->Update();
 	}
 	break;
-	case OBJECT_TYPE::Skinning:
+	case OBJECT_TYPE::SKINNING:
 	{
 		CB_ShadowObject shadowBuf;
 		shadowBuf.gWorldViewProj = world * view * proj;

@@ -8,7 +8,7 @@
 
 namespace ParserData
 {
-	struct OneAnimation;
+	class OneAnimation;
 }
 
 class Transform;

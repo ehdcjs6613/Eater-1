@@ -233,13 +233,13 @@ Vertexbuffer* HsGraphic::CreateBasicVertexBuffer(ParserData::Mesh* mModel)
 
 	//포지션 , 노말, uv, 탄젠타 값만 읽어옴
 	std::vector<Deferred32> temp;
-	int Vcount = mModel->m_VertexList.size();
+	int Vcount = (int)mModel->m_VertexList.size();
 	temp.resize(Vcount);
 	for (int i = 0; i < Vcount; i++)
 	{
 		temp[i].Pos = mModel->m_VertexList[i]->m_Pos;
 		temp[i].Nomal = mModel->m_VertexList[i]->m_Normal;
-		temp[i].Tex = { mModel->m_VertexList[i]->m_U ,mModel->m_VertexList[i]->m_V };
+		temp[i].Tex = mModel->m_VertexList[i]->m_UV;
 		temp[i].Tangent = mModel->m_VertexList[i]->m_Tanget;
 	}
 
@@ -272,7 +272,7 @@ Vertexbuffer* HsGraphic::CreateSkinngingVertexBuffer(ParserData::Mesh* mModel)
 
 	//포지션 , 노말, uv, 탄젠타 값만 읽어옴
 	std::vector<Skinning32> temp;
-	int Vcount = mModel->m_VertexList.size();
+	int Vcount = (int)mModel->m_VertexList.size();
 	temp.resize(Vcount);
 
 
@@ -282,7 +282,7 @@ Vertexbuffer* HsGraphic::CreateSkinngingVertexBuffer(ParserData::Mesh* mModel)
 
 		temp[i].Pos = One->m_Pos;
 		temp[i].Nomal = One->m_Normal;
-		temp[i].Tex = { One->m_U ,One->m_V };
+		temp[i].Tex = One->m_UV;
 		temp[i].Tangent = One->m_Tanget;
 
 
@@ -395,7 +395,7 @@ void HsGraphic::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 		
 		switch (Mesh->ObjType)
 		{
-			case OBJECT_TYPE::Camera: //카메라 오브젝트
+			case OBJECT_TYPE::CAMERA: //카메라 오브젝트
 			{
 				mRenderManager->CameraUpdate(global);
 				#ifdef _DEBUG
@@ -404,21 +404,21 @@ void HsGraphic::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 				break;
 			}
 
-			case OBJECT_TYPE::Skinning: //스키닝 매쉬
+			case OBJECT_TYPE::SKINNING: //스키닝 매쉬
 			{
 				mRenderManager->SkinningUpdate(Mesh);
 				mRenderManager->Rendering(Mesh,RenderingManager::ShaderType::SKINNING);
 				break;
 			}
 
-			case OBJECT_TYPE::Base: //기본 매쉬
+			case OBJECT_TYPE::BASE: //기본 매쉬
 			{
 				mRenderManager->MeshUpdate(Mesh);
 				mRenderManager->Rendering(Mesh, RenderingManager::ShaderType::BASIC);
 				break;
 			}
 
-			case OBJECT_TYPE::Bone: //기본 매쉬
+			case OBJECT_TYPE::BONE: //기본 매쉬
 			{
 				mRenderManager->BoneUpdate(Mesh);
 				//mRenderManager->Rendering(Mesh, RenderingManager::ShaderType::BASIC);

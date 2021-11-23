@@ -95,7 +95,7 @@ BOOL MultiRenderEngine::SplitWindow(int _Horizontal, int _Vertical)
 	//뷰포트를 들어온 스플릿 값 만큼 설정해주고 생성한다
 	ViewPortSetting(_Horizontal, _Vertical);
 
-	return Split_Window.size();
+	return (BOOL)Split_Window.size();
 }
 
 BOOL MultiRenderEngine::RegisterRenderer(GraphicEngine* _Renderer, std::string _Engine_Name)
@@ -407,8 +407,8 @@ void MultiRenderEngine::Create_SwapChain_RenderTarget()
 void MultiRenderEngine::Create_ViewPort(int KeyNumber, int StartX, int StartY, int Width, int Height)
 {
 	m_ViewPort = new D3D11_VIEWPORT();
-	m_ViewPort->TopLeftX = StartX;
-	m_ViewPort->TopLeftY = StartY;
+	m_ViewPort->TopLeftX = (float)StartX;
+	m_ViewPort->TopLeftY = (float)StartY;
 	m_ViewPort->Width = static_cast<float>(Width);
 	m_ViewPort->Height = static_cast<float>(Height);
 	m_ViewPort->MinDepth = 0.0f;
@@ -434,7 +434,7 @@ void MultiRenderEngine::ViewPortSetting(int m_Horizontal, int m_Vertical, BOOL C
 	{
 		for (int j = 0; j < m_Horizontal; j++)
 		{
-			if (Create == true)
+			if (Create)
 			{
 				//뷰포트를 생성해서 넣어준다
 				Create_ViewPort(count, StartX, StartY, Width, Height);
@@ -470,8 +470,8 @@ void MultiRenderEngine::ViewPortSetting(int m_Horizontal, int m_Vertical, BOOL C
 void MultiRenderEngine::ReSetting_ViewPort(int count, int StartX, int StartY, int Width, int Height)
 {
 	m_ViewPort = Split_Window[count].first;
-	m_ViewPort->TopLeftX = StartX;
-	m_ViewPort->TopLeftY = StartY;
+	m_ViewPort->TopLeftX = (float)StartX;
+	m_ViewPort->TopLeftY = (float)StartY;
 	m_ViewPort->Width = static_cast<float>(Width);
 	m_ViewPort->Height = static_cast<float>(Height);
 	m_ViewPort->MinDepth = 0.0f;
@@ -488,13 +488,13 @@ Vertexbuffer* MultiRenderEngine::BasicVertexBuffer(ParserData::Mesh* mModel)
 
 	//포지션 , 노말, uv, 탄젠트 값만 읽어옴
 	std::vector<MeshVertex> temp;
-	int Vcount = mModel->m_VertexList.size();
+	int Vcount = (int)mModel->m_VertexList.size();
 	temp.resize(Vcount);
 	for (int i = 0; i < Vcount; i++)
 	{
 		temp[i].Pos = mModel->m_VertexList[i]->m_Pos;
 		temp[i].Normal = mModel->m_VertexList[i]->m_Normal;
-		temp[i].Tex = { mModel->m_VertexList[i]->m_U ,mModel->m_VertexList[i]->m_V };
+		temp[i].Tex = mModel->m_VertexList[i]->m_UV;
 		temp[i].Tangent = mModel->m_VertexList[i]->m_Tanget;
 	}
 
@@ -528,7 +528,7 @@ Vertexbuffer* MultiRenderEngine::SkinningVertexBuffer(ParserData::Mesh* mModel)
 
 	//포지션 , 노말, uv, 탄젠타 값만 읽어옴
 	std::vector<SkinVertex> temp;
-	int Vcount = mModel->m_VertexList.size();
+	int Vcount = (int)mModel->m_VertexList.size();
 	temp.resize(Vcount);
 
 	for (int i = 0; i < Vcount; i++)
@@ -537,7 +537,7 @@ Vertexbuffer* MultiRenderEngine::SkinningVertexBuffer(ParserData::Mesh* mModel)
 
 		temp[i].Pos = One->m_Pos;
 		temp[i].Normal = One->m_Normal;
-		temp[i].Tex = { One->m_U ,One->m_V };
+		temp[i].Tex = One->m_UV;
 		temp[i].Tangent = One->m_Tanget;
 
 

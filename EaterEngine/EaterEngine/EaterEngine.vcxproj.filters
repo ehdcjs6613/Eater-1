@@ -25,9 +25,6 @@
     <Filter Include="소스 파일\Component\ComponentBase">
       <UniqueIdentifier>{de7214b3-5118-4f0b-92cb-81c38251b2b1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\MainHeader">
-      <UniqueIdentifier>{f73757eb-5a6f-4d7b-9396-09c400c48563}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\Manager\SceneManager">
       <UniqueIdentifier>{a7114667-6fd9-4288-a84a-872390776b42}</UniqueIdentifier>
     </Filter>
@@ -100,6 +97,9 @@
     <Filter Include="소스 파일\Component\AnimationController">
       <UniqueIdentifier>{85dbf900-b15b-4f04-8aa6-98d8c0e0cc7d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\GameObject\MainHeader">
+      <UniqueIdentifier>{f73757eb-5a6f-4d7b-9396-09c400c48563}</UniqueIdentifier>
+    </Filter>
     <Filter Include="소스 파일\Component\Animator">
       <UniqueIdentifier>{5d4d878e-6e04-41e7-a1e6-ee77e43803d7}</UniqueIdentifier>
     </Filter>
@@ -151,7 +151,7 @@
       <Filter>소스 파일\Manager\SceneManager</Filter>
     </ClInclude>
     <ClInclude Include="Export\MainHeader.h">
-      <Filter>소스 파일\MainHeader</Filter>
+      <Filter>소스 파일\GameObject\MainHeader</Filter>
     </ClInclude>
     <ClInclude Include="Export\GameObject.h">
       <Filter>소스 파일\GameObject</Filter>
@@ -210,7 +210,7 @@
       <Filter>소스 파일\Component\ComponentBase</Filter>
     </ClCompile>
     <ClCompile Include="MainHeader.cpp">
-      <Filter>소스 파일\MainHeader</Filter>
+      <Filter>소스 파일\GameObject\MainHeader</Filter>
     </ClCompile>
     <ClCompile Include="Scene.cpp">
       <Filter>소스 파일\Manager\SceneManager</Filter>

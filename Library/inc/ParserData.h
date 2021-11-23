@@ -14,7 +14,7 @@ namespace ParserData
 		DirectX::SimpleMath::Vector3	m_Scale;
 	};
 
-	struct OneAnimation
+	class OneAnimation
 	{
 	public:
 		OneAnimation();
@@ -54,7 +54,7 @@ namespace ParserData
 		DirectX::SimpleMath::Vector3 m_Pos;
 		DirectX::SimpleMath::Vector3 m_Normal;
 		DirectX::SimpleMath::Vector3 m_Tanget;
-		float m_U, m_V;
+		DirectX::SimpleMath::Vector2 m_UV;
 
 		bool m_IsNormalSet;		// Normal Data Setting 여부
 		bool m_IsTextureSet;	// Texture Data Setting 여부
