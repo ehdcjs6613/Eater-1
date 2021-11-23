@@ -23,13 +23,14 @@ void intro::Awake()
 	//LoadMesh("box");
 	//LoadMesh("Dome_v03");
 	//LoadMesh("1s_table_long_lower");
-	LoadMesh("Enemy_Run",false);
+	LoadMesh("Enemy_Run",false, true);
 	//LoadMesh("Player_Attack");
 	//LoadMesh("Skinning");
 	//LoadMesh("Enemy_Run",false,false);
 	//LoadMesh("box");
 	//LoadMesh("AnimeBox");
 	//LoadTesture("body_normal_tangent_Base_color.png");
+	LoadTesture("Dump.png");
 	LoadTesture("body_normal_tangent_Base_color.png");
 
 	///Ä«¸Þ¶ó
