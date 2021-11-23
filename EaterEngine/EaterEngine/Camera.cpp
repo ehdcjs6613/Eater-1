@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "EngineData.h"
 #include "Transform.h"
+#include "DebugManager.h"
 
 using namespace DirectX;
 std::vector<Camera*> Camera::CamList;
