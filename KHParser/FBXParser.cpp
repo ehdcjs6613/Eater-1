@@ -138,7 +138,7 @@ void FBXParser::SceneSetting(std::string fileName, bool scaling, bool onlyAni)
 
 	// Scene 내에서 삼각형화 할 수 있는 모든 노드를 삼각형화 시킨다..
 	// 3D Max 안에서 Editable poly 상태라면 이 작업을 안해야 한다..
-	pConverter->Triangulate(pScene, true);
+	pConverter->Triangulate(pScene, true, true);
 }
 
 void FBXParser::CreateModel()
@@ -611,35 +611,40 @@ void FBXParser::OptimizeVertex(ParserData::Mesh* pMesh)
 	// 각각 Face마다 존재하는 3개의 Vertex 비교..
 	for (unsigned int i = 0; i < pMesh->m_MeshFace.size(); i++)
 	{
+		Face* nowFace = pMesh->m_MeshFace[i];
+
 		for (int j = 0; j < 3; j++)
 		{
-			unsigned int vertexIndex = pMesh->m_MeshFace[i]->m_VertexIndex[j];
+			unsigned int vertexIndex = nowFace->m_VertexIndex[j];
 
 			Vertex* nowVertex = pMesh->m_VertexList[vertexIndex];
+			Vector3 nowNormal = nowFace->m_NormalVertex[j];
+			Vector2 nowUV = nowFace->m_UVvertex[j];
+			int nowIndex = nowFace->m_VertexIndex[j];
 
 			// 텍스처가 있고, 설정하지 않았으면 텍스처 u,v 설정..
 			if (nowVertex->m_IsTextureSet == false)
 			{
-				nowVertex->m_U = pMesh->m_MeshFace[i]->m_UVvertex[j].x;
-				nowVertex->m_V = pMesh->m_MeshFace[i]->m_UVvertex[j].y;
+				nowVertex->m_U = nowUV.x;
+				nowVertex->m_V = nowUV.y;
 				nowVertex->m_IsTextureSet = true;
 			}
 
 			// 최초 인덱스 노말값 검사시엔 넣어주고 시작..
 			if (nowVertex->m_IsNormalSet == false)
 			{
-				nowVertex->m_Normal = pMesh->m_MeshFace[i]->m_NormalVertex[j];
+				nowVertex->m_Normal = nowNormal;
 				nowVertex->m_IsNormalSet = true;
 			}
 
 			// Normal, U, V 값중 한개라도 다르면 Vertex 새로 생성..
-			if ((pMesh->m_VertexList[vertexIndex]->m_Normal != pMesh->m_MeshFace[i]->m_NormalVertex[j]))
+			if ((nowVertex->m_Normal != nowNormal))
 			{
 				new_VertexSet = true;
 			}
 
-			if ((pMesh->m_VertexList[vertexIndex]->m_U != pMesh->m_MeshFace[i]->m_UVvertex[j].x) ||
-				(pMesh->m_VertexList[vertexIndex]->m_V != pMesh->m_MeshFace[i]->m_UVvertex[j].y))
+			if ((nowVertex->m_U != nowUV.x) ||
+				(nowVertex->m_V != nowUV.y))
 			{
 				new_VertexSet = true;
 			}
@@ -651,14 +656,16 @@ void FBXParser::OptimizeVertex(ParserData::Mesh* pMesh)
 				{
 					for (size_t k = pMesh->m_VertexList.size(); k < resize_VertexIndex; k++)
 					{
+						Vertex* checkVertex = pMesh->m_VertexList[k];
+
 						// 새로 추가한 Vertex와 동일한 데이터를 갖고있는 Face 내의 Vertex Index 수정..
-						if ((pMesh->m_VertexList[k]->m_Indices == pMesh->m_MeshFace[i]->m_VertexIndex[j]) &&
-							(pMesh->m_VertexList[k]->m_Normal == pMesh->m_MeshFace[i]->m_NormalVertex[j]))
+						if ((checkVertex->m_Indices == nowIndex) &&
+							(checkVertex->m_Normal == nowNormal))
 						{
-							if ((pMesh->m_VertexList[k]->m_U == pMesh->m_MeshFace[i]->m_UVvertex[j].x) &&
-								(pMesh->m_VertexList[k]->m_V == pMesh->m_MeshFace[i]->m_UVvertex[j].y))
+							if ((checkVertex->m_U == nowUV.x) &&
+								(checkVertex->m_V == nowUV.y))
 							{
-								pMesh->m_MeshFace[i]->m_VertexIndex[j] = (int)k;
+								nowFace->m_VertexIndex[j] = (int)k;
 								new_VertexSet = false;
 								break;
 							}
@@ -673,17 +680,17 @@ void FBXParser::OptimizeVertex(ParserData::Mesh* pMesh)
 				Vertex* newVertex = new Vertex;
 				newVertex->m_Pos = nowVertex->m_Pos;
 				newVertex->m_Indices = nowVertex->m_Indices;
-				newVertex->m_Normal = pMesh->m_MeshFace[i]->m_NormalVertex[j];
+				newVertex->m_Normal = nowNormal;
 				newVertex->m_BoneIndices = nowVertex->m_BoneIndices;
 				newVertex->m_BoneWeights = nowVertex->m_BoneWeights;
 				newVertex->m_IsNormalSet = true;
 
-				newVertex->m_U = pMesh->m_MeshFace[i]->m_UVvertex[j].x;
-				newVertex->m_V = pMesh->m_MeshFace[i]->m_UVvertex[j].y;
+				newVertex->m_U = nowUV.x;
+				newVertex->m_V = nowUV.y;
 				newVertex->m_IsTextureSet = true;
 
 				pMesh->m_VertexList.push_back(newVertex);
-				pMesh->m_MeshFace[i]->m_VertexIndex[j] = (int)resize_VertexIndex;
+				nowFace->m_VertexIndex[j] = (int)resize_VertexIndex;
 				resize_VertexIndex++;
 				new_VertexSet = false;
 			}
