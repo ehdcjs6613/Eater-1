@@ -39,7 +39,8 @@ struct PixelIn
 
 float4 main(PixelIn pin) : SV_Target0
 {
-    float4 albedo = gDiffuseMap.Sample(samWrapMinLinear, pin.Tex);
+    float4 albedo = float4(0.0f, 0.0f, 0.0f, 1.0f);
+    albedo = gDiffuseMap.Sample(samWrapMinLinear, pin.Tex);
     
     // Gamma Correction
 	// Gamma Space -> Linear Space

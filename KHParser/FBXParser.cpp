@@ -248,7 +248,7 @@ void FBXParser::LoadAnimation(fbxsdk::FbxNode* node)
 		// 구동시간 동안 총 몇 프레임이 수행될지를 keyFrames에 담아줌
 		m_KeyFrames = (int)((tempStop - tempStart) * (double)frameRate);
 		m_TickFrame = (tempStop - tempStart) / m_KeyFrames;
-		m_StartTime = (int)(tempStart) * m_KeyFrames;
+		m_StartTime = (int)(tempStart)*m_KeyFrames;
 
 		ProcessAnimation(node);
 	}
@@ -256,6 +256,9 @@ void FBXParser::LoadAnimation(fbxsdk::FbxNode* node)
 
 void FBXParser::ProcessSkeleton(fbxsdk::FbxNode* node)
 {
+	// 애니메이션만 뽑을 경우..
+	if (m_OnlyAni) return;
+
 	pMesh = node->GetMesh();
 
 	// 새로운 Mesh 생성..
@@ -263,9 +266,6 @@ void FBXParser::ProcessSkeleton(fbxsdk::FbxNode* node)
 
 	m_OneMesh->m_NodeName = node->GetName();
 	m_OneMesh->m_IsBone = true;
-
-	// 애니메이션만 뽑을 경우..
-	if (m_OnlyAni) return;
 
 	// 현 Node Parent 찾기..
 	const char* parentName = node->GetParent()->GetName();
@@ -312,6 +312,9 @@ void FBXParser::ProcessSkeleton(fbxsdk::FbxNode* node)
 
 void FBXParser::ProcessMesh(fbxsdk::FbxNode* node)
 {
+	// 애니메이션만 뽑을 경우..
+	if (m_OnlyAni) return;
+
 	pMesh = node->GetMesh();
 
 	// 새로운 Mesh 생성..
@@ -319,11 +322,7 @@ void FBXParser::ProcessMesh(fbxsdk::FbxNode* node)
 
 	m_OneMesh->m_NodeName = node->GetName();
 
-	// 애니메이션만 뽑을 경우..
-	if (m_OnlyAni) return;
-
 	// 현 Node Parent 찾기..
-	
 	const char* parentName = node->GetParent()->GetName();
 
 	Mesh* parentMesh = FindMesh(parentName);
@@ -523,16 +522,16 @@ void FBXParser::ProcessAnimation(fbxsdk::FbxNode* node)
 			int deformerCount = mesh->GetDeformerCount();
 
 			// DeformerCount가 0보다 크면 Skinning Mesh..
-			if (deformerCount > 0)
-				return;
+			if (deformerCount > 0) return;
 		}
+	}
+	else
+	{
+		// 만약 스키닝 오브젝트라면 애니메이션 데이터는 Bone에 저장되어 있으므로..
+		if (m_OneMesh->m_IsSkinningObject) return;
 	}
 
 	FbxNodeAttribute* nodeAttribute = node->GetNodeAttribute();
-
-	// 만약 스키닝 오브젝트라면 애니메이션 데이터는 Bone에 저장되어 있으므로..
-	if (m_OneMesh->m_IsSkinningObject) return;
-
 	if (nodeAttribute != nullptr)
 	{
 		// 새로운 Animaiton Data 생성..
@@ -556,10 +555,10 @@ void FBXParser::ProcessAnimation(fbxsdk::FbxNode* node)
 
 		// Animation Data 삽입..
 		FbxTime::EMode timeMode = pScene->GetGlobalSettings().GetTimeMode();
-		for (FbxLongLong m_Index = 0; m_Index < m_OneAnimation->m_TotalFrame; m_Index++)
+		for (FbxLongLong index = 0; index < m_OneAnimation->m_TotalFrame; index++)
 		{
 			FbxTime takeTime;
-			takeTime.SetFrame(m_OneAnimation->m_StartFrame + m_Index, timeMode);
+			takeTime.SetFrame(m_OneAnimation->m_StartFrame + index, timeMode);
 
 			// Local Transform = 부모 Bone의 Global Transform의 Inverse Transform * 자신 Bone의 Global Transform
 			FbxAMatrix nodeTransform = node->EvaluateLocalTransform(takeTime);
@@ -574,7 +573,7 @@ void FBXParser::ProcessAnimation(fbxsdk::FbxNode* node)
 
 			OneFrame* newAni = new OneFrame;
 
-			newAni->m_Time = (float)m_Index;
+			newAni->m_Time = (float)index;
 			newAni->m_Pos = DirectX::SimpleMath::Vector3(pos);
 			newAni->m_RotQt = Quaternion(rot);
 			newAni->m_Scale = DirectX::SimpleMath::Vector3(scale);
@@ -583,7 +582,10 @@ void FBXParser::ProcessAnimation(fbxsdk::FbxNode* node)
 		}
 
 		// 해당 Mesh에 애니메이션 삽입..
-		m_OneMesh->m_Animation = m_OneAnimation;
+		if (m_OnlyAni == false)
+		{
+			m_OneMesh->m_Animation = m_OneAnimation;
+		}
 	}
 }
 
@@ -597,7 +599,6 @@ void FBXParser::OptimizeData()
 	{
 		OptimizeVertex(m_Model->m_MeshList[i]);
 	}
-
 }
 
 void FBXParser::OptimizeVertex(ParserData::Mesh* pMesh)
