@@ -6,7 +6,7 @@
 
 struct ID3D11Device;
 struct ID3D11DeviceContext;
-struct BufferData;
+class BufferData;
 
 class GraphicDebugManager;
 class ShaderManager;

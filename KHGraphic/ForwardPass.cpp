@@ -93,7 +93,7 @@ void ForwardPass::Update(MeshData* mesh, GlobalData* global)
 
 	switch (mesh->ObjType)
 	{
-	case OBJECT_TYPE::Base:
+	case OBJECT_TYPE::BASE:
 	{
 		CB_Object objectBuf;
 		objectBuf.gWorld = world;
@@ -109,7 +109,7 @@ void ForwardPass::Update(MeshData* mesh, GlobalData* global)
 		m_MeshVS->Update();
 	}
 		break;
-	case OBJECT_TYPE::Skinning:
+	case OBJECT_TYPE::SKINNING:
 	{
 		CB_Object objectBuf;
 		objectBuf.gWorld = world;

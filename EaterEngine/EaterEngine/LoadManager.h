@@ -18,7 +18,7 @@ namespace ParserData
 {
 	struct Model;
 	class Mesh;
-	struct OneAnimation;
+	class OneAnimation;
 }
 
 

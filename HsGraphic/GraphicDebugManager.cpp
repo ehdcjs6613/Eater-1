@@ -40,13 +40,13 @@ void GraphicDebugManager::Create_2D_Y_Circle_Buffers(XMFLOAT3 _Centor, float Rad
 {
 	int verCount = 180;
 	int inCount = verCount * 2;
-	int inSize = vertices.size();
+	int inSize = (int)vertices.size();
 
 	Debug32 temp00[180];
 	UINT in_temp00[360];
 	for (int i = 0; i < verCount; i++)
 	{
-		float angle = i * 2;
+		float angle = (float)(i * 2);
 		float x = Radius * cos(angle * 3.14f / 180);
 		float z = Radius * -sin(angle * 3.14f / 180);
 		float y = 0;
@@ -83,11 +83,11 @@ void GraphicDebugManager::Create_2D_X_Circle_Buffers(XMFLOAT3 _center, float Rad
 	Debug32 temp[180];
 	UINT in_temp[360];
 
-	int inSize = vertices.size();
+	int inSize = (int)vertices.size();
 
 	for (int i = 0; i < verCount; i++)
 	{
-		float angle = i * 2;
+		float angle = (float)(i * 2);
 		float x = Radius * cos(angle * 3.14f / 180);
 		float y = Radius * -sin(angle * 3.14f / 180);
 		float z = 0;
@@ -119,13 +119,13 @@ void GraphicDebugManager::Create_2D_Z_Circle_Buffers(XMFLOAT3 _center, float Rad
 {
 	int verCount = 180;
 	int inCount = verCount * 2;
-	int inSize = vertices.size();
+	int inSize = (int)vertices.size();
 
 	Debug32 temp00[180];
 	UINT in_temp00[360];
 	for (int i = 0; i < verCount; i++)
 	{
-		float angle = i * 2;
+		float angle = (float)(i * 2);
 		float y = Radius * cos(angle * 3.14f / 180);
 		float z = Radius * -sin(angle * 3.14f / 180);
 		float x = 0;
@@ -175,7 +175,7 @@ void GraphicDebugManager::Create_2D_X_Rect_Buffer(XMFLOAT3 _center, XMFLOAT2 _Ex
 		vertices.push_back(temp[i]);
 	}
 
-	int inSize = indices.size();
+	int inSize = (int)indices.size();
 	UINT in_temp[8];
 	in_temp[0] = 0 + inSize;		in_temp[1] = 1 + inSize;
 	in_temp[2] = 2 + inSize;		in_temp[3] = 3 + inSize;
@@ -241,7 +241,7 @@ void GraphicDebugManager::Create_3D_Box_Buffers(XMFLOAT3 _center, XMFLOAT3 _Exte
 		vertices.push_back(temp[i]);
 	}
 
-	int inSize = indices.size();
+	int inSize = (int)indices.size();
 
 	UINT in_temp[24];
 	in_temp[0] = 0 + inSize;		in_temp[1] = 1 + inSize;
@@ -275,8 +275,8 @@ void GraphicDebugManager::Create_2D_Line_Buffers(XMFLOAT3 start, XMFLOAT3 end, X
 {
 	//라인을 생성해준다
 
-	int inSize = indices.size();
-	int vsize = vertices.size();
+	int inSize = (int)indices.size();
+	int vsize = (int)vertices.size();
 
 	Debug32 temp[2];
 	temp[0].Pos		= start;
@@ -309,7 +309,7 @@ BufferData* GraphicDebugManager::CreateBuffer(std::string BufferName)
 
 	D3D11_BUFFER_DESC vbd;
 	vbd.Usage = D3D11_USAGE_IMMUTABLE;
-	vbd.ByteWidth = sizeof(Debug32) * (vertices.size());
+	vbd.ByteWidth = sizeof(Debug32) * (UINT)(vertices.size());
 	vbd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vbd.CPUAccessFlags = 0;
 	vbd.MiscFlags = 0;
@@ -321,7 +321,7 @@ BufferData* GraphicDebugManager::CreateBuffer(std::string BufferName)
 
 	D3D11_BUFFER_DESC ibd;
 	ibd.Usage = D3D11_USAGE_IMMUTABLE;
-	ibd.ByteWidth = sizeof(UINT) * indices.size();
+	ibd.ByteWidth = sizeof(UINT) * (UINT)indices.size();
 	ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	ibd.CPUAccessFlags = 0;
 	ibd.MiscFlags = 0;
@@ -330,8 +330,8 @@ BufferData* GraphicDebugManager::CreateBuffer(std::string BufferName)
 	iinitData.pSysMem = &indices[0];
 	m_Device->CreateBuffer(&ibd, &iinitData, &Buffer->IB);
 
-	Buffer->IndexCount = indices.size();
-	Buffer->VertexCount = vertices.size();
+	Buffer->IndexCount = (int)indices.size();
+	Buffer->VertexCount = (int)vertices.size();
 	Buffer->VertexDataSize = sizeof(Debug32);
 
 	//다쓴 인덱스와 버텍스들은 삭제 시킨다
@@ -359,12 +359,12 @@ void GraphicDebugManager::Create_Grid(int CountX, int CountY)
 	XMFLOAT3 m_Color = { 1,1,1 };
 	for (int i = -CountX; i <= CountX; i++)
 	{
-		Create_2D_Line_Buffers(XMFLOAT3(i, 0, -CountX), XMFLOAT3(i, 0, CountX), m_Color);
+		Create_2D_Line_Buffers(XMFLOAT3((float)i, 0, (float)(-CountX)), XMFLOAT3((float)i, 0, (float)CountX), m_Color);
 	}
 
 	for (int j = -CountY; j <= CountY; j++)
 	{
-		Create_2D_Line_Buffers(XMFLOAT3(-CountY, 0, j), XMFLOAT3(CountY, 0, j), m_Color);
+		Create_2D_Line_Buffers(XMFLOAT3((float)(-CountY), 0, (float)j), XMFLOAT3((float)CountY, 0, (float)j), m_Color);
 	}
 	
 	////축도 그린다
