@@ -246,27 +246,9 @@ void FBXParser::LoadAnimation(fbxsdk::FbxNode* node)
 	if (tempStart < tempStop)
 	{
 		// 구동시간 동안 총 몇 프레임이 수행될지를 keyFrames에 담아줌
-		int keyFrames = (int)((tempStop - tempStart) * (double)frameRate);
-		double ticksperFrame = (tempStop - tempStart) / keyFrames;
-
-		// 새로운 Animaiton Data 생성..
-		m_OneAnimation = new OneAnimation();
-
-		// 애니메이션 삽입(본 인덱스와 애니메이션 인덱스 일치)..
-		m_Model->m_AnimationList.push_back(m_OneAnimation);
-
-		// 한 프레임 재생 시간..
-		m_OneAnimation->m_TicksPerFrame = (float)ticksperFrame;
-
-		// 애니메이션 시작 프레임..
-		m_OneAnimation->m_StartFrame = (int)(tempStart)*keyFrames;
-		m_OneAnimation->m_EndFrame = keyFrames - 1;
-
-		// 애니메이션 총 프레임..
-		m_OneAnimation->m_TotalFrame = keyFrames;
-
-		// 애니메이션 정보가 있을경우..
-		m_Model->m_isAnimation = true;
+		m_KeyFrames = (int)((tempStop - tempStart) * (double)frameRate);
+		m_TickFrame = (tempStop - tempStart) / m_KeyFrames;
+		m_StartTime = (int)(tempStart) * m_KeyFrames;
 
 		ProcessAnimation(node);
 	}
@@ -321,13 +303,11 @@ void FBXParser::ProcessSkeleton(fbxsdk::FbxNode* node)
 		parentBoneIndex = FindBoneIndex(nodeName);
 	}
 
-	// 새로운 Bone 생성..
-	Bone newBone;
-	const char* boneName = node->GetName();
-	newBone.m_BoneName = boneName;
-	newBone.m_parent_bone_number = parentBoneIndex;
-	newBone.m_BoneNumber = (int)m_AllBoneList.size();
-	m_AllBoneList.push_back(BonePair(boneName, newBone));
+	// 해당 Bone Index 삽입..
+	m_OneMesh->m_BoneIndex = (int)m_AllBoneList.size();
+
+	// 새로운 Bone 삽입..
+	m_AllBoneList.push_back(m_OneMesh);
 }
 
 void FBXParser::ProcessMesh(fbxsdk::FbxNode* node)
@@ -465,7 +445,6 @@ bool FBXParser::ProcessBoneWeights(fbxsdk::FbxNode* node, std::vector<BoneWeight
 				Mesh* boneMesh = FindMesh(lineNodeName);
 				int boneIndex = FindBoneIndex(lineNodeName);
 
-				if (boneIndex == -1) continue;
 				if (boneMesh == nullptr) continue;
 				if (boneMesh->m_IsBone == false) continue;
 
@@ -488,9 +467,6 @@ bool FBXParser::ProcessBoneWeights(fbxsdk::FbxNode* node, std::vector<BoneWeight
 
 				DirectX::SimpleMath::Matrix offsetMatrix = clusterMatrix * clusterlinkMatrix.Invert() * geometryMatrix;
 
-				// Bone Index가 -1일 경우 가중치 없는 본
-				boneMesh->m_BoneIndex = boneIndex;
-
 				// 해당 Bone Index에 Bone Offset & Mesh Data 삽입..
 				skinMesh->m_BoneTMList[boneIndex] = offsetMatrix;
 				skinMesh->m_BoneMeshList[boneIndex] = boneMesh;
@@ -499,12 +475,14 @@ bool FBXParser::ProcessBoneWeights(fbxsdk::FbxNode* node, std::vector<BoneWeight
 				int c = cluster->GetControlPointIndicesCount();
 				for (int j = 0; j < cluster->GetControlPointIndicesCount(); ++j)
 				{
-					int m_Index = cluster->GetControlPointIndices()[j];
+					int index = cluster->GetControlPointIndices()[j];
 					double weight = cluster->GetControlPointWeights()[j];
 
-					if (weight == 0) continue;
-
-					skinBoneWeights[m_Index].AddBoneWeight(clusterIndex, (float)weight);
+					if (weight == 0)
+					{
+						continue;
+					}
+					skinBoneWeights[index].AddBoneWeight(boneIndex, (float)weight);
 				}
 			}
 
@@ -557,41 +535,55 @@ void FBXParser::ProcessAnimation(fbxsdk::FbxNode* node)
 
 	if (nodeAttribute != nullptr)
 	{
-		std::string nodeName = node->GetName();
-		Mesh* mesh = FindMesh(nodeName);
+		// 새로운 Animaiton Data 생성..
+		m_OneAnimation = new OneAnimation();
 
-		if (mesh != nullptr)
+		// Animation 삽입(본 인덱스와 애니메이션 인덱스 일치)..
+		m_Model->m_AnimationList.push_back(m_OneAnimation);
+
+		// Animation 정보가 있을경우..
+		m_Model->m_isAnimation = true;
+
+		// 한 프레임 재생 시간..
+		m_OneAnimation->m_TicksPerFrame = m_TickFrame;
+
+		// Animation 시작 프레임..
+		m_OneAnimation->m_StartFrame = m_StartTime;
+		m_OneAnimation->m_EndFrame = m_KeyFrames - 1;
+
+		// Animation 총 프레임..
+		m_OneAnimation->m_TotalFrame = m_KeyFrames;
+
+		// Animation Data 삽입..
+		FbxTime::EMode timeMode = pScene->GetGlobalSettings().GetTimeMode();
+		for (FbxLongLong m_Index = 0; m_Index < m_OneAnimation->m_TotalFrame; m_Index++)
 		{
-			FbxTime::EMode timeMode = pScene->GetGlobalSettings().GetTimeMode();
-			for (FbxLongLong m_Index = 0; m_Index < m_OneAnimation->m_TotalFrame; m_Index++)
-			{
-				FbxTime takeTime;
-				takeTime.SetFrame(m_OneAnimation->m_StartFrame + m_Index, timeMode);
+			FbxTime takeTime;
+			takeTime.SetFrame(m_OneAnimation->m_StartFrame + m_Index, timeMode);
 
-				// Local Transform = 부모 Bone의 Global Transform의 Inverse Transform * 자신 Bone의 Global Transform
-				FbxAMatrix nodeTransform = node->EvaluateLocalTransform(takeTime);
+			// Local Transform = 부모 Bone의 Global Transform의 Inverse Transform * 자신 Bone의 Global Transform
+			FbxAMatrix nodeTransform = node->EvaluateLocalTransform(takeTime);
 
-				DirectX::SimpleMath::Matrix nodeTRS = ConvertMatrix(nodeTransform);
+			DirectX::SimpleMath::Matrix nodeTRS = ConvertMatrix(nodeTransform);
 
-				XMVECTOR scale;
-				XMVECTOR rot;
-				XMVECTOR pos;
+			XMVECTOR scale;
+			XMVECTOR rot;
+			XMVECTOR pos;
 
-				XMMatrixDecompose(&scale, &rot, &pos, nodeTRS);
+			XMMatrixDecompose(&scale, &rot, &pos, nodeTRS);
 
-				OneFrame* newAni = new OneFrame;
+			OneFrame* newAni = new OneFrame;
 
-				newAni->m_Time = (float)m_Index;
-				newAni->m_Pos = DirectX::SimpleMath::Vector3(pos);
-				newAni->m_RotQt = Quaternion(rot);
-				newAni->m_Scale = DirectX::SimpleMath::Vector3(scale);
+			newAni->m_Time = (float)m_Index;
+			newAni->m_Pos = DirectX::SimpleMath::Vector3(pos);
+			newAni->m_RotQt = Quaternion(rot);
+			newAni->m_Scale = DirectX::SimpleMath::Vector3(scale);
 
-				m_OneAnimation->m_AniData.push_back(newAni);
-			}
-
-			// 해당 Mesh에 애니메이션 삽입..
-			mesh->m_Animation = m_OneAnimation;
+			m_OneAnimation->m_AniData.push_back(newAni);
 		}
+
+		// 해당 Mesh에 애니메이션 삽입..
+		m_OneMesh->m_Animation = m_OneAnimation;
 	}
 }
 
@@ -1157,10 +1149,10 @@ void FBXParser::CreateMesh()
 
 int FBXParser::FindBoneIndex(std::string boneName)
 {
-	for (BonePair bone : m_AllBoneList)
+	for (Mesh* bone : m_AllBoneList)
 	{
-		if (bone.first == boneName)
-			return bone.second.m_BoneNumber;
+		if (bone->m_NodeName == boneName)
+			return bone->m_BoneIndex;
 	}
 
 	return -1;

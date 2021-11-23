@@ -63,8 +63,8 @@ namespace ParserData
 
 	inline Bone::Bone()
 	{
-		m_BoneNumber			= 0;
-		m_parent_bone_number	= 0;
+		m_BoneNumber = 0;
+		m_parent_bone_number = 0;
 	}
 
 	inline CMaterial::CMaterial()
