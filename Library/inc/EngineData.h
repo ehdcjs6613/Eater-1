@@ -15,18 +15,18 @@ enum class OBJECT_TYPE
 	///현재 기본형으로 넣어둔 오브젝트 종류
 	///나중에 필요한건 넣고 필요없는건 빼자
 	
-	Default,		//값을 넣지않았을때 기본형
-	GameObject,		//다른 오브젝트들을 묶어놓는 용도
-	Base,			//상속구조로 되어있는 오브젝트
-	Skinning,		//스키닝이 추가된 오브젝트
-	Bone,			//본만 있는 오브젝트
-	Camera,			//카메라 기능만 하는 오브젝트
-	Light,			//라이트 객체
-	SkyBox,			//스카이 박스
-	Texture,		//한개의 텍스쳐로된 오브젝트(페이스두개가 합쳐진 사각형 텍스쳐)
-	Debug,			//디버깅 오브젝트
-	Particle,		//파티클 오브젝트
-	Effect			//이펙트 오브젝트
+	DEFALT,		//값을 넣지않았을때 기본형
+	GAMEOBJECT,		//다른 오브젝트들을 묶어놓는 용도
+	BASE,			//상속구조로 되어있는 오브젝트
+	SKINNING,		//스키닝이 추가된 오브젝트
+	BONE,			//본만 있는 오브젝트
+	CAMERA,			//카메라 기능만 하는 오브젝트
+	LIGHT,			//라이트 객체
+	SKYBOX,			//스카이 박스
+	TEXTURE,		//한개의 텍스쳐로된 오브젝트(페이스두개가 합쳐진 사각형 텍스쳐)
+	DEBUGOBJECT,			//디버깅 오브젝트
+	PARTICLE,		//파티클 오브젝트
+	EFFECT			//이펙트 오브젝트
 };
 
 /// <summary>
@@ -60,7 +60,7 @@ public:
 	}
 
 
-	OBJECT_TYPE ObjType = OBJECT_TYPE::Default;	//오브젝트 타입
+	OBJECT_TYPE ObjType = OBJECT_TYPE::DEFALT;	//오브젝트 타입
 
 	Indexbuffer*  IB = nullptr;	//인덱스 버퍼
 	Vertexbuffer* VB = nullptr;	//버텍스 버퍼

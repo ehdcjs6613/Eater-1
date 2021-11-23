@@ -79,7 +79,7 @@ void LoadManager::LoadMesh(std::string Name, bool Scale, bool LoadAnime)
 	
 
 	//본오프셋 TM과 본리스트를 먼저읽어오기위해 
-	int MeshCount = temp->m_MeshList.size();
+	int MeshCount = (int)temp->m_MeshList.size();
 	for (int i = 0; i < MeshCount; i++)
 	{
 		//리스트에 매쉬 조사
@@ -188,7 +188,7 @@ LoadMeshData* LoadManager::CreateMeshObjeect(ParserData::Mesh* mesh)
 	box->VB->Count = (int)mesh->m_VertexList.size();
 
 	//자식객체가 있다면 정보읽어옴
-	int ChildCount = mesh->m_ChildList.size();
+	int ChildCount = (int)mesh->m_ChildList.size();
 	for (int i = 0; i < ChildCount; i++)
 	{
 		LoadMeshData* temp = CreateMeshObjeect(mesh->m_ChildList[i]);
@@ -274,13 +274,13 @@ void LoadManager::LoadAnimation(ModelData* SaveMesh, ParserData::Model* MeshData
 		//찾는 이름이 없다면 만들어준다
 		AnimationList.insert({ SaveName,{}});
 	}
-	
+
 	//"_"부터 string 끝까지읽음
 	//Enemy_Run 이라면 Run 두번째 키 
 	start = End+1;
 	End = Name.length();
 	std::string key = Name.substr(start, End);
-	AnimationList[SaveName] = std::pair(key, data);
+	AnimationList[SaveName] = std::pair<std::string,ModelAnimationData*>(key, data);
 }
 
 void LoadManager::SetData(LoadMeshData* MeshData, ParserData::Mesh* LoadData)

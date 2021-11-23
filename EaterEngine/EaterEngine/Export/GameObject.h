@@ -80,9 +80,10 @@ inline T* GameObject::AddComponent(typename std::enable_if<std::is_base_of<Compo
 	//생성한 컨퍼넌트를 리스트에 넣는다
 	ComponentList.push_back(ConponentBox);
 	ConponentBox->SetObject(this);
-	
+
 	//나중에 이타입으로 찾아서 가져올수있도록 타입 설정
 	ConponentBox->SetComponentType(typeid(T).hash_code());
+
 
 	///오버라이딩 확인 각각에맞는 함수포인터 리스트에 넣는다 
 	//Awake
@@ -90,7 +91,6 @@ inline T* GameObject::AddComponent(typename std::enable_if<std::is_base_of<Compo
 	{
 		PushComponentFunction(ConponentBox, AWAKE);
 	}
-
 	//Start
 	if (&Component::Start != &T::Start)
 	{
@@ -134,7 +134,7 @@ inline T* GameObject::GetComponent(typename std::enable_if<std::is_base_of<Compo
 	//우진이의 코드를 보고 변경
 	//문제점...만약 한개의 오브젝트에 같은 컨퍼넌트 두개가 들어와있다면 어떻게 찾을것인가...
 
-	int count = ComponentList.size();
+	int count = (int)ComponentList.size();
 	for (int i = 0; i < count; i++)
 	{
 		//현재 컨퍼넌트와 찾고자하는 컨퍼넌트의 타입 비교

@@ -87,7 +87,7 @@ void RenderingManager::SkinningUpdate(MeshData* data)
 	mbuffer.TexMatrix = DirectX::XMMatrixTranspose(offetMT);
 
 
-	int OffsetSize = (data->BoneOffsetTM).size();
+	int OffsetSize = (int)data->BoneOffsetTM.size();
 	for (int i = 0; i < OffsetSize; i++)
 	{
 		mbuffer.BoneOffset[i] = (data->BoneOffsetTM)[i];

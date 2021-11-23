@@ -247,7 +247,7 @@ void FBXParser::LoadAnimation(fbxsdk::FbxNode* node)
 	{
 		// 구동시간 동안 총 몇 프레임이 수행될지를 keyFrames에 담아줌
 		m_KeyFrames = (int)((tempStop - tempStart) * (double)frameRate);
-		m_TickFrame = (tempStop - tempStart) / m_KeyFrames;
+		m_TickFrame = (float)(tempStop - tempStart) / (float)m_KeyFrames;
 		m_StartTime = (int)(tempStart)*m_KeyFrames;
 
 		ProcessAnimation(node);
@@ -365,6 +365,8 @@ void FBXParser::ProcessMesh(fbxsdk::FbxNode* node)
 		// Polygon 개수만큼 Face 생성..
 		m_OneMesh->m_MeshFace.push_back(new Face);
 
+		Face* nowFace = m_OneMesh->m_MeshFace[pi];
+
 		for (int vi = 0; vi < 3; vi++)
 		{
 			int vertexIndex = pMesh->GetPolygonVertex(pi, vi);
@@ -383,11 +385,11 @@ void FBXParser::ProcessMesh(fbxsdk::FbxNode* node)
 				LinkMaterialByPolygon(pMesh, pi, vertexIndex);
 
 			// Face Vertex Index Data
-			m_OneMesh->m_MeshFace[pi]->m_VertexIndex[vi] = vertexIndex;
+			nowFace->m_VertexIndex[vi] = vertexIndex;
 			// Face Vertex Normal Data
-			m_OneMesh->m_MeshFace[pi]->m_NormalVertex[vi] = fbxNormal;
+			nowFace->m_NormalVertex[vi] = fbxNormal;
 			// Face Vertex UV Data
-			m_OneMesh->m_MeshFace[pi]->m_UVvertex[vi] = fbxUV;
+			nowFace->m_UVvertex[vi] = fbxUV;
 
 			vertexCount++;
 		}
@@ -427,7 +429,6 @@ bool FBXParser::ProcessBoneWeights(fbxsdk::FbxNode* node, std::vector<BoneWeight
 			skinMesh->m_BoneTMList.resize(m_AllBoneList.size());
 			skinMesh->m_BoneMeshList.resize(m_AllBoneList.size());
 
-			std::vector<BoneWeights> skinBoneWeights(meshBoneWeights.size());
 			for (int clusterIndex = 0; clusterIndex < clusterCount; clusterIndex++)
 			{
 				FbxCluster* cluster = skin->GetCluster(clusterIndex);
@@ -481,7 +482,7 @@ bool FBXParser::ProcessBoneWeights(fbxsdk::FbxNode* node, std::vector<BoneWeight
 					{
 						continue;
 					}
-					skinBoneWeights[index].AddBoneWeight(boneIndex, (float)weight);
+					meshBoneWeights[index].AddBoneWeight(boneIndex, (float)weight);
 				}
 			}
 
@@ -490,8 +491,8 @@ bool FBXParser::ProcessBoneWeights(fbxsdk::FbxNode* node, std::vector<BoneWeight
 			case FbxCluster::eNormalize:
 			{
 				// 가중치 합을 1.0으로 만드는 작업..
-				for (int i = 0; i < (int)skinBoneWeights.size(); ++i)
-					skinBoneWeights[i].Normalize();
+				for (int i = 0; i < (int)meshBoneWeights.size(); ++i)
+					meshBoneWeights[i].Normalize();
 			}
 			break;
 
@@ -502,8 +503,6 @@ bool FBXParser::ProcessBoneWeights(fbxsdk::FbxNode* node, std::vector<BoneWeight
 				break;
 			}
 
-			for (size_t i = 0; i < meshBoneWeights.size(); i++)
-				meshBoneWeights[i].AddBoneWeights(skinBoneWeights[i]);
 		}
 	}
 
@@ -625,8 +624,7 @@ void FBXParser::OptimizeVertex(ParserData::Mesh* pMesh)
 			// 텍스처가 있고, 설정하지 않았으면 텍스처 u,v 설정..
 			if (nowVertex->m_IsTextureSet == false)
 			{
-				nowVertex->m_U = nowUV.x;
-				nowVertex->m_V = nowUV.y;
+				nowVertex->m_UV = nowUV;
 				nowVertex->m_IsTextureSet = true;
 			}
 
@@ -638,13 +636,12 @@ void FBXParser::OptimizeVertex(ParserData::Mesh* pMesh)
 			}
 
 			// Normal, U, V 값중 한개라도 다르면 Vertex 새로 생성..
-			if ((nowVertex->m_Normal != nowNormal))
+			if (nowVertex->m_Normal != nowNormal)
 			{
 				new_VertexSet = true;
 			}
 
-			if ((nowVertex->m_U != nowUV.x) ||
-				(nowVertex->m_V != nowUV.y))
+			if (nowVertex->m_UV != nowUV)
 			{
 				new_VertexSet = true;
 			}
@@ -662,8 +659,7 @@ void FBXParser::OptimizeVertex(ParserData::Mesh* pMesh)
 						if ((checkVertex->m_Indices == nowIndex) &&
 							(checkVertex->m_Normal == nowNormal))
 						{
-							if ((checkVertex->m_U == nowUV.x) &&
-								(checkVertex->m_V == nowUV.y))
+							if (checkVertex->m_UV == nowUV)
 							{
 								nowFace->m_VertexIndex[j] = (int)k;
 								new_VertexSet = false;
@@ -677,7 +673,7 @@ void FBXParser::OptimizeVertex(ParserData::Mesh* pMesh)
 			// 새로 추가해야할 Vertex..
 			if (new_VertexSet == true)
 			{
-				Vertex* newVertex = new Vertex;
+				Vertex* newVertex = new Vertex();
 				newVertex->m_Pos = nowVertex->m_Pos;
 				newVertex->m_Indices = nowVertex->m_Indices;
 				newVertex->m_Normal = nowNormal;
@@ -685,8 +681,7 @@ void FBXParser::OptimizeVertex(ParserData::Mesh* pMesh)
 				newVertex->m_BoneWeights = nowVertex->m_BoneWeights;
 				newVertex->m_IsNormalSet = true;
 
-				newVertex->m_U = nowUV.x;
-				newVertex->m_V = nowUV.y;
+				newVertex->m_UV = nowUV;
 				newVertex->m_IsTextureSet = true;
 
 				pMesh->m_VertexList.push_back(newVertex);
@@ -704,13 +699,17 @@ void FBXParser::OptimizeVertex(ParserData::Mesh* pMesh)
 		int index1 = pMesh->m_MeshFace[i]->m_VertexIndex[1];
 		int index2 = pMesh->m_MeshFace[i]->m_VertexIndex[2];
 
-		DirectX::SimpleMath::Vector3 ep1 = pMesh->m_VertexList[index1]->m_Pos - pMesh->m_VertexList[index0]->m_Pos;
-		DirectX::SimpleMath::Vector3 ep2 = pMesh->m_VertexList[index2]->m_Pos - pMesh->m_VertexList[index0]->m_Pos;
+		Vertex* vertex0 = pMesh->m_VertexList[index0];
+		Vertex* vertex1 = pMesh->m_VertexList[index0];
+		Vertex* vertex2 = pMesh->m_VertexList[index0];
 
-		DirectX::SimpleMath::Vector2 uv1 = { pMesh->m_VertexList[index1]->m_U - pMesh->m_VertexList[index0]->m_U,
-						  pMesh->m_VertexList[index1]->m_V - pMesh->m_VertexList[index0]->m_V };
-		DirectX::SimpleMath::Vector2 uv2 = { pMesh->m_VertexList[index2]->m_U - pMesh->m_VertexList[index0]->m_U,
-						  pMesh->m_VertexList[index2]->m_V - pMesh->m_VertexList[index0]->m_V };
+		DirectX::SimpleMath::Vector3 ep1 = vertex1->m_Pos - vertex0->m_Pos;
+		DirectX::SimpleMath::Vector3 ep2 = pMesh->m_VertexList[index2]->m_Pos - vertex0->m_Pos;
+
+		DirectX::SimpleMath::Vector2 uv1 = { vertex1->m_UV.x - vertex0->m_UV.x,
+											 vertex1->m_UV.y - vertex0->m_UV.y };
+		DirectX::SimpleMath::Vector2 uv2 = { vertex2->m_UV.x - vertex0->m_UV.x,
+											 vertex2->m_UV.y - vertex0->m_UV.y };
 
 		float den = 1.0f / (uv1.x * uv2.y - uv2.x * uv1.y);
 
@@ -722,9 +721,9 @@ void FBXParser::OptimizeVertex(ParserData::Mesh* pMesh)
 		tangent.Normalize();
 
 		// 유사 정점은 값을 누적하여 쉐이더에서 평균값을 사용하도록 하자..
-		pMesh->m_VertexList[index0]->m_Tanget += tangent;
-		pMesh->m_VertexList[index1]->m_Tanget += tangent;
-		pMesh->m_VertexList[index2]->m_Tanget += tangent;
+		vertex0->m_Tanget += tangent;
+		vertex1->m_Tanget += tangent;
+		vertex2->m_Tanget += tangent;
 	}
 
 	// 인덱스는 그냥 복사
@@ -732,18 +731,21 @@ void FBXParser::OptimizeVertex(ParserData::Mesh* pMesh)
 	{
 		pMesh->m_IndexList.push_back(new IndexList);
 
+		IndexList* nowIndexList = pMesh->m_IndexList[i];
+		Face* nowFace = pMesh->m_MeshFace[i];
+
 		for (unsigned int j = 0; j < 3; j++)
 		{
 			switch (j)
 			{
 			case 0:
-				pMesh->m_IndexList[i]->m_Index[j] = pMesh->m_MeshFace[i]->m_VertexIndex[0];
+				nowIndexList->m_Index[j] = nowFace->m_VertexIndex[0];
 				break;
 			case 1:
-				pMesh->m_IndexList[i]->m_Index[j] = pMesh->m_MeshFace[i]->m_VertexIndex[2];
+				nowIndexList->m_Index[j] = nowFace->m_VertexIndex[2];
 				break;
 			case 2:
-				pMesh->m_IndexList[i]->m_Index[j] = pMesh->m_MeshFace[i]->m_VertexIndex[1];
+				nowIndexList->m_Index[j] = nowFace->m_VertexIndex[1];
 				break;
 			default:
 				break;
@@ -984,10 +986,10 @@ void FBXParser::SetTransform(fbxsdk::FbxNode* node)
 
 int FBXParser::GetMaterialIndex(fbxsdk::FbxSurfaceMaterial* material)
 {
-	for (unsigned int m_Index = 0; m_Index < fbxMaterials.size(); m_Index++)
+	for (unsigned int index = 0; index < fbxMaterials.size(); index++)
 	{
-		if (fbxMaterials[m_Index] == material)
-			return m_Index;
+		if (fbxMaterials[index] == material)
+			return index;
 	}
 
 	return -1;
@@ -1132,18 +1134,26 @@ void FBXParser::CreateVertex(fbxsdk::FbxMesh* mesh, std::vector<BoneWeights>& bo
 	// Vertex 개수만큼 Vertex 생성..
 	for (int vertexIndex = 0; vertexIndex < vertexCount; vertexIndex++)
 	{
+		// 새로운 Vertex 생성..
 		m_OneMesh->m_VertexList.push_back(new Vertex);
 
+		// 현재 Vertex..
+		Vertex* nowVertex = m_OneMesh->m_VertexList[vertexIndex];
+
+		// 해당 Vertex의 Position..
 		fbxPos = mesh->GetControlPointAt(vertexIndex);
 
-		m_OneMesh->m_VertexList[vertexIndex]->m_Pos = ConvertVector3(fbxPos);
-		m_OneMesh->m_VertexList[vertexIndex]->m_Indices = vertexIndex;
+		// 변환한 Vertex의 Position..
+		nowVertex->m_Pos = ConvertVector3(fbxPos);
+
+		// 해당 Vertex의 Index..
+		nowVertex->m_Indices = vertexIndex;
 
 		// Bone Weight Data
 		for (unsigned int boneIndex = 0; boneIndex < boneWeights[vertexIndex].m_BoneWeights.size(); boneIndex++)
 		{
-			m_OneMesh->m_VertexList[vertexIndex]->m_BoneIndices.push_back(boneWeights[vertexIndex].m_BoneWeights[boneIndex]->m_BoneNumber);
-			m_OneMesh->m_VertexList[vertexIndex]->m_BoneWeights.push_back(boneWeights[vertexIndex].m_BoneWeights[boneIndex]->m_BoneWeight);
+			nowVertex->m_BoneIndices.push_back(boneWeights[vertexIndex].m_BoneWeights[boneIndex].m_BoneNumber);
+			nowVertex->m_BoneWeights.push_back(boneWeights[vertexIndex].m_BoneWeights[boneIndex].m_BoneWeight);
 		}
 	}
 }

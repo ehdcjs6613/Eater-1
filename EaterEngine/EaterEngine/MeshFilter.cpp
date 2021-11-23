@@ -30,7 +30,7 @@ void MeshFilter::Awake()
 		////최상위 객체를 가져옴
 		ModelData* data = LoadManager::GetMesh(MeshName);
 		Transform* MyTr = gameobject->transform;
-		gameobject->OneMeshData->ObjType = OBJECT_TYPE::GameObject;
+		gameobject->OneMeshData->ObjType = OBJECT_TYPE::GAMEOBJECT;
 
 		
 		if(data->TopMeshList[0]->Skinning_Object)
@@ -126,7 +126,7 @@ void MeshFilter::CheckTexture()
 
 void MeshFilter::CreateChild_Mesh(LoadMeshData* data, Transform* parent, ModelData* modeldata)
 {
-	int ChildCount = data->Child.size();
+	int ChildCount = (int)data->Child.size();
 
 	GameObject* OBJ = new GameObject();
 	OBJ->Name = data->Name;
@@ -147,11 +147,11 @@ void MeshFilter::CreateChild_Mesh(LoadMeshData* data, Transform* parent, ModelDa
 		SF->PushBoneList(&BoneList);
 		SF->PushBone_OffsetList(&BoneOffsetList);
 
-		OBJ->OneMeshData->ObjType = OBJECT_TYPE::Skinning;
+		OBJ->OneMeshData->ObjType = OBJECT_TYPE::SKINNING;
 	}
 	else
 	{
-		OBJ->OneMeshData->ObjType = OBJECT_TYPE::Base;
+		OBJ->OneMeshData->ObjType = OBJECT_TYPE::BASE;
 	}
 
 	// Material Data..
@@ -194,7 +194,7 @@ void MeshFilter::CreateChild_Bone(LoadMeshData* data, Transform* parent, std::ve
 {
 	GameObject* OBJ = new GameObject();
 	OBJ->Name = data->Name;
-	OBJ->OneMeshData->ObjType = OBJECT_TYPE::Bone;
+	OBJ->OneMeshData->ObjType = OBJECT_TYPE::BONE;
 
 	//컨퍼넌트 생성
 	Transform* Tr		= OBJ->AddComponent<Transform>();
@@ -221,7 +221,7 @@ void MeshFilter::CreateChild_Bone(LoadMeshData* data, Transform* parent, std::ve
 	(*BoneOffsetList)[data->BoneIndex] = (*data->BoneOffset);
 
 	//자식객체 개수만큼 실행
-	int ChildCount = data->Child.size();
+	int ChildCount = (int)data->Child.size();
 	for (int i = 0; i < ChildCount; i++)
 	{
 		//재귀 호출

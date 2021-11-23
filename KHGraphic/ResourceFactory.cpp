@@ -395,8 +395,7 @@ Vertexbuffer* GraphicResourceFactory::CreateMeshVertexBuffer<MeshVertex>(ParserD
 
 		vertices[i].Normal = mesh->m_VertexList[i]->m_Normal;
 
-		vertices[i].Tex.x = mesh->m_VertexList[i]->m_U;
-		vertices[i].Tex.y = mesh->m_VertexList[i]->m_V;
+		vertices[i].Tex = mesh->m_VertexList[i]->m_UV;
 
 		vertices[i].Tangent = mesh->m_VertexList[i]->m_Tanget;
 	}
@@ -438,8 +437,7 @@ Vertexbuffer* GraphicResourceFactory::CreateMeshVertexBuffer<SkinVertex>(ParserD
 
 		vertices[i].Normal = mesh->m_VertexList[i]->m_Normal;
 
-		vertices[i].Tex.x = mesh->m_VertexList[i]->m_U;
-		vertices[i].Tex.y = mesh->m_VertexList[i]->m_V;
+		vertices[i].Tex = mesh->m_VertexList[i]->m_UV;
 
 		vertices[i].Tangent = mesh->m_VertexList[i]->m_Tanget;
 
@@ -497,8 +495,7 @@ Vertexbuffer* GraphicResourceFactory::CreateMeshVertexBuffer<TerrainVertex>(Pars
 
 		vertices[i].Normal = mesh->m_VertexList[i]->m_Normal;
 
-		vertices[i].Tex.x = mesh->m_VertexList[i]->m_U;
-		vertices[i].Tex.y = mesh->m_VertexList[i]->m_V;
+		vertices[i].Tex = mesh->m_VertexList[i]->m_UV;
 
 		vertices[i].Tangent = mesh->m_VertexList[i]->m_Tanget;
 

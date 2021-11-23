@@ -29,8 +29,6 @@ namespace ParserData
 	{
 		m_IsNormalSet = false;
 		m_IsTextureSet = false;
-		m_U = 0.0f;
-		m_V = 0.0f;
 	}
 
 	inline Vertex::~Vertex()

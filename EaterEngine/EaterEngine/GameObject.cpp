@@ -56,7 +56,7 @@ Component* GameObject::GetDeleteComponent(int i)
 
 int GameObject::GetComponentCount()
 {
-	return ComponentList.size();
+	return (int)ComponentList.size();
 }
 
 void GameObject::PushChildList(GameObject* obj)

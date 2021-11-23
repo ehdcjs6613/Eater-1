@@ -69,8 +69,8 @@ void RenderManager::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 
 		switch (mesh->ObjType)
 		{
-		case OBJECT_TYPE::Base:
-		case OBJECT_TYPE::Skinning:
+		case OBJECT_TYPE::BASE:
+		case OBJECT_TYPE::SKINNING:
 			m_Farward->Update(mesh, global);
 			m_Farward->Render(mesh);
 			break;
@@ -93,8 +93,8 @@ void RenderManager::ShadowRender(std::queue<MeshData*>* meshList, GlobalData* gl
 
 		switch (mesh->ObjType)
 		{
-		case OBJECT_TYPE::Base:
-		case OBJECT_TYPE::Skinning:
+		case OBJECT_TYPE::BASE:
+		case OBJECT_TYPE::SKINNING:
 			m_Shadow->Update(mesh, global);
 			m_Shadow->Render(mesh);
 			break;
