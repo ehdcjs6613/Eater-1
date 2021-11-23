@@ -556,6 +556,8 @@ Vertexbuffer* MultiRenderEngine::SkinningVertexBuffer(ParserData::Mesh* mModel)
 			}
 
 		}
+
+
 	}
 
 	//버퍼 생성

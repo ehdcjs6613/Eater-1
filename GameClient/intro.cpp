@@ -51,7 +51,7 @@ void intro::Awake()
 	//testobj->SetActive(false);
 	
 	testobj->GetTransform()->Position	= { 0 ,0, 0 };
-	testobj->GetTransform()->Scale		= { 2 ,2, 2 };
+	testobj->GetTransform()->Scale		= { 1 ,1, 1 };
 	testobj->GetTransform()->Rotation	= {90 ,0,0 };
 }
 

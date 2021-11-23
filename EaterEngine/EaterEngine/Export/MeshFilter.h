@@ -61,11 +61,13 @@ private:
 	//초기설정 Texture Setting
 	void CheckTexture();
 
+
 	static ObjectManager* OBJ_Manager;
 	static MaterialManager* MAT_Manager;
 private:
 	bool isLoadMesh;			//매쉬 로드여부
 	bool isLoadTexture;			//텍스쳐 로드 여부
+
 
 	std::string MeshName;		//로드한 매쉬 이름
 	std::string TextureName;	//로드한 텍스쳐 이름

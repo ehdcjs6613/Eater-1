@@ -38,7 +38,7 @@ void MeshFilter::Awake()
 			BoneList.resize(data->BoneList->size());
 			BoneOffsetList.resize(data->BoneOffsetList->size());
 		}
-
+		
 		//본 오브젝트 만들기
 		for(int i = 0; i < data->TopBoneList.size(); i++)
 		{
@@ -199,7 +199,6 @@ void MeshFilter::CreateChild_Bone(LoadMeshData* data, Transform* parent, std::ve
 	//컨퍼넌트 생성
 	Transform* Tr		= OBJ->AddComponent<Transform>();
 	MeshFilter* Filter	= OBJ->AddComponent<MeshFilter>();
-
 
 	Animator* Anime = OBJ->AddComponent<Animator>();
 	//애니메이션 데이터 넣어주기
