@@ -47,8 +47,8 @@ void GraphicDebugManager::Create_2D_Y_Circle_Buffers(XMFLOAT3 _Centor, float Rad
 	for (int i = 0; i < verCount; i++)
 	{
 		float angle = (float)(i * 2);
-		float x = Radius * cos(angle * 3.14f / 180);
-		float z = Radius * -sin(angle * 3.14f / 180);
+		float x =(float)(Radius * cos(angle * 3.14f / 180));
+		float z = (float)(Radius * -sin(angle * 3.14f / 180));
 		float y = 0;
 
 		temp00[i].Pos = { _Centor.x + x,_Centor.y + y,_Centor.z + z };
@@ -88,8 +88,8 @@ void GraphicDebugManager::Create_2D_X_Circle_Buffers(XMFLOAT3 _center, float Rad
 	for (int i = 0; i < verCount; i++)
 	{
 		float angle = (float)(i * 2);
-		float x = Radius * cos(angle * 3.14f / 180);
-		float y = Radius * -sin(angle * 3.14f / 180);
+		float x = (float)(Radius * cos(angle * 3.14f / 180));
+		float y = (float)(Radius * -sin(angle * 3.14f / 180));
 		float z = 0;
 
 		temp[i].Pos = { _center.x + x,_center.y + y,_center.z + z };
@@ -126,8 +126,8 @@ void GraphicDebugManager::Create_2D_Z_Circle_Buffers(XMFLOAT3 _center, float Rad
 	for (int i = 0; i < verCount; i++)
 	{
 		float angle = (float)(i * 2);
-		float y = Radius * cos(angle * 3.14f / 180);
-		float z = Radius * -sin(angle * 3.14f / 180);
+		float y = (float)(Radius * cos(angle * 3.14f / 180));
+		float z = (float)(Radius * -sin(angle * 3.14f / 180));
 		float x = 0;
 
 		temp00[i].Pos = { _center.x + x,_center.y + y,_center.z + z };

@@ -134,18 +134,16 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 
 void GameEngine::Update()
 {
-	mDebugManager->Clear();
+	
 	//매니저들 업데이트 (컨퍼넌트 업데이트후 변경된 사항을 각각의 게임오브젝트 OneMeshData에 전달)
 	//타임매니저는 먼저실행되어야함
 	mTimeManager->Update();
 	mKeyManager->Update();
 	mSceneManager->Update();
 	mObjectManager->PlayUpdate();
-
 	mDebugManager->Update();
 	
 
-	mDebugManager->End();
 	//컨퍼넌트 업데이트 끝
 	//그래픽엔진으로 넘겨줄 랜더큐도 생성완료
 
@@ -191,25 +189,23 @@ void GameEngine::OnResize(int Change_Width, int Change_Height)
 	std::string Height = std::to_string(Change_Height);;
 	std::string temp = "윈도우 사이즈 변경:"+ Width+","+ Height;
 	Camera::SetSize(Change_Width, Change_Height);
-
-	
-	mDebugManager->Print(temp,0,0, DebugManager::MSG_TYPE::MSG_ENGINE);
 }
 
 ///오브젝트 생성 삭제
 GameObject* GameEngine::Instance(std::string ObjName)
 {
+	DebugManager::Line();
 	//오브젝트 생성
 	GameObject* temp = new GameObject();
 	mObjectManager->PushCreateObject(temp);
 	temp->Name = ObjName;
-	
+	DebugManager::Print(DebugManager::MSG_TYPE::MSG_CREATE, "GameObject", ObjName, false);
+
 	//Transform 은 기본으로 넣어준다
 	Transform* Tr = temp->AddComponent<Transform>();
 	temp->transform = Tr;
 
 
-	mDebugManager->Print(ObjName,0,1,DebugManager::MSG_TYPE::MSG_CREATE);
 	return temp;
 }
 
@@ -222,14 +218,12 @@ void GameEngine::Destroy(GameObject* obj)
 void GameEngine::PushScene(Scene* mScene, std::string name)
 {
 	std::string mStr = "씬 생성 :" + name;
-	mDebugManager->Print(mStr,0,0,DebugManager::MSG_TYPE::MSG_ENGINE);
 	mSceneManager->PushScene(mScene,name);
 }
 
 void GameEngine::ChoiceScene(std::string name)
 {
 	std::string mStr = "현재 씬 선택 :" + name;
-	mDebugManager->Print(mStr, 0, 0 ,DebugManager::MSG_TYPE::MSG_ENGINE);
 	
 	//씬 선택후 이전 씬 의 정보들을 모두지움
 	mObjectManager->AllDeleteObject();
@@ -246,7 +240,6 @@ void GameEngine::LoadMesh(std::string mMeshName, bool Scale, bool LoadAnime)
 {
 	std::string temp = "매쉬를 로드합니다 : " + mMeshName;
 	mLoadManager->LoadMesh(mMeshName, Scale, LoadAnime);
-	mDebugManager->Print(temp,0,0, DebugManager::MSG_TYPE::MSG_LOAD);
 }
 
 void GameEngine::LoadTexture(std::string mTextureName)

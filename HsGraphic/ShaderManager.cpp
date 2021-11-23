@@ -369,8 +369,8 @@ bool ShaderManager::LoadVertexShader(std::string vsFileName, std::string ShaderN
 	}
 
 
-	//D3DReflect(_vertexShaderBuffer->GetBufferPointer(), _vertexShaderBuffer->GetBufferSize(),
-	//	IID_ID3D11ShaderReflection, (void**)&ReFlector);
+	D3DReflect(_vertexShaderBuffer->GetBufferPointer(), _vertexShaderBuffer->GetBufferSize(),
+		IID_ID3D11ShaderReflection, (void**)&ReFlector);
 	
 	
 	
@@ -447,8 +447,8 @@ bool ShaderManager::LoadPixelShader(std::string psFileName, std::string ShaderNa
 	);
 
 
-	//D3DReflect(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(),
-	//	IID_ID3D11ShaderReflection, (void**)&ReFlector);
+	D3DReflect(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(),
+		IID_ID3D11ShaderReflection, (void**)&ReFlector);
 
 
 	g_pPsClassLinkage->Release();

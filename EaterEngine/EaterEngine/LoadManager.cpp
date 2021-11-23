@@ -35,11 +35,12 @@ ModelData* LoadManager::GetMesh(std::string Name)
 	std::map<std::string, ModelData*>::iterator temp = ModelList.find(Name);
 	if (temp == ModelList.end())
 	{
-		DebugManager::Print(Name, 0, 0, DebugManager::MSG_TYPE::MSG_LOAD, true);
+		DebugManager::Print(DebugManager::MSG_TYPE::MSG_GET,"Mesh",Name,true);
 		return nullptr;
 	}
 	else
 	{
+		DebugManager::Print(DebugManager::MSG_TYPE::MSG_GET, "Mesh", Name, false);
 		return temp->second;
 	}
 
@@ -50,11 +51,12 @@ TextureBuffer* LoadManager::GetTexture(std::string Name)
 	std::map<std::string, TextureBuffer*>::iterator temp = TextureList.find(Name);
 	if (temp == TextureList.end())
 	{
-		DebugManager::Print(Name, 0, 0, DebugManager::MSG_TYPE::MSG_LOAD, true);
+		DebugManager::Print(DebugManager::MSG_TYPE::MSG_GET, "Texture", Name, true);
 		return nullptr;
 	}
 	else
 	{
+		DebugManager::Print(DebugManager::MSG_TYPE::MSG_GET, "Texture", Name, false);
 		return temp->second;
 	}
 }
@@ -69,6 +71,15 @@ void LoadManager::LoadMesh(std::string Name, bool Scale, bool LoadAnime)
 
 	//파서를 통해서 매쉬를 로드
 	ParserData::Model* temp = EaterParser->LoadModel(FullName, Scale, LoadAnime);
+	if (temp == nullptr)
+	{
+		DebugManager::Print(DebugManager::MSG_TYPE::MSG_LOAD, "Mesh", Name, true);
+	}
+	else
+	{
+		DebugManager::Print(DebugManager::MSG_TYPE::MSG_LOAD, "Mesh", Name, false);
+	}
+
 
 	//애니메이션 데이터 넣어줌
 	LoadAnimation(SaveMesh,temp, Name);
@@ -123,10 +134,11 @@ void LoadManager::LoadTexture(std::string Name)
 	
 	if (Tbuffer == nullptr || Tbuffer->TextureBufferPointer == nullptr)
 	{
-		DebugManager::Print(TextureName, 0, 0, DebugManager::MSG_TYPE::MSG_LOAD, true);
+		DebugManager::Print(DebugManager::MSG_TYPE::MSG_LOAD, "Texture", Name, true);
 	}
 	else
 	{
+		DebugManager::Print(DebugManager::MSG_TYPE::MSG_LOAD, "Texture", Name, false);
 		//이름은 .dds , .png 를 빼고 저장한다
 		std::string::size_type End = Name.rfind('.');
 		std::string::size_type start = 0;
@@ -262,6 +274,15 @@ void LoadManager::LoadAnimation(ModelData* SaveMesh, ParserData::Model* MeshData
 	ModelAnimationData* data = new ModelAnimationData();
 	data->AnimList = &(MeshData->m_AnimationList);
 	
+	if (data->AnimList == nullptr)
+	{
+		DebugManager::Print(DebugManager::MSG_TYPE::MSG_LOAD, "Animation", Name, true);
+	}
+	else
+	{
+		DebugManager::Print(DebugManager::MSG_TYPE::MSG_LOAD, "Animation", Name, false);
+	}
+
 	//저장
 	//들어온 string을 맨앞부터"_"까지만읽는다
 	std::string::size_type start = 0;

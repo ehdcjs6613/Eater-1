@@ -70,33 +70,41 @@ void GameObject::PushChildList(GameObject* obj)
 
 void GameObject::PushComponentFunction(Component* con, unsigned int type)
 {
+	
 	switch (type)
 	{
 	case AWAKE:
+		DebugManager::Print(DebugManager::MSG_TYPE::MSG_PUSH, "ComponentFunction", "1.Awake",false);
 		ObjectManager::PushAwake(con);
 		con->FUNCTION_MASK |= AWAKE;
 		break;
 	case START:
+		DebugManager::Print(DebugManager::MSG_TYPE::MSG_PUSH, "ComponentFunction", "2.Start", false);
 		ObjectManager::PushStart(con);
 		con->FUNCTION_MASK |= START;
 		break;
 	case START_UPDATE:
+		DebugManager::Print(DebugManager::MSG_TYPE::MSG_PUSH, "ComponentFunction", "3.StartUpdate", false);
 		ObjectManager::PushStartUpdate(con);
 		con->FUNCTION_MASK |= START_UPDATE;
 		break;
 	case Transform_UPDATE:
+		DebugManager::Print(DebugManager::MSG_TYPE::MSG_PUSH, "ComponentFunction","4.TransformUpdate", false);
 		ObjectManager::PushTransformUpdate(con);
 		con->FUNCTION_MASK |= Transform_UPDATE;
 		break;
 	case Physics_UPDATE:
+		DebugManager::Print(DebugManager::MSG_TYPE::MSG_PUSH, "ComponentFunction", "5.PhysicsUpdate", false);
 		ObjectManager::PushPhysicsUpdate(con);
 		con->FUNCTION_MASK |= Physics_UPDATE;
 		break;
 	case UPDATE:
+		DebugManager::Print(DebugManager::MSG_TYPE::MSG_PUSH, "ComponentFunction", "6,Update", false);
 		ObjectManager::PushUpdate(con);
 		con->FUNCTION_MASK |= UPDATE;
 		break;
 	case END_UPDATE:
+		DebugManager::Print(DebugManager::MSG_TYPE::MSG_PUSH, "ComponentFunction", "7.EndUpdate", false);
 		ObjectManager::PushEndUpdate(con);
 		con->FUNCTION_MASK |= END_UPDATE;
 		break;
