@@ -1,43 +1,28 @@
 //#include "Transform.h"
 #include "DirectXDefine.h"
 #include "d3dx11effect.h"
+#include "Effects.h"
 #include "XVertex.h"
 #include "XShader.h"
+#include "OneCompile.h"
 #include "ViewGrid.h"
 
-ViewGrid::ViewGrid() 
-{
+BOOL ViewGrid::Initialize(ID3D11Device* _pDevice, ID3D11DeviceContext* _pDeviceContext, ID3D11RasterizerState* _pRSS)
 	
-
-}
-
-ViewGrid::ViewGrid(const ViewGrid& _pViewGrid)
 {
-}
+	m_d3dDevice = (_pDevice);
+	m_d3dImmediateContext = (_pDeviceContext);
+	m_pRenderstate = (_pRSS);
 
-ViewGrid::~ViewGrid()
-{
-}
-
-BOOL ViewGrid::Initialize(ID3D11Device* _pDevice, ID3D11DeviceContext* _pDeviceContext , ID3D11RasterizerState* pRS)
-{
-	m_d3dDevice = _pDevice;
-	m_d3dImmediateContext = _pDeviceContext;
-	m_pRenderstate = pRS;
-
-	//초기화 부분
-	//버텍스 버퍼를 만드는 부분이다.
 	BuildGeometry();
 	BuildFX();
 	BuildLayout();
+
 	return 0;
 }
 
 BOOL ViewGrid::BuildGeometry()
 {
-	DirectX::XMMatrixIdentity();
-
-
 	// 정점 버퍼를 생성한다. 
 	// 40개의 정점을 만들었다.
 	XVertexGrid vertices[40];
@@ -85,13 +70,12 @@ BOOL ViewGrid::BuildGeometry()
 	iinitData.pSysMem = indices;
 	HR(m_d3dDevice->CreateBuffer(&ibd, &iinitData, &m_IB));
 
-
 	return 0;
 }
 
 BOOL ViewGrid::BuildFX()
 {
-	std::ifstream fin("../FX/color.fxo", std::ios::binary);//색출
+	std::ifstream fin("../Resources/Shader/LWJ/color.cso", std::ios::binary);
 
 	fin.seekg(0, std::ios_base::end);
 	int size = (int)fin.tellg();
@@ -101,8 +85,8 @@ BOOL ViewGrid::BuildFX()
 	fin.read(&compiledShader[0], size);
 	fin.close();
 
-	HR(D3DX11CreateEffectFromMemory(&compiledShader[0], size,
-		0, m_d3dDevice, &m_FX));
+	D3DX11CreateEffectFromMemory(&compiledShader[0], size,
+		0, m_d3dDevice, &m_FX);
 
 	mTech = m_FX->GetTechniqueByName("ColorTech");
 	mfxWorldViewProj = m_FX->GetVariableByName("gWorldViewProj")->AsMatrix();
@@ -128,11 +112,13 @@ BOOL ViewGrid::BuildLayout()
 	return 0;
 }
 
-BOOL ViewGrid::Update(const DirectX::XMMATRIX& world, const DirectX::XMMATRIX& view, const DirectX::XMMATRIX & proj)
+
+
+BOOL ViewGrid::Update( const DirectX::SimpleMath::Matrix* view, const DirectX::SimpleMath::Matrix* proj)
 {
-	m_World			= world;
-	m_View			= view;
-	m_Projection	= proj;
+	
+	m_View = *view;
+	m_Projection = *proj;
 
 	return 0;
 }
@@ -142,6 +128,16 @@ BOOL ViewGrid::Destroy()
 	return 0;
 }
 
+ViewGrid::ViewGrid()
+{
+}
+ViewGrid::ViewGrid(const ViewGrid& _pViewGrid)
+{
+}
+
+ViewGrid::~ViewGrid()
+{
+}
 void ViewGrid::Render()
 {
 	// 입력 배치 객체 셋팅
@@ -175,4 +171,5 @@ void ViewGrid::Render()
 		m_d3dImmediateContext->DrawIndexed(40, 0, 0);
 	}
 
+	return ;
 }

@@ -26,8 +26,8 @@
 //테스트용
 #include "HsGraphic.h"
 #include "DH3DEngine.h"
-#include "KHGraphic.h"
 #include "X3Engine.h"
+#include "KHGraphic.h"
 
 GameEngine::GameEngine()
 {
@@ -106,7 +106,7 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 	mGraphicManager->SplitWindow(2, 2);
 	//엔진을 지정된 넘버로 넣는다
 
-	mGraphicManager->PushEngine(0, new X3Engine(), "X3Engine");
+	mGraphicManager->PushEngine(0, new X3Engine(), "우진0");
 	//mGraphicManager->PushEngine(1, new DH3DEngine(), "동혁1");
 	mGraphicManager->PushEngine(1, new DH3DEngine(), "동혁0");
 	mGraphicManager->PushEngine(2, new HsGraphic(), "형선0");

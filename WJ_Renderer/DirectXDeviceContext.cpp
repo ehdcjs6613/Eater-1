@@ -77,6 +77,11 @@ ID3D11DeviceContext* DirectXDeviceContext::GetDeviceContext()
 	return m_pDX11DeviceContext;
 }
 
+void DirectXDeviceContext::SetDeviceContext(ID3D11DeviceContext* _pDevice)
+{
+	this->m_pDX11DeviceContext = _pDevice;
+}
+
 /*
 4. Flags: 추가적인 장치 플래그들을 지정한다.
 

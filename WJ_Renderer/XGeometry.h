@@ -9,7 +9,7 @@ public:
 	virtual BOOL BuildGeometry() = 0;
 	virtual BOOL BuildFX() = 0;
 	virtual BOOL BuildLayout() = 0;
-	virtual BOOL Update(const DirectX::XMMATRIX& world, const  DirectX::XMMATRIX& view, const  DirectX::XMMATRIX& proj) = 0;
+	virtual BOOL Update(const  DirectX::SimpleMath::Matrix* view, const DirectX::SimpleMath::Matrix* proj) = 0;
 	virtual BOOL Destroy() = 0;
 
 public:

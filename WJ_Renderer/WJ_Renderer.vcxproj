@@ -120,11 +120,11 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>X3Engine_DLL;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)Library\inc;$(SolutionDir)Library\inc\DHEngine;$(SolutionDir)WJ_Renderer\inc\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Library\inc\;$(SolutionDir)WJ_Renderer\inc\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -138,9 +138,8 @@
       <Command>copy /Y "$(ProjectDir)X3Engine.h" "$(SolutionDir)Library\inc"
 copy /Y "$(ProjectDir)XShader.h" "$(SolutionDir)Library\inc"
 copy /Y "$(ProjectDir)WJDefine.h" "$(SolutionDir)Library\inc"
-copy /Y "$(TargetDir)*.dll" "$(SolutionDir)Library/lib"
-copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library/lib"
-copy /Y "$(TargetDir)*.lib" "$(SolutionDir)lib"
+copy /Y "$(TargetDir)*.dll" "$(SolutionDir)Library\lib"
+copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\ib"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -173,6 +172,8 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)lib"
     <ClCompile Include="DirectXSamplerState.cpp" />
     <ClCompile Include="DirectXSwapChain.cpp" />
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="Effects.cpp" />
+    <ClCompile Include="LightHelper.cpp" />
     <ClCompile Include="ViewGrid.cpp" />
     <ClCompile Include="X3Engine.cpp" />
     <ClCompile Include="XGeometry.cpp" />
@@ -191,6 +192,8 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)lib"
     <ClInclude Include="DirectXRenderTargeter.h" />
     <ClInclude Include="DirectXSamplerState.h" />
     <ClInclude Include="DirectXSwapChain.h" />
+    <ClInclude Include="Effects.h" />
+    <ClInclude Include="LightHelper.h" />
     <ClInclude Include="OneCompile.h" />
     <ClInclude Include="ViewGrid.h" />
     <ClInclude Include="WJDefine.h" />
@@ -221,6 +224,10 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)lib"
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Geometry</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="LightHelper.fx">
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
     </FxCompile>
     <FxCompile Include="vertexShaders.hlsli">
       <FileType>Document</FileType>

@@ -55,6 +55,7 @@ class X3Engine : public  GraphicEngine
 {
 private:
 	FLOAT					 m_ArrColor[4];
+	D3D11_VIEWPORT*			 m_ViewPort;
 private:
 	//
 ///-----------[엔진이 지니는 변수들]------------///
@@ -80,6 +81,8 @@ private:
 	DirectXSwapChain*		m_pDirectXSwapChain;
 	DirectXRenderTargeter*	m_pRenderTargeter;
 	DirectXSamplerState*	m_pSamplerState;
+
+	Grahpics2D*	m_pGrahpics2D;
 
 private:
 
@@ -118,6 +121,13 @@ public:
 
 	/// 랜더링을 한다 매쉬 랜더데이터 리스트, 글로벌 데이터
 	X3Engine_DLL virtual void		  Render(std::queue<MeshData*>* meshList, GlobalData* global) override;
+
+
+	/// 랜더타겟에 해당하는 데이터를 넘겨줄것임 
+	/// (사실 디바이스만 넘어가면 멀티그래픽엔진쪽으로 넘겨줘도될듯)
+	virtual void SetViewPort(void* VPT);//랜더타겟뷰, 뎁스스텐실,뷰포트
+	virtual void SetDevice(void* Devie, void* DevieContext); //디바이스,컨텍스트
+
 
 #pragma endregion Parents Overriding Function List
 public:
@@ -159,9 +169,9 @@ private:
 	// 폰트때문에 뎁스스탠실 스테이트가 강제가 됐다.
 	ID3D11DepthStencilState* NormalDSS;
 
-	DirectX::XMFLOAT4X4 mWorld;	// Transform Matrix
-	DirectX::XMFLOAT4X4 mView;
-	DirectX::XMFLOAT4X4 mProj;
+	DirectX::SimpleMath::Matrix mWorld;	// Transform Matrix
+	DirectX::SimpleMath::Matrix mView;
+	DirectX::SimpleMath::Matrix mProj;
 
 
 

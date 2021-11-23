@@ -44,7 +44,7 @@ public:
 	void				 CreateDepthStencilState(ID3D11DeviceContext*, ID3D11DepthStencilState*);
 	void				 CreateDepthStencilView(ID3D11DeviceContext* _pDeviceContext, ID3D11DepthStencilView* _pDepthStencilView, ID3D11Texture2D* _pDepthStencilBuffer, ID3D11RenderTargetView* _pRenderTarget);
 	void				 CreateResterize(ID3D11DeviceContext* _pDeviceContext, ID3D11RasterizerState* _pRasterizerState);
-	void				 CreateViewPort(ID3D11DeviceContext* _pDeviceContext);
+	D3D11_VIEWPORT		 CreateViewPort(ID3D11DeviceContext* _pDeviceContext);
 
 	ID3D11Texture2D*     CreateInitFactory(int& _vedioCard);
 	DXGI_SWAP_CHAIN_DESC CreateInitSwapChain(HWND _hWnd);

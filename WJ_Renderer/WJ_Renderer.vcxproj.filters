@@ -72,6 +72,9 @@
     <Filter Include="3.Shaders\FX">
       <UniqueIdentifier>{8814a624-fd14-4826-9a9a-b0ac8eb4e922}</UniqueIdentifier>
     </Filter>
+    <Filter Include="3.Shaders\ShaderClass\helper">
+      <UniqueIdentifier>{7116b9ae-cdb2-4995-a21a-270e88b2802b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -115,6 +118,12 @@
     </ClCompile>
     <ClCompile Include="XGeometry.cpp">
       <Filter>2.Graphics\9999.Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Effects.cpp">
+      <Filter>3.Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="LightHelper.cpp">
+      <Filter>3.Shaders\ShaderClass\helper</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -166,6 +175,12 @@
     <ClInclude Include="XGeometry.h">
       <Filter>2.Graphics\9999.Geometry</Filter>
     </ClInclude>
+    <ClInclude Include="Effects.h">
+      <Filter>3.Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="LightHelper.h">
+      <Filter>3.Shaders\ShaderClass\helper</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="vertexShaders.hlsli">
@@ -178,6 +193,9 @@
       <Filter>3.Shaders\FX</Filter>
     </FxCompile>
     <FxCompile Include="color.fx">
+      <Filter>3.Shaders\FX</Filter>
+    </FxCompile>
+    <FxCompile Include="LightHelper.fx">
       <Filter>3.Shaders\FX</Filter>
     </FxCompile>
   </ItemGroup>

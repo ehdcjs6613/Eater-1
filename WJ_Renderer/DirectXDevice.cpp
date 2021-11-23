@@ -357,7 +357,7 @@ void DirectXDevice::CreateResterize(ID3D11DeviceContext* _pDeviceContext, ID3D11
 	_pDeviceContext->RSSetState(_pRasterizerState);
 }
 
-void DirectXDevice::CreateViewPort(ID3D11DeviceContext* _pDeviceContext)
+D3D11_VIEWPORT DirectXDevice::CreateViewPort(ID3D11DeviceContext* _pDeviceContext)
 {
 	D3D11_VIEWPORT viewport;
 	ZeroMemory(&viewport, sizeof(D3D11_VIEWPORT));
@@ -373,6 +373,8 @@ void DirectXDevice::CreateViewPort(ID3D11DeviceContext* _pDeviceContext)
 
 	// Create the viewport. ºäÆ÷Æ®¸¦ ¸¸µì´Ï´Ù.
 	_pDeviceContext->RSSetViewports(1, &viewport);
+
+	return viewport;
 }
 
 

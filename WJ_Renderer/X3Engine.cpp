@@ -1,6 +1,7 @@
 #include <wrl/client.h>
 
 #include "OneCompile.h"
+#include "EngineData.h"
 #include "d3dx11effect.h"
 #include "WICTextureLoader.h"
 #include "XVertex.h"
@@ -12,32 +13,69 @@
 #include "DirectXAdapter.h"
 #include "DirectXRenderTargeter.h"
 #include "DirectXSamplerState.h"
-#include "XRenderer.h"
+#include "../DirectX2DSupporter/Grahpics2D.h"
 #include "ParserData.h"
-//#include "Grahpics2D.h"
 #include "ResourcesData.h"
 #include "ViewGrid.h"
 #include "X3Engine.h"
 //스마트포인터 인클르드
 
+/*
+	XVertexShader m_XVertexShader;
+	XPixelShader  m_XPexelShader;
+
+	ID3D11Buffer* m_pVertexBuffer;
+
+	//------------------------------
+	ViewGrid* m_pViewGrid;
+
+	ID3DX11Effect* m_FX;
+	ID3DX11EffectTechnique* mTech;
+	ID3DX11EffectMatrixVariable* mfxWorldViewProj;
+
+	ID3D11InputLayout* mInputLayout;
+	// 폰트때문에 뎁스스탠실 스테이트가 강제가 됐다.
+	ID3D11DepthStencilState* NormalDSS;
+
+	DirectX::XMFLOAT4X4 mWorld;	// Transform Matrix
+	DirectX::XMFLOAT4X4 mView;
+	DirectX::XMFLOAT4X4 mProj;
+*/
 // 초기화 부분.
-X3Engine::X3Engine() : m_pDevice(nullptr), m_pDeviceContext(nullptr) , m_ArrColor{ 0.5f, 0.5f, 0.35f, 1.0f }
+X3Engine::X3Engine() : 
+	m_pDevice(nullptr), 
+	m_pDeviceContext(nullptr) , 
+	m_ArrColor{ 0.5f, 0.5f, 0.35f, 1.0f },
+	m_XVertexShader{},
+	m_XPexelShader{},
+	m_pVertexBuffer(nullptr),
+	mWorld{},
+	mView{},
+	mProj{},
+	m_FX(nullptr),
+	mTech(nullptr),
+	mfxWorldViewProj(nullptr),
+	mInputLayout(nullptr),
+	NormalDSS(nullptr)
 {
 
 	//생성 부분
 	m_pDevice = new DirectXDevice();
 	m_pDeviceContext = new DirectXDeviceContext();
+	m_pSamplerState = new DirectXSamplerState();
 	
-	//m_pRenderer->m_pDirectXSwapChain = new DirectXSwapChain(m_pDevice->m_pDX11Device);
 	m_pRasterizerState = new DirectXRasterizerState();
 	m_pRasterizerSolid = new DirectXRasterizerState();
 	m_pRasterizerWire = new DirectXRasterizerState();
 	m_pAdapter = new DirectXAdapter();
 	m_pRenderTargeter = new DirectXRenderTargeter();
+	m_pGrahpics2D = new Grahpics2D();
+
 	this->m_pDirectXSwapChain = new DirectXSwapChain(m_pDevice->GetDevice());
-	//m_p2DSupport = new Grahpics2D();
 
+	m_pViewGrid = new ViewGrid();
 
+	
 }
 
 X3Engine::~X3Engine()
@@ -49,8 +87,9 @@ void X3Engine::Initialize(HWND _hWnd, int _iWidth, int _iHeight)
 {
 	m_hWnd = _hWnd;
 	m_pDevice->CreateSize(_iWidth, _iHeight);
-
-	//백버퍼를 반환하여 팩토리를 초기화합니다.
+	///이제는 쓰이지 않는다.
+#pragma region 이제는 쓰이지 않는다
+		//백버퍼를 반환하여 팩토리를 초기화합니다.
 	ID3D11Texture2D* backBufferPtr = m_pDevice->CreateInitFactory(m_videoCardMemory);
 	//스왑체인을 초기화 해줍니다.
 	DXGI_SWAP_CHAIN_DESC swapChainDesc(m_pDevice->CreateInitSwapChain(m_hWnd));
@@ -58,15 +97,15 @@ void X3Engine::Initialize(HWND _hWnd, int _iWidth, int _iHeight)
 	// Set the feature level to DirectX 11.
 	// 형상 레벨을 DirectX 11로 설정
 	// 스왑체인을 만들어 줍니다.
-	m_pDirectXSwapChain->MakeASwapChain(m_pDevice->GetDevice(),m_pDeviceContext->GetDeviceContext(),swapChainDesc);
+	m_pDirectXSwapChain->MakeASwapChain(m_pDevice->GetDevice(), m_pDeviceContext->GetDeviceContext(), swapChainDesc);
 
 	///뎁스 = (깊이)
 
 	//렌더 타겟을 만들어줍니다.
-	m_pRenderTargeter->Create(m_pDevice->GetDevice(),m_pDirectXSwapChain->GetSwapChain());
+	m_pRenderTargeter->Create(m_pDevice->GetDevice(), m_pDirectXSwapChain->GetSwapChain());
 	//디바이스에 뎁스버퍼를 만들어줍니다.
 	m_pDevice->CreateDepthBuffer(m_pDepthStencil_Buffer);
-	m_pDevice->CreateDepthStencilState(m_pDeviceContext->GetDeviceContext(),m_pDepthStencil_State);
+	m_pDevice->CreateDepthStencilState(m_pDeviceContext->GetDeviceContext(), m_pDepthStencil_State);
 	//뎁스스텐실 뷰를 위한 조건들을 넣어줍니다.
 	m_pDevice->CreateDepthStencilView
 	(
@@ -76,9 +115,10 @@ void X3Engine::Initialize(HWND _hWnd, int _iWidth, int _iHeight)
 		m_pRenderTargeter->m_pRenderTarget
 	);
 	//레스터라이저를 만들어줍니다.
-	m_pDevice->CreateResterize(	m_pDeviceContext->GetDeviceContext(),m_pRasterizerState->GetFrameRS());
+	m_pDevice->CreateResterize(m_pDeviceContext->GetDeviceContext(), m_pRasterizerState->GetFrameRS());
 	//뷰포트를 만들어줍니다.
-	m_pDevice->CreateViewPort(m_pDeviceContext->GetDeviceContext());
+
+	(*m_ViewPort) = m_pDevice->CreateViewPort(m_pDeviceContext->GetDeviceContext());
 	//샘플러 스테이트를 만들어줍니다.
 	m_pSamplerState->CreateDXSamplerState(m_pDevice->GetDevice());
 
@@ -94,19 +134,21 @@ void X3Engine::Initialize(HWND _hWnd, int _iWidth, int _iHeight)
 	m_pAdapter->GetAdapterInfo();
 
 
-	//m_p2DSupport->initialize(m_hWnd, m_pRenderer->m_pDirectXSwapChain->m_pSwapChain);
-	//m_p2DSupport->LoadBitMap(L"../Image/apple_1.png", L"../Image/apple_1.png");
-	//m_p2DSupport->LoadBitMap(L"../Image/atk_1.png", L"../Image/atk_1.png");
+	m_pGrahpics2D->initialize(m_hWnd, m_pDirectXSwapChain->GetSwapChain());
+	m_pGrahpics2D->LoadBitMap(L"../Image/apple_1.png", L"../Image/apple_1.png");
+	m_pGrahpics2D->LoadBitMap(L"../Image/atk_1.png", L"../Image/atk_1.png");
 
 	if (nullptr == m_pDirectXSwapChain->GetSwapChain())
 	{
 
 	}
-	InitializeShaders();
 	ViewGrid* m_pViewGrid = new ViewGrid();
 	m_pViewGrid->Initialize(m_pDevice->GetDevice(), m_pDeviceContext->GetDeviceContext(), m_pRasterizerWire->GetFrameRS());
-	
 
+#pragma endregion 이제안씀.
+
+	
+	InitializeShaders();
 	//OnReSize(this->m_iWidth, m_iHeight);
 }
 
@@ -254,16 +296,52 @@ void X3Engine::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 {
 	//렌더링시작의 순서.
 	//나중에 렌더 큐? 같은걸로 해보자,
-	
-	BeginRender();
-	LoopRender();
-	EndRender();
+	m_pDeviceContext->GetDeviceContext()->RSSetViewports(1, this->m_ViewPort);
+
+	mView = DirectX::SimpleMath::Matrix(*global->mViewMX);
+	mProj = DirectX::SimpleMath::Matrix(*global->mProj);
+
+	m_pViewGrid->Update(&mView, &mProj);
+
+	while (!meshList->empty())
+	{
+		// 메시 데이터를 하나 꺼내옴.
+		MeshData* _Mesh_Data = meshList->front();
+		meshList->pop();
+
+		/// 오브젝트들을 그린다. (Draw Primitive)
+		if (_Mesh_Data->ObjType != OBJECT_TYPE::Base)
+		{
+			continue;
+		}
+
+	}
+	m_pViewGrid->Render();
+
+	//BeginRender();
+	//LoopRender();
+	//EndRender();
 
 	///2D렌더링 처리
-	//m_pRenderer->Render_2D(m_p2DSupport, this->m_pAdapter);
-	//m_pRenderer->Render_End(m_p2DSupport,m_pRenderer->m_pDirectXSwapChain->m_pSwapChain);
+	
 
 
+
+}
+
+void X3Engine::SetViewPort(void* VPT)
+{
+	(this->m_ViewPort) = (reinterpret_cast<D3D11_VIEWPORT*>(VPT));
+}
+
+void X3Engine::SetDevice(void* Devie, void* DevieContext)
+{
+	m_pDevice->SetDevice(reinterpret_cast<ID3D11Device*>(Devie));
+	m_pDeviceContext->SetDeviceContext(reinterpret_cast<ID3D11DeviceContext*>(DevieContext));
+
+	//렌더스테이트를 생성한다.
+	this->CreateRenderState();
+	m_pViewGrid->Initialize(m_pDevice->GetDevice(), m_pDeviceContext->GetDeviceContext(), m_pRasterizerWire->GetFrameRS());
 }
 
 void X3Engine::CreateRenderState()
@@ -346,25 +424,7 @@ HRESULT X3Engine::BeginRender()
 {
 	HRESULT hr = S_OK;
 
-	//렌더타겟 (백버퍼)를 초기화한다.
-	m_pDeviceContext->GetDeviceContext()->ClearRenderTargetView(m_pRenderTargeter->m_pRenderTarget, this->m_ArrColor);
-
-	//뎁스, 스텐실 뷰초기화
-	m_pDeviceContext->GetDeviceContext()->ClearDepthStencilView
-	(
-		this->m_pDepthStencil_View,
-		D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
-		1.0f,
-		0
-	);
-	m_pDeviceContext->GetDeviceContext()->OMSetRenderTargets(1, &m_pRenderTargeter->m_pRenderTarget, m_pDepthStencil_View);
-
-
-	//m_pDeviceContext->GetDeviceContext()->RSSetState(m_pRasterizerState->GetFrameRS());
-	m_pDeviceContext->GetDeviceContext()->RSSetState(m_pRasterizerState->GetFrameRS());
-	m_pDeviceContext->GetDeviceContext()->OMSetDepthStencilState(m_pDepthStencil_State, 0);
-	m_pDeviceContext->GetDeviceContext()->PSSetSamplers(0, 1, &m_pSamplerState->m_pSamplerState);
-
+	
 	return hr;
 }
 
@@ -372,49 +432,16 @@ HRESULT X3Engine::LoopRender()
 {
 	HRESULT hr = S_OK;
 
-	/// 용책 예제 - 구면좌표계를 카티지안 좌표계로 바꾼다.
-	DirectX::XMMATRIX I = DirectX::XMMatrixIdentity();
-	DirectX::XMStoreFloat4x4(&mWorld, I);
-	DirectX::XMStoreFloat4x4(&mView, I);
-	DirectX::XMStoreFloat4x4(&mProj, I);
-
-	/// WVP TM등을 셋팅
-	// Set constants
-	DirectX::XMMATRIX world = DirectX::XMLoadFloat4x4(&mWorld);
-	DirectX::XMMATRIX view = DirectX::XMLoadFloat4x4(&mView);
-	DirectX::XMMATRIX proj = DirectX::XMLoadFloat4x4(&mProj);
-
-	m_pViewGrid->Update(world, view, proj);
-
-	/// 카메라 만드는 중
-	//m_pCamera->UpdateViewMatrix();
-	//view = m_pCamera->View();
-	//proj = m_pCamera->Proj();
-
-	// 상수 버퍼 변수를 통해서 윌드뷰프로젝션 행렬을 셋팅해준다. (객체의 캐시를 바꾸는 것이며 GPU의 상수버퍼가 바로 갱신되는 것은 아니다.)
-	DirectX::XMMATRIX worldViewProj = world * view * proj;
-	mfxWorldViewProj->SetMatrix(reinterpret_cast<float*>(&worldViewProj));
-
-	///----------------------------------------------------------------------------------------------------
-	/// 오브젝트들을 그린다. (Draw Primitive)
-
-	//-----
-	// 용책 예제 (사각형)
-
-	// 입력 배치 객체 셋팅
-	m_pDeviceContext->GetDeviceContext()->IASetInputLayout(mInputLayout);
-	m_pDeviceContext->GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-	m_pDeviceContext->GetDeviceContext()->OMSetDepthStencilState(NormalDSS, 0);
-
-	m_pViewGrid->Render();
-
 	return hr;
 }
 
 HRESULT X3Engine::EndRender()
 {
 	HRESULT hr = S_OK;
+	//m_pGrahpics2D->Draw_AllText();
+	//m_pGrahpics2D->Draw_AllImage();
+	//m_pGrahpics2D->Draw_AllSprite();
+
 	return hr;
 }
 

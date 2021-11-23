@@ -21,4 +21,5 @@ public:
 	//void	CreateViewPort()
 public:
 	ID3D11DeviceContext* GetDeviceContext();
+	void SetDeviceContext(ID3D11DeviceContext* _pDevice);
 };

@@ -133,8 +133,27 @@ void CMainFrame::OnDockTable()
 	
 	
 	*/
+	if (nullptr == m_pDockableView && m_Num == 0)
+	{
+		m_pDockableView = new DockableView();
+		m_pDockableView->Create(_T("Game"), this, CRect(0, 0, 1920, 1080),
+			TRUE, ID_FILE_NEW,
+			WS_SYSMENU | WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS
+			| WS_CLIPCHILDREN | CBRS_LEFT | CBRS_FLOAT_MULTI);
 
-	if (nullptr == m_pDlg && m_Num==0)
+		m_pDockableView->m_pXGameView->m_hWnd;// = m_pDockableView->m_hWnd;//this->GetSafeHwnd();
+		m_pDockableView->EnableDocking(CBRS_ALIGN_ANY);
+
+		DockPane(m_pDockableView);
+
+		m_pDockableView->SetAutoHideMode(false, CBRS_ALIGN_ANY);
+
+		m_pDockableView->ShowPane(true, false, true);
+		m_pDockableView->ShowWindow(SW_SHOW);
+		m_Num++;
+		//m_pDockableView->m_pXGameView->m_pGameManger->Start(this->GetSafeHwnd());
+	}
+	else if (nullptr == m_pDlg && m_Num==1)
 	{
 		m_pDlg = new DockableBase();
 
@@ -151,26 +170,6 @@ void CMainFrame::OnDockTable()
 		m_pDlg->CreateDlg();
 		m_Num++;
 
-	}
-	else if ( nullptr == m_pDockableView && m_Num == 1)
-	{
-		m_pDockableView = new DockableView();
-		m_pDockableView->Create(_T("Game"), this, CRect(0, 0, 1920, 1080), 
-			TRUE, ID_FILE_NEW,
-			WS_SYSMENU | WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS 
-			| WS_CLIPCHILDREN | CBRS_LEFT | CBRS_FLOAT_MULTI);
-
-		m_pDockableView->m_pXGameView->m_hWnd;// = m_pDockableView->m_hWnd;//this->GetSafeHwnd();
-		m_pDockableView->EnableDocking(CBRS_ALIGN_ANY);
-
-		DockPane(m_pDockableView);
-
-		m_pDockableView->SetAutoHideMode(false, CBRS_ALIGN_ANY);
-
-		m_pDockableView->ShowPane(true, false, true);
-		m_pDockableView->ShowWindow(SW_SHOW);
-		m_Num++;
-		//m_pDockableView->m_pXGameView->m_pGameManger->Start(this->GetSafeHwnd());
 	}
 	else if(nullptr == m_pDialog && m_Num == 2)
 	{
