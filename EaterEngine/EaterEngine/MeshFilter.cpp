@@ -54,7 +54,6 @@ void MeshFilter::Awake()
 
 		//Texture Check & Setting..
 		CheckTexture();
-
 	}
 }
 
@@ -103,12 +102,16 @@ void MeshFilter::PushModelData(LoadMeshData* mModel)
 }
 
 void MeshFilter::CheckTexture()
-{
+{	
+
 	// 설정한 Texture가 있을경우 로드한 Diffuse 대신 해당 Texture 설정..
 	if (TextureName.empty() == false)
 	{
+		GameObject* obj = gameobject->GetChild(0);
+		
+
 		// 해당 Object Mesh Data..
-		MeshData* data = gameobject->OneMeshData;
+		MeshData* data = obj->OneMeshData;
 
 		// 설정 Texture Buffer..
 		TextureBuffer* texBuffer = LoadManager::GetTexture(TextureName);
@@ -121,14 +124,16 @@ void MeshFilter::CheckTexture()
 
 		// Texture 설정..
 		data->Diffuse = texBuffer;
+
+
 	}
 }
 
 void MeshFilter::CreateChild_Mesh(LoadMeshData* data, Transform* parent, ModelData* modeldata)
 {
 	int ChildCount = data->Child.size();
-
 	GameObject* OBJ = new GameObject();
+	gameobject->PushChildList(OBJ);
 	OBJ->Name = data->Name;
 
 
@@ -178,7 +183,10 @@ void MeshFilter::CreateChild_Mesh(LoadMeshData* data, Transform* parent, ModelDa
 	Tr->Load_World = *data->WorldTM;
 
 	//Transform 끼리 연결
-	//LinkHierarchy(Tr, parent);
+	if ((int)modeldata->TopBoneList.size() == 0)
+	{
+		LinkHierarchy(Tr, parent);
+	}
 	//오브젝트 매니저에서 관리할수있도록 넣어준다
 	OBJ_Manager->PushCreateObject(OBJ);
 

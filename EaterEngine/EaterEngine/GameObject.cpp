@@ -33,7 +33,11 @@ GameObject* GameObject::GetChild(std::string Name)
 
 GameObject* GameObject::GetChild(int Number)
 {
-	return nullptr;
+	if (Number >= (int)ChildList.size())
+	{
+		return nullptr;
+	}
+	return ChildList[Number];
 }
 
 Transform* GameObject::GetTransform()
