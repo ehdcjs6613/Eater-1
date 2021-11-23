@@ -6,8 +6,9 @@
 /// 업데이트 함수 포인터 리스트에 넣어줌
 /// </summary>
 
+//#include <Function>
 #include "EaterEngineDLL.h"
-
+#include <functional>
 class TimeManager;
 class KeyinputManager;
 class GameObject;
@@ -32,6 +33,7 @@ public:
 	//마지막 업데이트
 	virtual void EndUpdate() {};
 
+	void (Component::* Test)();
 	
 	//현재 이컨퍼넌트의 어떤함수가 오버라이딩되어있는지 확인하기위해
 	unsigned int FUNCTION_MASK = 0x00000000;
@@ -46,6 +48,7 @@ public:
 	EATER_ENGINEDLL void SetObject(GameObject* obj);
 
 	static void SetManager(TimeManager* time, KeyinputManager* key);
+
 
 public:
 	//이컨퍼넌트를 가지고 있는 게임오브젝트

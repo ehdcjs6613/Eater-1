@@ -48,12 +48,10 @@ private:
 	void LinkHierarchy(Transform* my,Transform*parent);
 
 	//LoadMeshData를 게임에 사용할 오브젝트로 생성하면서 값을 넣어준다
-	void CreateChild_Mesh(LoadMeshData* data,Transform* parent, ModelData* modeldata);
+	void CreateChild_Mesh(LoadMeshData* data,Transform* parent,  ModelData* modeldata);
 
 	//LoadMeshData를 게임에 사용할 오브젝트로 생성하면서 값을 넣어준다
 	void CreateChild_Bone(LoadMeshData* data, Transform* parent, std::vector<Transform*>* mBoneList, std::vector<DirectX::SimpleMath::Matrix>* BoneOffsetList);
-
-	void BoneDataResize();
 
 	//게임오브젝트의 LoadData를 합쳐준다
 	void PushModelData(LoadMeshData* mModel);
@@ -74,6 +72,8 @@ private:
 
 	std::vector<Transform*> BoneList;
 	std::vector<DirectX::SimpleMath::Matrix> BoneOffsetList;
-	std::vector<ParserData::OneAnimation*> AnimData;
+	std::vector<ParserData::OneAnimation*>	AnimData;
+	std::vector<GameObject*> MeshList;
+	
 };
 

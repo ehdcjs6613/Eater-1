@@ -19,7 +19,7 @@ void intro::Awake()
 	//LoadMesh("Player_Idle");
 	//LoadMesh("EnemyB");
 	//LoadMesh("Field");
-	LoadMesh("Table");
+	//LoadMesh("Table");
 	//LoadMesh("box");
 	//LoadMesh("Dome_v03");
 	//LoadMesh("1s_table_long_lower");
@@ -27,22 +27,23 @@ void intro::Awake()
 	//LoadMesh("Enemy_Run",false, true);
 	//LoadMesh("Player_Attack");
 	//LoadMesh("Skinning");
-	//LoadMesh("Enemy_Run",false,false);
+	LoadMesh("Enemy_Run",false,false);
 	//LoadMesh("box");
 	//LoadMesh("AnimeBox");
 	//LoadTesture("body_normal_tangent_Base_color.png");
 	LoadTesture("Dump.png");
+	LoadTesture("Player.dds");
 	LoadTesture("body_normal_tangent_Base_color.png");
 
 	///카메라
-	testobj = Instance();
+	testobj = Instance("Cam");
 	testobj->AddComponent<Camera>();
 	testobj->AddComponent<Keyinput>();
 	testobj->GetTransform()->Position = { 0,0,-25 };
 	
 	///라이트
+	testobj = Instance("DirectionLight");
 	testobj->AddComponent<DirectionLight>();
-	testobj = Instance();
 
 	//testobj = Instance("obj");
 	//MeshFilter* Filter		= testobj->AddComponent<MeshFilter>();
@@ -52,13 +53,13 @@ void intro::Awake()
 	testobj = Instance("obj1");
 	MeshFilter* Filter = testobj->AddComponent<MeshFilter>();
 	//AnimationController* AC = testobj->AddComponent<AnimationController>();
-	Filter->SetMeshName("Table");
-	//Filter->SetTextureName("body_normal_tangent_Base_color");
+	Filter->SetMeshName("Enemy_Run");
+	Filter->SetTextureName("Player");
 	//testobj->SetActive(false);
 	
-	//testobj->GetTransform()->Position	= { 0 ,0, 0 };
-	//testobj->GetTransform()->Scale		= { 1 ,1, 1 };
-	//testobj->GetTransform()->Rotation	= {90 ,0,0 };
+	testobj->GetTransform()->Position	= { 0 ,0, 0 };
+	testobj->GetTransform()->Scale		= { 1 ,1, 1 };
+	testobj->GetTransform()->Rotation	= {90 ,0,0 };
 }
 
 void intro::Start()
