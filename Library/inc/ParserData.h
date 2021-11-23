@@ -22,6 +22,8 @@ namespace ParserData
 		~OneAnimation();
 
 	public:
+		int index;
+
 		std::vector<OneFrame*>	m_AniData;
 
 		float	m_TicksPerFrame;
