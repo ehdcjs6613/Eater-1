@@ -1,7 +1,8 @@
 #include <wrl/client.h>
-
 #include "OneCompile.h"
 #include "EngineData.h"
+#include "Effects.h"
+#include "InputLayout.h"
 #include "d3dx11effect.h"
 #include "WICTextureLoader.h"
 #include "XVertex.h"
@@ -342,6 +343,10 @@ void X3Engine::SetDevice(void* Devie, void* DevieContext)
 	//렌더스테이트를 생성한다.
 	this->CreateRenderState();
 	m_pViewGrid->Initialize(m_pDevice->GetDevice(), m_pDeviceContext->GetDeviceContext(), m_pRasterizerWire->GetFrameRS());
+
+	Effects::InitAll(m_pDevice->GetDevice());
+	InputLayouts::InitAll(m_pDevice->GetDevice());
+
 }
 
 void X3Engine::CreateRenderState()

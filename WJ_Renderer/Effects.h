@@ -18,6 +18,9 @@
 #include "LightHelper.h"
 
 #pragma region Effect
+class DirectionalLight;
+class Material;
+
 class Effect
 {
 public:

@@ -125,6 +125,9 @@
     <ClCompile Include="LightHelper.cpp">
       <Filter>3.Shaders\ShaderClass\helper</Filter>
     </ClCompile>
+    <ClCompile Include="InputLayout.cpp">
+      <Filter>2.Graphics\0.ViewAxis</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="X3Engine.h">
@@ -180,6 +183,9 @@
     </ClInclude>
     <ClInclude Include="LightHelper.h">
       <Filter>3.Shaders\ShaderClass\helper</Filter>
+    </ClInclude>
+    <ClInclude Include="InputLayout.h">
+      <Filter>2.Graphics\0.ViewAxis</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

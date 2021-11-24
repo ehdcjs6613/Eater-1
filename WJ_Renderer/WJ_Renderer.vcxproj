@@ -173,6 +173,7 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\ib"
     <ClCompile Include="DirectXSwapChain.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="Effects.cpp" />
+    <ClCompile Include="InputLayout.cpp" />
     <ClCompile Include="LightHelper.cpp" />
     <ClCompile Include="ViewGrid.cpp" />
     <ClCompile Include="X3Engine.cpp" />
@@ -193,6 +194,7 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\ib"
     <ClInclude Include="DirectXSamplerState.h" />
     <ClInclude Include="DirectXSwapChain.h" />
     <ClInclude Include="Effects.h" />
+    <ClInclude Include="InputLayout.h" />
     <ClInclude Include="LightHelper.h" />
     <ClInclude Include="OneCompile.h" />
     <ClInclude Include="ViewGrid.h" />

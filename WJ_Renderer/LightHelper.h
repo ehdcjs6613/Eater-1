@@ -4,8 +4,6 @@
 // Helper classes for lighting.
 //***************************************************************************************
 
-#ifndef LIGHTHELPER_H
-#define LIGHTHELPER_H
 
 #include <Windows.h>
 
@@ -76,5 +74,3 @@ struct Material
 	XMFLOAT4 Specular; // w = SpecPower
 	XMFLOAT4 Reflect;
 };
-
-#endif // LIGHTHELPER_H
