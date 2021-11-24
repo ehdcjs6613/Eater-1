@@ -147,16 +147,7 @@
     <ClInclude Include="VertexShader.h">
       <Filter>소스 파일\Shader\ShaderClass\VertexShader</Filter>
     </ClInclude>
-    <ClInclude Include="UnorderedAccessViewDefine.h">
-      <Filter>소스 파일\Shader\ShaderResource</Filter>
-    </ClInclude>
-    <ClInclude Include="ShaderResourceViewDefine.h">
-      <Filter>소스 파일\Shader\ShaderResource</Filter>
-    </ClInclude>
     <ClInclude Include="ConstantBufferDefine.h">
-      <Filter>소스 파일\Shader\ShaderResource</Filter>
-    </ClInclude>
-    <ClInclude Include="SamplerStateDefine.h">
       <Filter>소스 파일\Shader\ShaderResource</Filter>
     </ClInclude>
     <ClInclude Include="ComputeShader.h">
@@ -264,6 +255,15 @@
     <ClInclude Include="ForwardPass.h">
       <Filter>소스 파일\RendererPass\Forward</Filter>
     </ClInclude>
+    <ClInclude Include="SamplerBufferDefine.h">
+      <Filter>소스 파일\Shader\ShaderResource</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderResourceBufferDefine.h">
+      <Filter>소스 파일\Shader\ShaderResource</Filter>
+    </ClInclude>
+    <ClInclude Include="UnorderedAccessBufferDefine.h">
+      <Filter>소스 파일\Shader\ShaderResource</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="D3D11Graphic.cpp">
@@ -347,6 +347,12 @@
       <Filter>소스 파일\Shader\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="..\Resources\Shader\SKH\SkinVS.hlsl">
+      <Filter>소스 파일\Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Resources\Shader\SKH\ShadowMeshVS.hlsl">
+      <Filter>소스 파일\Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Resources\Shader\SKH\ShadowSkinVS.hlsl">
       <Filter>소스 파일\Shader\HLSL</Filter>
     </FxCompile>
   </ItemGroup>

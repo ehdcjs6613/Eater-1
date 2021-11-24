@@ -15,28 +15,32 @@ cbuffer cbCamera : register(b1)
     float3 gEyePosW : packoffset(c0);
 };
 
-cbuffer cbMaterial : register(b2)
+cbuffer cbMaterials : register(b2)
 {
     Material gMaterials[5];
 }
 
 Texture2D gDiffuseMap : register(t0);
 Texture2D gNormalMap : register(t1);
+Texture2D gShadowMap : register(t2);
 
-SamplerState samWrapMinLinear : register(s0);
+SamplerComparisonState gShadowSam : register(s0);
+SamplerState samWrapMinLinear : register(s1);
 
 struct PixelIn
 {
     float4 PosW : SV_POSITION;
-    float3 NormalW : NORMALW;
     float2 Tex : TEXCOORD;
+    float3 NormalW : NORMALW;
+    float3 ShadowPosH : POS_SHADOW;
     
     float3x3 TBN : TANGENT;
 };
 
 float4 main(PixelIn pin) : SV_Target0
 {
-    float4 albedo = gDiffuseMap.Sample(samWrapMinLinear, pin.Tex);
+    float4 albedo = float4(0.0f, 0.0f, 0.0f, 1.0f);
+    albedo = gDiffuseMap.Sample(samWrapMinLinear, pin.Tex);
     
     // Gamma Correction
 	// Gamma Space -> Linear Space
@@ -45,6 +49,9 @@ float4 main(PixelIn pin) : SV_Target0
     
     float3 normalMapSample = 2.0f * gNormalMap.Sample(samWrapMinLinear, pin.Tex).rgb - 1.0f;
     float3 bumpedNormalW = mul(normalMapSample, pin.TBN);
+    
+    // Shadow
+    float shadows = CalcShadowFactor(gShadowSam, gShadowMap, pin.ShadowPosH);
     
     // View Direction
     float3 ViewDirection = pin.PosW.xyz - gEyePosW;
@@ -67,8 +74,8 @@ float4 main(PixelIn pin) : SV_Target0
 				A, D, S);
     
         ambient += A;
-        diffuse += D;
-        spec += S;
+        diffuse += shadows * D;
+        spec += shadows * S;
     }
     
     // Point Light
@@ -107,5 +114,7 @@ float4 main(PixelIn pin) : SV_Target0
     // Common to take alpha from diffuse material and texture.
     litColor.a = gMaterials[0].Diffuse.a * albedo.a;
     
-    return albedo;
+    
+    return litColor;
+   // return float4(1.0f, 0.0f, 0.0f, 1.0f);
 }

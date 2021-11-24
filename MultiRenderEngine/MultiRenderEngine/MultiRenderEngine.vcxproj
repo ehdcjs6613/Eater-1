@@ -23,11 +23,9 @@
     <ClInclude Include="MacroDefine.h" />
     <ClInclude Include="MultiRenderDefine.h" />
     <ClInclude Include="MultiRenderEngine.h" />
-    <ClInclude Include="TextureBase.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MultiRenderEngine.cpp" />
-    <ClCompile Include="TextureBase.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

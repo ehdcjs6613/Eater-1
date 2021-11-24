@@ -13,7 +13,6 @@ public:
 	~RenderManager();
 
 public:
-	void Initialize() override;
 	void Initialize(int width, int height) override;
 	void Release() override;
 

@@ -13,7 +13,6 @@ public:
 	~GraphicResourceFactory();
 
 public:
-	void Initialize();
 	void Initialize(int width, int height) override;
 	void Release() override;
 

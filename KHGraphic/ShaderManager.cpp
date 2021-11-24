@@ -1,11 +1,11 @@
 #include "DirectDefine.h"
-#include "ShaderManagerBase.h"
 #include "ShaderBase.h"
 #include "VertexShader.h"
 #include "PixelShader.h"
 #include "ComputeShader.h"
+#include "windows.h"
+#include "ShaderManagerBase.h"
 #include "ShaderManager.h"
-#include "ShaderTypes.h"
 #include "ResourceBufferHashTable.h"
 
 using namespace Microsoft::WRL;
@@ -26,14 +26,12 @@ void ShaderManager::Initialize(Microsoft::WRL::ComPtr<ID3D11Device> device, Micr
 	IShader::Initialize(device, context);
 	IShader::SetShaderRoute("../Resources/Shader/SKH/");
 
-	// Shader Hash Table Initialize..
-	ShaderResourceHashTable::Initialize();
-
 	// Global Shader Create..
 	CreateShader();
 
 	// Shader Hash Table Reset..
-	ShaderResourceHashTable::Reset();
+	ShaderResourceHashTable* table = ShaderResourceHashTable::GetInstance();
+	table->Destroy();
 }
 
 void ShaderManager::Release()
@@ -101,6 +99,9 @@ void ShaderManager::CreateShader()
 	LoadShader(eShaderType::VERTEX, "MeshVS.cso");
 	LoadShader(eShaderType::VERTEX, "SkinVS.cso");
 	LoadShader(eShaderType::PIXEL, "ForwardPS.cso");
+
+	LoadShader(eShaderType::VERTEX, "ShadowMeshVS.cso");
+	LoadShader(eShaderType::VERTEX, "ShadowSkinVS.cso");
 
 	//// Global Forward Shader
 	//LoadShader(eShaderType::VERTEX, "FinalVS.cso");

@@ -17,8 +17,7 @@
 #include "ResourceFactory.h"
 
 #include "VertexDefine.h"
-#include "ResourceBufferHashTable.h"
-#include "SamplerStateDefine.h"
+#include "SamplerBufferDefine.h"
 #include "ToolKitDefine.h"
 
 using namespace DirectX::SimpleMath;
@@ -55,10 +54,10 @@ void GraphicResourceFactory::Initialize(int width, int height)
 	m_ShaderManager->Initialize(m_Device, m_Context);
 
 	// Graphic Resource Manager 초기화..
-	m_ResourceManager->Initialize(m_Device, m_SwapChain);
+	m_ResourceManager->Initialize(m_Device, nullptr);
 
 	// Back Buffer 생성..
-	CreateMainRenderTarget(width, height);
+	//CreateMainRenderTarget(width, height);
 
 	/// Global Resource 생성..
 	CreateDepthStencilState();
@@ -72,17 +71,6 @@ void GraphicResourceFactory::Initialize(int width, int height)
 	// FullScreen Buffer..
 	CreateQuadBuffer();
 	CreateSSAOQuadBuffer();
-}
-
-void GraphicResourceFactory::Initialize()
-{
-	// Shader Manager 초기화..
-	m_ShaderManager->Initialize(m_Device, m_Context);
-
-	// Graphic Resource Manager 초기화..
-	m_ResourceManager->Initialize(m_Device, m_SwapChain);
-
-	CreateRasterizerState();
 }
 
 void GraphicResourceFactory::Release()
@@ -407,8 +395,7 @@ Vertexbuffer* GraphicResourceFactory::CreateMeshVertexBuffer<MeshVertex>(ParserD
 
 		vertices[i].Normal = mesh->m_VertexList[i]->m_Normal;
 
-		vertices[i].Tex.x = mesh->m_VertexList[i]->m_U;
-		vertices[i].Tex.y = mesh->m_VertexList[i]->m_V;
+		vertices[i].Tex = mesh->m_VertexList[i]->m_UV;
 
 		vertices[i].Tangent = mesh->m_VertexList[i]->m_Tanget;
 	}
@@ -450,8 +437,7 @@ Vertexbuffer* GraphicResourceFactory::CreateMeshVertexBuffer<SkinVertex>(ParserD
 
 		vertices[i].Normal = mesh->m_VertexList[i]->m_Normal;
 
-		vertices[i].Tex.x = mesh->m_VertexList[i]->m_U;
-		vertices[i].Tex.y = mesh->m_VertexList[i]->m_V;
+		vertices[i].Tex = mesh->m_VertexList[i]->m_UV;
 
 		vertices[i].Tangent = mesh->m_VertexList[i]->m_Tanget;
 
@@ -509,8 +495,7 @@ Vertexbuffer* GraphicResourceFactory::CreateMeshVertexBuffer<TerrainVertex>(Pars
 
 		vertices[i].Normal = mesh->m_VertexList[i]->m_Normal;
 
-		vertices[i].Tex.x = mesh->m_VertexList[i]->m_U;
-		vertices[i].Tex.y = mesh->m_VertexList[i]->m_V;
+		vertices[i].Tex = mesh->m_VertexList[i]->m_UV;
 
 		vertices[i].Tangent = mesh->m_VertexList[i]->m_Tanget;
 
@@ -788,30 +773,6 @@ void GraphicResourceFactory::CreateDepthStencilView(int width, int height)
 
 	// Defalt DepthStencilView 생성..
 	CreateDSV(tex2D.Get(), nullptr, nullptr);
-
-	ZeroMemory(&texDesc, sizeof(texDesc));
-	texDesc.Width = width * 4;
-	texDesc.Height = height * 4;
-	texDesc.MipLevels = 1;
-	texDesc.ArraySize = 1;
-	//texDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
-	texDesc.Format = DXGI_FORMAT_R24G8_TYPELESS;
-	texDesc.SampleDesc.Count = 1;
-	texDesc.SampleDesc.Quality = 0;
-	texDesc.Usage = D3D11_USAGE_DEFAULT;
-	texDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
-	texDesc.CPUAccessFlags = 0;
-	texDesc.MiscFlags = 0;
-	CreateTexture2D(&texDesc, tex2D.GetAddressOf());
-
-	D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc;
-	dsvDesc.Flags = 0;
-	dsvDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-	dsvDesc.Texture2D.MipSlice = 0;
-
-	// Shadow DepthStencilView 생성..
-	CreateDSV(tex2D.Get(), &dsvDesc, nullptr);
 
 	RESET_COM(tex2D);
 }

@@ -6,7 +6,7 @@
 
 class ShaderManager;
 class RenderingManager;
-
+class GraphicDebugManager;
 class TextureBuffer;
 class Indexbuffer;
 class Vertexbuffer;
@@ -22,7 +22,7 @@ public:
 	virtual HS_GRAPHICDLL void OnReSize(int Change_Width, int Change_Height) override;
 	virtual HS_GRAPHICDLL void Render(std::queue<MeshData*>* meshList, GlobalData* global) override;
 	virtual HS_GRAPHICDLL void Delete() override;
-	virtual HS_GRAPHICDLL void SetViewPort(void* VPT);
+	virtual HS_GRAPHICDLL void SetViewPort(void* VPT, int Change_Width, int Change_Height);
 	virtual HS_GRAPHICDLL void SetDevice(void* Devie, void* DevieContext);
 
 	//텍스쳐 버퍼를생성
@@ -64,6 +64,7 @@ private:
 	ID3D11RasterizerState* mSolid;
 
 	//매니저들
-	ShaderManager*		mShaderManager;
-	RenderingManager*	mRenderManager;
+	ShaderManager*			mShaderManager;
+	RenderingManager*		mRenderManager;
+	GraphicDebugManager*	mDebugManager;
 };
