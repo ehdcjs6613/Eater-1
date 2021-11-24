@@ -5,8 +5,8 @@
 #include "SkinningFilter.h"
 #include "AnimationController.h"
 #include "Transform.h"
-#include "AI.h"
 #include "KeyInput.h"
+#include "Player.h"
 #include "Camera.h"
 #include "Light.h"
 
@@ -16,6 +16,7 @@ void intro::Awake()
 	LoadMeshPath("../Resources/Mesh/");
 	LoadTesturePath("../Resources/Texture/");
 	
+	LoadTesture("Dump.png");
 	//LoadMesh("Player_Idle");
 	//LoadMesh("EnemyB");
 	//LoadMesh("Field");
@@ -27,16 +28,15 @@ void intro::Awake()
 	//LoadMesh("Enemy_Run",false, true);
 	//LoadMesh("Player_Attack");
 	//LoadMesh("Skinning");
-	//LoadMesh("Enemy_Run",false,false);
-	//LoadMesh("Enemy_Roll",false,true);
-	LoadMesh("Anim_Run",false,false);
-	LoadMesh("Anim_Idle",false,true);
+	LoadMesh("Enemy_Run",false,false);
+	LoadMesh("Enemy_Roll",false,true);
+	//LoadMesh("Anim_Run",	true,false);
+	//LoadMesh("Anim_Idle",	false,true);
 	//LoadMesh("Anim_Idle",false,true);
 	//LoadMesh("box");
 	//LoadMesh("AnimeBox");
 	//LoadTesture("body_normal_tangent_Base_color.png");
-	//LoadTesture("Dump.png");
-	//LoadTesture("Player.dds");
+	LoadTesture("Player.dds");
 	//LoadTesture("body_normal_tangent_Base_color.png");
 
 	///Ä«¸Þ¶ó
@@ -49,22 +49,7 @@ void intro::Awake()
 	testobj = Instance("DirectionLight");
 	testobj->AddComponent<DirectionLight>();
 
-	//testobj = Instance("obj");
-	//MeshFilter* Filter		= testobj->AddComponent<MeshFilter>();
-	//AnimationController* AC = testobj->AddComponent<AnimationController>();
-	//Filter->SetMeshName("MOdNA09_highpoly_1123");
-
-	testobj = Instance("obj1");
-	MeshFilter* Filter = testobj->AddComponent<MeshFilter>();
-	AnimationController* AC = testobj->AddComponent<AnimationController>();
-	Filter->SetMeshName("Anim_Run");
-	Filter->SetTextureName("Player");
-	Filter->SetAnimationName("Anim");
-	//testobj->SetActive(false);
-	
-	testobj->GetTransform()->Position	= { 0 ,0, 0 };
-	testobj->GetTransform()->Scale		= { 0.01f ,0.01f, 0.01f };
-	testobj->GetTransform()->Rotation	= {90 ,0,0 };
+	CreateObject();
 }
 
 void intro::Start()
@@ -81,4 +66,15 @@ void intro::End()
 {
 
 
+}
+
+void intro::CreateObject()
+{
+	testobj = Instance("obj1");
+
+	testobj->AddComponent<Player>();
+	testobj->AddComponent<AnimationController>();
+	testobj->AddComponent<MeshFilter>();
+
+	
 }

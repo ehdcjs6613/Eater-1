@@ -15,7 +15,7 @@ Animator::Animator()
 	XM_SCL = XMMatrixIdentity();
 
 	mTime		= 0;
-	PlayTime	= 1;
+	PlaySpeed	= 1;
 	AnimeIndex	= 0;
 
 	mLoop = true;
@@ -30,12 +30,11 @@ Animator::~Animator()
 void Animator::Start()
 {
 	transfrom = gameobject->transform;
-	Play(1,true);
 }
 
 void Animator::StartUpdate()
 {
-	if (NowAnimationData != nullptr)
+	if (mPlay == true)
 	{
 		AnimeFrameIndex();
 	
@@ -49,16 +48,6 @@ void Animator::StartUpdate()
 		
 		transfrom->Load_Local = XM_SCL * XM_ROT * XM_POS;
 	}
-	
-	if (mKeyInputManger->GetKeyDown(VK_NUMPAD1))
-	{
-		Stop();
-	}
-	
-	if (mKeyInputManger->GetKeyDown(VK_NUMPAD2))
-	{
-		ReStart();
-	}
 }
 
 void Animator::SetAnimation(ParserData::OneAnimation* data)
@@ -66,15 +55,18 @@ void Animator::SetAnimation(ParserData::OneAnimation* data)
 	NowAnimationData = data;
 }
 
-void Animator::Play(float time, bool Loop)
+void Animator::Play(float Speed, bool Loop)
 {
-	PlayTime = time;
-	mLoop = Loop;
+	PlaySpeed = Speed;	//재생 스피드 기본 1
+	mPlay = true;		//재생 여부
+	mLoop = Loop;		//반복 재생 여부
+	mStop = false;		//멈춤 여부
 }
 
 void Animator::Stop()
 {
 	mStop = true;
+	mPlay = false;
 }
 
 void Animator::ReStart()

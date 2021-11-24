@@ -13,6 +13,7 @@ public:
 	virtual void Update();
 	virtual void End();
 
+	void CreateObject();
 private:
 	GameObject* testobj;
 };

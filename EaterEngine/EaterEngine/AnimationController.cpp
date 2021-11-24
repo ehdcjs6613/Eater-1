@@ -13,26 +13,6 @@ AnimationController::~AnimationController()
 
 }
 
-void AnimationController::Awake()
-{
-
-
-}
-
-void AnimationController::Update()
-{
-	if (mKeyInputManger->GetKeyDown(VK_F3))
-	{
-		ChoiceAnime("Idle");
-		
-	}
-
-	if (mKeyInputManger->GetKeyDown(VK_F4))
-	{
-		ChoiceAnime("Run");
-	}
-}
-
 void AnimationController::SetBoneList(std::vector<GameObject*>* m_ObjList)
 {
 	//게임오브젝트리스트를 애니메이터 리스트로 변경시켜줌
@@ -59,24 +39,43 @@ void AnimationController::SetAnimeList(ModelAnimationData* data)
 }
 
 
-void AnimationController::ChoiceAnime(std::string Name)
+void AnimationController::Choice(std::string Name)
 {
 	//나의 애니메이션 리스트에서 선택한 애니메이션을 본에게 넘겨준다
-
-	int count = AnimationList->AnimList[Name]->size();
+	NowAnimationName = Name;
+	//int count = (int)AnimationList->AnimList[Name]->size();
 	std::vector<OneAnimation*>* data = AnimationList->AnimList[Name];
+
+	std::vector<Animator*>::iterator it = AnimatorList.begin();
+	int count = 0;
+	for (it;it!= AnimatorList.end();it++)
+	{
+		if ((*it) == nullptr) { continue; }
+
+		(*it)->SetAnimation((*data)[count]);
+		count++;
+	}
+}
+
+void AnimationController::Play(float Speed, bool Loop)
+{
+	//이미 한번 플레이가 호출되면 그뒤로는 호출안됨
+	if (isPlay == true) { return; }
+
+	std::vector<OneAnimation*>* data = AnimationList->AnimList[NowAnimationName];
+	int count = (int)data->size();
+
 	for (int i = 0; i < count; i++)
 	{
 		if ((*data)[i] == nullptr) { continue; }
 		if (AnimatorList[i] == nullptr) { continue; }
 
-		AnimatorList[i]->SetAnimation((*data)[i]);
+		AnimatorList[i]->Play();
 	}
+	isPlay = true;
 }
 
-void AnimationController::Play()
+void AnimationController::Stop()
 {
-
-
 
 }
