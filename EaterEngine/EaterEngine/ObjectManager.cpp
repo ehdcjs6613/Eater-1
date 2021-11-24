@@ -232,17 +232,25 @@ void ObjectManager::PlayUpdate()
 	Global->mShadowTrans	= DirectionLight::g_DirLight->GetShadowTranspose();
 
 	///모든오브젝트의 데이터를 랜더큐에 담는다
-	CreateRenderQueue();
+	//CreateRenderQueue();
 
 	///모든 오브젝트 업데이트 완료
 }
 
 void ObjectManager::CreateRenderQueue()
 {
+	int temp = ShadowData.size();
 	//오브젝트의 사이즈 만큼 돌면서 랜더큐에 MeshData를 전달해준다
 	for (int i = 0; i < ShadowData.size(); i++)
 	{
 		ShadowData.pop();
+	}
+
+	temp = RenderData.size();
+
+	for (int i = 0; i < temp; i++)
+	{
+		RenderData.pop();
 	}
 	
 	int count = (int)ObjectList.size();

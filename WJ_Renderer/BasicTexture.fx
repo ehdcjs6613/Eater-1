@@ -40,8 +40,9 @@ SamplerState samAnisotropic
 struct VertexIn
 {
 	float3 PosL    : POSITION;
-	float3 NormalL : NORMAL;
 	float2 Tex     : TEXCOORD;
+	float3 NormalL : NORMAL;
+    float3 Tangent : TANGENT;
 };
 
 struct VertexOut
@@ -58,7 +59,7 @@ VertexOut VS(VertexIn vin)
 	
 	// Transform to world space space.
 	vout.PosW    = mul(float4(vin.PosL, 1.0f), gWorld).xyz;
-	vout.NormalW = mul(vin.NormalL, (float3x3)gWorldInvTranspose);
+    vout.NormalW = mul((float3x3) gWorldInvTranspose, vin.NormalL);
 		
 	// Transform to homogeneous clip space.
 	vout.PosH = mul(float4(vin.PosL, 1.0f), gWorldViewProj);

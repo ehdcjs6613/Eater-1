@@ -24,9 +24,9 @@ class DirectXDevice
 public:
 	DirectXDevice();
 	~DirectXDevice();
+	ID3D11Device*	    m_pDX11Device;
 private:
 	//장치 관리할 인터페이스
-	ID3D11Device*	    m_pDX11Device;
 	int					m_iWidth;
 	int					m_iHeight;
 

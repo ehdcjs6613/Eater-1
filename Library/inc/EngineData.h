@@ -59,7 +59,6 @@ public:
 		VB = nullptr;
 	}
 
-
 	OBJECT_TYPE ObjType = OBJECT_TYPE::DEFALT;	//오브젝트 타입
 
 	Indexbuffer*  IB = nullptr;	//인덱스 버퍼

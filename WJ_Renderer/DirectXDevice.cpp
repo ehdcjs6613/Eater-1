@@ -48,20 +48,18 @@ ID3D11Texture2D* DirectXDevice::CreateInitFactory(int& _vedioCard)
 	IDXGIAdapter* adapter;
 	IDXGIOutput* adapterOutput;
 	UINT numModes, i, numerator, denominator;
-	unsigned long long stringLength;
 	DXGI_MODE_DESC* displayModeList;
 	DXGI_ADAPTER_DESC adapterDesc;
-	int error;
+	
 	
 	ID3D11Texture2D* backBufferPtr = nullptr;
-	D3D11_TEXTURE2D_DESC depthBufferDesc;
-	D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
-	D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
+	//D3D11_TEXTURE2D_DESC depthBufferDesc;
+	//D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
+	//D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
 
-	D3D11_RASTERIZER_DESC rasterDesc;
+	//D3D11_RASTERIZER_DESC rasterDesc;
 
-	D3D11_VIEWPORT viewport;
-	float fieldOfView, screenAspect;
+	
 
 	// DXGI ÆÑÅä¸® »ý¼º.
  	HR(CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&factory));

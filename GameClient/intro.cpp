@@ -20,14 +20,14 @@ void intro::Awake()
 	//LoadMesh("EnemyB");
 	//LoadMesh("Field");
 	//LoadMesh("Table");
-	//LoadMesh("box");
+	LoadMesh("box");
 	//LoadMesh("Dome_v03");
 	//LoadMesh("1s_table_long_lower");
 	//LoadMesh("MOdNA09_highpoly_1123");
 	//LoadMesh("Enemy_Run",false, true);
 	//LoadMesh("Player_Attack");
 	//LoadMesh("Skinning");
-	LoadMesh("Enemy_Run",false,false);
+	//LoadMesh("Enemy_Run",false,false);
 	//LoadMesh("box");
 	//LoadMesh("AnimeBox");
 	//LoadTesture("body_normal_tangent_Base_color.png");
@@ -53,8 +53,8 @@ void intro::Awake()
 	testobj = Instance("obj1");
 	MeshFilter* Filter = testobj->AddComponent<MeshFilter>();
 	//AnimationController* AC = testobj->AddComponent<AnimationController>();
-	Filter->SetMeshName("Enemy_Run");
-	Filter->SetTextureName("Player");
+	Filter->SetMeshName("box");
+	//Filter->SetTextureName("Player");
 	//testobj->SetActive(false);
 	
 	testobj->GetTransform()->Position	= { 0 ,0, 0 };

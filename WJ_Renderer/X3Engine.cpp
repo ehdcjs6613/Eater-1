@@ -1,4 +1,4 @@
-#include <wrl/client.h>
+//#include <wrl/client.h>
 #include "OneCompile.h"
 #include "MathHelper.h"
 #include "EngineData.h"
@@ -120,7 +120,7 @@ void X3Engine::Initialize(HWND _hWnd, int _iWidth, int _iHeight)
 	m_pDevice->CreateResterize(m_pDeviceContext->GetDeviceContext(), m_pRasterizerState->GetFrameRS());
 	//뷰포트를 만들어줍니다.
 
-	(*m_ViewPort) = m_pDevice->CreateViewPort(m_pDeviceContext->GetDeviceContext());
+	(m_ViewPort) = m_pDevice->CreateViewPort(m_pDeviceContext->GetDeviceContext());
 	//샘플러 스테이트를 만들어줍니다.
 	m_pSamplerState->CreateDXSamplerState(m_pDevice->GetDevice());
 
@@ -214,7 +214,7 @@ Vertexbuffer* X3Engine::CreateVertexBuffer(ParserData::Mesh* mModel)
 	{
 		temp[i].Pos = mModel->m_VertexList[i]->m_Pos;
 		temp[i].Nomal = mModel->m_VertexList[i]->m_Normal;
-		temp[i].Tex = { mModel->m_VertexList[i]->m_U ,mModel->m_VertexList[i]->m_V };
+		temp[i].Tex =  mModel->m_VertexList[i]->m_UV;
 		temp[i].Tangent = mModel->m_VertexList[i]->m_Tanget;
 	}
 
@@ -298,22 +298,22 @@ void X3Engine::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 {
 	//렌더링시작의 순서.
 	//나중에 렌더 큐? 같은걸로 해보자,
-	m_pDeviceContext->GetDeviceContext()->RSSetViewports(1, this->m_ViewPort);
+	m_pDeviceContext->GetDeviceContext()->RSSetViewports(1, &this->m_ViewPort);
 
 	mView = DirectX::SimpleMath::Matrix(*global->mViewMX);
 	mProj = DirectX::SimpleMath::Matrix(*global->mProj);
 
-	m_pViewGrid->Update(&mView, &mProj);
+	//m_pViewGrid->Update(&mView, &mProj);
 
 	while (!meshList->empty())
 	{
 		// 메시 데이터를 하나 꺼내옴.
 		MeshData* _Mesh_Data = meshList->front();
-		meshList->pop();
 
 		/// 오브젝트들을 그린다. (Draw Primitive)
-		if (_Mesh_Data->ObjType != OBJECT_TYPE::Base)
+		if (_Mesh_Data->ObjType != OBJECT_TYPE::BASE)
 		{
+			meshList->pop();
 			continue;
 		}
 
@@ -321,23 +321,20 @@ void X3Engine::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 		Render_VB = reinterpret_cast<ID3D11Buffer*>(_Mesh_Data->VB->VertexbufferPointer);
 		Render_IB = reinterpret_cast<ID3D11Buffer*>(_Mesh_Data->IB->IndexBufferPointer);
 
+		// 매쉬 텍스쳐 정보에서 캐스팅해서 그걸 밑에 이펙트에 넣으면 나올거임
+		//_Mesh_Data->Diffuse->TextureBufferPointer;
+		
 		// 입력 배치 객체 셋팅
 		m_pDeviceContext->GetDeviceContext()->IASetInputLayout(InputLayouts::PosNormalTexBiNormalTangent);
 		m_pDeviceContext->GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-		//// 렌더 스테이트
-		m_pDeviceContext->GetDeviceContext()->RSSetState(m_pRasterizerState->GetFrameRS());
-		/*
-			DirectX::SimpleMath::Matrix mWorld;	// Transform Matrix
-			DirectX::SimpleMath::Matrix mView;
-			DirectX::SimpleMath::Matrix mProj;
-		*/
 		// 버텍스버퍼와 인덱스버퍼 셋팅
-		Vertex_Buffer_Stride = sizeof(XVertexDef);
+		Vertex_Buffer_Stride = _Mesh_Data->VB->VertexDataSize;
 		Vertex_Buffer_Offset = 0;
 
 		/// WVP TM등을 셋팅
-		mWorld = DirectX::SimpleMath::Matrix(_Mesh_Data->mWorld);
+		mWorld = _Mesh_Data->mWorld;
+		//mWorld = DirectX::SimpleMath::Matrix();
 		Mul_WVP = mWorld * mView * mProj;
 
 		// 월드의 역행렬
@@ -345,7 +342,7 @@ void X3Engine::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 
 		// Set per frame constants.
 		DirectionalLight _temp_Dir;
-		DirectX::SimpleMath::Vector4 _Ambient = DirectX::SimpleMath::Vector4(0.2f, 0.2f, 0.2f, 1.0f);
+		DirectX::SimpleMath::Vector4 _Ambient = DirectX::SimpleMath::Vector4(0.8f, 0.8f, 0.8f, 1.0f);
 		DirectX::SimpleMath::Vector4 _Diffuse = DirectX::SimpleMath::Vector4(0.5f, 0.5f, 0.5f, 1.0f);
 		DirectX::SimpleMath::Vector4 _Specular = DirectX::SimpleMath::Vector4(0.5f, 0.5f, 0.5f, 1.0f);
 		DirectX::SimpleMath::Vector3 _Direction = DirectX::SimpleMath::Vector3(-0.57735f, -0.57735f, 0.57735f);
@@ -355,7 +352,7 @@ void X3Engine::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 		_temp_Dir.Direction = _Direction;
 
 		Material _Temp_Mat;
-		DirectX::SimpleMath::Vector4 _Ambient1 = DirectX::SimpleMath::Vector4(0.2f, 0.2f, 0.2f, 1.0f);
+		DirectX::SimpleMath::Vector4 _Ambient1 = DirectX::SimpleMath::Vector4(0.8f, 0.8f, 0.8f, 1.0f);
 		DirectX::SimpleMath::Vector4 _Diffuse1 = DirectX::SimpleMath::Vector4(0.5f, 0.5f, 0.5f, 1.0f);
 		DirectX::SimpleMath::Vector4 _Specular1 = DirectX::SimpleMath::Vector4(0.5f, 0.5f, 0.5f, 1.0f);
 		DirectX::SimpleMath::Vector4 _Reflect1 = DirectX::SimpleMath::Vector4(0.5f, 0.5f, 0.5f, 1.0f);
@@ -365,18 +362,18 @@ void X3Engine::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 		_Temp_Mat.Reflect = _Reflect1;
 
 
-		Effects::BasicFX->SetDirLights(&_temp_Dir);
+		Effects::BasicTextureFX->SetDirLights(&_temp_Dir);
 
 		// 월드 Eye 포지션.
 		DirectX::SimpleMath::Vector3 _Camera_Vec(mView._41, mView._42, mView._43);
-		Effects::BasicFX->SetEyePosW(_Camera_Vec);
+		Effects::BasicTextureFX->SetEyePosW(_Camera_Vec);
 
 		ID3DX11EffectTechnique* mTech = nullptr;
 
 		/// 텍스쳐 사용
 		//mTech = Effects::BasicFX->Light1Tech;
 		/// 텍스쳐 미사용
-		mTech = Effects::BasicFX->Light2Tech;
+		mTech = Effects::BasicTextureFX->Light1TexTech;
 
 		D3DX11_TECHNIQUE_DESC techDesc;
 		mTech->GetDesc(&techDesc);
@@ -387,18 +384,21 @@ void X3Engine::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 			m_pDeviceContext->GetDeviceContext()->IASetIndexBuffer(Render_IB, DXGI_FORMAT_R32_UINT, 0);
 
 			World_Inverse_Transpose = MathHelper::InverseTranspose(mWorld);
-			Effects::BasicFX->SetWorld(mWorld);
-			Effects::BasicFX->SetWorldInvTranspose(World_Inverse_Transpose);
-			Effects::BasicFX->SetWorldViewProj(Mul_WVP);
-			Effects::BasicFX->SetMaterial(_Temp_Mat);
-			Effects::BasicFX->SetTexTransform(DirectX::SimpleMath::Matrix::Identity);
+			Effects::BasicTextureFX->SetWorld(mWorld);
+			Effects::BasicTextureFX->SetWorldInvTranspose(World_Inverse_Transpose);
+			Effects::BasicTextureFX->SetWorldViewProj(Mul_WVP);
+			Effects::BasicTextureFX->SetMaterial(_Temp_Mat);
+			Effects::BasicTextureFX->SetTexTransform(DirectX::SimpleMath::Matrix::Identity);
+			Effects::BasicTextureFX->SetDiffuseMap((ID3D11ShaderResourceView*)(_Mesh_Data->Diffuse->TextureBufferPointer));
 
 			mTech->GetPassByIndex(p)->Apply(0, m_pDeviceContext->GetDeviceContext());
 			m_pDeviceContext->GetDeviceContext()->DrawIndexed(_Mesh_Data->IB->Count, 0, 0);
 		}
+		meshList->pop();
 
 	}
-	m_pViewGrid->Render();
+
+	//m_pViewGrid->Render();
 
 	//BeginRender();
 	//LoopRender();
@@ -411,9 +411,9 @@ void X3Engine::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 
 }
 
-void X3Engine::SetViewPort(void* VPT)
+void X3Engine::SetViewPort(void* VPT, int Change_Width, int Change_Height)
 {
-	(this->m_ViewPort) = (reinterpret_cast<D3D11_VIEWPORT*>(VPT));
+	(this->m_ViewPort) = *(D3D11_VIEWPORT*)VPT;
 }
 
 void X3Engine::SetDevice(void* Devie, void* DevieContext)
