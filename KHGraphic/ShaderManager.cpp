@@ -30,7 +30,7 @@ void ShaderManager::Initialize(Microsoft::WRL::ComPtr<ID3D11Device> device, Micr
 	CreateShader();
 
 	// Shader Hash Table Reset..
-	ShaderResourceHashTable* table = ShaderResourceHashTable::GetInstance();
+	ShaderResourceHashTable* table = ShaderResourceHashTable::Get();
 	table->Destroy();
 }
 

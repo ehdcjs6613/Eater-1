@@ -53,6 +53,16 @@ void Keyinput::Update()
 		transform->SetLocalPosition(0, 0, -(speed * delta));
 	}
 
+	if (GetKey('Q'))
+	{
+		transform->SetLocalPosition(0, (speed * delta), 0);
+	}
+
+	if (GetKey('E'))
+	{
+		transform->SetLocalPosition(0, -(speed * delta), 0);
+	}
+
 	if (GetKeyDown(VK_RBUTTON) == true)
 	{
 		mLastMousePosX = GetMousePosX();

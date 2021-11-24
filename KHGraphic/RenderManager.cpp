@@ -41,9 +41,16 @@ RenderManager::~RenderManager()
 
 void RenderManager::Initialize(int width, int height)
 {
+	// Render Pass Resource Create..
 	for (RenderPassBase* renderPass : m_RenderPassList)
 	{
-		renderPass->Initialize(width, height);
+		renderPass->Create(width, height);
+	}
+
+	// Render Pass Resource Set..
+	for (RenderPassBase* renderPass : m_RenderPassList)
+	{
+		renderPass->Start();
 	}
 }
 

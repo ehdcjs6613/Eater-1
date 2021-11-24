@@ -6,7 +6,7 @@
 
 ShaderResourceHashTable* ShaderResourceHashTable::instance = nullptr;
 
-ShaderResourceHashTable* ShaderResourceHashTable::GetInstance()
+ShaderResourceHashTable* ShaderResourceHashTable::Get()
 {
 	if (instance == nullptr)
 	{
@@ -16,13 +16,13 @@ ShaderResourceHashTable* ShaderResourceHashTable::GetInstance()
 	return instance;
 }
 
-size_t ShaderResourceHashTable::FindHashCode(BufferType type, std::string cBufName)
+size_t ShaderResourceHashTable::FindHashCode(eResourceType type, std::string cBufName)
 {
 	std::unordered_map<std::string, Hash_Code>::iterator cHash;
 	
 	switch (type)
 	{
-	case BufferType::CBUFFER:
+	case eResourceType::CBUFFER:
 	{
 		cHash = g_CBuffer_HashTable.find(cBufName);
 	
@@ -32,7 +32,7 @@ size_t ShaderResourceHashTable::FindHashCode(BufferType type, std::string cBufNa
 		}
 	}
 	break;
-	case BufferType::SAMPLER:
+	case eResourceType::SAMPLER:
 	{
 		cHash = g_Sampler_HashTable.find(cBufName);
 	
@@ -42,7 +42,7 @@ size_t ShaderResourceHashTable::FindHashCode(BufferType type, std::string cBufNa
 		}
 	}
 	break;
-	case BufferType::SRV:
+	case eResourceType::SRV:
 	{
 		cHash = g_SRV_HashTable.find(cBufName);
 	
@@ -52,7 +52,7 @@ size_t ShaderResourceHashTable::FindHashCode(BufferType type, std::string cBufNa
 		}
 	}
 	break;
-	case BufferType::UAV:
+	case eResourceType::UAV:
 	{
 		cHash = g_UAV_HashTable.find(cBufName);
 	
@@ -71,6 +71,13 @@ size_t ShaderResourceHashTable::FindHashCode(BufferType type, std::string cBufNa
 	
 	
 	return cHash->second;
+}
+
+bool ShaderResourceHashTable::DefineCheck(Define_Mask nowDefine)
+{
+	DEFINE_MASK |= nowDefine;
+
+	return true;
 }
 
 bool ShaderResourceHashTable::CheckHashCode(std::unordered_map<std::string, Hash_Code>& table, std::string name, Hash_Code hash_code)

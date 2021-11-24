@@ -28,7 +28,7 @@ ForwardPass::~ForwardPass()
 
 }
 
-void ForwardPass::Initialize(int width, int height)
+void ForwardPass::Create(int width, int height)
 {
 	// Shader ¼³Á¤..
 	m_MeshVS = g_Shader->GetShader("MeshVS");
@@ -50,6 +50,11 @@ void ForwardPass::Initialize(int width, int height)
 	//m_BackBuffer = g_Resource->GetMainRenderTarget();
 	//m_BackBufferRTV = m_BackBuffer->GetRTV();
 	//m_BackBufferSRV = m_BackBuffer->GetSRV();
+}
+
+void ForwardPass::Start()
+{
+
 }
 
 void ForwardPass::OnResize(int width, int height)
