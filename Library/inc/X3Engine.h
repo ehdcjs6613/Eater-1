@@ -15,7 +15,7 @@ class DirectXAdapter;
 //	  어떻게 그릴지의 레스터라이져 클래스
 class DirectXRasterizerState;
 //	  렌더러 클래스
-class XRenderer;
+class DirectXRenderTargeter;
 //	  샘플러 스테이트 클래스
 class DirectXSamplerState;
 
@@ -173,7 +173,14 @@ private:
 	DirectX::SimpleMath::Matrix mView;
 	DirectX::SimpleMath::Matrix mProj;
 
-
-
+	ID3D11Buffer* Render_VB = nullptr;
+	ID3D11Buffer* Render_IB = nullptr;
+	// Buffer 관련
+	UINT Vertex_Buffer_Stride = 0;
+	UINT Vertex_Buffer_Offset = 0;
+	// WVP 관련
+	DirectX::SimpleMath::Matrix Mul_WVP;		// W * V * P
+	DirectX::SimpleMath::Matrix World_Inverse;	// 월드 역행렬
+	DirectX::SimpleMath::Matrix World_Inverse_Transpose;
 };
 

@@ -1,5 +1,6 @@
 #include <wrl/client.h>
 #include "OneCompile.h"
+#include "MathHelper.h"
 #include "EngineData.h"
 #include "Effects.h"
 #include "InputLayout.h"
@@ -314,6 +315,86 @@ void X3Engine::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 		if (_Mesh_Data->ObjType != OBJECT_TYPE::Base)
 		{
 			continue;
+		}
+
+		// 해당 메시의 VB,IB 를 받아옴.
+		Render_VB = reinterpret_cast<ID3D11Buffer*>(_Mesh_Data->VB->VertexbufferPointer);
+		Render_IB = reinterpret_cast<ID3D11Buffer*>(_Mesh_Data->IB->IndexBufferPointer);
+
+		// 입력 배치 객체 셋팅
+		m_pDeviceContext->GetDeviceContext()->IASetInputLayout(InputLayouts::PosNormalTexBiNormalTangent);
+		m_pDeviceContext->GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+		//// 렌더 스테이트
+		m_pDeviceContext->GetDeviceContext()->RSSetState(m_pRasterizerState->GetFrameRS());
+		/*
+			DirectX::SimpleMath::Matrix mWorld;	// Transform Matrix
+			DirectX::SimpleMath::Matrix mView;
+			DirectX::SimpleMath::Matrix mProj;
+		*/
+		// 버텍스버퍼와 인덱스버퍼 셋팅
+		Vertex_Buffer_Stride = sizeof(XVertexDef);
+		Vertex_Buffer_Offset = 0;
+
+		/// WVP TM등을 셋팅
+		mWorld = DirectX::SimpleMath::Matrix(_Mesh_Data->mWorld);
+		Mul_WVP = mWorld * mView * mProj;
+
+		// 월드의 역행렬
+		World_Inverse = mWorld.Invert();
+
+		// Set per frame constants.
+		DirectionalLight _temp_Dir;
+		DirectX::SimpleMath::Vector4 _Ambient = DirectX::SimpleMath::Vector4(0.2f, 0.2f, 0.2f, 1.0f);
+		DirectX::SimpleMath::Vector4 _Diffuse = DirectX::SimpleMath::Vector4(0.5f, 0.5f, 0.5f, 1.0f);
+		DirectX::SimpleMath::Vector4 _Specular = DirectX::SimpleMath::Vector4(0.5f, 0.5f, 0.5f, 1.0f);
+		DirectX::SimpleMath::Vector3 _Direction = DirectX::SimpleMath::Vector3(-0.57735f, -0.57735f, 0.57735f);
+		_temp_Dir.Ambient = _Ambient;
+		_temp_Dir.Diffuse = _Diffuse;
+		_temp_Dir.Specular = _Specular;
+		_temp_Dir.Direction = _Direction;
+
+		Material _Temp_Mat;
+		DirectX::SimpleMath::Vector4 _Ambient1 = DirectX::SimpleMath::Vector4(0.2f, 0.2f, 0.2f, 1.0f);
+		DirectX::SimpleMath::Vector4 _Diffuse1 = DirectX::SimpleMath::Vector4(0.5f, 0.5f, 0.5f, 1.0f);
+		DirectX::SimpleMath::Vector4 _Specular1 = DirectX::SimpleMath::Vector4(0.5f, 0.5f, 0.5f, 1.0f);
+		DirectX::SimpleMath::Vector4 _Reflect1 = DirectX::SimpleMath::Vector4(0.5f, 0.5f, 0.5f, 1.0f);
+		_Temp_Mat.Ambient = _Ambient1;
+		_Temp_Mat.Diffuse = _Diffuse1;
+		_Temp_Mat.Specular = _Specular1;
+		_Temp_Mat.Reflect = _Reflect1;
+
+
+		Effects::BasicFX->SetDirLights(&_temp_Dir);
+
+		// 월드 Eye 포지션.
+		DirectX::SimpleMath::Vector3 _Camera_Vec(mView._41, mView._42, mView._43);
+		Effects::BasicFX->SetEyePosW(_Camera_Vec);
+
+		ID3DX11EffectTechnique* mTech = nullptr;
+
+		/// 텍스쳐 사용
+		//mTech = Effects::BasicFX->Light1Tech;
+		/// 텍스쳐 미사용
+		mTech = Effects::BasicFX->Light2Tech;
+
+		D3DX11_TECHNIQUE_DESC techDesc;
+		mTech->GetDesc(&techDesc);
+
+		for (UINT p = 0; p < techDesc.Passes; ++p)
+		{
+			m_pDeviceContext->GetDeviceContext()->IASetVertexBuffers(0, 1, &Render_VB, &Vertex_Buffer_Stride, &Vertex_Buffer_Offset);
+			m_pDeviceContext->GetDeviceContext()->IASetIndexBuffer(Render_IB, DXGI_FORMAT_R32_UINT, 0);
+
+			World_Inverse_Transpose = MathHelper::InverseTranspose(mWorld);
+			Effects::BasicFX->SetWorld(mWorld);
+			Effects::BasicFX->SetWorldInvTranspose(World_Inverse_Transpose);
+			Effects::BasicFX->SetWorldViewProj(Mul_WVP);
+			Effects::BasicFX->SetMaterial(_Temp_Mat);
+			Effects::BasicFX->SetTexTransform(DirectX::SimpleMath::Matrix::Identity);
+
+			mTech->GetPassByIndex(p)->Apply(0, m_pDeviceContext->GetDeviceContext());
+			m_pDeviceContext->GetDeviceContext()->DrawIndexed(_Mesh_Data->IB->Count, 0, 0);
 		}
 
 	}

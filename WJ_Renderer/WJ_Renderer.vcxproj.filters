@@ -204,5 +204,8 @@
     <FxCompile Include="LightHelper.fx">
       <Filter>3.Shaders\FX</Filter>
     </FxCompile>
+    <FxCompile Include="BasicTexture.fx">
+      <Filter>3.Shaders\FX</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
