@@ -2,6 +2,7 @@
 #include "ResourcesData.h"
 #include "ParserData.h"
 #include <functional>
+#include <map>
 #include "LightHelper.h"
 
 
@@ -160,9 +161,7 @@ public:
 	{
 		
 	}
-
-	//한개의 모델 애니메이션 정보
-	std::vector<OneAnimation*>* AnimList;
+	std::map<std::string, std::vector<OneAnimation*>* > AnimList;
 };
 
 //컨퍼넌트들의 함수포인터를 저장할 구조체
@@ -176,7 +175,7 @@ public:
 	std::function<void()> FunctionPointer;
 
 	//컨퍼넌트 포인터
-	Component* ComponentPoiner;
+	Component* ComponentPointer;
 };
 
 
