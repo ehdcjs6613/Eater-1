@@ -77,7 +77,9 @@ void Effects::InitAll(ID3D11Device* device)
 #else
 	BasicFX = new BasicEffect(device, L"../x64/Release/Basic.cso");
 	BasicTextureFX = new BasicEffect(device, L"../x64/Release/BasicTexture.cso");
-#endif // DEBUG
+#endif 
+
+
 
 }
 

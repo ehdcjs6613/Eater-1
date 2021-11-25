@@ -26,3 +26,10 @@
 
 
 
+#ifdef Graphcis2D_Interface
+#define Graphics2D_DLL __declspec(dllimport)
+#define EXPIMP_TEMPLATE extern
+#else
+#define Graphics2D_DLL __declspec(dllexport)
+#define EXPIMP_TEMPLATE
+#endif

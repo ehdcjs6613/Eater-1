@@ -18,30 +18,11 @@
 #include "../DirectX2DSupporter/Grahpics2D.h"
 #include "ParserData.h"
 #include "ResourcesData.h"
-#include "ViewGrid.h"
 #include "X3Engine.h"
 //스마트포인터 인클르드
 
 /*
-	XVertexShader m_XVertexShader;
-	XPixelShader  m_XPexelShader;
-
-	ID3D11Buffer* m_pVertexBuffer;
-
-	//------------------------------
-	ViewGrid* m_pViewGrid;
-
-	ID3DX11Effect* m_FX;
-	ID3DX11EffectTechnique* mTech;
-	ID3DX11EffectMatrixVariable* mfxWorldViewProj;
-
-	ID3D11InputLayout* mInputLayout;
-	// 폰트때문에 뎁스스탠실 스테이트가 강제가 됐다.
-	ID3D11DepthStencilState* NormalDSS;
-
-	DirectX::XMFLOAT4X4 mWorld;	// Transform Matrix
-	DirectX::XMFLOAT4X4 mView;
-	DirectX::XMFLOAT4X4 mProj;
+	
 */
 // 초기화 부분.
 X3Engine::X3Engine() : 
@@ -71,11 +52,8 @@ X3Engine::X3Engine() :
 	m_pRasterizerWire = new DirectXRasterizerState();
 	m_pAdapter = new DirectXAdapter();
 	m_pRenderTargeter = new DirectXRenderTargeter();
-	m_pGrahpics2D = new Grahpics2D();
 
 	this->m_pDirectXSwapChain = new DirectXSwapChain(m_pDevice->GetDevice());
-
-	m_pViewGrid = new ViewGrid();
 
 	
 }
@@ -87,10 +65,11 @@ X3Engine::~X3Engine()
 
 void X3Engine::Initialize(HWND _hWnd, int _iWidth, int _iHeight)
 {
-	m_hWnd = _hWnd;
-	m_pDevice->CreateSize(_iWidth, _iHeight);
+
 	///이제는 쓰이지 않는다.
 #pragma region 이제는 쓰이지 않는다
+	m_hWnd = _hWnd;
+	m_pDevice->CreateSize(_iWidth, _iHeight);
 		//백버퍼를 반환하여 팩토리를 초기화합니다.
 	ID3D11Texture2D* backBufferPtr = m_pDevice->CreateInitFactory(m_videoCardMemory);
 	//스왑체인을 초기화 해줍니다.
@@ -136,22 +115,15 @@ void X3Engine::Initialize(HWND _hWnd, int _iWidth, int _iHeight)
 	m_pAdapter->GetAdapterInfo();
 
 
-	m_pGrahpics2D->initialize(m_hWnd, m_pDirectXSwapChain->GetSwapChain());
-	m_pGrahpics2D->LoadBitMap(L"../Image/apple_1.png", L"../Image/apple_1.png");
-	m_pGrahpics2D->LoadBitMap(L"../Image/atk_1.png", L"../Image/atk_1.png");
 
 	if (nullptr == m_pDirectXSwapChain->GetSwapChain())
 	{
 
 	}
-	ViewGrid* m_pViewGrid = new ViewGrid();
-	m_pViewGrid->Initialize(m_pDevice->GetDevice(), m_pDeviceContext->GetDeviceContext(), m_pRasterizerWire->GetFrameRS());
-
-#pragma endregion 이제안씀.
-
 	
 	InitializeShaders();
-	//OnReSize(this->m_iWidth, m_iHeight);
+#pragma endregion 이제안씀.
+
 }
 
 Indexbuffer* X3Engine::CreateIndexBuffer(ParserData::Mesh* mModel)
@@ -160,8 +132,8 @@ Indexbuffer* X3Engine::CreateIndexBuffer(ParserData::Mesh* mModel)
 	Indexbuffer* indexbuffer = new Indexbuffer();
 
 	//모델의 계수
-	int ModelCount = (int)mModel->m_IndexList.size();
-	int Icount = (int)mModel->m_IndexList.size();
+	size_t ModelCount = (int)mModel->m_IndexList.size();
+	size_t Icount = (int)mModel->m_IndexList.size();
 
 	std::vector<UINT> index;
 	index.resize(Icount * 3);
@@ -181,7 +153,7 @@ Indexbuffer* X3Engine::CreateIndexBuffer(ParserData::Mesh* mModel)
 	//인덱스 버퍼를 생성한다
 	D3D11_BUFFER_DESC ibd;
 	ibd.Usage = D3D11_USAGE_IMMUTABLE;
-	ibd.ByteWidth = sizeof(UINT) * index.size();
+	ibd.ByteWidth = sizeof(UINT) * (UINT)index.size();
 	ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	ibd.CPUAccessFlags = 0;
 	ibd.MiscFlags = 0;
@@ -201,12 +173,8 @@ Vertexbuffer* X3Engine::CreateVertexBuffer(ParserData::Mesh* mModel)
 	ID3D11Buffer* mVB = nullptr;
 	Vertexbuffer* vertexbuffer = new Vertexbuffer();
 
-
-
 	//모델의 계수
-	int Vcount = mModel->m_VertexList.size();
-	mModel->m_VertexList;
-
+	size_t Vcount = mModel->m_VertexList.size();
 
 	std::vector<XVertexDef> temp;
 	temp.resize(Vcount);
@@ -222,7 +190,7 @@ Vertexbuffer* X3Engine::CreateVertexBuffer(ParserData::Mesh* mModel)
 
 	D3D11_BUFFER_DESC vbd;
 	vbd.Usage = D3D11_USAGE_IMMUTABLE;
-	vbd.ByteWidth = sizeof(XVertexDef) * Vcount;
+	vbd.ByteWidth = sizeof(XVertexDef) * (UINT)Vcount;
 	vbd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vbd.CPUAccessFlags = 0;
 	vbd.MiscFlags = 0;
@@ -333,7 +301,7 @@ void X3Engine::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 		Vertex_Buffer_Offset = 0;
 
 		/// WVP TM등을 셋팅
-		mWorld = _Mesh_Data->mWorld;
+		mWorld = DirectX::XMMatrixIdentity();//_Mesh_Data->mWorld;
 		//mWorld = DirectX::SimpleMath::Matrix();
 		Mul_WVP = mWorld * mView * mProj;
 
@@ -380,6 +348,7 @@ void X3Engine::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 
 		for (UINT p = 0; p < techDesc.Passes; ++p)
 		{
+			
 			m_pDeviceContext->GetDeviceContext()->IASetVertexBuffers(0, 1, &Render_VB, &Vertex_Buffer_Stride, &Vertex_Buffer_Offset);
 			m_pDeviceContext->GetDeviceContext()->IASetIndexBuffer(Render_IB, DXGI_FORMAT_R32_UINT, 0);
 
@@ -423,8 +392,7 @@ void X3Engine::SetDevice(void* Devie, void* DevieContext)
 
 	//렌더스테이트를 생성한다.
 	this->CreateRenderState();
-	m_pViewGrid->Initialize(m_pDevice->GetDevice(), m_pDeviceContext->GetDeviceContext(), m_pRasterizerWire->GetFrameRS());
-
+	
 	Effects::InitAll(m_pDevice->GetDevice());
 	InputLayouts::InitAll(m_pDevice->GetDevice());
 
@@ -477,6 +445,8 @@ void X3Engine::InitializeShaders()
 #pragma endregion
 
 	/// ============================ 쉐이더의 초기화 부분 ===================================== //
+
+	//현재 이 코드(hlsl 쉐이더 초기화 함수)는 사용하지 않는다.
 	/*
 	// Color Shader
 
@@ -492,8 +462,9 @@ void X3Engine::InitializeShaders()
 		{ "TEXCOORD",	0,DXGI_FORMAT::DXGI_FORMAT_R32G32_FLOAT,0,D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_CLASSIFICATION::D3D11_INPUT_PER_VERTEX_DATA,0 } ,
 	};
 
-
-	UINT numElements = ARRAYSIZE(layout, numElements);
+	
+	//UINT numElements = ARRAYSIZE(layout, numElements);
+	UINT numElements = ARRAYSIZE(layout);
 
 	if (0 != m_XVertexShader.Initialize(m_pDevice->GetDevice(), shaderFoler + L"vertexShaders.cso", layout, numElements))
 	{

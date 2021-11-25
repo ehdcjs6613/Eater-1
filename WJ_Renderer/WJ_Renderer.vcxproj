@@ -47,7 +47,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
+    <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
@@ -83,6 +83,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <TargetName>$(ProjectName)_x64r</TargetName>
+    <LibraryPath>$(SolutionDir)Library\lib;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -129,6 +130,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)Library\inc\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -158,6 +160,11 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\ib"
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(SolutionDir)Library\inc\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalOptions>
+      </AdditionalOptions>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -166,7 +173,7 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\ib"
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalLibraryDirectories>$(SolutionDir)Library\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>DirectX2DSupporter.lib;%(AdditionalDependencies);kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>DirectX2DSupporter.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy /Y "$(ProjectDir)X3Engine.h" "$(SolutionDir)Library\inc"
@@ -190,7 +197,6 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\ib"
     <ClCompile Include="Effects.cpp" />
     <ClCompile Include="InputLayout.cpp" />
     <ClCompile Include="LightHelper.cpp" />
-    <ClCompile Include="ViewGrid.cpp" />
     <ClCompile Include="X3Engine.cpp" />
     <ClCompile Include="XGeometry.cpp" />
     <ClCompile Include="XShader.cpp">
@@ -212,7 +218,6 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\ib"
     <ClInclude Include="InputLayout.h" />
     <ClInclude Include="LightHelper.h" />
     <ClInclude Include="OneCompile.h" />
-    <ClInclude Include="ViewGrid.h" />
     <ClInclude Include="WJDefine.h" />
     <ClInclude Include="X3Engine.h" />
     <ClInclude Include="XGeometry.h" />

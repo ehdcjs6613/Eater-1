@@ -39,10 +39,10 @@ bool XVertexShader::Initialize(ID3D11Device* _pDevice, std::wstring _wShaderPath
 
 	if (FAILED(hr))
 	{
-		return -1;
+		return true;
 	}
 
-	return 0;
+	return false;
 }
 
 ID3D11VertexShader* XVertexShader::GetShader()
@@ -91,7 +91,7 @@ bool XPixelShader::Initialize(ID3D11Device* _pDevice, std::wstring _wShaderPath,
 	{
 		MessageBox(NULL,
 			L"NO SHADER", L"Error", MB_OK);
-		return -1;
+		return true;
 	}
 
 	return false;

@@ -83,9 +83,6 @@
     <ClCompile Include="X3Engine.cpp">
       <Filter>1.Engine</Filter>
     </ClCompile>
-    <ClCompile Include="ViewGrid.cpp">
-      <Filter>2.Graphics\1.ViewGird</Filter>
-    </ClCompile>
     <ClCompile Include="XVertex.cpp">
       <Filter>2.Graphics\2.XVertex</Filter>
     </ClCompile>
@@ -141,9 +138,6 @@
     </ClInclude>
     <ClInclude Include="AlignedAllocationPolicy.h">
       <Filter>0.DirectX_Class\Define</Filter>
-    </ClInclude>
-    <ClInclude Include="ViewGrid.h">
-      <Filter>2.Graphics\1.ViewGird</Filter>
     </ClInclude>
     <ClInclude Include="XVertex.h">
       <Filter>2.Graphics\2.XVertex</Filter>

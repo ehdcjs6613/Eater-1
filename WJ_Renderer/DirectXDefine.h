@@ -10,6 +10,7 @@
 #define SAFE_RELEASE(x) { if(x){ x->Release(); x = 0; } }
 #define SafeDelete(x) { delete x; x = 0; }
 
+
 // LEHIDE
 #if defined(DEBUG) | defined(_DEBUG)
 #ifndef HR

@@ -5,11 +5,15 @@
 #include "Non_ThreadObjectPool.h"
 
 
-#ifdef Graphcis2D_Interface
-#define Graphics2D_DLL __declspec(dllimport)
-#else
-#define Graphics2D_DLL __declspec(dllexport)
-#endif
+
+
+
+EXPIMP_TEMPLATE template class Graphics2D_DLL std::queue<Text_Queue_Data*>;
+EXPIMP_TEMPLATE template class Graphics2D_DLL std::queue<Image_Queue_Data*>;
+EXPIMP_TEMPLATE template class Graphics2D_DLL std::queue<Image_Queue_Data*>;
+EXPIMP_TEMPLATE template class Graphics2D_DLL std::map<std::wstring, ID2D1Bitmap*>;
+
+
 
 class Graphics2D_DLL Grahpics2D
 {

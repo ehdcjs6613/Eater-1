@@ -211,6 +211,7 @@ void MultiRenderEngine::Render(int count, std::queue<MeshData*>* meshList, Globa
 		(Split_Window[count]).second->Render(meshList, global);
 	}
 
+
 }
 
 void MultiRenderEngine::Delete()

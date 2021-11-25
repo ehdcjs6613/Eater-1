@@ -1,6 +1,6 @@
 #include "Grahpics2D.h"
 
-Grahpics2D::Grahpics2D()
+Grahpics2D::Grahpics2D() : m_3D_SwapChain(nullptr),m_2D_RenderTarget(nullptr), g_hWnd(NULL)
 {
 	
 
@@ -41,7 +41,7 @@ void Grahpics2D::initialize(HWND _hWnd, IDXGISwapChain* _3D_SwapChain, float _Fo
 	hr = CoCreateInstance(CLSID_WICImagingFactory, NULL, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&pWICFactory));
 	hr = CoCreateInstance(CLSID_WICBmpDecoder, NULL, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&pDecodePtr));
 
-	dpi = GetDpiForWindow(g_hWnd);
+	dpi = (float)GetDpiForWindow(g_hWnd);
 
 	// 생성할 RenderTarget 에 대한 정보 설정.
 	D2D1_RENDER_TARGET_PROPERTIES props =
@@ -177,7 +177,7 @@ void Grahpics2D::thDrawSprite(std::wstring _Image_Name, POINTF _Position, float 
 	std::map<std::wstring, ID2D1Bitmap*>::iterator _map_data = Image_Resource.find(_Image_Name);
 	ID2D1Bitmap* _Img_Data = _map_data->second;
 
-	m_2D_RenderTarget->SetTransform(D2D1::Matrix3x2F::Rotation(_Angle, D2D1::Point2F(_Position.x, _Position.y)));
+	m_2D_RenderTarget->SetTransform(D2D1::Matrix3x2F::Rotation((FLOAT)_Angle, D2D1::Point2F(_Position.x, _Position.y)));
 
 	//m_2D_RenderTarget->DrawBitmap(_Img_Data, Draw_Area, _Alpha);
 
@@ -191,14 +191,14 @@ void Grahpics2D::thDrawSprite(std::wstring _Image_Name, POINTF _Position, float 
 		idx = 0;
 	}
 
-	int Accross = (int)_Img_Data->GetSize().width / _StartOneSpace;
+	float Accross = (int)_Img_Data->GetSize().width / _StartOneSpace;
 
 
 	D2D1_RECT_F DrawAfterImage =
 	{
-		(idx % Accross) * _StartOneSpace,
+		(idx % (int)Accross) * _StartOneSpace,
 		(idx / Accross) * _EndOneSpace,
-		((idx % Accross * _StartOneSpace) + _StartOneSpace),
+		((idx % (int)Accross * _StartOneSpace) + _StartOneSpace),
 		(idx / Accross) * _EndOneSpace + _EndOneSpace
 	};
 
@@ -270,6 +270,7 @@ void Grahpics2D::Push_DrawText(POINT _Pos, float _Width,
 	// 버퍼 준비 최대 글자수 128
 	wchar_t* pStr = nullptr;
 	pStr =new wchar_t[128];
+	ZeroMemory(pStr, sizeof(wchar_t[128]));
 
 	va_list args;
 	// 가변인자의 위치를 처음으로 셋팅하기 위함.
@@ -281,8 +282,8 @@ void Grahpics2D::Push_DrawText(POINT _Pos, float _Width,
 
 	Text_Queue_Data* Queue_Data = Text_Data_Pool.GetObject();
 
-	Queue_Data->Position_X = _Pos.x;
-	Queue_Data->Position_Y = _Pos.y;
+	Queue_Data->Position_X = (float)_Pos.x;
+	Queue_Data->Position_Y = (float)_Pos.y;
 	Queue_Data->Text_Width = _Width;
 
 	Queue_Data->Color_R = r;
@@ -312,7 +313,7 @@ void Grahpics2D::Draw_AllText()
 
 		m_WriteFactory->CreateTextLayout(
 			Queue_Data->Text_String,
-			wcslen(Queue_Data->Text_String),
+			(UINT32)wcslen(Queue_Data->Text_String),
 			m_TextFormat,
 			Queue_Data->Text_Width,
 			std::numeric_limits<float>::infinity(),
@@ -320,18 +321,28 @@ void Grahpics2D::Draw_AllText()
 
 		DWRITE_TEXT_RANGE textRange;
 		textRange.startPosition = 0;
-		textRange.length = wcslen(Queue_Data->Text_String);
+		textRange.length = (UINT)wcslen(Queue_Data->Text_String);
 
 		m_TextLayOut->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING);
 		m_TextLayOut->SetFontSize(Queue_Data->Text_Size, textRange);
 
 
-		// 폰트별 차지하는 영역 계산 필요
-		m_2D_RenderTarget->DrawTextLayout
-		(
-			D2D1::Point2F(Queue_Data->Position_X, Queue_Data->Position_Y),
-			m_TextLayOut, m_TextColor
-		);
+		if (nullptr != m_TextLayOut)
+		{
+			if (nullptr != m_TextColor)
+			{
+				// 폰트별 차지하는 영역 계산 필요
+				m_2D_RenderTarget->DrawTextLayout
+				(
+					D2D1::Point2F(Queue_Data->Position_X, Queue_Data->Position_Y),
+					m_TextLayOut, m_TextColor
+				);
+			}
+			else{return;}
+		
+		}
+		else{return;}
+	
 
 		m_TextLayOut->Release();
 		m_TextColor->Release();
@@ -382,7 +393,7 @@ void Grahpics2D::Draw_AllSprite()
 			POINTF{ Queue_Data->Position_X, Queue_Data->Position_Y },
 			Queue_Data->Alpha,
 			Queue_Data->Scale_X, Queue_Data->Scale_Y,
-			Queue_Data->Rotate_Angle,
+			(int)Queue_Data->Rotate_Angle,
 			0,
 			Queue_Data->Index,
 			Queue_Data->WidthDraw,

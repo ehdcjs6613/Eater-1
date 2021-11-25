@@ -53,7 +53,7 @@ struct Image_Queue_Data
 
 
 	//스프라이트용 이미지에 대한 자료
-	int    Index = 0.0f;				//이미지 인덱스
+	int    Index = 0;				//이미지 인덱스
 	float  WidthDraw = 0.0f;			//스프라이트 이미지중 한칸의 대한 이미지.
 	float  HeightDraw = 0.0f;
 };

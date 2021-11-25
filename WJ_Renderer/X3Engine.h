@@ -21,12 +21,7 @@ class DirectXSamplerState;
 
 class SharedRenderData;
 
-class Grahpics2D;
-
 //그리기를 위한 포인터의  클래스
-//개인그리기
-class ViewGrid;
-
 
 
 
@@ -112,8 +107,6 @@ private:
 	DirectXRenderTargeter*	m_pRenderTargeter;
 	DirectXSamplerState*	m_pSamplerState;
 
-	Grahpics2D*	m_pGrahpics2D;
-
 private:
 
 
@@ -155,8 +148,6 @@ private:
 	HRESULT EndRender();
 	//-----------------------------------
 
-
-	ViewGrid* m_pViewGrid;
 private:
 	ID3DX11Effect* m_FX;
 	ID3DX11EffectTechnique* mTech;
