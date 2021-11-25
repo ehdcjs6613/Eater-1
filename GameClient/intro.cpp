@@ -75,7 +75,7 @@ void intro::Awake()
 	Mf->SetTextureName("MainTexture");
 	tr->Rotation = { 90 ,0,0 };
 
-
+	//
 	///¿øÇü
 	testobj = Instance("Inside_dome");
 	Mf = testobj->AddComponent<MeshFilter>();
