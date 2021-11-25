@@ -301,7 +301,7 @@ void X3Engine::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 		Vertex_Buffer_Offset = 0;
 
 		/// WVP TM등을 셋팅
-		mWorld = DirectX::XMMatrixIdentity();//_Mesh_Data->mWorld;
+		mWorld = _Mesh_Data->mWorld;//_Mesh_Data->mWorld;
 		//mWorld = DirectX::SimpleMath::Matrix();
 		Mul_WVP = mWorld * mView * mProj;
 
