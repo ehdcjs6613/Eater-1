@@ -29,7 +29,7 @@ void intro::Awake()
 	//LoadMesh("Skinning");
 	LoadMesh("Enemy_Run",false,false);
 	LoadMesh("Inside_dome");
-	LoadMesh("map");
+	LoadMesh("Dome_v03");
 	//LoadMesh("Enemy_Roll",false,true);
 	//LoadMesh("Anim_Run",false,false);
 	//LoadMesh("Anim_Idle",false,true);
@@ -71,7 +71,7 @@ void intro::Awake()
 	Mf = testobj->AddComponent<MeshFilter>();
 	ac = nullptr;
 	tr = testobj->GetTransform();
-	Mf->SetMeshName("map");
+	Mf->SetMeshName("Inside_dome");
 	Mf->SetTextureName("MainTexture");
 	tr->Rotation = { 90 ,0,0 };
 
@@ -81,7 +81,7 @@ void intro::Awake()
 	Mf = testobj->AddComponent<MeshFilter>();
 	ac = nullptr;
 	tr = testobj->GetTransform();
-	Mf->SetMeshName("Inside_dome");
+	Mf->SetMeshName("Dome_v03");
 	Mf->SetTextureName("MainTexture");
 	tr->Rotation = { 90 ,0,0 };
 }
