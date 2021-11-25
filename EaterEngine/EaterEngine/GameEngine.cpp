@@ -105,8 +105,8 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 	mGraphicManager->SplitWindow(1, 1);
 
 	//엔진을 지정된 넘버로 넣는다
-	mGraphicManager->PushEngine(0, new HsGraphic(), "형선");
-	//mGraphicManager->PushEngine(1, new KHGraphic(), "규황");
+	//mGraphicManager->PushEngine(0, new HsGraphic(), "형선");
+	mGraphicManager->PushEngine(0, new KHGraphic(), "규황");
 	//mGraphicManager->PushEngine(2, new DH3DEngine(), "동혁");
 	//mGraphicManager->PushEngine(3, new DH3DEngine(), "동혁0");
 
