@@ -112,7 +112,7 @@ void ObjectManager::PushStartUpdate(Component* mComponent)
 	//함수 포인터
 	data.FunctionPointer = std::bind(&Component::StartUpdate, mComponent);
 	//컨퍼넌트 포인터
-	data.ComponentPoiner = mComponent;
+	data.ComponentPointer = mComponent;
 
 	StartUpdate.Push(data);
 }
@@ -125,7 +125,7 @@ void ObjectManager::PushTransformUpdate(Component* mComponent)
 	//함수 포인터
 	data.FunctionPointer = std::bind(&Component::TransformUpdate, mComponent);
 	//컨퍼넌트 포인터
-	data.ComponentPoiner = mComponent;
+	data.ComponentPointer = mComponent;
 
 	TransformUpdate.Push(data);
 }
@@ -138,7 +138,7 @@ void ObjectManager::PushPhysicsUpdate(Component* mComponent)
 	//함수 포인터
 	data.FunctionPointer = std::bind(&Component::PhysicsUpdate, mComponent);
 	//컨퍼넌트 포인터
-	data.ComponentPoiner = mComponent;
+	data.ComponentPointer = mComponent;
 
 	PhysicsUpdate.Push(data);
 }
@@ -151,7 +151,7 @@ void ObjectManager::PushUpdate(Component* mComponent)
 	//함수 포인터
 	data.FunctionPointer = std::bind(&Component::Update, mComponent);
 	//컨퍼넌트 포인터
-	data.ComponentPoiner = mComponent;
+	data.ComponentPointer = mComponent;
 
 
 	Update.Push(data);
@@ -166,7 +166,7 @@ void ObjectManager::PushEndUpdate(Component* mComponent)
 	//함수 포인터
 	data.FunctionPointer = std::bind(&Component::EndUpdate, mComponent);
 	//컨퍼넌트 포인터
-	data.ComponentPoiner = mComponent;
+	data.ComponentPointer = mComponent;
 
 	EndUpdate.Push(data);
 }
@@ -179,7 +179,7 @@ void ObjectManager::PushStart(Component* mComponent)
 	//함수 포인터
 	data.FunctionPointer = std::bind(&Component::Start, mComponent);
 	//컨퍼넌트 포인터
-	data.ComponentPoiner = mComponent;
+	data.ComponentPointer = mComponent;
 
 	StartFunction.Push(data);
 }
@@ -192,7 +192,7 @@ void ObjectManager::PushAwake(Component* mComponent)
 	//함수 포인터
 	data.FunctionPointer = std::bind(&Component::Awake, mComponent);
 	//컨퍼넌트 포인터
-	data.ComponentPoiner = mComponent;
+	data.ComponentPointer = mComponent;
 
 	AwakeFunction.Push(data);
 }
@@ -230,26 +230,33 @@ void ObjectManager::PlayUpdate()
 	Global->mLightViewMX	= DirectionLight::g_DirLight->GetView();
 	Global->mLightProj		= DirectionLight::g_DirLight->GetProj();
 	Global->mShadowTrans	= DirectionLight::g_DirLight->GetShadowTranspose();
-
-	///모든오브젝트의 데이터를 랜더큐에 담는다
-	CreateRenderQueue();
-
-	///모든 오브젝트 업데이트 완료
 }
 
 void ObjectManager::CreateRenderQueue()
 {
 	//오브젝트의 사이즈 만큼 돌면서 랜더큐에 MeshData를 전달해준다
-	for (int i = 0; i < ShadowData.size(); i++)
+	while ((int)ShadowData.size() != 0)
 	{
 		ShadowData.pop();
 	}
 	
+
+	while((int)RenderData.size() != 0)
+	{
+		RenderData.pop();
+	}
+
+
+
+
 	int count = (int)ObjectList.size();
 	
 	std::vector<GameObject*>::iterator it = ObjectList.begin();
 	for (it; it != ObjectList.end(); it++)
 	{	
+		if ((*it)->OneMeshData->ObjType == OBJECT_TYPE::BONE) { continue; }
+
+
 		RenderData.push((*it)->OneMeshData);
 		ShadowData.push((*it)->OneMeshData);
 	}

@@ -30,7 +30,6 @@ Animator::~Animator()
 void Animator::Start()
 {
 	transfrom = gameobject->transform;
-	Play(1,true);
 }
 
 void Animator::StartUpdate()
