@@ -13,6 +13,19 @@ AnimationController::~AnimationController()
 
 }
 
+void AnimationController::Update()
+{
+	if (mKeyInputManger->GetKeyDown(VK_F3))
+	{
+		Choice("Roll");	
+	}
+
+	if (mKeyInputManger->GetKeyDown(VK_F4))
+	{
+		Choice("Run");
+	}
+}
+
 void AnimationController::SetBoneList(std::vector<GameObject*>* m_ObjList)
 {
 	//게임오브젝트리스트를 애니메이터 리스트로 변경시켜줌
@@ -38,41 +51,29 @@ void AnimationController::SetAnimeList(ModelAnimationData* data)
 	AnimationList = data;
 }
 
-
 void AnimationController::Choice(std::string Name)
 {
 	//나의 애니메이션 리스트에서 선택한 애니메이션을 본에게 넘겨준다
 	NowAnimationName = Name;
-	//int count = (int)AnimationList->AnimList[Name]->size();
+	isChoice = true;
 	std::vector<OneAnimation*>* data = AnimationList->AnimList[Name];
+	
 
-	std::vector<Animator*>::iterator it = AnimatorList.begin();
-	int count = 0;
-	for (it;it!= AnimatorList.end();it++)
+	//본의 애니메이션을 넣어준다
+	int Count = (int)AnimatorList.size();
+	for (int i = 0; i < Count; i++)
 	{
-		if ((*it) == nullptr) { continue; }
-
-		(*it)->SetAnimation((*data)[count]);
-		count++;
+		if (AnimatorList[i] == nullptr) { continue; }
+		
+		AnimatorList[i]->SetAnimation((*data)[i]);
 	}
 }
 
 void AnimationController::Play(float Speed, bool Loop)
 {
-	//이미 한번 플레이가 호출되면 그뒤로는 호출안됨
-	if (isPlay == true) { return; }
 
-	std::vector<OneAnimation*>* data = AnimationList->AnimList[NowAnimationName];
-	int count = (int)data->size();
 
-	for (int i = 0; i < count; i++)
-	{
-		if ((*data)[i] == nullptr) { continue; }
-		if (AnimatorList[i] == nullptr) { continue; }
 
-		AnimatorList[i]->Play();
-	}
-	isPlay = true;
 }
 
 void AnimationController::Stop()

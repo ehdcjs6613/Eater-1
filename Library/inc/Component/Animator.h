@@ -51,10 +51,9 @@ private:
 	DirectX::XMMATRIX XM_SCL;
 
 	float	mTime;			//현재 재생타임
-	float	PlaySpeed;		//애니메이션을 한바퀴 도는 시간 
+	float	PlayTime;		//애니메이션을 한바퀴 도는 시간 
 	int		AnimeIndex;		//애니메이션 인덱스값
 	bool	mLoop;			//반복 재생 여부
-	bool	mPlay;
 	bool	mStop;
 
 

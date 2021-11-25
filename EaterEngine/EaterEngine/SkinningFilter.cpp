@@ -17,9 +17,8 @@ SkinningFilter::~SkinningFilter()
 
 void SkinningFilter::Start()
 {
-	
-
-	
+	BoneOffsetTM->resize(BoneSize);
+	gameobject->OneMeshData->BoneOffsetTM.resize(BoneSize);
 }
 
 void SkinningFilter::Update()
@@ -46,7 +45,6 @@ void SkinningFilter::PushBoneList(std::vector<GameObject*>* mBoneList)
 	// BoneList 와 BoneOffsetTM 은 1:1 매칭이 되어야한다
 	// 받은 본 오브젝트 리스트를 Tranform만 뽑아서 다시저장
 	BoneSize = (int)mBoneList->size();
-	gameobject->OneMeshData->BoneOffsetTM.resize(BoneSize);
 	BoneList.resize(BoneSize);
 
 	for (int i = 0; i < BoneSize; i++)

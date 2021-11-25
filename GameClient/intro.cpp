@@ -5,8 +5,9 @@
 #include "SkinningFilter.h"
 #include "AnimationController.h"
 #include "Transform.h"
-#include "KeyInput.h"
+#include "AI.h"
 #include "Player.h"
+#include "KeyInput.h"
 #include "Camera.h"
 #include "Light.h"
 
@@ -16,27 +17,29 @@ void intro::Awake()
 	LoadMeshPath("../Resources/Mesh/");
 	LoadTesturePath("../Resources/Texture/");
 	
-	LoadTesture("Dump.png");
 	//LoadMesh("Player_Idle");
 	//LoadMesh("EnemyB");
 	//LoadMesh("Field");
 	//LoadMesh("Table");
 	//LoadMesh("box");
-	//LoadMesh("Dome_v03");
 	//LoadMesh("1s_table_long_lower");
 	//LoadMesh("MOdNA09_highpoly_1123");
 	//LoadMesh("Enemy_Run",false, true);
 	//LoadMesh("Player_Attack");
 	//LoadMesh("Skinning");
 	LoadMesh("Enemy_Run",false,false);
-	LoadMesh("Enemy_Roll",false,true);
-	//LoadMesh("Anim_Run",	true,false);
-	//LoadMesh("Anim_Idle",	false,true);
+	LoadMesh("Inside_dome");
+	LoadMesh("map");
+	//LoadMesh("Enemy_Roll",false,true);
+	//LoadMesh("Anim_Run",false,false);
+	//LoadMesh("Anim_Idle",false,true);
 	//LoadMesh("Anim_Idle",false,true);
 	//LoadMesh("box");
 	//LoadMesh("AnimeBox");
 	//LoadTesture("body_normal_tangent_Base_color.png");
+	LoadTesture("Dump.png");
 	LoadTesture("Player.dds");
+	LoadTesture("MainTexture.png");
 	//LoadTesture("body_normal_tangent_Base_color.png");
 
 	///카메라
@@ -49,7 +52,38 @@ void intro::Awake()
 	testobj = Instance("DirectionLight");
 	testobj->AddComponent<DirectionLight>();
 
-	CreateObject();
+
+
+	///캐릭터
+	testobj = Instance("Player");
+	MeshFilter* Mf			= testobj->AddComponent<MeshFilter>();
+	AnimationController* ac = testobj->AddComponent<AnimationController>();
+	Transform* tr			= testobj->GetTransform();
+	////컨퍼넌트 초기화
+	Mf->SetMeshName("Enemy_Run");
+	Mf->SetTextureName("Player");
+	Mf->SetAnimationName("Enemy");
+	tr->Rotation = { 90 ,0,0 };
+
+
+	/// MAP
+	//testobj = Instance("obj1");
+	//Mf = testobj->AddComponent<MeshFilter>();
+	//ac = nullptr;
+	//tr = testobj->GetTransform();
+	//Mf->SetMeshName("map");
+	//Mf->SetTextureName("MainTexture");
+	//tr->Rotation = { 90 ,0,0 };
+
+
+	///원형
+	//testobj = Instance("Inside_dome");
+	//Mf = testobj->AddComponent<MeshFilter>();
+	//ac = nullptr;
+	//tr = testobj->GetTransform();
+	//Mf->SetMeshName("Inside_dome");
+	//Mf->SetTextureName("MainTexture");
+	//tr->Rotation = { 90 ,0,0 };
 }
 
 void intro::Start()
@@ -66,15 +100,4 @@ void intro::End()
 {
 
 
-}
-
-void intro::CreateObject()
-{
-	testobj = Instance("obj1");
-
-	testobj->AddComponent<Player>();
-	testobj->AddComponent<AnimationController>();
-	testobj->AddComponent<MeshFilter>();
-
-	
 }

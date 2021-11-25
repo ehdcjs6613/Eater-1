@@ -5,6 +5,18 @@
 #include "GameObject.h"
 #include "MainHeader.h"
 
+Player::Player()
+{
+	AC = nullptr;
+	Tr = nullptr;
+	Mf = nullptr;
+}
+
+Player::~Player()
+{
+
+}
+
 void Player::Awake()
 {
 	//컨퍼넌트 가져오기
@@ -12,46 +24,18 @@ void Player::Awake()
 	Tr = gameobject->GetComponent<Transform>();
 	Mf = gameobject->GetComponent<MeshFilter>();
 
-	//컨퍼넌트 초기화
-	Mf->SetMeshName("Enemy_Run");
-	Mf->SetTextureName("Player");
-	Mf->SetAnimationName("Enemy");
 }
 
 void Player::Start()
 {
-	Tr->Position	= { 0 ,0, 0 };
-	Tr->Scale		= { 1 ,1, 1 };
-	Tr->Rotation	= { 90 ,0,0 };
+	//컨퍼넌트 초기화
+	Mf->SetMeshName("Enemy_Run");
+	Mf->SetTextureName("Player");
+	Mf->SetAnimationName("Enemy");
 
-	AC->Choice("Roll");
+	Tr->Position = { 0 ,0, 0 };
+	Tr->Scale = { 1 ,1, 1 };
+	Tr->Rotation = { 90 ,0,0 };
 }
 
-void Player::Update()
-{
-	//방향키
-	if (GetKey(VK_UP))
-	{
-		Tr->SetTranlate(0, 0, -GetDeltaTime());
-		AC->Choice("Run");
-	}
 
-	if (GetKey(VK_DOWN))
-	{
-		Tr->SetTranlate(0, 0, GetDeltaTime());
-		AC->Choice("Run");
-	}
-
-	if (GetKey(VK_RIGHT))
-	{
-		Tr->SetTranlate(GetDeltaTime(), 0, 0);
-		AC->Choice("Run");
-	}
-	if (GetKey(VK_LEFT))
-	{
-		Tr->SetTranlate(-GetDeltaTime(), 0,0);
-		AC->Choice("Run");
-	}
-
-	AC->Play(1, true);
-}

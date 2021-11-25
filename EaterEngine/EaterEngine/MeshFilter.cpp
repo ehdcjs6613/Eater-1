@@ -200,7 +200,10 @@ void MeshFilter::CreateChild_Mesh(LoadMeshData* data, Transform* parent, ModelDa
 	Tr->Load_World = *data->WorldTM;
 
 	//Transform 끼리 연결
-	//LinkHierarchy(Tr, parent);
+	if (data->Skinning_Object == false)
+	{
+		LinkHierarchy(Tr, parent);
+	}
 	//오브젝트 매니저에서 관리할수있도록 넣어준다
 	OBJ_Manager->PushCreateObject(OBJ);
 
