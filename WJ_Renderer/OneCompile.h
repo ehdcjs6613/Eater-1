@@ -26,7 +26,7 @@
 #pragma comment( lib, "DirectXTK_x64r.lib" )
 #pragma comment( lib, "Effects11.lib" )
 #endif
-
+//
 
 
 
