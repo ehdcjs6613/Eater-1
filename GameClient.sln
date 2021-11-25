@@ -5,7 +5,6 @@ VisualStudioVersion = 16.0.31005.135
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GameClient", "GameClient\GameClient.vcxproj", "{F7B74EBE-5212-462B-9A00-DCA9CCFA7ECA}"
 	ProjectSection(ProjectDependencies) = postProject
-		{27AE9575-4284-4E30-804A-F3D3C73E2C7A} = {27AE9575-4284-4E30-804A-F3D3C73E2C7A}
 		{DA0653A1-8789-40BC-ADEE-D29B5D09A1A4} = {DA0653A1-8789-40BC-ADEE-D29B5D09A1A4}
 	EndProjectSection
 EndProject
@@ -34,8 +33,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MultiRenderEngine", "MultiR
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WJ_Renderer", "WJ_Renderer\WJ_Renderer.vcxproj", "{E4A020D0-ECC7-442C-ABF3-48076C2EF47A}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DirectX2DSupporter", "DirectX2DSupporter\DirectX2DSupporter.vcxproj", "{27AE9575-4284-4E30-804A-F3D3C73E2C7A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -109,14 +106,6 @@ Global
 		{E4A020D0-ECC7-442C-ABF3-48076C2EF47A}.Release|x64.Build.0 = Release|x64
 		{E4A020D0-ECC7-442C-ABF3-48076C2EF47A}.Release|x86.ActiveCfg = Release|Win32
 		{E4A020D0-ECC7-442C-ABF3-48076C2EF47A}.Release|x86.Build.0 = Release|Win32
-		{27AE9575-4284-4E30-804A-F3D3C73E2C7A}.Debug|x64.ActiveCfg = Debug|x64
-		{27AE9575-4284-4E30-804A-F3D3C73E2C7A}.Debug|x64.Build.0 = Debug|x64
-		{27AE9575-4284-4E30-804A-F3D3C73E2C7A}.Debug|x86.ActiveCfg = Debug|Win32
-		{27AE9575-4284-4E30-804A-F3D3C73E2C7A}.Debug|x86.Build.0 = Debug|Win32
-		{27AE9575-4284-4E30-804A-F3D3C73E2C7A}.Release|x64.ActiveCfg = Release|x64
-		{27AE9575-4284-4E30-804A-F3D3C73E2C7A}.Release|x64.Build.0 = Release|x64
-		{27AE9575-4284-4E30-804A-F3D3C73E2C7A}.Release|x86.ActiveCfg = Release|Win32
-		{27AE9575-4284-4E30-804A-F3D3C73E2C7A}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
