@@ -1,0 +1,84 @@
+﻿다시 빌드 시작...
+1>------ 모두 다시 빌드 시작: 프로젝트: DirectX2DSupporter, 구성: Debug x64 ------
+1>dllmain.cpp
+1>Grahpics2D.cpp
+1>C:\Users\KGIT13\Documents\GitHub\Eater\DirectX2DSupporter\Graphics2D_Sturcter.h(56,17): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+1>C:\Users\KGIT13\Documents\GitHub\Eater\DirectX2DSupporter\Grahpics2D.h(63,40): warning C4251: 'Grahpics2D::Text_Data_Pool': class 'Non_ThreadObjectPool<Text_Queue_Data>'에서는 class 'Grahpics2D'의 클라이언트에서 DLL 인터페이스를 사용하도록 지정해야 합니다.
+1>C:\Users\KGIT13\Documents\GitHub\Eater\DirectX2DSupporter\Grahpics2D.h(63): message : 'Non_ThreadObjectPool<Text_Queue_Data>' 선언을 참조하십시오.
+1>C:\Users\KGIT13\Documents\GitHub\Eater\DirectX2DSupporter\Grahpics2D.h(64,41): warning C4251: 'Grahpics2D::Image_Data_Pool': class 'Non_ThreadObjectPool<Image_Queue_Data>'에서는 class 'Grahpics2D'의 클라이언트에서 DLL 인터페이스를 사용하도록 지정해야 합니다.
+1>C:\Users\KGIT13\Documents\GitHub\Eater\DirectX2DSupporter\Grahpics2D.h(64): message : 'Non_ThreadObjectPool<Image_Queue_Data>' 선언을 참조하십시오.
+1>C:\Users\KGIT13\Documents\GitHub\Eater\DirectX2DSupporter\Grahpics2D.h(65,41): warning C4251: 'Grahpics2D::Sprite_Data_Pool': class 'Non_ThreadObjectPool<Image_Queue_Data>'에서는 class 'Grahpics2D'의 클라이언트에서 DLL 인터페이스를 사용하도록 지정해야 합니다.
+1>C:\Users\KGIT13\Documents\GitHub\Eater\DirectX2DSupporter\Grahpics2D.h(64): message : 'Non_ThreadObjectPool<Image_Queue_Data>' 선언을 참조하십시오.
+1>C:\Users\KGIT13\Documents\GitHub\Eater\DirectX2DSupporter\Grahpics2D.h(68,31): warning C4251: 'Grahpics2D::Msg_Queue': class 'std::queue<T *,std::deque<T *,std::allocator<T *>>>'에서는 class 'Grahpics2D'의 클라이언트에서 DLL 인터페이스를 사용하도록 지정해야 합니다.
+1>        with
+1>        [
+1>            T=Text_Queue_Data
+1>        ]
+1>C:\Users\KGIT13\Documents\GitHub\Eater\DirectX2DSupporter\Non_ThreadObjectPool.h(10): message : 'std::queue<T *,std::deque<T *,std::allocator<T *>>>' 선언을 참조하십시오.
+1>        with
+1>        [
+1>            T=Text_Queue_Data
+1>        ]
+1>C:\Users\KGIT13\Documents\GitHub\Eater\DirectX2DSupporter\Grahpics2D.h(69,32): warning C4251: 'Grahpics2D::Image_Queue': class 'std::queue<T *,std::deque<T *,std::allocator<T *>>>'에서는 class 'Grahpics2D'의 클라이언트에서 DLL 인터페이스를 사용하도록 지정해야 합니다.
+1>        with
+1>        [
+1>            T=Image_Queue_Data
+1>        ]
+1>C:\Users\KGIT13\Documents\GitHub\Eater\DirectX2DSupporter\Non_ThreadObjectPool.h(10): message : 'std::queue<T *,std::deque<T *,std::allocator<T *>>>' 선언을 참조하십시오.
+1>        with
+1>        [
+1>            T=Image_Queue_Data
+1>        ]
+1>C:\Users\KGIT13\Documents\GitHub\Eater\DirectX2DSupporter\Grahpics2D.h(70,32): warning C4251: 'Grahpics2D::Sprite_Queue': class 'std::queue<T *,std::deque<T *,std::allocator<T *>>>'에서는 class 'Grahpics2D'의 클라이언트에서 DLL 인터페이스를 사용하도록 지정해야 합니다.
+1>        with
+1>        [
+1>            T=Image_Queue_Data
+1>        ]
+1>C:\Users\KGIT13\Documents\GitHub\Eater\DirectX2DSupporter\Non_ThreadObjectPool.h(10): message : 'std::queue<T *,std::deque<T *,std::allocator<T *>>>' 선언을 참조하십시오.
+1>        with
+1>        [
+1>            T=Image_Queue_Data
+1>        ]
+1>C:\Users\KGIT13\Documents\GitHub\Eater\DirectX2DSupporter\Grahpics2D.h(71,39): warning C4251: 'Grahpics2D::Image_Resource': class 'std::map<std::wstring,ID2D1Bitmap *,std::less<std::wstring>,std::allocator<std::pair<const std::wstring,ID2D1Bitmap *>>>'에서는 class 'Grahpics2D'의 클라이언트에서 DLL 인터페이스를 사용하도록 지정해야 합니다.
+1>C:\Users\KGIT13\Documents\GitHub\Eater\DirectX2DSupporter\Grahpics2D.h(71): message : 'std::map<std::wstring,ID2D1Bitmap *,std::less<std::wstring>,std::allocator<std::pair<const std::wstring,ID2D1Bitmap *>>>' 선언을 참조하십시오.
+1>C:\Users\KGIT13\Documents\GitHub\Eater\DirectX2DSupporter\Grahpics2D.cpp(44,23): warning C4244: '=': 'UINT'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+1>C:\Users\KGIT13\Documents\GitHub\Eater\DirectX2DSupporter\Grahpics2D.cpp(180,61): warning C4244: '인수': 'int'에서 'FLOAT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+1>C:\Users\KGIT13\Documents\GitHub\Eater\DirectX2DSupporter\Grahpics2D.cpp(194,14): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+1>C:\Users\KGIT13\Documents\GitHub\Eater\DirectX2DSupporter\Grahpics2D.cpp(284,31): warning C4244: '=': 'LONG'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+1>C:\Users\KGIT13\Documents\GitHub\Eater\DirectX2DSupporter\Grahpics2D.cpp(285,31): warning C4244: '=': 'LONG'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+1>C:\Users\KGIT13\Documents\GitHub\Eater\DirectX2DSupporter\Grahpics2D.cpp(319,17): warning C4267: '인수': 'size_t'에서 'UINT32'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+1>C:\Users\KGIT13\Documents\GitHub\Eater\DirectX2DSupporter\Grahpics2D.cpp(323,53): warning C4267: '=': 'size_t'에서 'UINT32'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+1>C:\Users\KGIT13\Documents\GitHub\Eater\DirectX2DSupporter\Grahpics2D.cpp(385,14): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+1>코드를 생성하고 있습니다...
+1>   C:\Users\KGIT13\Documents\GitHub\Eater\x64\Debug\DirectX2DSupporter.lib 라이브러리 및 C:\Users\KGIT13\Documents\GitHub\Eater\x64\Debug\DirectX2DSupporter.exp 개체를 생성하고 있습니다.
+1>DirectX2DSupporter.vcxproj -> C:\Users\KGIT13\Documents\GitHub\Eater\x64\Debug\DirectX2DSupporter.dll
+1>C:\Users\KGIT13\Documents\GitHub\Eater\DirectX2DSupporter\Grahpics2D.h
+1>C:\Users\KGIT13\Documents\GitHub\Eater\DirectX2DSupporter\Grahpics2D_Define.h
+1>C:\Users\KGIT13\Documents\GitHub\Eater\DirectX2DSupporter\Graphics2D_Sturcter.h
+1>C:\Users\KGIT13\Documents\GitHub\Eater\DirectX2DSupporter\Non_ThreadObjectPool.h
+1>C:\Users\KGIT13\Documents\GitHub\Eater\DirectX2DSupporter\Texture.h
+1>        5개 파일이 복사되었습니다.
+1>C:\Users\KGIT13\Documents\GitHub\Eater\x64\Debug\DH3DEngine_x64d.dll
+1>C:\Users\KGIT13\Documents\GitHub\Eater\x64\Debug\DirectX2DSupporter.dll
+1>C:\Users\KGIT13\Documents\GitHub\Eater\x64\Debug\EaterEngine_x64d.dll
+1>C:\Users\KGIT13\Documents\GitHub\Eater\x64\Debug\EditorLib.dll
+1>C:\Users\KGIT13\Documents\GitHub\Eater\x64\Debug\HsGraphic_x64d.dll
+1>C:\Users\KGIT13\Documents\GitHub\Eater\x64\Debug\KHGraphic_x64d.dll
+1>C:\Users\KGIT13\Documents\GitHub\Eater\x64\Debug\KHParser_x64d.dll
+1>C:\Users\KGIT13\Documents\GitHub\Eater\x64\Debug\libfbxsdk.dll
+1>C:\Users\KGIT13\Documents\GitHub\Eater\x64\Debug\MultiRenderEngine_x64d.dll
+1>C:\Users\KGIT13\Documents\GitHub\Eater\x64\Debug\WJ_Renderer.dll
+1>C:\Users\KGIT13\Documents\GitHub\Eater\x64\Debug\WJ_Renderer_x64d.dll
+1>       11개 파일이 복사되었습니다.
+1>C:\Users\KGIT13\Documents\GitHub\Eater\x64\Debug\DH3DEngine_x64d.lib
+1>C:\Users\KGIT13\Documents\GitHub\Eater\x64\Debug\DirectX2DSupporter.lib
+1>C:\Users\KGIT13\Documents\GitHub\Eater\x64\Debug\EaterEngine_x64d.lib
+1>C:\Users\KGIT13\Documents\GitHub\Eater\x64\Debug\EditorLib.lib
+1>C:\Users\KGIT13\Documents\GitHub\Eater\x64\Debug\HsGraphic_x64d.lib
+1>C:\Users\KGIT13\Documents\GitHub\Eater\x64\Debug\KHGraphic_x64d.lib
+1>C:\Users\KGIT13\Documents\GitHub\Eater\x64\Debug\KHParser_x64d.lib
+1>C:\Users\KGIT13\Documents\GitHub\Eater\x64\Debug\MultiRenderEngine_x64d.lib
+1>C:\Users\KGIT13\Documents\GitHub\Eater\x64\Debug\WJ_Renderer.lib
+1>        9개 파일이 복사되었습니다.
+1>"DirectX2DSupporter.vcxproj" 프로젝트를 빌드했습니다.
+========== 모두 다시 빌드: 성공 1, 실패 0, 생략 0 ==========
