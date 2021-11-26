@@ -175,24 +175,24 @@ void GraphicResourceManager::Release()
 		SAFE_DELETE(viewport);
 	}
 
-	for (ComPtr<ID3D11DepthStencilState> dss : m_DepthStencilStateList)
+	for (std::pair<Hash_Code, Microsoft::WRL::ComPtr<ID3D11DepthStencilState>> dss : m_DepthStencilStateList)
 	{
-		RESET_COM(dss);
+		RESET_COM(dss.second);
 	}
 
-	for (ComPtr<ID3D11RasterizerState> rs : m_RasterizerStateList)
+	for (std::pair<Hash_Code, Microsoft::WRL::ComPtr<ID3D11RasterizerState>> rs : m_RasterizerStateList)
 	{
-		RESET_COM(rs);
+		RESET_COM(rs.second);
 	}
 
-	for (ComPtr<ID3D11BlendState> bs : m_BlendStateList)
+	for (std::pair<Hash_Code, Microsoft::WRL::ComPtr<ID3D11BlendState>> bs : m_BlendStateList)
 	{
-		RESET_COM(bs);
+		RESET_COM(bs.second);
 	}
 
-	for (ComPtr<ID3D11SamplerState> ss : m_SamplerStateList)
+	for (std::pair<Hash_Code, Microsoft::WRL::ComPtr<ID3D11SamplerState>> ss : m_SamplerStateList)
 	{
-		RESET_COM(ss);
+		RESET_COM(ss.second);
 	}
 
 	for (BufferData* buffer : m_BufferList)

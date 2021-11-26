@@ -282,6 +282,12 @@
     <ClInclude Include="BlendStateDefine.h">
       <Filter>소스 파일\HashTable\GraphicResource</Filter>
     </ClInclude>
+    <ClInclude Include="RenderTargetDefine.h">
+      <Filter>소스 파일\HashTable\GraphicResource</Filter>
+    </ClInclude>
+    <ClInclude Include="ViewPortDefine.h">
+      <Filter>소스 파일\HashTable\GraphicResource</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="D3D11Graphic.cpp">

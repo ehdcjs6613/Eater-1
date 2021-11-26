@@ -200,6 +200,7 @@ copy /Y "$(ProjectDir)GraphicDLL.h" "$(SolutionDir)Library\inc"</Command>
     <ClInclude Include="BasicRenderTarget.h" />
     <ClInclude Include="MathDefine.h" />
     <ClInclude Include="RasterizerStateDefine.h" />
+    <ClInclude Include="RenderTargetDefine.h" />
     <ClInclude Include="RenderTargetTypes.h" />
     <ClInclude Include="ResourceFactoryBase.h" />
     <ClInclude Include="RenderManagerBase.h" />
@@ -231,6 +232,7 @@ copy /Y "$(ProjectDir)GraphicDLL.h" "$(SolutionDir)Library\inc"</Command>
     <ClInclude Include="VertexDefine.h" />
     <ClInclude Include="VertexShader.h" />
     <ClInclude Include="ViewPort.h" />
+    <ClInclude Include="ViewPortDefine.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ComputeRenderTarget.cpp" />

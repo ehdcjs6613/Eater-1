@@ -23,14 +23,16 @@ typedef size_t			Hash_Code;
 
 enum class eResourceType
 {
-	CBUFFER,
-	SAMPLER,
-	SRV,
-	UAV,
-	DSV,
-	DSS,
-	RS,
-	BS
+	CBUFFER,			// Constant Buffer Resource
+	SAMPLER,			// Sampler State Resource
+	SRV,				// Shader Resource View Resource
+	UAV,				// Unordered Access View Resource
+	DSV,				// Depth Stencil View Resource
+	DSS,				// Depth Stencil State Resource
+	RS,					// Rasterizer State Resource
+	BS,					// Blend State Resource
+	RT,					// RenderTarget Resource
+	VP,					// ViewPort Resource
 };
 
 class ShaderResourceHashTable

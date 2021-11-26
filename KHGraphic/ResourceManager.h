@@ -1,4 +1,5 @@
 #pragma once
+#include <unordered_map>
 #include "ResourceManagerBase.h"
 
 typedef size_t Hash_Code;
@@ -38,10 +39,10 @@ public:
 	template<typename T, typename U>
 	void AddResource(U resource);
 
-	template<typename T>
+	template<typename T = int>
 	void AddResource(ViewPort* resource);
 
-	template<typename T>
+	template<typename T = int>
 	void AddResource(RenderTarget* resource);
 
 	template<typename T>
@@ -59,7 +60,6 @@ public:
 	template<typename T>
 	void AddResource(Microsoft::WRL::ComPtr<ID3D11SamplerState> resource);
 
-	template<typename T = int>
 	void AddResource(BufferData* resource);
 
 
@@ -123,5 +123,4 @@ inline void GraphicResourceManager::AddResource(Microsoft::WRL::ComPtr<ID3D11Ble
 template<typename T>
 inline void GraphicResourceManager::AddResource(Microsoft::WRL::ComPtr<ID3D11SamplerState> resource) { m_SamplerStateList.insert(std::make_pair(T::GetHashCode(), resource)); }
 
-template<typename T>
-inline void GraphicResourceManager::AddResource(BufferData* resource) { m_BufferList.insert(std::make_pair(T::GetHashCode(), resource)); }
+inline void GraphicResourceManager::AddResource(BufferData* resource) { m_BufferList.push_back(resource); }
