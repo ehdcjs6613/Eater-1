@@ -35,7 +35,7 @@
       <UniqueIdentifier>{f719478b-bad2-44d2-a53c-e5625be7e03e}</UniqueIdentifier>
     </Filter>
     <Filter Include="소스 파일\Component\Player">
-      <UniqueIdentifier>{92f6c266-0ef8-48dc-a6ae-99b26a08959b}</UniqueIdentifier>
+      <UniqueIdentifier>{a59a5f89-b961-40e7-8282-6208957b9634}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

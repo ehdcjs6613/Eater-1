@@ -174,7 +174,7 @@ public:
 	std::function<void()> FunctionPointer;
 
 	//컨퍼넌트 포인터
-	Component* ComponentPoiner;
+	Component* ComponentPointer;
 };
 
 

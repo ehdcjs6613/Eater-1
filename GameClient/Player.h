@@ -5,16 +5,19 @@ class AnimationController;
 class Transform;
 class MeshFilter;
 
-class Player: public Component
+class Player :public Component
 {
 public:
+	Player();
+	~Player();
+
 	void Awake();
 	void Start();
-	void Update();
 
 private:
-
 	AnimationController* AC;
-	Transform* Tr;
+	Transform*	Tr;
 	MeshFilter* Mf;
+
+
 };
