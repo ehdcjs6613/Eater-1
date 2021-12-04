@@ -27,22 +27,11 @@ void intro::Awake()
 	LoadTexture("Dump.png");
 	
 
-	///카메라
-	testobj = Instance("Cam");
-	testobj->AddComponent<Camera>();
-	testobj->AddComponent<Keyinput>();
-	testobj->GetTransform()->Position = { 0,0,-25 };
 	
-	///라이트
-	testobj = Instance("DirectionLight");
-	testobj->AddComponent<DirectionLight>();
-
-	///캐릭터
-	testobj = Instance("Player");
-	testobj->AddComponent<AnimationController>();
-	testobj->AddComponent<MeshFilter>();
-	testobj->AddComponent<Player>();
-
+	
+	CreateCam();
+	CreateLignt();
+	CreatePlayer();
 }
 
 void intro::Start()
@@ -59,4 +48,29 @@ void intro::End()
 {
 
 
+}
+
+void intro::CreatePlayer()
+{
+	///캐릭터
+	GameObject* temp = Instance("Player");
+	temp->AddComponent<AnimationController>();
+	temp->AddComponent<MeshFilter>();
+	temp->AddComponent<Player>();
+}
+
+void intro::CreateLignt()
+{
+	///라이트
+	GameObject* temp = Instance("DirectionLight");
+	temp->AddComponent<DirectionLight>();
+}
+
+void intro::CreateCam()
+{
+	///카메라
+	GameObject* temp = Instance("Cam");
+	temp->AddComponent<Camera>();
+	temp->AddComponent<Keyinput>();
+	temp->GetTransform()->Position = { 0,0,-25 };
 }
