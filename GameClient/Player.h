@@ -9,15 +9,20 @@ class Player :public Component
 {
 public:
 	Player();
-	~Player();
-
+	virtual ~Player();
 	void Awake();
 	void Start();
-
+	void Update();
 private:
 	AnimationController* AC;
 	Transform*	Tr;
 	MeshFilter* Mf;
 
+	GameObject* RightHand;
+	GameObject* LeftHand;
 
+	GameObject* Gun;
+	GameObject* Weapon;
+
+	bool Move;
 };

@@ -27,7 +27,7 @@
 #include "HsGraphic.h"
 #include "DH3DEngine.h"
 #include "KHGraphic.h"
-#include "X3Engine.h"
+
 
 GameEngine::GameEngine()
 {
@@ -96,21 +96,15 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 	/// 다만 그래픽엔진의 순수가상함수로된건 무조건다만들어놔야함
 	/// </summary>
 	/////////////////////////////////////////////////////////////////
-
-	//mGraphicManager->PushEngine<HsGraphic>("형선");
-	//mGraphicManager->PushEngine<DH3DEngine>("동혁");
-	//mGraphicManager->PushEngine<KHGraphic>("규황");
-	//mGraphicManager->ChoiceEngine("형선");
-
 	//윈도를 가로 2 	세로3번으로 분할시키겠다 (총 윈도우의 수 = 2 * 3)
-	mGraphicManager->SplitWindow(2, 2);
+	mGraphicManager->SplitWindow(1, 1);
 
 	//엔진을 지정된 넘버로 넣는다
 	//mGraphicManager->PushEngine(0, new X3Engine(), "우진");
 	mGraphicManager->PushEngine(0, new HsGraphic(), "형선");
-	mGraphicManager->PushEngine(1, new X3Engine(), "우진");
-	mGraphicManager->PushEngine(2, new KHGraphic(), "규황");
-	mGraphicManager->PushEngine(3, new DH3DEngine(), "동혁");
+	
+	//mGraphicManager->PushEngine(2, new KHGraphic(), "규황");
+	//mGraphicManager->PushEngine(3, new DH3DEngine(), "동혁");
 
 
 

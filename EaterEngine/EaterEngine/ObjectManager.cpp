@@ -102,89 +102,7 @@ void ObjectManager::Initialize(HWND _g_hWnd)
 
 }
 
-void ObjectManager::PushStartUpdate(Component* mComponent)
-{
-	//컨퍼넌트들의 업데이트 함수만 모아놓은 리스트에 들어온 컨퍼넌트 업데이트 함수를 넣어줌
-
-	ComponentFunctionData data;
-	//활성화 여부
-	data.Enabled = &mComponent->Enabled;
-	//함수 포인터
-	data.FunctionPointer = std::bind(&Component::StartUpdate, mComponent);
-	//컨퍼넌트 포인터
-	data.ComponentPointer = mComponent;
-
-	StartUpdate.Push(data);
-}
-
-void ObjectManager::PushTransformUpdate(Component* mComponent)
-{
-	ComponentFunctionData data;
-	//활성화 여부
-	data.Enabled = &mComponent->Enabled;
-	//함수 포인터
-	data.FunctionPointer = std::bind(&Component::TransformUpdate, mComponent);
-	//컨퍼넌트 포인터
-	data.ComponentPointer = mComponent;
-
-	TransformUpdate.Push(data);
-}
-
-void ObjectManager::PushPhysicsUpdate(Component* mComponent)
-{
-	ComponentFunctionData data;
-	//활성화 여부
-	data.Enabled = &mComponent->Enabled;
-	//함수 포인터
-	data.FunctionPointer = std::bind(&Component::PhysicsUpdate, mComponent);
-	//컨퍼넌트 포인터
-	data.ComponentPointer = mComponent;
-
-	PhysicsUpdate.Push(data);
-}
-
-void ObjectManager::PushUpdate(Component* mComponent)
-{
-	ComponentFunctionData data;
-	//활성화 여부
-	data.Enabled = &mComponent->Enabled;
-	//함수 포인터
-	data.FunctionPointer = std::bind(&Component::Update, mComponent);
-	//컨퍼넌트 포인터
-	data.ComponentPointer = mComponent;
-
-
-	Update.Push(data);
-}
-
-void ObjectManager::PushEndUpdate(Component* mComponent)
-{
-	//가장 마지막에 실행되는 업데이트 함수리스트에 넣는다
-	ComponentFunctionData data;
-	//활성화 여부
-	data.Enabled = &mComponent->Enabled;
-	//함수 포인터
-	data.FunctionPointer = std::bind(&Component::EndUpdate, mComponent);
-	//컨퍼넌트 포인터
-	data.ComponentPointer = mComponent;
-
-	EndUpdate.Push(data);
-}
-
-void ObjectManager::PushStart(Component* mComponent)
-{
-	ComponentFunctionData data;
-	//활성화 여부
-	data.Enabled = &mComponent->Enabled;
-	//함수 포인터
-	data.FunctionPointer = std::bind(&Component::Start, mComponent);
-	//컨퍼넌트 포인터
-	data.ComponentPointer = mComponent;
-
-	StartFunction.Push(data);
-}
-
-void ObjectManager::PushAwake(Component* mComponent)
+void ObjectManager::PushAwake(Component* mComponent, int Order)
 {
 	ComponentFunctionData data;
 	//활성화 여부
@@ -193,9 +111,100 @@ void ObjectManager::PushAwake(Component* mComponent)
 	data.FunctionPointer = std::bind(&Component::Awake, mComponent);
 	//컨퍼넌트 포인터
 	data.ComponentPointer = mComponent;
+	//컨퍼넌트 순서
+	data.OrderCount = Order;
 
 	AwakeFunction.Push(data);
 }
+void ObjectManager::PushStartUpdate(Component* mComponent, int Order)
+{
+	ComponentFunctionData data;
+	//활성화 여부
+	data.Enabled = &mComponent->Enabled;
+	//함수 포인터
+	data.FunctionPointer = std::bind(&Component::StartUpdate, mComponent);
+	//컨퍼넌트 포인터
+	data.ComponentPointer = mComponent;
+	//컨퍼넌트 순서
+	data.OrderCount = Order;
+	StartUpdate.Push(data);
+}
+
+void ObjectManager::PushTransformUpdate(Component* mComponent, int Order)
+{
+	ComponentFunctionData data;
+	//활성화 여부
+	data.Enabled = &mComponent->Enabled;
+	//함수 포인터
+	data.FunctionPointer = std::bind(&Component::TransformUpdate, mComponent);
+	//컨퍼넌트 포인터
+	data.ComponentPointer = mComponent;
+	//컨퍼넌트 순서
+	data.OrderCount = Order;
+
+	TransformUpdate.Push(data);
+}
+
+void ObjectManager::PushPhysicsUpdate(Component* mComponent, int Order)
+{
+	ComponentFunctionData data;
+	//활성화 여부
+	data.Enabled = &mComponent->Enabled;
+	//함수 포인터
+	data.FunctionPointer = std::bind(&Component::PhysicsUpdate, mComponent);
+	//컨퍼넌트 포인터
+	data.ComponentPointer = mComponent;
+	//컨퍼넌트 순서
+	data.OrderCount = Order;
+
+	PhysicsUpdate.Push(data);
+}
+
+void ObjectManager::PushUpdate(Component* mComponent, int Order)
+{
+	ComponentFunctionData data;
+	//활성화 여부
+	data.Enabled = &mComponent->Enabled;
+	//함수 포인터
+	data.FunctionPointer = std::bind(&Component::Update, mComponent);
+	//컨퍼넌트 포인터
+	data.ComponentPointer = mComponent;
+	//컨퍼넌트 순서
+	data.OrderCount = Order;
+
+	Update.Push(data);
+}
+
+void ObjectManager::PushEndUpdate(Component* mComponent, int Order)
+{
+	ComponentFunctionData data;
+	//활성화 여부
+	data.Enabled = &mComponent->Enabled;
+	//함수 포인터
+	data.FunctionPointer = std::bind(&Component::EndUpdate, mComponent);
+	//컨퍼넌트 포인터
+	data.ComponentPointer = mComponent;
+	//컨퍼넌트 순서
+	data.OrderCount = Order;
+
+	EndUpdate.Push(data);
+}
+
+void ObjectManager::PushStart(Component* mComponent, int Order)
+{
+	ComponentFunctionData data;
+	//활성화 여부
+	data.Enabled = &mComponent->Enabled;
+	//함수 포인터
+	data.FunctionPointer = std::bind(&Component::Start, mComponent);
+	//컨퍼넌트 포인터
+	data.ComponentPointer = mComponent;
+	//컨퍼넌트 순서
+	data.OrderCount = Order;
+
+	StartFunction.Push(data);
+}
+
 
 void ObjectManager::PlayUpdate()
 {
@@ -217,10 +226,6 @@ void ObjectManager::PlayUpdate()
 
 	///가장 마지막에 실행되는 Update 함수 리스트
 	EndUpdate.Play();
-
-
-
-
 
 	//글로벌 데이터
 	Global->mProj	= Camera::GetProj();
@@ -254,7 +259,7 @@ void ObjectManager::CreateRenderQueue()
 	std::vector<GameObject*>::iterator it = ObjectList.begin();
 	for (it; it != ObjectList.end(); it++)
 	{	
-		if ((*it)->OneMeshData->ObjType == OBJECT_TYPE::BONE) { continue; }
+		//if ((*it)->OneMeshData->ObjType == OBJECT_TYPE::BONE) { continue; }
 
 
 		RenderData.push((*it)->OneMeshData);
@@ -308,6 +313,21 @@ std::queue<MeshData*>* ObjectManager::GetShadowQueue()
 	return &ShadowData;
 }
 
+ComponentFunctionData ObjectManager::PushComponentData(Component* mComponent)
+{
+	ComponentFunctionData data;
+	//활성화 여부
+	data.Enabled = &mComponent->Enabled;
+	//함수 포인터
+	data.FunctionPointer = std::bind(&Component::Awake, mComponent);
+	//컨퍼넌트 포인터
+	data.ComponentPointer = mComponent;
+	//컨퍼넌트 순서
+	data.OrderCount = mComponent->OrderCount;
+
+	return data;
+}
+
 
 void ObjectManager::DeleteComponent(Component* cpt)
 {
@@ -316,32 +336,32 @@ void ObjectManager::DeleteComponent(Component* cpt)
 	{
 		AwakeFunction.Pop(cpt);
 	}
-
+	
 	if (cpt->FUNCTION_MASK & START)
 	{
 		StartFunction.Pop(cpt);
 	}
-
+	
 	if (cpt->FUNCTION_MASK & START_UPDATE)
 	{
 		StartUpdate.Pop(cpt);
 	}
-
+	
 	if (cpt->FUNCTION_MASK & Transform_UPDATE)
 	{
 		TransformUpdate.Pop(cpt);
 	}
-
+	
 	if (cpt->FUNCTION_MASK & Physics_UPDATE)
 	{
 		PhysicsUpdate.Pop(cpt);
 	}
-
+	
 	if (cpt->FUNCTION_MASK & UPDATE)
 	{
 		Update.Pop(cpt);
 	}
-
+	
 	if (cpt->FUNCTION_MASK & END_UPDATE)
 	{
 		EndUpdate.Pop(cpt);
@@ -352,4 +372,3 @@ void ObjectManager::DeleteComponent(Component* cpt)
 	delete cpt;
 	cpt = nullptr;
 }
-

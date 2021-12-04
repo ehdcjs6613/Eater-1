@@ -478,6 +478,7 @@ void MultiRenderEngine::ReSetting_ViewPort(int count, int StartX, int StartY, in
 	m_ViewPort->MinDepth = 0.0f;
 	m_ViewPort->MaxDepth = 1.0f;
 
+	if ((Split_Window[count]).second == nullptr) { return; }
 	(Split_Window[count]).second->SetViewPort(m_ViewPort, m_ScreenWidth, m_ScreenHeight);
 }
 

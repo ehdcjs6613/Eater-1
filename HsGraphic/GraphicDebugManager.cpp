@@ -379,7 +379,7 @@ void GraphicDebugManager::Create_Grid(int CountX, int CountY)
 
 void GraphicDebugManager::Create_Bone()
 {
-	Create_3D_Box_Buffers(XMFLOAT3(0, 0, 0), XMFLOAT3(0.02f, 0.02f, 0.02f));
+	Create_3D_Box_Buffers(XMFLOAT3(0, 0, 0), XMFLOAT3(0.04f, 0.04f, 0.04f));
 	Create_2D_Line_Buffers(XMFLOAT3(0, 0, 0), XMFLOAT3(0, 0, -0.04f), XMFLOAT3(1, 0, 0));
 	Create_2D_Line_Buffers(XMFLOAT3(0, 0, 0), XMFLOAT3(0, 0.04f, 0), XMFLOAT3(0, 1, 0));
 	Create_2D_Line_Buffers(XMFLOAT3(0, 0, 0), XMFLOAT3(0.04f, 0, 0), XMFLOAT3(0, 0, 1));
