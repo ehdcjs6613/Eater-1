@@ -17,15 +17,16 @@ public:
 	EATER_ENGINEDLL AnimationController();
 	EATER_ENGINEDLL virtual ~AnimationController();
 
-	void Update();
-
 	void SetBoneList(std::vector<GameObject*>* mobjList);
 	void SetAnimeList(ModelAnimationData* data);
 
-	EATER_ENGINEDLL void Choice(std::string Name);		//애니메이션 선택
-	EATER_ENGINEDLL void Play(float Speed, bool Loop);
-	EATER_ENGINEDLL void Stop();
-	
+	EATER_ENGINEDLL void Choice(std::string Name);		//선택
+	EATER_ENGINEDLL void Play(float Speed, bool Loop);	//재생
+	EATER_ENGINEDLL void Stop();						//일시정지
+
+	EATER_ENGINEDLL int GetNowFrame();	//선택한 애니메이션 프레임
+	EATER_ENGINEDLL int GetEndFrame();	//선택한 애니메이션 끝 프레임
+private:
 	//본들의 애니메이터 리스트
 	std::vector<Animator*> AnimatorList;
 
@@ -33,7 +34,5 @@ public:
 	ModelAnimationData* AnimationList;
 
 	std::string NowAnimationName;
-	bool isPlay;
-	bool isChoice;
 };
 

@@ -176,6 +176,9 @@ public:
 
 	//컨퍼넌트 포인터
 	Component* ComponentPointer;
+
+	//컨퍼넌트 순서
+	int OrderCount = 0;
 };
 
 
