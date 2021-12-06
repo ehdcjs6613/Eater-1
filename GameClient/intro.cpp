@@ -48,6 +48,7 @@ void intro::Awake()
 	testobj = Instance("Field");
 	testobj->AddComponent<MeshFilter>()->SetMeshName("Field");
 	testobj->GetComponent<Transform>()->Scale = { 0.5f, 0.5f, 0.5f };
+
 }
 
 void intro::Start()
