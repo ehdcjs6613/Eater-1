@@ -75,6 +75,9 @@
     <Filter Include="3.Shaders\ShaderClass\helper">
       <UniqueIdentifier>{7116b9ae-cdb2-4995-a21a-270e88b2802b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="2.Graphics\3.Box">
+      <UniqueIdentifier>{51f70507-ad2f-4163-a556-7b8361610451}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -124,6 +127,9 @@
     </ClCompile>
     <ClCompile Include="InputLayout.cpp">
       <Filter>2.Graphics\0.ViewAxis</Filter>
+    </ClCompile>
+    <ClCompile Include="CBox.cpp">
+      <Filter>2.Graphics\3.Box</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -180,6 +186,9 @@
     </ClInclude>
     <ClInclude Include="InputLayout.h">
       <Filter>2.Graphics\0.ViewAxis</Filter>
+    </ClInclude>
+    <ClInclude Include="CBox.h">
+      <Filter>2.Graphics\3.Box</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

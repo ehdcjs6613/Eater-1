@@ -1,10 +1,8 @@
 //#include <wrl/client.h>
 #include "OneCompile.h"
-#include "MathHelper.h"
 #include "EngineData.h"
 #include "Effects.h"
 #include "InputLayout.h"
-#include "d3dx11effect.h"
 #include "WICTextureLoader.h"
 #include "XVertex.h"
 #include "DirectXDefine.h"
@@ -18,6 +16,7 @@
 #include "../DirectX2DSupporter/Grahpics2D.h"
 #include "ParserData.h"
 #include "ResourcesData.h"
+#include "CBox.h"
 #include "X3Engine.h"
 //스마트포인터 인클르드
 
@@ -32,14 +31,15 @@ X3Engine::X3Engine() :
 	m_XVertexShader{},
 	m_XPexelShader{},
 	m_pVertexBuffer(nullptr),
-	mWorld{},
-	mView{},
-	mProj{},
-	m_FX(nullptr),
-	mTech(nullptr),
-	mfxWorldViewProj(nullptr),
-	mInputLayout(nullptr),
-	NormalDSS(nullptr)
+	m_CBox(nullptr)
+	//mWorld{},
+	//mView{},
+	//mProj{},
+	//m_FX(nullptr),
+	//mTech(nullptr),
+	//mfxWorldViewProj(nullptr),
+	//mInputLayout(nullptr),
+	//NormalDSS(nullptr)
 {
 
 	//생성 부분
@@ -52,6 +52,7 @@ X3Engine::X3Engine() :
 	m_pRasterizerWire = new DirectXRasterizerState();
 	m_pAdapter = new DirectXAdapter();
 	m_pRenderTargeter = new DirectXRenderTargeter();
+	m_CBox = new CBox();
 
 	this->m_pDirectXSwapChain = new DirectXSwapChain(m_pDevice->GetDevice());
 
@@ -273,99 +274,103 @@ void X3Engine::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 
 	//m_pViewGrid->Update(&mView, &mProj);
 
-	while (!meshList->empty())
-	{
-		// 메시 데이터를 하나 꺼내옴.
-		MeshData* _Mesh_Data = meshList->front();
-
-		/// 오브젝트들을 그린다. (Draw Primitive)
-		if (_Mesh_Data->ObjType != OBJECT_TYPE::BASE)
-		{
-			meshList->pop();
-			continue;
-		}
-
-		// 해당 메시의 VB,IB 를 받아옴.
-		Render_VB = reinterpret_cast<ID3D11Buffer*>(_Mesh_Data->VB->VertexbufferPointer);
-		Render_IB = reinterpret_cast<ID3D11Buffer*>(_Mesh_Data->IB->IndexBufferPointer);
-
-		// 매쉬 텍스쳐 정보에서 캐스팅해서 그걸 밑에 이펙트에 넣으면 나올거임
-		//_Mesh_Data->Diffuse->TextureBufferPointer;
-		
-		// 입력 배치 객체 셋팅
-		m_pDeviceContext->GetDeviceContext()->IASetInputLayout(InputLayouts::PosNormalTexBiNormalTangent);
-		m_pDeviceContext->GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-		// 버텍스버퍼와 인덱스버퍼 셋팅
-		Vertex_Buffer_Stride = _Mesh_Data->VB->VertexDataSize;
-		Vertex_Buffer_Offset = 0;
-
-		/// WVP TM등을 셋팅
-		mWorld = _Mesh_Data->mWorld;//_Mesh_Data->mWorld;
-		//mWorld = DirectX::SimpleMath::Matrix();
-		Mul_WVP = mWorld * mView * mProj;
-
-		// 월드의 역행렬
-		World_Inverse = mWorld.Invert();
-
-		// Set per frame constants.
-		DirectionalLight _temp_Dir;
-		DirectX::SimpleMath::Vector4 _Ambient = DirectX::SimpleMath::Vector4(0.8f, 0.8f, 0.8f, 1.0f);
-		DirectX::SimpleMath::Vector4 _Diffuse = DirectX::SimpleMath::Vector4(0.5f, 0.5f, 0.5f, 1.0f);
-		DirectX::SimpleMath::Vector4 _Specular = DirectX::SimpleMath::Vector4(0.5f, 0.5f, 0.5f, 1.0f);
-		DirectX::SimpleMath::Vector3 _Direction = DirectX::SimpleMath::Vector3(-0.57735f, -0.57735f, 0.57735f);
-		_temp_Dir.Ambient = _Ambient;
-		_temp_Dir.Diffuse = _Diffuse;
-		_temp_Dir.Specular = _Specular;
-		_temp_Dir.Direction = _Direction;
-
-		Material _Temp_Mat;
-		DirectX::SimpleMath::Vector4 _Ambient1 = DirectX::SimpleMath::Vector4(0.8f, 0.8f, 0.8f, 1.0f);
-		DirectX::SimpleMath::Vector4 _Diffuse1 = DirectX::SimpleMath::Vector4(0.5f, 0.5f, 0.5f, 1.0f);
-		DirectX::SimpleMath::Vector4 _Specular1 = DirectX::SimpleMath::Vector4(0.5f, 0.5f, 0.5f, 1.0f);
-		DirectX::SimpleMath::Vector4 _Reflect1 = DirectX::SimpleMath::Vector4(0.5f, 0.5f, 0.5f, 1.0f);
-		_Temp_Mat.Ambient = _Ambient1;
-		_Temp_Mat.Diffuse = _Diffuse1;
-		_Temp_Mat.Specular = _Specular1;
-		_Temp_Mat.Reflect = _Reflect1;
+	m_CBox->Update(mView, mProj);
+	m_CBox->Render(meshList);
 
 
-		Effects::BasicTextureFX->SetDirLights(&_temp_Dir);
-
-		// 월드 Eye 포지션.
-		DirectX::SimpleMath::Vector3 _Camera_Vec(mView._41, mView._42, mView._43);
-		Effects::BasicTextureFX->SetEyePosW(_Camera_Vec);
-
-		ID3DX11EffectTechnique* mTech = nullptr;
-
-		/// 텍스쳐 사용
-		//mTech = Effects::BasicFX->Light1Tech;
-		/// 텍스쳐 미사용
-		mTech = Effects::BasicTextureFX->Light1TexTech;
-
-		D3DX11_TECHNIQUE_DESC techDesc;
-		mTech->GetDesc(&techDesc);
-
-		for (UINT p = 0; p < techDesc.Passes; ++p)
-		{
-			
-			m_pDeviceContext->GetDeviceContext()->IASetVertexBuffers(0, 1, &Render_VB, &Vertex_Buffer_Stride, &Vertex_Buffer_Offset);
-			m_pDeviceContext->GetDeviceContext()->IASetIndexBuffer(Render_IB, DXGI_FORMAT_R32_UINT, 0);
-
-			World_Inverse_Transpose = MathHelper::InverseTranspose(mWorld);
-			Effects::BasicTextureFX->SetWorld(mWorld);
-			Effects::BasicTextureFX->SetWorldInvTranspose(World_Inverse_Transpose);
-			Effects::BasicTextureFX->SetWorldViewProj(Mul_WVP);
-			Effects::BasicTextureFX->SetMaterial(_Temp_Mat);
-			Effects::BasicTextureFX->SetTexTransform(DirectX::SimpleMath::Matrix::Identity);
-			Effects::BasicTextureFX->SetDiffuseMap((ID3D11ShaderResourceView*)(_Mesh_Data->Diffuse->TextureBufferPointer));
-
-			mTech->GetPassByIndex(p)->Apply(0, m_pDeviceContext->GetDeviceContext());
-			m_pDeviceContext->GetDeviceContext()->DrawIndexed(_Mesh_Data->IB->Count, 0, 0);
-		}
-		meshList->pop();
-
-	}
+	//while (!meshList->empty())
+	//{
+	//	// 메시 데이터를 하나 꺼내옴.
+	//	MeshData* _Mesh_Data = meshList->front();
+	//
+	//	/// 오브젝트들을 그린다. (Draw Primitive)
+	//	if (_Mesh_Data->ObjType != OBJECT_TYPE::BASE)
+	//	{
+	//		meshList->pop();
+	//		continue;
+	//	}
+	//
+	//	// 해당 메시의 VB,IB 를 받아옴.
+	//	Render_VB = reinterpret_cast<ID3D11Buffer*>(_Mesh_Data->VB->VertexbufferPointer);
+	//	Render_IB = reinterpret_cast<ID3D11Buffer*>(_Mesh_Data->IB->IndexBufferPointer);
+	//
+	//	// 매쉬 텍스쳐 정보에서 캐스팅해서 그걸 밑에 이펙트에 넣으면 나올거임
+	//	//_Mesh_Data->Diffuse->TextureBufferPointer;
+	//	
+	//	// 입력 배치 객체 셋팅
+	//	m_pDeviceContext->GetDeviceContext()->IASetInputLayout(InputLayouts::PosNormalTexBiNormalTangent);
+	//	m_pDeviceContext->GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	//
+	//	// 버텍스버퍼와 인덱스버퍼 셋팅
+	//	Vertex_Buffer_Stride = _Mesh_Data->VB->VertexDataSize;
+	//	Vertex_Buffer_Offset = 0;
+	//
+	//	/// WVP TM등을 셋팅
+	//	mWorld = _Mesh_Data->mWorld;//_Mesh_Data->mWorld;
+	//	//mWorld = DirectX::SimpleMath::Matrix();
+	//	Mul_WVP = mWorld * mView * mProj;
+	//
+	//	// 월드의 역행렬
+	//	World_Inverse = mWorld.Invert();
+	//
+	//	// Set per frame constants.
+	//	DirectionalLight _temp_Dir;
+	//	DirectX::SimpleMath::Vector4 _Ambient = DirectX::SimpleMath::Vector4(0.8f, 0.8f, 0.8f, 1.0f);
+	//	DirectX::SimpleMath::Vector4 _Diffuse = DirectX::SimpleMath::Vector4(0.5f, 0.5f, 0.5f, 1.0f);
+	//	DirectX::SimpleMath::Vector4 _Specular = DirectX::SimpleMath::Vector4(0.5f, 0.5f, 0.5f, 1.0f);
+	//	DirectX::SimpleMath::Vector3 _Direction = DirectX::SimpleMath::Vector3(-0.57735f, -0.57735f, 0.57735f);
+	//	_temp_Dir.Ambient = _Ambient;
+	//	_temp_Dir.Diffuse = _Diffuse;
+	//	_temp_Dir.Specular = _Specular;
+	//	_temp_Dir.Direction = _Direction;
+	//
+	//	Material _Temp_Mat;
+	//	DirectX::SimpleMath::Vector4 _Ambient1 = DirectX::SimpleMath::Vector4(0.8f, 0.8f, 0.8f, 1.0f);
+	//	DirectX::SimpleMath::Vector4 _Diffuse1 = DirectX::SimpleMath::Vector4(0.5f, 0.5f, 0.5f, 1.0f);
+	//	DirectX::SimpleMath::Vector4 _Specular1 = DirectX::SimpleMath::Vector4(0.5f, 0.5f, 0.5f, 1.0f);
+	//	DirectX::SimpleMath::Vector4 _Reflect1 = DirectX::SimpleMath::Vector4(0.5f, 0.5f, 0.5f, 1.0f);
+	//	_Temp_Mat.Ambient = _Ambient1;
+	//	_Temp_Mat.Diffuse = _Diffuse1;
+	//	_Temp_Mat.Specular = _Specular1;
+	//	_Temp_Mat.Reflect = _Reflect1;
+	//
+	//
+	//	Effects::BasicTextureFX->SetDirLights(&_temp_Dir);
+	//
+	//	// 월드 Eye 포지션.
+	//	DirectX::SimpleMath::Vector3 _Camera_Vec(mView._41, mView._42, mView._43);
+	//	Effects::BasicTextureFX->SetEyePosW(_Camera_Vec);
+	//
+	//	ID3DX11EffectTechnique* mTech = nullptr;
+	//
+	//	/// 텍스쳐 사용
+	//	//mTech = Effects::BasicFX->Light1Tech;
+	//	/// 텍스쳐 미사용
+	//	mTech = Effects::BasicTextureFX->Light1TexTech;
+	//
+	//	D3DX11_TECHNIQUE_DESC techDesc;
+	//	mTech->GetDesc(&techDesc);
+	//
+	//	for (UINT p = 0; p < techDesc.Passes; ++p)
+	//	{
+	//		
+	//		m_pDeviceContext->GetDeviceContext()->IASetVertexBuffers(0, 1, &Render_VB, &Vertex_Buffer_Stride, &Vertex_Buffer_Offset);
+	//		m_pDeviceContext->GetDeviceContext()->IASetIndexBuffer(Render_IB, DXGI_FORMAT_R32_UINT, 0);
+	//
+	//		World_Inverse_Transpose = MathHelper::InverseTranspose(mWorld);
+	//		Effects::BasicTextureFX->SetWorld(mWorld);
+	//		Effects::BasicTextureFX->SetWorldInvTranspose(World_Inverse_Transpose);
+	//		Effects::BasicTextureFX->SetWorldViewProj(Mul_WVP);
+	//		Effects::BasicTextureFX->SetMaterial(_Temp_Mat);
+	//		Effects::BasicTextureFX->SetTexTransform(DirectX::SimpleMath::Matrix::Identity);
+	//		Effects::BasicTextureFX->SetDiffuseMap((ID3D11ShaderResourceView*)(_Mesh_Data->Diffuse->TextureBufferPointer));
+	//
+	//		mTech->GetPassByIndex(p)->Apply(0, m_pDeviceContext->GetDeviceContext());
+	//		m_pDeviceContext->GetDeviceContext()->DrawIndexed(_Mesh_Data->IB->Count, 0, 0);
+	//	}
+	//	meshList->pop();
+	//
+	//}
 
 	//m_pViewGrid->Render();
 
@@ -396,6 +401,7 @@ void X3Engine::SetDevice(void* Devie, void* DevieContext)
 	Effects::InitAll(m_pDevice->GetDevice());
 	InputLayouts::InitAll(m_pDevice->GetDevice());
 
+	m_CBox->Initialize(m_pDevice->GetDevice(), m_pDeviceContext->GetDeviceContext());
 }
 
 void X3Engine::CreateRenderState()

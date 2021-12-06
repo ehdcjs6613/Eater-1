@@ -21,6 +21,7 @@ class DirectXSamplerState;
 
 class SharedRenderData;
 
+class CBox;
 //그리기를 위한 포인터의  클래스
 
 
@@ -108,11 +109,13 @@ private:
 	DirectXSamplerState*	m_pSamplerState;
 
 private:
+	DirectX::SimpleMath::Matrix mView;
+	DirectX::SimpleMath::Matrix mProj;
 
 
-	DirectX::XMMATRIX		m_ProjectionMatrix;
-	DirectX::XMMATRIX		m_WorldMatrix;
-	DirectX::XMMATRIX		m_OtherMatrix;
+	//DirectX::XMMATRIX		m_ProjectionMatrix;
+	//DirectX::XMMATRIX		m_WorldMatrix;
+	//DirectX::XMMATRIX		m_OtherMatrix;
 private:
 	//int					  m_iWidth;
 	//int					  m_iHeight;
@@ -149,26 +152,27 @@ private:
 	//-----------------------------------
 
 private:
-	ID3DX11Effect* m_FX;
-	ID3DX11EffectTechnique* mTech;
-	ID3DX11EffectMatrixVariable* mfxWorldViewProj;
-
-	ID3D11InputLayout* mInputLayout;
-	// 폰트때문에 뎁스스탠실 스테이트가 강제가 됐다.
-	ID3D11DepthStencilState* NormalDSS;
-
-	DirectX::SimpleMath::Matrix mWorld;	// Transform Matrix
-	DirectX::SimpleMath::Matrix mView;
-	DirectX::SimpleMath::Matrix mProj;
-
-	ID3D11Buffer* Render_VB = nullptr;
-	ID3D11Buffer* Render_IB = nullptr;
-	// Buffer 관련
-	UINT Vertex_Buffer_Stride = 0;
-	UINT Vertex_Buffer_Offset = 0;
-	// WVP 관련
-	DirectX::SimpleMath::Matrix Mul_WVP;		// W * V * P
-	DirectX::SimpleMath::Matrix World_Inverse;	// 월드 역행렬
-	DirectX::SimpleMath::Matrix World_Inverse_Transpose;
+	CBox* m_CBox;
+	//ID3DX11Effect* m_FX;
+	//ID3DX11EffectTechnique* mTech;
+	//ID3DX11EffectMatrixVariable* mfxWorldViewProj;
+	//
+	//ID3D11InputLayout* mInputLayout;
+	//// 폰트때문에 뎁스스탠실 스테이트가 강제가 됐다.
+	//ID3D11DepthStencilState* NormalDSS;
+	//
+	//DirectX::SimpleMath::Matrix mWorld;	// Transform Matrix
+	//DirectX::SimpleMath::Matrix mView;
+	//DirectX::SimpleMath::Matrix mProj;
+	//
+	//ID3D11Buffer* Render_VB = nullptr;
+	//ID3D11Buffer* Render_IB = nullptr;
+	//// Buffer 관련
+	//UINT Vertex_Buffer_Stride = 0;
+	//UINT Vertex_Buffer_Offset = 0;
+	//// WVP 관련
+	//DirectX::SimpleMath::Matrix Mul_WVP;		// W * V * P
+	//DirectX::SimpleMath::Matrix World_Inverse;	// 월드 역행렬
+	//DirectX::SimpleMath::Matrix World_Inverse_Transpose;
 };
 

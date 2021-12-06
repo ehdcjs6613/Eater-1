@@ -6,6 +6,7 @@
 #include "Camera.h"
 #include "GameObject.h"
 #include "Light.h"
+#include "../Physics/BoxCollider.h"
 #include "TScene.h"
 
 TScene::TScene()
@@ -62,6 +63,9 @@ void TScene::Awake()
 	Filter->SetMeshName("box");
 	//Filter->SetTextureName("Player");
 	//testobj->SetActive(false);
+	testobj->AddComponent<BoxCollider>();
+	//테스트용 박스 콜 라이다
+
 
 	testobj->GetTransform()->Position = { 0 ,0, 0 };
 	testobj->GetTransform()->Scale = { 1 ,1, 1 };

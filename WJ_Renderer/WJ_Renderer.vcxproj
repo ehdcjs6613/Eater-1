@@ -185,6 +185,7 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\ib"
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CBox.cpp" />
     <ClCompile Include="DirectXAdapter.cpp" />
     <ClCompile Include="DirectXDefine.cpp" />
     <ClCompile Include="DirectXDevice.cpp" />
@@ -206,6 +207,7 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\ib"
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AlignedAllocationPolicy.h" />
+    <ClInclude Include="CBox.h" />
     <ClInclude Include="DirectXAdapter.h" />
     <ClInclude Include="DirectXDefine.h" />
     <ClInclude Include="DirectXDevice.h" />
