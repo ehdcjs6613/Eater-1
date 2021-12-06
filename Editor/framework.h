@@ -1,21 +1,19 @@
 ﻿#pragma once
 
-<<<<<<< Updated upstream
-=======
+
 #pragma comment(lib,"../Library/lib/EditorLib.lib")
 #pragma comment(lib,"../Library/lib/Physics.lib")
 
->>>>>>> Stashed changes
+
 #ifndef VC_EXTRALEAN
 #define VC_EXTRALEAN            // 거의 사용되지 않는 내용은 Windows 헤더에서 제외합니다.
 #endif
 
-<<<<<<< Updated upstream
-=======
+
 #include <WinSDKVer.h>
 //
 #define _WIN32_WINNT 0x0502  
->>>>>>> Stashed changes
+
 
 #define _ATL_CSTRING_EXPLICIT_CONSTRUCTORS      // 일부 CString 생성자는 명시적으로 선언됩니다.
 
@@ -40,16 +38,8 @@
 #include <afxcontrolbars.h>     // MFC의 리본 및 컨트롤 막대 지원
 
 
+//hh
 
-
-<<<<<<< Updated upstream
-
-
-
-
-
-=======
->>>>>>> Stashed changes
 #ifdef _UNICODE
 #if defined _M_IX86
 #pragma comment(linker,"/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='x86' publicKeyToken='6595b64144ccf1df' language='*'\"")

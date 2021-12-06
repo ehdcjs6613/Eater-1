@@ -1,5 +1,7 @@
 #pragma once
+//& export header file
 
+//& dll Export
 
 #if _DEBUG
 	#ifdef PhysicsExportDLL
@@ -15,6 +17,9 @@
 	#endif
 
 #endif
+
+
+//& lib comment
 
 #if _DEBUG
 	#pragma comment(lib,"EaterEngine_x64d.lib")
