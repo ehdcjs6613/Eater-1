@@ -1,4 +1,3 @@
-#include "GraphicsEngine.h"
 #include "GraphicDebugManager.h"
 #include "HsGraphic.h"
 #include "HsEngineHelper.h"

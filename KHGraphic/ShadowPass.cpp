@@ -4,6 +4,7 @@
 #include "VertexShader.h"
 #include "PixelShader.h"
 #include "ViewPort.h"
+#include "GraphicState.h"
 #include "Texture2D.h"
 #include "DepthStencilView.h"
 #include "RenderTargetBase.h"
@@ -14,10 +15,15 @@
 
 #include "VertexDefine.h"
 #include "ConstantBufferDefine.h"
-#include "ShaderResourceBufferDefine.h"
 #include "ResourceFactoryBase.h"
 #include "ResourceManagerBase.h"
 #include "ShaderManagerBase.h"
+#include "ShaderResourceBufferDefine.h"
+#include "DepthStencilViewDefine.h"
+#include "DepthStencilStateDefine.h"
+#include "ViewPortDefine.h"
+#include "RenderTargetDefine.h"
+#include "RasterizerStateDefine.h"
 
 ShadowPass::ShadowPass()
 	:m_ShadowDSV(nullptr), m_ShadowSRV(nullptr)
@@ -32,7 +38,7 @@ ShadowPass::~ShadowPass()
 void ShadowPass::Create(int width, int height)
 {
 	// ViewPort 설정..
-	m_ShadowViewport = g_Factory->CreateViewPort(0.0f, 0.0f, (float)width, (float)height, 4.0f, 4.0f);
+	g_Factory->CreateViewPort<VP_Shadow>(0.0f, 0.0f, (float)width, (float)height, 4.0f, 4.0f);
 
 	// DepthStencilView 설정..
 	D3D11_TEXTURE2D_DESC texDesc;
@@ -55,28 +61,27 @@ void ShadowPass::Create(int width, int height)
 	g_Factory->CreateTexture2D(&texDesc, tex2D.GetAddressOf());
 
 	D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc;
+	ZeroMemory(&dsvDesc, sizeof(dsvDesc));
 	dsvDesc.Flags = 0;
 	dsvDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 	dsvDesc.Texture2D.MipSlice = 0;
 
 	// Shadow DepthStencilView 생성..
-	g_Factory->CreateDSV(tex2D.Get(), &dsvDesc, nullptr);
+	g_Factory->CreateDepthStencilView<DSV_Shadow>(tex2D.Get(), &dsvDesc);
 
 	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+	ZeroMemory(&srvDesc, sizeof(srvDesc));
 	srvDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
 	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 	srvDesc.Texture2D.MipLevels = texDesc.MipLevels;
 	srvDesc.Texture2D.MostDetailedMip = 0;
 
 	// ShaderResourceView 생성..
-	g_Factory->CreateSRV(tex2D.Get(), &srvDesc, &m_ShadowSRV);
+	g_Factory->CreateShaderResourceView(tex2D.Get(), &srvDesc, &m_ShadowSRV);
 
 	// RenderTarget 생성..
-	m_ShadowRT = g_Factory->CreateBasicRenderTarget(nullptr, &m_ShadowSRV);
-	m_ShadowRT->SetRatio(4.0f, 4.0f);
-
-
+	g_Factory->CreateBasicRenderTarget<RT_Shadow>(nullptr, &m_ShadowSRV);
 
 	// Texture2D Resource Reset..
 	RESET_COM(tex2D);
@@ -88,15 +93,18 @@ void ShadowPass::Start()
 	m_MeshShadowVS = g_Shader->GetShader("ShadowMeshVS");
 	m_SkinShadowVS = g_Shader->GetShader("ShadowSkinVS");
 	m_ForwardPS = g_Shader->GetShader("ForwardPS");
+	
+	m_ShadowRT = g_Resource->GetRenderTarget<RT_Shadow>();
+	m_ShadowRT->SetRatio(4.0f, 4.0f);
 
-	m_RasterizerState = g_Resource->GetRasterizerState(eRasterizerState::DEPTH);
-
-
-	m_ShadowDepthStencilView = g_Resource->GetDepthStencilView(eDepthStencilView::SHADOW);
+	m_ShadowDepthStencilView = g_Resource->GetDepthStencilView<DSV_Shadow>();
 	m_ShadowDepthStencilView->SetRatio(4.0f, 4.0f);
 
+	m_ShadowViewport = g_Resource->GetViewPort<VP_Shadow>()->Get();
+	m_RasterizerState = g_Resource->GetRasterizerState<RS_Depth>()->Get();
+
 	// Shadow DepthStencilView 설정..
-	m_ShadowDSV = m_ShadowDepthStencilView->GetDSV();
+	m_ShadowDSV = m_ShadowDepthStencilView->Get();
 
 	// Shadow Map 등록..
 	m_ForwardPS->SetShaderResourceView<gShadowMap>(&m_ShadowSRV);
@@ -105,7 +113,7 @@ void ShadowPass::Start()
 void ShadowPass::OnResize(int width, int height)
 {
 	// Shadow DepthStencilView 재설정..
-	m_ShadowDSV = m_ShadowDepthStencilView->GetDSV();
+	m_ShadowDSV = m_ShadowDepthStencilView->Get();
 
 	// Shadow ShaderResourceView 재설정..
 	m_ShadowSRV = m_ShadowRT->GetSRV();
@@ -141,7 +149,7 @@ void ShadowPass::Update(MeshData* mesh, GlobalData* global)
 	{
 	case OBJECT_TYPE::BASE:
 	{
-		CB_ShadowObject shadowBuf;
+		CB_ShadowMeshObject shadowBuf;
 		shadowBuf.gWorldViewProj = world * view * proj;
 
 		m_MeshShadowVS->SetConstantBuffer(shadowBuf);
@@ -151,17 +159,15 @@ void ShadowPass::Update(MeshData* mesh, GlobalData* global)
 	break;
 	case OBJECT_TYPE::SKINNING:
 	{
-		CB_ShadowObject shadowBuf;
+		CB_ShadowSkinObject shadowBuf;
 		shadowBuf.gWorldViewProj = world * view * proj;
 
-		CB_Skinned skinBuf;
 		for (int i = 0; i < mesh->BoneOffsetTM.size(); i++)
 		{
-			skinBuf.gBoneTransforms[i] = mesh->BoneOffsetTM[i];
+			shadowBuf.gBoneTransforms[i] = mesh->BoneOffsetTM[i];
 		}
 
 		m_SkinShadowVS->SetConstantBuffer(shadowBuf);
-		m_SkinShadowVS->SetConstantBuffer(skinBuf);
 
 		m_SkinShadowVS->Update();
 	}

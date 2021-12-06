@@ -141,19 +141,19 @@ copy /Y "$(ProjectDir)GraphicDLL.h" "$(SolutionDir)Library\inc"</Command>
       <PreprocessorDefinitions>_DEBUG;GRAPHIC_EXPORT;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>..\Library\inc</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Library\inc;$(ProjectDir)Export</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalLibraryDirectories>..\Library\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Library\lib</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>copy/Y "$(TargetDir)*.lib"   "$(SolutionDir)Library\lib"
 copy/Y "$(TargetDir)*.dll"   "$(SolutionDir)Library\lib"
-copy /Y "$(ProjectDir)KHGraphic.h" "$(SolutionDir)Library\inc"
-copy /Y "$(ProjectDir)GraphicDLL.h" "$(SolutionDir)Library\inc"</Command>
+
+copy/Y "$(ProjectDir)Export\*.h"   "$(SolutionDir)Library\inc\Graphic"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -165,7 +165,7 @@ copy /Y "$(ProjectDir)GraphicDLL.h" "$(SolutionDir)Library\inc"</Command>
       <PreprocessorDefinitions>NDEBUG;GRAPHIC_EXPORT;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>..\Library\inc</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Library\inc;$(ProjectDir)Export</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -173,19 +173,24 @@ copy /Y "$(ProjectDir)GraphicDLL.h" "$(SolutionDir)Library\inc"</Command>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalLibraryDirectories>..\Library\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Library\lib</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>copy/Y "$(TargetDir)*.lib"   "$(SolutionDir)Library\lib"
 copy/Y "$(TargetDir)*.dll"   "$(SolutionDir)Library\lib"
-copy /Y "$(ProjectDir)KHGraphic.h" "$(SolutionDir)Library\inc"
-copy /Y "$(ProjectDir)GraphicDLL.h" "$(SolutionDir)Library\inc"</Command>
+
+copy/Y "$(ProjectDir)Export\*.h"   "$(SolutionDir)Library\inc\Graphic"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="BlendStateDefine.h" />
+    <ClInclude Include="BufferData.h" />
+    <ClInclude Include="BufferDataDefine.h" />
     <ClInclude Include="DepthStencilStateDefine.h" />
     <ClInclude Include="DepthStencilViewDefine.h" />
+    <ClInclude Include="Export\GraphicDLL.h" />
+    <ClInclude Include="Export\GraphicsEngine.h" />
+    <ClInclude Include="GraphicState.h" />
     <ClInclude Include="HashBase.h" />
     <ClInclude Include="CompilerDefine.h" />
     <ClInclude Include="ComputeRenderTarget.h" />
@@ -195,13 +200,13 @@ copy /Y "$(ProjectDir)GraphicDLL.h" "$(SolutionDir)Library\inc"</Command>
     <ClInclude Include="DeferredPass.h" />
     <ClInclude Include="DepthStencilView.h" />
     <ClInclude Include="ForwardPass.h" />
-    <ClInclude Include="GraphicDLL.h" />
     <ClInclude Include="LightPass.h" />
     <ClInclude Include="BasicRenderTarget.h" />
     <ClInclude Include="MathDefine.h" />
     <ClInclude Include="RasterizerStateDefine.h" />
     <ClInclude Include="RenderTargetDefine.h" />
     <ClInclude Include="RenderTargetTypes.h" />
+    <ClInclude Include="ResourceBase.h" />
     <ClInclude Include="ResourceFactoryBase.h" />
     <ClInclude Include="RenderManagerBase.h" />
     <ClInclude Include="ResourceManagerBase.h" />
@@ -222,7 +227,7 @@ copy /Y "$(ProjectDir)GraphicDLL.h" "$(SolutionDir)Library\inc"</Command>
     <ClInclude Include="ShaderManager.h" />
     <ClInclude Include="ShaderManagerBase.h" />
     <ClInclude Include="ShaderResourceBase.h" />
-    <ClInclude Include="ResourceBufferHashTable.h" />
+    <ClInclude Include="ShaderResourceHashTable.h" />
     <ClInclude Include="ShaderResourceBufferDefine.h" />
     <ClInclude Include="ShaderTypes.h" />
     <ClInclude Include="ShadowPass.h" />
@@ -235,12 +240,15 @@ copy /Y "$(ProjectDir)GraphicDLL.h" "$(SolutionDir)Library\inc"</Command>
     <ClInclude Include="ViewPortDefine.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BufferData.cpp" />
     <ClCompile Include="ComputeRenderTarget.cpp" />
     <ClCompile Include="ComputeShader.cpp" />
     <ClCompile Include="D3D11Graphic.cpp" />
     <ClCompile Include="DeferredPass.cpp" />
     <ClCompile Include="DepthStencilView.cpp" />
     <ClCompile Include="ForwardPass.cpp" />
+    <ClCompile Include="GraphicEngine.cpp" />
+    <ClCompile Include="GraphicState.cpp" />
     <ClCompile Include="KHGraphic.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="LightPass.cpp" />
@@ -254,13 +262,18 @@ copy /Y "$(ProjectDir)GraphicDLL.h" "$(SolutionDir)Library\inc"</Command>
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="ShaderBase.cpp" />
     <ClCompile Include="ShaderManager.cpp" />
-    <ClCompile Include="ResourceBufferHashTable.cpp" />
+    <ClCompile Include="ShaderResourceHashTable.cpp" />
     <ClCompile Include="ShaderTypes.cpp" />
     <ClCompile Include="ShadowPass.cpp" />
     <ClCompile Include="VertexShader.cpp" />
     <ClCompile Include="ViewPort.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="..\Resources\Shader\SKH\DeferredBasicPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resources\Shader\SKH\%(Filename).cso</ObjectFileOutput>
+    </FxCompile>
     <FxCompile Include="..\Resources\Shader\SKH\ForwardPS.hlsl">
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
@@ -275,6 +288,25 @@ copy /Y "$(ProjectDir)GraphicDLL.h" "$(SolutionDir)Library\inc"</Command>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
+    <FxCompile Include="..\Resources\Shader\SKH\LightHelper.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\Resources\Shader\SKH\LightPS.hlsl">
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resources\Shader\SKH\%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)Resources\Shader\SKH\%(Filename).cso</ObjectFileOutput>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="..\Resources\Shader\SKH\LightVS.hlsl">
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resources\Shader\SKH\%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)Resources\Shader\SKH\%(Filename).cso</ObjectFileOutput>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
     <FxCompile Include="..\Resources\Shader\SKH\MeshVS.hlsl">
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
@@ -288,6 +320,14 @@ copy /Y "$(ProjectDir)GraphicDLL.h" "$(SolutionDir)Library\inc"</Command>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="..\Resources\Shader\SKH\DeferredNormalTexturePS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resources\Shader\SKH\%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)Resources\Shader\SKH\%(Filename).cso</ObjectFileOutput>
     </FxCompile>
     <FxCompile Include="..\Resources\Shader\SKH\ShadowMeshVS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
@@ -330,6 +370,14 @@ copy /Y "$(ProjectDir)GraphicDLL.h" "$(SolutionDir)Library\inc"</Command>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="..\Resources\Shader\SKH\DeferredTexturePS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Resources\Shader\SKH\%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)Resources\Shader\SKH\%(Filename).cso</ObjectFileOutput>
     </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -1,5 +1,17 @@
 #pragma once
 #include "HashBase.h"
 
-#define ADD_RANDER_TARGER(ClassName) static bool rs_##ClassName = ShaderResourceHashTable::Get()->Push(eResourceType::RS, #ClassName, typeid(ClassName).hash_code());
-#define RANDER_TARGER(ClassName) CREATE_EMPTY_CLASS(ClassName) ADD_RANDER_TARGER(ClassName)
+#define RANDER_TARGET(ClassName) CREATE_HASH_CLASS(ClassName, eResourceType::RT)
+
+///////////////////////////////////////////////////////////////////////////////////////////
+// Global RenderTarget
+///////////////////////////////////////////////////////////////////////////////////////////
+
+RANDER_TARGET(RT_Shadow)
+RANDER_TARGET(RT_SSAO)
+
+RANDER_TARGET(RT_Deffered_Albedo)
+RANDER_TARGET(RT_Deffered_Normal)
+RANDER_TARGET(RT_Deffered_Position)
+RANDER_TARGET(RT_Deffered_Shadow)
+RANDER_TARGET(RT_Deffered_Depth)

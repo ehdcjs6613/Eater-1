@@ -1,8 +1,13 @@
 #include "DirectDefine.h"
 #include "D3D11Graphic.h"
-#include "ResourceFactoryBase.h"
+#include "GraphicState.h"
+#include "BufferData.h"
+#include "ViewPort.h"
+#include "Texture2D.h"
+#include "DepthStencilView.h"
 #include "ShaderManagerBase.h"
-#include "ResourceManagerBase.h"
+#include "ResourceFactory.h"
+#include "ResourceManager.h"
 #include "RenderPassBase.h"
 #include "RenderManager.h"
 
@@ -18,20 +23,22 @@
 #include "LightPass.h"
 #include "VertexDefine.h"
 
-RenderManager::RenderManager(D3D11Graphic* graphic, IGraphicResourceFactory* factory)
+RenderManager::RenderManager(D3D11Graphic* graphic, IGraphicResourceFactory* factory, IGraphicResourceManager* resource, IShaderManager* shader)
 {
 	// Rendering Initialize..
-	RenderPassBase::Initialize(nullptr, factory, factory->GetResourceManager(), factory->GetShaderManager());
+	RenderPassBase::Initialize(graphic->GetContext(), factory, resource, shader);
+
+	m_SwapChain = graphic->GetSwapChain();
 
 	m_Farward = new ForwardPass();
 	//m_Deferred = new DeferredPass();
 	//m_Light = new LightPass();
 	m_Shadow = new ShadowPass();
 
+	m_RenderPassList.push_back(m_Shadow);
 	m_RenderPassList.push_back(m_Farward);
 	//m_RenderPassList.push_back(m_Deferred);
 	//m_RenderPassList.push_back(m_Light);
-	m_RenderPassList.push_back(m_Shadow);
 }
 
 RenderManager::~RenderManager()
@@ -68,8 +75,6 @@ void RenderManager::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 {
 	m_Farward->BeginRender();
 
-	RenderPassBase::g_Context->RSSetViewports(1, m_ViewPort);
-
 	while (meshList->size() != 0)
 	{
 		MeshData* mesh = meshList->front();
@@ -87,7 +92,7 @@ void RenderManager::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 	}
 
 	// 최종 출력..
-	//m_SwapChain->Present(0, 0);
+	m_SwapChain->Present(0, 0);
 }
 
 void RenderManager::ShadowRender(std::queue<MeshData*>* meshList, GlobalData* global)
@@ -123,10 +128,10 @@ void RenderManager::UIRender(std::queue<MeshData*>* meshList, GlobalData* global
 
 void RenderManager::OnResize(int width, int height)
 {
-	//RenderPassBase::g_Resource->OnResize(width, height);
-	//
-	//for (RenderPassBase* renderPass : m_RenderPassList)
-	//{
-	//	renderPass->OnResize(width, height);
-	//}
+	RenderPassBase::g_Resource->OnResize(width, height);
+
+	for (RenderPassBase* renderPass : m_RenderPassList)
+	{
+		renderPass->OnResize(width, height);
+	}
 }
