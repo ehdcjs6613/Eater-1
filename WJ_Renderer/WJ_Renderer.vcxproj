@@ -144,7 +144,7 @@
 copy /Y "$(ProjectDir)XShader.h" "$(SolutionDir)Library\inc"
 copy /Y "$(ProjectDir)WJDefine.h" "$(SolutionDir)Library\inc"
 copy /Y "$(TargetDir)*.dll" "$(SolutionDir)Library\lib"
-copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\ib"
+copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\lib"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -180,7 +180,7 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\ib"
 copy /Y "$(ProjectDir)XShader.h" "$(SolutionDir)Library\inc"
 copy /Y "$(ProjectDir)WJDefine.h" "$(SolutionDir)Library\inc"
 copy /Y "$(TargetDir)*.dll" "$(SolutionDir)Library\lib"
-copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\ib"
+copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\lib"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>

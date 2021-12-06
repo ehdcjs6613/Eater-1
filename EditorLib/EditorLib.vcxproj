@@ -93,10 +93,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(SolutionDir)Library\inc;$(SolutionDir)Library\inc\Component;$(SolutionDir)Editor</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <ModuleDefinitionFile>.\EditorLib.def</ModuleDefinitionFile>
+      <AdditionalLibraryDirectories>$(SolutionDir)Library\lib</AdditionalLibraryDirectories>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -107,6 +109,10 @@
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
+    <PostBuildEvent>
+      <Command>copy /Y "$(TargetDir)*.dll" "$(SolutionDir)Library\lib"
+copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\lib"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -165,12 +171,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_WINDOWS;NDEBUG;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(SolutionDir)Library\inc;$(SolutionDir)Library\inc\Component;$(SolutionDir)Editor</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <ModuleDefinitionFile>.\EditorLib.def</ModuleDefinitionFile>
+      <AdditionalLibraryDirectories>$(SolutionDir)Library\lib</AdditionalLibraryDirectories>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -181,20 +189,37 @@
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
+    <PostBuildEvent>
+      <Command>copy /Y "$(TargetDir)*.dll" "$(SolutionDir)Library\lib"
+copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\lib"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="EDDockableBase.cpp" />
     <ClCompile Include="EditorLib.cpp" />
+    <ClCompile Include="EditorSystem.cpp" />
+    <ClCompile Include="EWGameView.cpp" />
     <ClCompile Include="GameDlg.cpp" />
+    <ClCompile Include="DockableView.cpp" />
+    <ClCompile Include="TKeyInput.cpp" />
+    <ClCompile Include="TScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="EditorLib.def" />
     <None Include="res\EditorLib.rc2" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DllExport.h" />
+    <ClInclude Include="EDDockableBase.h" />
     <ClInclude Include="EditorLib.h" />
+    <ClInclude Include="EditorSystem.h" />
+    <ClInclude Include="EWGameView.h" />
     <ClInclude Include="GameDlg.h" />
+    <ClInclude Include="DockableView.h" />
     <ClInclude Include="LibDefine.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="TKeyInput.h" />
+    <ClInclude Include="TScene.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="EditorLib.rc" />
