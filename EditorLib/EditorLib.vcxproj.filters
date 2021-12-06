@@ -13,6 +13,15 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="File">
+      <UniqueIdentifier>{662da856-e89e-4bdc-b832-392b052f92f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File\GameView">
+      <UniqueIdentifier>{c64e5ab7-6f9c-4c16-a91c-aebb9eaebb7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File\G2">
+      <UniqueIdentifier>{8e15ce6f-c4a7-46b8-aabd-d963cbc63a68}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EditorLib.cpp">
@@ -20,6 +29,24 @@
     </ClCompile>
     <ClCompile Include="GameDlg.cpp">
       <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="DockableView.cpp">
+      <Filter>File\GameView</Filter>
+    </ClCompile>
+    <ClCompile Include="EWGameView.cpp">
+      <Filter>File\GameView</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorSystem.cpp">
+      <Filter>File\GameView</Filter>
+    </ClCompile>
+    <ClCompile Include="TKeyInput.cpp">
+      <Filter>File\G2</Filter>
+    </ClCompile>
+    <ClCompile Include="TScene.cpp">
+      <Filter>File\G2</Filter>
+    </ClCompile>
+    <ClCompile Include="EDDockableBase.cpp">
+      <Filter>File\GameView</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -41,6 +68,27 @@
       <Filter>소스 파일</Filter>
     </ClInclude>
     <ClInclude Include="GameDlg.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="DockableView.h">
+      <Filter>File\GameView</Filter>
+    </ClInclude>
+    <ClInclude Include="EWGameView.h">
+      <Filter>File\GameView</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorSystem.h">
+      <Filter>File\GameView</Filter>
+    </ClInclude>
+    <ClInclude Include="TKeyInput.h">
+      <Filter>File\G2</Filter>
+    </ClInclude>
+    <ClInclude Include="TScene.h">
+      <Filter>File\G2</Filter>
+    </ClInclude>
+    <ClInclude Include="EDDockableBase.h">
+      <Filter>File\GameView</Filter>
+    </ClInclude>
+    <ClInclude Include="DllExport.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

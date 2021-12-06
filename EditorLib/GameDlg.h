@@ -7,12 +7,12 @@ class EWGameView;
 #ifdef DEBUG
 AFX_EXT_CLASS
 #else
-
+AFX_EXT_CLASS
 
 #endif // DEBUG
 
 
-class __declspec(dllexport) GameDlg : public CPaneDialog
+class  GameDlg : public CPaneDialog
 {
 private:
 	DECLARE_DYNAMIC(GameDlg)
