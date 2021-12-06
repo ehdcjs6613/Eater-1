@@ -16,24 +16,23 @@ void intro::Awake()
 	//불러오는 매쉬의 경로 파악
 	LoadMeshPath("../Resources/Mesh/");
 	LoadTexturePath("../Resources/Texture/");
-
-	LoadMesh("Field");
-	LoadMesh("Player_Run", false, false);
-	LoadMesh("Player_Roll", false, true);
-	LoadMesh("Player_Idle", false, true);
-	LoadMesh("Pistol", true, false);
-	LoadMesh("Weapon", true, false);
+	
+	LoadMesh("Player_Run", false,false);
+	LoadMesh("Player_Roll",false,true);
+	LoadMesh("Player_Idle",false,true);
+	LoadMesh("Pistol",true,false);
+	LoadMesh("Weapon",true,false);
 
 	LoadTexture("Player.dds");
 	LoadTexture("Dump.png");
-
+	
 
 	///카메라
 	testobj = Instance("Cam");
 	testobj->AddComponent<Camera>();
 	testobj->AddComponent<Keyinput>();
 	testobj->GetTransform()->Position = { 0,0,-25 };
-
+	
 	///라이트
 	testobj = Instance("DirectionLight");
 	testobj->AddComponent<DirectionLight>();
@@ -44,10 +43,6 @@ void intro::Awake()
 	testobj->AddComponent<MeshFilter>();
 	testobj->AddComponent<Player>();
 
-	/// 바닥
-	testobj = Instance("Field");
-	testobj->AddComponent<MeshFilter>()->SetMeshName("Field");
-	testobj->GetComponent<Transform>()->Scale = { 0.5f, 0.5f, 0.5f };
 }
 
 void intro::Start()
