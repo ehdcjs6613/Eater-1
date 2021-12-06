@@ -1,17 +1,13 @@
 #pragma once
-#pragma warning(disable:4251)
-#include "Grahpics2D.h"
+
 #include <queue>
 
-//EXPIMP_TEMPLATE template class Graphics2D_DLL std::queue<class T>;
-
-
 template <class T>
-class Graphics2D_DLL Non_ThreadObjectPool
+class Non_ThreadObjectPool
 {
 private:
 	int m_Pool_Size = 0;
-	 std::queue<T*> Object_Manage_Queue;
+	std::queue<T*> Object_Manage_Queue;
 
 public:
 	Non_ThreadObjectPool(int _Pool_Size = 1000);

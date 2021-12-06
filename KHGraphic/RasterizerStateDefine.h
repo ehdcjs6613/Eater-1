@@ -1,0 +1,13 @@
+#pragma once
+#include "HashBase.h"
+
+#define RASTERIZER_STATE(ClassName) CREATE_HASH_CLASS(ClassName, eResourceType::RS)
+
+///////////////////////////////////////////////////////////////////////////////////////////
+// Global Rasterizer State
+///////////////////////////////////////////////////////////////////////////////////////////
+
+RASTERIZER_STATE(RS_Solid)
+RASTERIZER_STATE(RS_WireFrame)
+RASTERIZER_STATE(RS_CullNone)
+RASTERIZER_STATE(RS_Depth)

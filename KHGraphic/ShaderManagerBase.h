@@ -15,8 +15,11 @@ typedef size_t Hash_Code;
 interface IShaderManager
 {
 public:
-	virtual void Initialize(Microsoft::WRL::ComPtr<ID3D11Device> device, Microsoft::WRL::ComPtr<ID3D11DeviceContext> context) abstract;
+	virtual void Initialize() abstract;
 	virtual void Release() abstract;
+	
+public:
+	virtual void AddSampler(Hash_Code hash_code, ID3D11SamplerState** sampler) abstract;
 
 public:
 	// GetShader Original Pointer..

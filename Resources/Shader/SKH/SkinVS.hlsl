@@ -1,18 +1,12 @@
-cbuffer cbObject : register(b0)
-{
-    float4x4 gWorld : packoffset(c0);
-    float4x4 gWorldViewProj : packoffset(c4);
-    float4x4 gTexTransform : packoffset(c8);
-};
+#pragma pack_matrix(row_major)
 
-cbuffer cbSkinned : register(b1)
+cbuffer cbSkinObject : register(b0)
 {
-    float4x4 gBoneTransforms[96];
-};
-
-cbuffer cbShadow : register(b2)
-{
-    float4x4 gShadowTransform : packoffset(c0);
+    float4x4 gWorld                 : packoffset(c0);
+    float4x4 gWorldViewProj         : packoffset(c4);
+    float4x4 gTexTransform          : packoffset(c8);
+    float4x4 gShadowTransform       : packoffset(c12);
+    float4x4 gBoneTransforms[96]    : packoffset(c16);
 };
 
 struct VertexIn
@@ -30,7 +24,8 @@ struct VertexIn
 
 struct VertexOut
 {
-    float4 PosW : SV_POSITION;
+    float4 PosH : SV_POSITION;
+    float3 PosW : POSITIONW;
     float2 Tex : TEXCOORD;
     float3 NormalW : NORMALW;
     float3 ShadowPosH : POS_SHADOW;
@@ -48,28 +43,31 @@ VertexOut main(VertexIn vin)
     
     for (int i = 0; i < 4; ++i)
     {
-        posL += vin.BoneWeights1[i] * mul(gBoneTransforms[vin.BoneIndices1[i]], float4(vin.PosL, 1.0f)).xyz;
-        normalL += vin.BoneWeights1[i] * mul((float3x3) gBoneTransforms[vin.BoneIndices1[i]], vin.NormalL);
-        tangentL += vin.BoneWeights1[i] * mul((float3x3) gBoneTransforms[vin.BoneIndices1[i]], vin.TangentL);
+        posL += vin.BoneWeights1[i] * mul(float4(vin.PosL, 1.0f), gBoneTransforms[vin.BoneIndices1[i]]).xyz;
+        normalL += vin.BoneWeights1[i] * mul(vin.NormalL, (float3x3) gBoneTransforms[vin.BoneIndices1[i]]);
+        tangentL += vin.BoneWeights1[i] * mul(vin.TangentL, (float3x3) gBoneTransforms[vin.BoneIndices1[i]]);
     }
     
     for (int j = 0; j < 4; ++j)
     {
-        posL += vin.BoneWeights2[j] * mul(gBoneTransforms[vin.BoneIndices2[j]], float4(vin.PosL, 1.0f)).xyz;
-        normalL += vin.BoneWeights2[j] * mul((float3x3) gBoneTransforms[vin.BoneIndices2[j]], vin.NormalL);
-        tangentL += vin.BoneWeights2[j] * mul((float3x3) gBoneTransforms[vin.BoneIndices2[j]], vin.TangentL);
+        posL += vin.BoneWeights2[j] * mul(float4(vin.PosL, 1.0f), gBoneTransforms[vin.BoneIndices2[j]]).xyz;
+        normalL += vin.BoneWeights2[j] * mul(vin.NormalL, (float3x3) gBoneTransforms[vin.BoneIndices2[j]]);
+        tangentL += vin.BoneWeights2[j] * mul(vin.TangentL, (float3x3) gBoneTransforms[vin.BoneIndices2[j]]);
     }
     
-	// 세계 공간 변환
-    vout.PosW = mul(gWorldViewProj, float4(posL, 1.0f));
+    // 동차 공간 변환
+    vout.PosH = mul(float4(posL, 1.0f), gWorldViewProj);
+	
+    // 세계 공간 변환
+    vout.PosW = mul(float4(posL, 1.0f), gWorld).xyz;
 
-    vout.NormalW = mul((float3x3)gWorld, normalL);
+    vout.NormalW = mul(normalL, (float3x3) gWorld);
     vout.NormalW = normalize(vout.NormalW);
 	
 	// Output vertex attributes for interpolation across triangle.
-    vout.Tex = mul(gTexTransform, float4(vin.Tex, 0.0f, 1.0f)).xy;
+    vout.Tex = mul(float4(vin.Tex, 0.0f, 1.0f), gTexTransform).xy;
     
-    float3 TangentW = mul((float3x3)gWorld, tangentL);
+    float3 TangentW = mul(tangentL, (float3x3) gWorld);
 
     // Vertex Shader 에서 TBN을 구해주자..
 	// Pixel Shader에서 연산은 최소한으로 해야하기 때문..
@@ -79,7 +77,7 @@ VertexOut main(VertexIn vin)
     
     vout.TBN = float3x3(T, B, N);
     
-    float4 Shadow = mul(gShadowTransform, float4(posL, 1.0f));
+    float4 Shadow = mul(float4(posL, 1.0f), gShadowTransform);
     
     vout.ShadowPosH = Shadow.xyz / Shadow.w;
     
