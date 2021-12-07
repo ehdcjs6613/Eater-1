@@ -71,15 +71,8 @@ BasicEffect* Effects::BasicTextureFX = nullptr;
 
 void Effects::InitAll(ID3D11Device* device)
 {
-#ifdef _DEBUG
-	BasicFX = new BasicEffect(device, L"../x64/Debug/Basic.cso");
-	BasicTextureFX = new BasicEffect(device, L"../x64/Debug/BasicTexture.cso");
-#else
-	BasicFX = new BasicEffect(device, L"../x64/Release/Basic.cso");
-	BasicTextureFX = new BasicEffect(device, L"../x64/Release/BasicTexture.cso");
-#endif 
-
-
+	BasicFX = new BasicEffect(device, L"../Resources/Shader/LWJ/Basic.cso");
+	BasicTextureFX = new BasicEffect(device, L"../Resources/Shader/LWJ/BasicTexture.cso");
 
 }
 

@@ -3,8 +3,14 @@
 #include "DllDefine.h"
 #include "Collider.h"
 
+class GameObject;
+
 class BoxCollider : public Collider
 {
+private:
+	//GameObject* m_pGameObject;
+
+	ID3D11DeviceContext* m_DeviceContext;
 public:
 	float m_Size[3];
 
@@ -35,4 +41,5 @@ private:
 	//정렬된 정사격형끼리의 충돌
 	void CalculateAABB();
 public:
+	void Initialize(ID3D11DeviceContext*);
 };

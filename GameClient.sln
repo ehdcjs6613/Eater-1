@@ -36,10 +36,13 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WJ_Renderer", "WJ_Renderer\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Editor", "Editor\Editor.vcxproj", "{D6707562-7483-45BF-8F20-9EECF9AA104E}"
 EndProject
+<<<<<<< HEAD
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EditorLib", "EditorLib\EditorLib.vcxproj", "{FC6AFA2D-7A10-40E9-A586-7532EA6CCB36}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Physics", "Physics\Physics.vcxproj", "{D85E2AC8-177B-4E33-892D-ED9B9D7640AE}"
 EndProject
+=======
+>>>>>>> parent of 928e43f (Revert "Release TestUpload")
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -120,6 +123,7 @@ Global
 		{D6707562-7483-45BF-8F20-9EECF9AA104E}.Release|x64.Build.0 = Release|x64
 		{D6707562-7483-45BF-8F20-9EECF9AA104E}.Release|x86.ActiveCfg = Release|Win32
 		{D6707562-7483-45BF-8F20-9EECF9AA104E}.Release|x86.Build.0 = Release|Win32
+<<<<<<< HEAD
 		{FC6AFA2D-7A10-40E9-A586-7532EA6CCB36}.Debug|x64.ActiveCfg = Debug|x64
 		{FC6AFA2D-7A10-40E9-A586-7532EA6CCB36}.Debug|x64.Build.0 = Debug|x64
 		{FC6AFA2D-7A10-40E9-A586-7532EA6CCB36}.Debug|x86.ActiveCfg = Debug|Win32
@@ -136,6 +140,8 @@ Global
 		{D85E2AC8-177B-4E33-892D-ED9B9D7640AE}.Release|x64.Build.0 = Release|x64
 		{D85E2AC8-177B-4E33-892D-ED9B9D7640AE}.Release|x86.ActiveCfg = Release|Win32
 		{D85E2AC8-177B-4E33-892D-ED9B9D7640AE}.Release|x86.Build.0 = Release|Win32
+=======
+>>>>>>> parent of 928e43f (Revert "Release TestUpload")
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

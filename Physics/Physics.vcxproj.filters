@@ -22,6 +22,9 @@
     <Filter Include="Colliders\BoxCollider">
       <UniqueIdentifier>{a5893af5-d66f-49d3-be8a-329b66ebde3d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Vertex">
+      <UniqueIdentifier>{6b5c04b3-a1cd-4052-803f-4b1160943e4b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Collider.cpp">
@@ -33,6 +36,9 @@
     <ClCompile Include="dllmain.cpp">
       <Filter>헤더 파일</Filter>
     </ClCompile>
+    <ClCompile Include="VertexPositionColor.cpp">
+      <Filter>Vertex</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DllDefine.h">
@@ -43,6 +49,12 @@
     </ClInclude>
     <ClInclude Include="BoxCollider.h">
       <Filter>Colliders\BoxCollider</Filter>
+    </ClInclude>
+    <ClInclude Include="DxDefine.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexPositionColor.h">
+      <Filter>Vertex</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
