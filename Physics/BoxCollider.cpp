@@ -4,7 +4,7 @@
 
 BoxCollider::BoxCollider() : m_Size{1,1,1}
 {
-
+	//---
 }
 
 BoxCollider::~BoxCollider()
