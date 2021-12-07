@@ -25,15 +25,21 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Collider.cpp">
-      <Filter>헤더 파일</Filter>
+      <Filter>Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="BoxCollider.cpp">
+      <Filter>BoxCollider</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Collider.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="DllDefine.h">
       <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Collider.h">
+      <Filter>Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="BoxCollider.h">
+      <Filter>BoxCollider</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

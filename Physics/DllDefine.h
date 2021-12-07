@@ -3,15 +3,15 @@
 
 #if _DEBUG
 	#ifdef PhysicsExportDLL
-		#define PhysicsExport __declspec(dllimport)
-	#else
 		#define PhysicsExport __declspec(dllexport)
+	#else
+		#define PhysicsExport __declspec(dllimport)
 	#endif
 #else //_Release
 	#ifdef PhysicsExportDLL
-		#define PhysicsExport __declspec(dllimport)
-	#else
 		#define PhysicsExport __declspec(dllexport)
+	#else
+		#define PhysicsExport __declspec(dllimport)
 	#endif
 
 #endif
