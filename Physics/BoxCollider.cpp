@@ -5,6 +5,7 @@
 BoxCollider::BoxCollider() : m_Size{1,1,1}
 {
 	//---
+	//Hight
 }
 
 BoxCollider::~BoxCollider()
