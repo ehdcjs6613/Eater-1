@@ -40,7 +40,7 @@ void TScene::Awake()
 	LoadTesture("Dump.png");
 	LoadTesture("Player.dds");
 	LoadTesture("body_normal_tangent_Base_color.png");
-
+	////----------------------------------
 	///Ä«¸Þ¶ó
 	testobj = Instance("Cam");
 	testobj->AddComponent<Camera>();
