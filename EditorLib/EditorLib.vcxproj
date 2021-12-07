@@ -199,7 +199,6 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\lib"</Command>
     <ClCompile Include="EditorLib.cpp" />
     <ClCompile Include="EditorSystem.cpp" />
     <ClCompile Include="EWGameView.cpp" />
-    <ClCompile Include="GameDlg.cpp" />
     <ClCompile Include="DockableView.cpp" />
     <ClCompile Include="TKeyInput.cpp" />
     <ClCompile Include="TScene.cpp" />
@@ -214,7 +213,6 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\lib"</Command>
     <ClInclude Include="EditorLib.h" />
     <ClInclude Include="EditorSystem.h" />
     <ClInclude Include="EWGameView.h" />
-    <ClInclude Include="GameDlg.h" />
     <ClInclude Include="DockableView.h" />
     <ClInclude Include="LibDefine.h" />
     <ClInclude Include="Resource.h" />

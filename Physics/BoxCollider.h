@@ -1,5 +1,6 @@
 #pragma once
 
+#include "DxDefine.h"
 #include "DllDefine.h"
 #include "Collider.h"
 

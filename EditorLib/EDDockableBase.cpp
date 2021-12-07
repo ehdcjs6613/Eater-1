@@ -2,7 +2,6 @@
 //
 #include "../Editor/resource.h"
 #include "LibDefine.h"
-#include "GameDlg.h"
 #include "EDDockableBase.h"
 
 

@@ -11,7 +11,7 @@
 #include "EWGameView.h"
 #include "EDDockableBase.h"
 #include "DockableView.h"
-#include "GameDlg.h"
+
 
 #include "MainFrm.h"
 

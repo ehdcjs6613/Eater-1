@@ -1,4 +1,4 @@
-#include "DxDefine.h"
+
 #include "VertexPositionColor.h"
 #include "BoxCollider.h"
 

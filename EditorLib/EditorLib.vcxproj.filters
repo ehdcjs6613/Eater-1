@@ -1,109 +1,42 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="소스 파일">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="헤더 파일">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="리소스 파일">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-<<<<<<< Updated upstream
-=======
-    <Filter Include="File">
-      <UniqueIdentifier>{662da856-e89e-4bdc-b832-392b052f92f8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="File\GameView">
-      <UniqueIdentifier>{c64e5ab7-6f9c-4c16-a91c-aebb9eaebb7c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="File\Scene">
-      <UniqueIdentifier>{8e15ce6f-c4a7-46b8-aabd-d963cbc63a68}</UniqueIdentifier>
-    </Filter>
->>>>>>> Stashed changes
+    <ClCompile Include="EDDockableBase.cpp" />
+    <ClCompile Include="EditorLib.cpp" />
+    <ClCompile Include="EditorSystem.cpp" />
+    <ClCompile Include="EWGameView.cpp" />
+    <ClCompile Include="DockableView.cpp" />
+    <ClCompile Include="TKeyInput.cpp" />
+    <ClCompile Include="TScene.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="EditorLib.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="GameDlg.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-<<<<<<< Updated upstream
-=======
-    <ClCompile Include="DockableView.cpp">
-      <Filter>File\GameView</Filter>
-    </ClCompile>
-    <ClCompile Include="EWGameView.cpp">
-      <Filter>File\GameView</Filter>
-    </ClCompile>
-    <ClCompile Include="EditorSystem.cpp">
-      <Filter>File\GameView</Filter>
-    </ClCompile>
-    <ClCompile Include="TKeyInput.cpp">
-      <Filter>File\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="TScene.cpp">
-      <Filter>File\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="EDDockableBase.cpp">
-      <Filter>File\GameView</Filter>
-    </ClCompile>
->>>>>>> Stashed changes
+    <ClInclude Include="DllExport.h" />
+    <ClInclude Include="EDDockableBase.h" />
+    <ClInclude Include="EditorLib.h" />
+    <ClInclude Include="EditorSystem.h" />
+    <ClInclude Include="EWGameView.h" />
+    <ClInclude Include="DockableView.h" />
+    <ClInclude Include="LibDefine.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="TKeyInput.h" />
+    <ClInclude Include="TScene.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="EditorLib.def">
-      <Filter>소스 파일</Filter>
-    </None>
-    <None Include="res\EditorLib.rc2">
-      <Filter>리소스 파일</Filter>
-    </None>
+    <ResourceCompile Include="EditorLib.rc" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Resource.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="EditorLib.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="LibDefine.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="GameDlg.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-<<<<<<< Updated upstream
-=======
-    <ClInclude Include="DockableView.h">
-      <Filter>File\GameView</Filter>
-    </ClInclude>
-    <ClInclude Include="EWGameView.h">
-      <Filter>File\GameView</Filter>
-    </ClInclude>
-    <ClInclude Include="EditorSystem.h">
-      <Filter>File\GameView</Filter>
-    </ClInclude>
-    <ClInclude Include="TKeyInput.h">
-      <Filter>File\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="TScene.h">
-      <Filter>File\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="EDDockableBase.h">
-      <Filter>File\GameView</Filter>
-    </ClInclude>
-    <ClInclude Include="DllExport.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
->>>>>>> Stashed changes
+    <None Include="EditorLib.def" />
+    <None Include="res\EditorLib.rc2" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="EditorLib.rc">
-      <Filter>리소스 파일</Filter>
-    </ResourceCompile>
+    <Filter Include="Source">
+      <UniqueIdentifier>{2fc8d08e-cc4e-4c32-940b-e8d1fc1404f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header">
+      <UniqueIdentifier>{0dca1195-0067-4109-9c85-92cd0d08535c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource">
+      <UniqueIdentifier>{b1c564fe-ff6e-4074-af71-4c0e2d6b9e6b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>
