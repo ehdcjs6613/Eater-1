@@ -44,6 +44,24 @@ DirectX::XMFLOAT3* Camera::GetMainPos()
 	return MainCam->GetPos();
 }
 
+//DirectX::XMFLOAT3 Camera::GetLocalPos_Up()
+//{
+//	if (MainCam == nullptr) { return; }
+//	return MainCam->gameobject->GetTransform()->GetLocalPosition_UP();
+//}
+//
+//DirectX::XMFLOAT3 Camera::GetLocalPos_Right()
+//{
+//	if (MainCam == nullptr) { return; }
+//	return MainCam->gameobject->GetTransform()->GetLocalPosition_Right();
+//}
+//
+//DirectX::XMFLOAT3 Camera::GetLocalPos_Look()
+//{
+//	if (MainCam == nullptr) { return; }
+//	return MainCam->gameobject->GetTransform()->GetLocalPosition_Look();
+//}
+
 DirectX::XMFLOAT3* Camera::GetPos()
 {
 	return &tranform->Position;
@@ -133,6 +151,7 @@ void Camera::PushCamList()
 		MainCam = this;
 	}
 
+	//카메라 리스트로 넣느다
 	int count = (int)CamList.size();
 	for (int i = 0; i < count; i++)
 	{
@@ -146,6 +165,7 @@ void Camera::PushCamList()
 
 	//여기로 왔다는것은 리스트가 꽉찼다는 것
 	CamList.push_back(this);
+	//자기의 인덱스 저장
 	MyIndex = count;
 }
 
