@@ -11,12 +11,6 @@
 	#endif
 #endif
 
-//기본적으로 필요한 헤더들
-#pragma comment(lib,"PhysX_64.lib")
-#pragma comment(lib,"PhysXFoundation_64.lib")
-#pragma comment(lib,"PhysXExtensions_static_64.lib")
-
-
 //필요dll들
 /*
 	항상필요
@@ -33,4 +27,3 @@
 */
 
 //최상위 헤더파일
-#include "PxPhysicsAPI.h"
