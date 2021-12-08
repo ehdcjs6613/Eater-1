@@ -60,9 +60,9 @@ public:
 	float GetMousePosY();			//마우스 위치 Y
 public:
 	///카메라 관련
-	Vector3 GetCameraLocalPosition_UP();
-	Vector3 GetCameraLocalPosition_Right();
-	Vector3 GetCameraLocalPosition_Look();
+	//Vector3 GetCameraLocalPosition_UP();
+	//Vector3 GetCameraLocalPosition_Right();
+	//Vector3 GetCameraLocalPosition_Look();
 public:
 	///시간 관련
 	float GetdeltaTime();
