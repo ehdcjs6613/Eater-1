@@ -21,8 +21,6 @@ namespace ParserData
 	class OneAnimation;
 }
 
-
-
 class ModelAnimationData;
 class LoadMeshData;
 class ModelData;

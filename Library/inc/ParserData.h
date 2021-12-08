@@ -13,7 +13,7 @@ namespace ParserData
 		DirectX::SimpleMath::Quaternion m_RotQt;
 		DirectX::SimpleMath::Vector3	m_Scale;
 	};
-
+	
 	class OneAnimation
 	{
 	public:
@@ -22,13 +22,9 @@ namespace ParserData
 		~OneAnimation();
 
 	public:
-		int index;
-
 		std::vector<OneFrame*>	m_AniData;
 
 		float	m_TicksPerFrame;
-		float	m_FrameTime;
-		int		m_TickFrame;
 		int		m_TotalFrame;
 		int		m_StartFrame;
 		int		m_EndFrame;

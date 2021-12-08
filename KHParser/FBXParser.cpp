@@ -193,7 +193,6 @@ void FBXParser::LoadNode(fbxsdk::FbxNode* node, fbxsdk::FbxNodeAttribute::EType 
 	FbxNodeAttribute* nodeAttribute = node->GetNodeAttribute();
 	if (nodeAttribute != nullptr)
 	{
-		FbxString nodename = node->GetName();
 		FbxNodeAttribute::EType attributeType = nodeAttribute->GetAttributeType();
 		if (attributeType == attribute)
 		{
@@ -325,6 +324,7 @@ void FBXParser::ProcessMesh(fbxsdk::FbxNode* node)
 	// 현 Node Parent 찾기..
 	const char* parentName = node->GetParent()->GetName();
 
+	// 부모 Mesh 찾기..
 	Mesh* parentMesh = FindMesh(parentName);
 	m_OneMesh->m_ParentName = parentName;
 
@@ -342,7 +342,9 @@ void FBXParser::ProcessMesh(fbxsdk::FbxNode* node)
 	// Node TRS 설정..
 	SetTransform(node);
 
+	// Mesh Vertex 총 개수..
 	int vertexTotalCount = pMesh->GetControlPointsCount();
+	// Mesh Face 총 개수..
 	int polygonTotalCount = pMesh->GetPolygonCount();
 
 	// 만약 Vertex 정보가 없을경우 처리하지 않기 위함..
@@ -374,11 +376,8 @@ void FBXParser::ProcessMesh(fbxsdk::FbxNode* node)
 
 			if (vertexIndex < 0 || vertexIndex >= vertexTotalCount)	continue;
 
-			DirectX::SimpleMath::Vector3 fbxNormal;
-			DirectX::SimpleMath::Vector2 fbxUV;
-
-			fbxNormal = GetNormal(pMesh, vertexIndex, vertexCount);
-			fbxUV = GetUV(pMesh, vertexIndex, uvIndex);
+			Vector3 fbxNormal = GetNormal(pMesh, vertexIndex, vertexCount);
+			Vector2 fbxUV = GetUV(pMesh, vertexIndex, uvIndex);
 
 			// 일단 하나의 Mesh 당 하나의 Material로 생각하고 가자..
 			if (m_OneMesh->m_MaterialData == nullptr)
@@ -443,10 +442,13 @@ bool FBXParser::ProcessBoneWeights(fbxsdk::FbxNode* node, std::vector<BoneWeight
 
 				// Bone Mesh 체크..
 				Mesh* boneMesh = FindMesh(lineNodeName);
+
+				// 해당 Bone Mesh가 없을경우..
+				if (boneMesh == nullptr) continue;
+
+				// Bone Index 체크..
 				int boneIndex = FindBoneIndex(lineNodeName);
 
-				if (boneMesh == nullptr) continue;
-				if (boneMesh->m_IsBone == false) continue;
 
 				FbxAMatrix matClusterTransformMatrix;
 				FbxAMatrix matClusterLinkTransformMatrix;
@@ -461,16 +463,15 @@ bool FBXParser::ProcessBoneWeights(fbxsdk::FbxNode* node, std::vector<BoneWeight
 				cluster->GetTransformLinkMatrix(matClusterLinkTransformMatrix);
 
 				// Bone Matrix 설정..
-				DirectX::SimpleMath::Matrix clusterMatrix = ConvertMatrix(matClusterTransformMatrix);
-				DirectX::SimpleMath::Matrix clusterlinkMatrix = ConvertMatrix(matClusterLinkTransformMatrix);
-				DirectX::SimpleMath::Matrix geometryMatrix = ConvertMatrix(geometryTransform);
+				Matrix clusterMatrix = ConvertMatrix(matClusterTransformMatrix);
+				Matrix clusterlinkMatrix = ConvertMatrix(matClusterLinkTransformMatrix);
+				Matrix geometryMatrix = ConvertMatrix(geometryTransform);
 
-				DirectX::SimpleMath::Matrix offsetMatrix = clusterMatrix * clusterlinkMatrix.Invert() * geometryMatrix;
+				Matrix offsetMatrix = clusterMatrix * clusterlinkMatrix.Invert() * geometryMatrix;
 
 				// 해당 Bone Index에 Bone Offset & Mesh Data 삽입..
 				skinMesh->m_BoneTMList[boneIndex] = offsetMatrix;
 				skinMesh->m_BoneMeshList[boneIndex] = boneMesh;
-
 
 				int c = cluster->GetControlPointIndicesCount();
 				for (int j = 0; j < cluster->GetControlPointIndicesCount(); ++j)
@@ -495,14 +496,11 @@ bool FBXParser::ProcessBoneWeights(fbxsdk::FbxNode* node, std::vector<BoneWeight
 					meshBoneWeights[i].Normalize();
 			}
 			break;
-
 			case FbxCluster::eAdditive:
 				break;
-
 			case FbxCluster::eTotalOne:
 				break;
 			}
-
 		}
 	}
 
@@ -656,14 +654,16 @@ void FBXParser::OptimizeVertex(ParserData::Mesh* pMesh)
 						Vertex* checkVertex = pMesh->m_VertexList[k];
 
 						// 새로 추가한 Vertex와 동일한 데이터를 갖고있는 Face 내의 Vertex Index 수정..
-						if ((checkVertex->m_Indices == nowIndex) &&
-							(checkVertex->m_Normal == nowNormal))
+						if (checkVertex->m_Indices == nowIndex)
 						{
-							if (checkVertex->m_UV == nowUV)
+							if (checkVertex->m_Normal == nowNormal)
 							{
-								nowFace->m_VertexIndex[j] = (int)k;
-								new_VertexSet = false;
-								break;
+								if (checkVertex->m_UV == nowUV)
+								{
+									nowFace->m_VertexIndex[j] = (int)k;
+									new_VertexSet = false;
+									break;
+								}
 							}
 						}
 					}
@@ -700,11 +700,11 @@ void FBXParser::OptimizeVertex(ParserData::Mesh* pMesh)
 		int index2 = pMesh->m_MeshFace[i]->m_VertexIndex[2];
 
 		Vertex* vertex0 = pMesh->m_VertexList[index0];
-		Vertex* vertex1 = pMesh->m_VertexList[index0];
-		Vertex* vertex2 = pMesh->m_VertexList[index0];
+		Vertex* vertex1 = pMesh->m_VertexList[index1];
+		Vertex* vertex2 = pMesh->m_VertexList[index2];
 
 		DirectX::SimpleMath::Vector3 ep1 = vertex1->m_Pos - vertex0->m_Pos;
-		DirectX::SimpleMath::Vector3 ep2 = pMesh->m_VertexList[index2]->m_Pos - vertex0->m_Pos;
+		DirectX::SimpleMath::Vector3 ep2 = vertex2->m_Pos - vertex0->m_Pos;
 
 		DirectX::SimpleMath::Vector2 uv1 = { vertex1->m_UV.x - vertex0->m_UV.x,
 											 vertex1->m_UV.y - vertex0->m_UV.y };
@@ -973,9 +973,9 @@ void FBXParser::SetTransform(fbxsdk::FbxNode* node)
 	if (m_OneMesh->m_TopNode)
 	{
 		const auto yaw = -90.0f * DirectX::XM_PI / 180.0f;
-
+		
 		DirectX::SimpleMath::Quaternion q = XMQuaternionRotationRollPitchYaw(yaw, 0.0f, 0.0f);
-
+		
 		world *= XMMatrixRotationQuaternion(q);
 		local *= XMMatrixRotationQuaternion(q);
 	}
@@ -1008,9 +1008,9 @@ void FBXParser::SetMaterial(fbxsdk::FbxSurfaceMaterial* material)
 		m_MaterialData->m_Material_Ambient.w = 1.0f;
 
 		// Diffuse Data
-		m_MaterialData->m_Material_Diffuse.x = static_cast<float>(((FbxSurfacePhong*)material)->Diffuse.Get()[0]);
-		m_MaterialData->m_Material_Diffuse.y = static_cast<float>(((FbxSurfacePhong*)material)->Diffuse.Get()[1]);
-		m_MaterialData->m_Material_Diffuse.z = static_cast<float>(((FbxSurfacePhong*)material)->Diffuse.Get()[2]);
+		m_MaterialData->m_Material_Diffuse.x = static_cast<float>(((FbxSurfacePhong*)material)->Albedo.Get()[0]);
+		m_MaterialData->m_Material_Diffuse.y = static_cast<float>(((FbxSurfacePhong*)material)->Albedo.Get()[1]);
+		m_MaterialData->m_Material_Diffuse.z = static_cast<float>(((FbxSurfacePhong*)material)->Albedo.Get()[2]);
 		m_MaterialData->m_Material_Diffuse.w = 1.0f;
 
 		// Specular Data
@@ -1043,9 +1043,9 @@ void FBXParser::SetMaterial(fbxsdk::FbxSurfaceMaterial* material)
 		m_MaterialData->m_Material_Ambient.w = 1.0f;
 
 		// Diffuse Data
-		m_MaterialData->m_Material_Diffuse.x = static_cast<float>(((FbxSurfaceLambert*)material)->Diffuse.Get()[0]);
-		m_MaterialData->m_Material_Diffuse.y = static_cast<float>(((FbxSurfaceLambert*)material)->Diffuse.Get()[1]);
-		m_MaterialData->m_Material_Diffuse.z = static_cast<float>(((FbxSurfaceLambert*)material)->Diffuse.Get()[2]);
+		m_MaterialData->m_Material_Diffuse.x = static_cast<float>(((FbxSurfaceLambert*)material)->Albedo.Get()[0]);
+		m_MaterialData->m_Material_Diffuse.y = static_cast<float>(((FbxSurfaceLambert*)material)->Albedo.Get()[1]);
+		m_MaterialData->m_Material_Diffuse.z = static_cast<float>(((FbxSurfaceLambert*)material)->Albedo.Get()[2]);
 		m_MaterialData->m_Material_Diffuse.w = 1.0f;
 
 		// Emissive Data
@@ -1149,11 +1149,17 @@ void FBXParser::CreateVertex(fbxsdk::FbxMesh* mesh, std::vector<BoneWeights>& bo
 		// 해당 Vertex의 Index..
 		nowVertex->m_Indices = vertexIndex;
 
+		// 현재 Bone Data..
+		BoneWeights nowBone = boneWeights[vertexIndex];
+
 		// Bone Weight Data
-		for (unsigned int boneIndex = 0; boneIndex < boneWeights[vertexIndex].m_BoneWeights.size(); boneIndex++)
+		for (unsigned int boneIndex = 0; boneIndex < nowBone.m_BoneWeights.size(); boneIndex++)
 		{
-			nowVertex->m_BoneIndices.push_back(boneWeights[vertexIndex].m_BoneWeights[boneIndex].m_BoneNumber);
-			nowVertex->m_BoneWeights.push_back(boneWeights[vertexIndex].m_BoneWeights[boneIndex].m_BoneWeight);
+			// 현재 Weight..
+			Weight nowWeight = nowBone.m_BoneWeights[boneIndex];
+
+			nowVertex->m_BoneIndices.push_back(nowWeight.m_BoneNumber);
+			nowVertex->m_BoneWeights.push_back(nowWeight.m_BoneWeight);
 		}
 	}
 }

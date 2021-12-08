@@ -2,7 +2,7 @@
 #include "ShaderBase.h"
 #include "PixelShader.h"
 
-#include "ResourceBufferHashTable.h"
+#include "ShaderResourceHashTable.h"
 #include "CompilerDefine.h"
 #include <sstream>
 #include <fstream>
@@ -21,7 +21,7 @@ PixelShader::~PixelShader()
 void PixelShader::LoadShader(std::string fileName)
 {
 	ID3D11ShaderReflection* pReflector = nullptr;
-	ShaderResourceHashTable* resource_table = ShaderResourceHashTable::GetInstance();
+	ShaderResourceHashTable* resource_table = ShaderResourceHashTable::Get();
 	
 	size_t cbuffer_register_slot = 0;	// ConstantBuffer Max Register Slot
 	size_t sampler_register_slot = 0;	// Sampler Max Register Slot
@@ -64,7 +64,7 @@ void PixelShader::LoadShader(std::string fileName)
 			HR(g_Device->CreateBuffer(&cBufferDesc, nullptr, &cBuffer));
 
 			// Constant Buffer Hash Code..
-			hash_key = resource_table->FindHashCode(BufferType::CBUFFER, bufferDesc.Name);
+			hash_key = resource_table->FindHashCode(eResourceType::CB, bufferDesc.Name);
 
 			// Constant Buffer Register Slot Number..
 			cbuffer_register_slot = bindDesc.BindPoint;
@@ -87,7 +87,7 @@ void PixelShader::LoadShader(std::string fileName)
 		case D3D_SIT_TEXTURE:
 		{
 			// SRV Hash Code..
-			hash_key = resource_table->FindHashCode(BufferType::SRV, bindDesc.Name);
+			hash_key = resource_table->FindHashCode(eResourceType::SRV, bindDesc.Name);
 
 			// SRV Register Slot Number..
 			srv_register_slot = bindDesc.BindPoint;
@@ -99,7 +99,7 @@ void PixelShader::LoadShader(std::string fileName)
 		case D3D_SIT_SAMPLER:
 		{
 			// Sampler Hash Code..
-			hash_key = resource_table->FindHashCode(BufferType::SAMPLER, bindDesc.Name);
+			hash_key = resource_table->FindHashCode(eResourceType::SS, bindDesc.Name);
 
 			// Sampler Register Slot Number..
 			sampler_register_slot = bindDesc.BindPoint;

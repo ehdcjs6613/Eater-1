@@ -1,8 +1,7 @@
 #pragma once
-#include "ClassType.h"
+#include "HashBase.h"
 
-#define ADD_UNORDERED_ACCESS_VIEW(ClassName) static bool uav_##ClassName = ShaderResourceHashTable::GetInstance()->Push<ClassName>(BufferType::UAV, #ClassName, ClassName::GetHashCode());
-#define UNORDERED_ACCESS_VIEW(ClassName) CREATE_EMPTY_CLASS(ClassName) ADD_UNORDERED_ACCESS_VIEW(ClassName)
+#define UNORDERED_ACCESS_VIEW(ClassName) CREATE_HASH_CLASS(ClassName, eResourceType::UAV) RESOURCE_PUSH(ClassName, eResourceType::UAV)
 
 /// <summary>
 /// UnorderedAccessView Resource Struct
@@ -21,3 +20,8 @@
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 UNORDERED_ACCESS_VIEW(gOutput)
+
+
+
+/// Resource Hash 재등록 방지 Define
+RESOURCE_DEFINE(DEFINE_UAV)

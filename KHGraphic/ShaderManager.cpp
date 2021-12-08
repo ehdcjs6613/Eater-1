@@ -1,18 +1,19 @@
 #include "DirectDefine.h"
+#include "D3D11Graphic.h"
 #include "ShaderBase.h"
 #include "VertexShader.h"
 #include "PixelShader.h"
 #include "ComputeShader.h"
-#include "windows.h"
 #include "ShaderManagerBase.h"
 #include "ShaderManager.h"
-#include "ResourceBufferHashTable.h"
+#include "ShaderResourceHashTable.h"
 
 using namespace Microsoft::WRL;
 
-ShaderManager::ShaderManager()
+ShaderManager::ShaderManager(D3D11Graphic* graphic)
 {
-
+	// Shader Global Initialize..
+	IShader::Initialize(graphic->GetDevice(), graphic->GetContext());
 }
 
 ShaderManager::~ShaderManager()
@@ -20,18 +21,13 @@ ShaderManager::~ShaderManager()
 
 }
 
-void ShaderManager::Initialize(Microsoft::WRL::ComPtr<ID3D11Device> device, Microsoft::WRL::ComPtr<ID3D11DeviceContext> context)
+void ShaderManager::Initialize()
 {
-	// Shader Global Initialize..
-	IShader::Initialize(device, context);
+	// Shader File Route Setting..
 	IShader::SetShaderRoute("../Resources/Shader/SKH/");
 
 	// Global Shader Create..
 	CreateShader();
-
-	// Shader Hash Table Reset..
-	ShaderResourceHashTable* table = ShaderResourceHashTable::GetInstance();
-	table->Destroy();
 }
 
 void ShaderManager::Release()
@@ -96,55 +92,44 @@ ComputeShader* ShaderManager::GetComputeShader(std::string shaderName)
 
 void ShaderManager::CreateShader()
 {
+	// Object Shader
 	LoadShader(eShaderType::VERTEX, "MeshVS.cso");
 	LoadShader(eShaderType::VERTEX, "SkinVS.cso");
+
+	// Forward Shader
 	LoadShader(eShaderType::PIXEL, "ForwardPS.cso");
 
+	// Deffered Shader
+	LoadShader(eShaderType::PIXEL, "DeferredPS.cso");
+
+	// Light Shader
+	LoadShader(eShaderType::VERTEX, "LightVS.cso");
+	LoadShader(eShaderType::PIXEL, "LightPS.cso");
+
+	// Shadow Shader
 	LoadShader(eShaderType::VERTEX, "ShadowMeshVS.cso");
 	LoadShader(eShaderType::VERTEX, "ShadowSkinVS.cso");
+}
 
-	//// Global Forward Shader
-	//LoadShader(eShaderType::VERTEX, "FinalVS.cso");
-	//LoadShader(eShaderType::PIXEL, "FinalPS.cso");
-	//
-	// Global Deferred Shader
-	//LoadShader(eShaderType::VERTEX, "FullScreenVS.cso");
-	//LoadShader(eShaderType::PIXEL, "LightPS.cso");
-	//
-	//LoadShader(eShaderType::VERTEX, "ColorVS.cso");
-	//LoadShader(eShaderType::PIXEL, "ColorPS.cso");
-	//
-	//LoadShader(eShaderType::VERTEX, "SkyCubeVS.cso");
-	//LoadShader(eShaderType::PIXEL, "SkyCubePS.cso");
-	//
-	//LoadShader(eShaderType::VERTEX, "NormalShadowVS.cso");
-	//LoadShader(eShaderType::VERTEX, "SkinShadowVS.cso");
-	//
-	//LoadShader(eShaderType::VERTEX, "TextureVS.cso");
-	//LoadShader(eShaderType::VERTEX, "SkinVS.cso");
-	//LoadShader(eShaderType::PIXEL, "TextureDeferredPS.cso");
-	//
-	//LoadShader(eShaderType::VERTEX, "NormalTextureVS.cso");
-	//LoadShader(eShaderType::PIXEL, "NormalTextureDeferredPS.cso");
-	//
-	//LoadShader(eShaderType::VERTEX, "NormalSkinVS.cso");
-	//LoadShader(eShaderType::PIXEL, "NormalTextureDeferredPS.cso");
-	//
-	//// SSAO Shader
-	//LoadShader(eShaderType::VERTEX, "SSAOVS.cso");
-	//LoadShader(eShaderType::PIXEL, "SSAOPS.cso");
-	//
-	//LoadShader(eShaderType::VERTEX, "SSAOBlurVS.cso");
-	//LoadShader(eShaderType::PIXEL, "SSAOHorizonBlurPS.cso");
-	//LoadShader(eShaderType::PIXEL, "SSAOVerticalBlurPS.cso");
-	//
-	//// Terrain Shader
-	//LoadShader(eShaderType::VERTEX, "TerrainVS.cso");
-	//LoadShader(eShaderType::PIXEL, "TerrainPS.cso");
-	//
-	//// Screen Blur Shader
-	//LoadShader(eShaderType::COMPUTE, "HorizonBlurCS.cso");
-	//LoadShader(eShaderType::COMPUTE, "VerticalBlurCS.cso");
+void ShaderManager::AddSampler(Hash_Code hash_code, ID3D11SamplerState** sampler)
+{
+	for (std::pair<std::string, ShaderBase*> shader : m_ShaderList)
+	{
+		ShaderBase* pShader = shader.second;
+
+		switch (pShader->GetType())
+		{
+		case eShaderType::VERTEX:
+		case eShaderType::PIXEL:
+		case eShaderType::COMPUTE:
+		{
+			pShader->SetSamplerState(hash_code, sampler);
+		}
+		break;
+		default:
+			break;
+		}
+	}
 }
 
 ShaderBase* ShaderManager::LoadShader(eShaderType shaderType, std::string shaderName)
