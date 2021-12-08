@@ -31,6 +31,11 @@ public:
 	// Main Camera Position
 	static DirectX::XMFLOAT3* GetMainPos();
 
+	//카메라의 로컬 좌표를 가져온다
+	//static DirectX::XMFLOAT3  GetLocalPos_Up();
+	//static DirectX::XMFLOAT3  GetLocalPos_Right();
+	//static DirectX::XMFLOAT3  GetLocalPos_Look();
+
 	//OnResize 에서 실행될 함수
 	static void SetSize(int Change_Width, int Change_Height);
 	static void CreateProj(int winsizeX,int WinSizeY, bool ViewPoint = false);

@@ -582,9 +582,6 @@ Vertexbuffer* MultiRenderEngine::SkinningVertexBuffer(ParserData::Mesh* mModel)
 	return vertexbuffer;
 }
 
-
-
-
 void MultiRenderEngine::BeginRender()
 {
 	//Å¬¸®¾î

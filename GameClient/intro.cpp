@@ -5,7 +5,6 @@
 #include "SkinningFilter.h"
 #include "AnimationController.h"
 #include "Transform.h"
-#include "AI.h"
 #include "Player.h"
 #include "KeyInput.h"
 #include "Camera.h"
@@ -27,8 +26,6 @@ void intro::Awake()
 	LoadTexture("Dump.png");
 	
 
-	
-	
 	CreateCam();
 	CreateLignt();
 	CreatePlayer();

@@ -101,7 +101,8 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 
 	//엔진을 지정된 넘버로 넣는다
 	//mGraphicManager->PushEngine(0, new X3Engine(), "우진");
-	mGraphicManager->PushEngine(0, new HsGraphic(), "형선");
+	mGraphicManager->PushEngine(0, new KHGraphic(), "규황");
+	//mGraphicManager->PushEngine(0, new HsGraphic(), "형선");
 	
 	//mGraphicManager->PushEngine(2, new KHGraphic(), "규황");
 	//mGraphicManager->PushEngine(3, new DH3DEngine(), "동혁");
@@ -288,6 +289,21 @@ float GameEngine::GetMousePosY()
 {
 	//마우스 위치 y좌표
 	return (float)mKeyManager->GetMousePos()->y;
+}
+
+Vector3 GameEngine::GetCameraLocalPosition_UP()
+{
+	return Vector3();
+}
+
+Vector3 GameEngine::GetCameraLocalPosition_Right()
+{
+	return Vector3();
+}
+
+Vector3 GameEngine::GetCameraLocalPosition_Look()
+{
+	return Vector3();
 }
 
 float GameEngine::GetdeltaTime()
