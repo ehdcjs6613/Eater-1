@@ -10,6 +10,7 @@
 #include "TimeManager.h"
 #include "MaterialManager.h"
 #include "LightManager.h"
+#include "PhysManager.h"
 
 #include "ParserData.h"
 #include "EngineData.h"
@@ -30,7 +31,11 @@ GameEngine::GameEngine()
 	mObjectManager	= nullptr;
 	mSceneManager	= nullptr;
 	mKeyManager		= nullptr;
-
+	mPhysManager	= nullptr;
+	mLightManager	= nullptr;
+	mMaterialManager = nullptr;
+	mTimeManager	= nullptr;
+	mGraphicManager = nullptr;
 
 	//기본 윈도우 사이즈 설정
 	WinSizeWidth	= 1920;
@@ -38,6 +43,8 @@ GameEngine::GameEngine()
 
 	//윈도우 핸들
 	mHwnd = NULL;
+
+	ConsoleDebug = true;
 }
 
 GameEngine::~GameEngine()
@@ -61,6 +68,7 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 	mTimeManager		= new TimeManager();
 	mMaterialManager	= new MaterialManager();
 	mLightManager		= new LightManager();
+	mPhysManager		= new PhysManager();
 
 	//매니저들 인풋
 	MeshFilter::SetManager(mObjectManager, mMaterialManager);
@@ -76,6 +84,7 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 	mTimeManager->Initialize();
 	mLightManager->Initialize();
 	mMaterialManager->Initialize();
+	mPhysManager->Initialize();
 
 	Component::SetManager(mTimeManager, mKeyManager);
 
