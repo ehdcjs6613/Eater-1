@@ -3,12 +3,10 @@
 #include "ShaderBase.h"
 #include "VertexShader.h"
 #include "PixelShader.h"
-#include "ViewPort.h"
 #include "GraphicState.h"
 #include "Texture2D.h"
-#include "DepthStencilView.h"
-#include "RenderTargetBase.h"
-#include "BasicRenderTarget.h"
+#include "DepthStencil.h"
+#include "RenderTarget.h"
 #include "VertexDefine.h"
 #include "EngineData.h"
 #include "DeferredPass.h"
@@ -41,8 +39,6 @@ DeferredPass::~DeferredPass()
 
 void DeferredPass::Create(int width, int height)
 {
-	Microsoft::WRL::ComPtr<ID3D11Texture2D> tex2D[5] = { nullptr, };
-	
 	///////////////////////////////////////////////////////////////////////////
 	// Texture 2D
 	///////////////////////////////////////////////////////////////////////////
@@ -73,13 +69,6 @@ void DeferredPass::Create(int width, int height)
 	texDescPosNormal.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
 	texDescPosNormal.CPUAccessFlags = 0;
 	texDescPosNormal.MiscFlags = 0;
-
-	// Texture 2D 생성..
-	g_Factory->CreateTexture2D(&texDescDiffuse, tex2D[0].GetAddressOf());
-	g_Factory->CreateTexture2D(&texDescPosNormal, tex2D[1].GetAddressOf());
-	g_Factory->CreateTexture2D(&texDescPosNormal, tex2D[2].GetAddressOf());
-	g_Factory->CreateTexture2D(&texDescPosNormal, tex2D[3].GetAddressOf());
-	g_Factory->CreateTexture2D(&texDescPosNormal, tex2D[4].GetAddressOf());
 
 	///////////////////////////////////////////////////////////////////////////
 	// RenderTargetView 2D
@@ -114,29 +103,22 @@ void DeferredPass::Create(int width, int height)
 	srvDescPosNormal.Texture2D.MipLevels = 1;
 
 	// RenderTarget 생성..
-	g_Factory->CreateBasicRenderTarget<RT_Deffered_Albedo>(tex2D[0].Get(), &rtvDescDiffuse, &srvDescDiffuse);
-	g_Factory->CreateBasicRenderTarget<RT_Deffered_Normal>(tex2D[1].Get(), &rtvDescPosNormal, &srvDescPosNormal);
-	g_Factory->CreateBasicRenderTarget<RT_Deffered_Position>(tex2D[2].Get(), &rtvDescPosNormal, &srvDescPosNormal);
-	g_Factory->CreateBasicRenderTarget<RT_Deffered_Shadow>(tex2D[3].Get(), &rtvDescPosNormal, &srvDescPosNormal);
-	g_Factory->CreateBasicRenderTarget<RT_Deffered_Depth>(tex2D[4].Get(), &rtvDescPosNormal, &srvDescPosNormal);
-
-	// Texture2D Resource Reset..
-	RESET_COM(tex2D[0]);
-	RESET_COM(tex2D[1]);
-	RESET_COM(tex2D[2]);
-	RESET_COM(tex2D[3]);
-	RESET_COM(tex2D[4]);
+	g_Factory->CreateRenderTarget<RT_Deffered_Albedo>(&texDescDiffuse, &rtvDescDiffuse, &srvDescDiffuse);
+	g_Factory->CreateRenderTarget<RT_Deffered_Normal>(&texDescPosNormal, &rtvDescPosNormal, &srvDescPosNormal);
+	g_Factory->CreateRenderTarget<RT_Deffered_Position>(&texDescPosNormal, &rtvDescPosNormal, &srvDescPosNormal);
+	g_Factory->CreateRenderTarget<RT_Deffered_Shadow>(&texDescPosNormal, &rtvDescPosNormal, &srvDescPosNormal);
+	g_Factory->CreateRenderTarget<RT_Deffered_Depth>(&texDescPosNormal, &rtvDescPosNormal, &srvDescPosNormal);
 }
 
 void DeferredPass::Start()
 {
 	// Shader 설정..
-	m_MeshVS = g_Shader->GetShader("NormalSkinVS");
-	m_SkinVS = g_Shader->GetShader("NormalTextureVS");
+	m_MeshVS = g_Shader->GetShader("MeshVS");
+	m_SkinVS = g_Shader->GetShader("SkinVS");
 	m_DeferredPS = g_Shader->GetShader("DeferredPS");
 
 	// DepthStencilView 설정..
-	m_DepthStencilView = g_Resource->GetDepthStencilView<DSV_Defalt>()->Get();
+	m_DepthStencilView = g_Resource->GetDepthStencil<DS_Defalt>()->GetDSV();
 
 	// Graphic State 설정..
 	m_DepthStencilState = g_Resource->GetDepthStencilState<DSS_Defalt>()->Get();
@@ -152,7 +134,6 @@ void DeferredPass::Start()
 	m_PositionRT = g_Resource->GetRenderTarget<RT_Deffered_Position>();
 	m_ShadowRT = g_Resource->GetRenderTarget<RT_Deffered_Shadow>();
 	m_DepthRT = g_Resource->GetRenderTarget<RT_Deffered_Depth>();
-	m_SSAORT = g_Resource->GetRenderTarget<RT_SSAO>();
 
 	// RenderTargetView 설정..
 	m_RTVList.resize(5);
@@ -174,7 +155,7 @@ void DeferredPass::Start()
 void DeferredPass::OnResize(int width, int height)
 {
 	// DepthStencilView 재설정..
-	m_DepthStencilView = g_Resource->GetDepthStencilView<DSV_Defalt>()->Get();
+	m_DepthStencilView = g_Resource->GetDepthStencil<DS_Defalt>()->GetDSV();
 	
 	// ShaderResourceView List 재설정..
 	m_SRVList[0] = m_AlbedoRT->GetSRV();
@@ -221,11 +202,6 @@ void DeferredPass::Update(MeshData* mesh, GlobalData* global)
 	Matrix proj = *global->mProj;
 	Matrix shadowTrans = *global->mShadowTrans;
 	Vector3 eye(view._41, view._42, view._43);
-	LightData* lightData = global->mLightData;
-
-	UINT texture_type = 0;
-	ID3D11ShaderResourceView* diffuse_srv = nullptr;
-	ID3D11ShaderResourceView* normal_srv = nullptr;
 
 	switch (mesh->ObjType)
 	{
@@ -269,15 +245,13 @@ void DeferredPass::Update(MeshData* mesh, GlobalData* global)
 	
 	if (mesh->Albedo)
 	{
-		materialBuf.gTexID |= ALBEDO_MAP;
-		diffuse_srv = reinterpret_cast<ID3D11ShaderResourceView*>(mesh->Albedo->TextureBufferPointer);
-		m_DeferredPS->SetShaderResourceView<gDiffuseMap>(&diffuse_srv);
+ 		materialBuf.gTexID |= ALBEDO_MAP;
+		m_DeferredPS->SetShaderResourceView<gDiffuseMap>((ID3D11ShaderResourceView*)mesh->Albedo->TextureBufferPointer);
 	}
 	if (mesh->Normal)
 	{
 		materialBuf.gTexID |= NORMAL_MAP;
-		normal_srv = reinterpret_cast<ID3D11ShaderResourceView*>(mesh->Normal->TextureBufferPointer);
-		m_DeferredPS->SetShaderResourceView<gNormalMap>(&normal_srv);
+		m_DeferredPS->SetShaderResourceView<gNormalMap>((ID3D11ShaderResourceView*)mesh->Normal->TextureBufferPointer);
 	}
 
 	m_DeferredPS->SetConstantBuffer(materialBuf);

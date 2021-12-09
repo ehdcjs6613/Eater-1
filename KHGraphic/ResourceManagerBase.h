@@ -1,16 +1,12 @@
 #pragma once
 #include <assert.h>
-#include "RenderTargetTypes.h"
 #include "ResourceBase.h"
 #include "HashBase.h"
 
 typedef size_t Hash_Code;
 
-// Template을 통해 들어오는 Class가 HashClass인지 체크..
-template<typename T>
-using Enable_Check = typename std::enable_if<std::is_base_of<HashClass<T>, T>::value, bool>::type;
-
-class DepthStencilView;
+class RenderTarget;
+class DepthStencil;
 class DepthStencilState;
 class BlendState;
 class RasterizerState;
@@ -34,19 +30,18 @@ public:
 	virtual void Release() abstract;
 
 public:
-	friend class OriginalRenderTarget;
 	friend class GraphicResourceFactory;
 
 public:
 	// BackBuffer RenderTarget Get Function
-	virtual BasicRenderTarget* GetMainRenderTarget() abstract;
+	virtual RenderTarget* GetMainRenderTarget() abstract;
 	// BackBuffer RenderTarget Add Function
 	virtual void AddMainRenderTarget(RenderTarget* rtv) abstract;
 
 	// RenderTarget Get Function
-	template<typename T, Enable_Check<T> = NULL> OriginalRenderTarget GetRenderTarget();
+	template<typename T, Enable_Check<T> = NULL> RenderTarget* GetRenderTarget();
 	// DepthStencilView Get Function
-	template<typename T, Enable_Check<T> = NULL> DepthStencilView* GetDepthStencilView();
+	template<typename T, Enable_Check<T> = NULL> DepthStencil* GetDepthStencil();
 	// DepthStencilState Get Function
 	template<typename T, Enable_Check<T> = NULL> DepthStencilState* GetDepthStencilState();
 	// RasterizerState Get Function
@@ -63,8 +58,8 @@ public:
 	template<typename T, Enable_Check<T> = NULL> void AddResource(ResourceBase* resource);
 
 private:
-	virtual OriginalRenderTarget GetRenderTarget(Hash_Code hash_code) abstract;
-	virtual DepthStencilView* GetDepthStencilView(Hash_Code hash_code) abstract;
+	virtual RenderTarget* GetRenderTarget(Hash_Code hash_code) abstract;
+	virtual DepthStencil* GetDepthStencil(Hash_Code hash_code) abstract;
 	virtual BlendState* GetBlendState(Hash_Code hash_code) abstract;
 	virtual RasterizerState* GetRasterizerState(Hash_Code hash_code) abstract;
 	virtual DepthStencilState* GetDepthStencilState(Hash_Code hash_code) abstract;
@@ -73,14 +68,10 @@ private:
 
 private:
 	virtual void AddResource(Hash_Code hash_code, ResourceBase* resource) abstract;
-
-private:
-	virtual BasicRenderTarget* GetBasicRenderTarget(Hash_Code hash_code) abstract;
-	virtual ComputeRenderTarget* GetComputeRenderTarget(Hash_Code hash_code) abstract;
 };
 
 template<typename T, Enable_Check<T>>
-inline OriginalRenderTarget IGraphicResourceManager::GetRenderTarget()
+inline RenderTarget* IGraphicResourceManager::GetRenderTarget()
 {
 	// Template Struct Resource Type Check..
 	assert(T::GetType() == eResourceType::RT);
@@ -90,12 +81,12 @@ inline OriginalRenderTarget IGraphicResourceManager::GetRenderTarget()
 
 
 template<typename T, Enable_Check<T>>
-inline DepthStencilView* IGraphicResourceManager::GetDepthStencilView()
+inline DepthStencil* IGraphicResourceManager::GetDepthStencil()
 {
 	// Template Struct Resource Type Check..
-	assert(T::GetType() == eResourceType::DSV);
+	assert(T::GetType() == eResourceType::DS);
 	
-	return GetDepthStencilView(T::GetHashCode());
+	return GetDepthStencil(T::GetHashCode());
 }
 
 template<typename T, Enable_Check<T>>
