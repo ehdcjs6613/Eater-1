@@ -125,6 +125,11 @@ ViewPort::ViewPort(float ratio_offsetX, float ratio_offsetY, float ratio_sizeX, 
 
 ViewPort::~ViewPort()
 {
+	Reset();
+}
+
+void ViewPort::Reset()
+{
 	SAFE_DELETE(m_ViewPort);
 }
 

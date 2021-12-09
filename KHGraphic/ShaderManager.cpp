@@ -1,5 +1,5 @@
 #include "DirectDefine.h"
-#include "D3D11Graphic.h"
+#include "D3D11GraphicBase.h"
 #include "ShaderBase.h"
 #include "VertexShader.h"
 #include "PixelShader.h"
@@ -10,7 +10,7 @@
 
 using namespace Microsoft::WRL;
 
-ShaderManager::ShaderManager(D3D11Graphic* graphic)
+ShaderManager::ShaderManager(ID3D11Graphic* graphic)
 {
 	// Shader Global Initialize..
 	IShader::Initialize(graphic->GetDevice(), graphic->GetContext());
@@ -111,7 +111,7 @@ void ShaderManager::CreateShader()
 	LoadShader(eShaderType::VERTEX, "ShadowSkinVS.cso");
 }
 
-void ShaderManager::AddSampler(Hash_Code hash_code, ID3D11SamplerState** sampler)
+void ShaderManager::AddSampler(Hash_Code hash_code, ID3D11SamplerState* sampler)
 {
 	for (std::pair<std::string, ShaderBase*> shader : m_ShaderList)
 	{

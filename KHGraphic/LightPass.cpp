@@ -5,9 +5,8 @@
 #include "PixelShader.h"
 #include "GraphicState.h"
 #include "Texture2D.h"
-#include "DepthStencilView.h"
-#include "RenderTargetBase.h"
-#include "BasicRenderTarget.h"
+#include "DepthStencil.h"
+#include "RenderTarget.h"
 #include "VertexDefine.h"
 #include "BufferData.h"
 #include "EngineData.h"
@@ -57,21 +56,21 @@ void LightPass::Start()
 	m_ScreenViewport = g_Resource->GetViewPort<VP_FullScreen>()->Get();
 
 	// DepthStencilView 설정..
-	m_DepthStencilView = g_Resource->GetDepthStencilView<DSV_Defalt>()->GetDSV();
+	m_DepthStencilView = g_Resource->GetDepthStencil<DS_Defalt>()->GetDSV();
 
 	// Multi RenderTarget 설정..
 	m_AlbedoRT = g_Resource->GetRenderTarget<RT_Deffered_Albedo>();
 	m_NormalRT = g_Resource->GetRenderTarget<RT_Deffered_Normal>();
 	m_PositionRT = g_Resource->GetRenderTarget<RT_Deffered_Position>();
 	m_ShadowRT = g_Resource->GetRenderTarget<RT_Deffered_Shadow>();
-	m_SSAORT = g_Resource->GetRenderTarget<RT_SSAO>();
+	//m_SSAORT = g_Resource->GetRenderTarget<RT_SSAO>();
 
 	// ShaderResource 설정..
 	m_LightPS->SetShaderResourceView<gAlbedoRT>(m_AlbedoRT->GetSRV());
 	m_LightPS->SetShaderResourceView<gNormalRT>(m_NormalRT->GetSRV());
 	m_LightPS->SetShaderResourceView<gPositionRT>(m_PositionRT->GetSRV());
 	m_LightPS->SetShaderResourceView<gShadowRT>(m_ShadowRT->GetSRV());
-	m_LightPS->SetShaderResourceView<gSSAOMap>(m_SSAORT->GetSRV());
+	//m_LightPS->SetShaderResourceView<gSSAOMap>(m_SSAORT->GetSRV());
 }
 
 void LightPass::OnResize(int width, int height)
@@ -82,15 +81,15 @@ void LightPass::OnResize(int width, int height)
 	// BackBuffer ShaderResourceView 재설정..
 	m_BackBufferSRV = m_BackBuffer->GetSRV();
 	
-	// DepthStencilView 재설성..
-	m_DepthStencilView = m_DSV->GetDSV();
+	// DepthStencilView 재설정..
+	m_DepthStencilView = g_Resource->GetDepthStencil<DS_Defalt>()->GetDSV();
 	
 	// ShaderResource 재설정..
 	m_LightPS->SetShaderResourceView<gAlbedoRT>(m_AlbedoRT->GetSRV());
 	m_LightPS->SetShaderResourceView<gNormalRT>(m_NormalRT->GetSRV());
 	m_LightPS->SetShaderResourceView<gPositionRT>(m_PositionRT->GetSRV());
 	m_LightPS->SetShaderResourceView<gShadowRT>(m_ShadowRT->GetSRV());
-	m_LightPS->SetShaderResourceView<gSSAOMap>(m_SSAORT->GetSRV());
+	//m_LightPS->SetShaderResourceView<gSSAOMap>(m_SSAORT->GetSRV());
 }
 
 void LightPass::Release()
