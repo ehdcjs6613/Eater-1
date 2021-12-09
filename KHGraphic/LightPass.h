@@ -15,31 +15,31 @@ public:
 	void Release() override;
 
 	void BeginRender();
-	void Render();
+	void Render(GlobalData* global);
 
 private:
 	BufferData* m_ScreenBuffer;
 
-	VertexShader* m_ScreenVS;
-	PixelShader* m_ScreenPS; 
+	VertexShader* m_LightVS;
+	PixelShader* m_LightPS; 
 	
-	DepthStencilView* m_DSV;
+	DepthStencil* m_DSV;
 	ID3D11DepthStencilView* m_DepthStencilView;
 
 	ID3D11DepthStencilState* m_DepthStencilState;
 	ID3D11RasterizerState* m_RasterizerState;
 	ID3D11BlendState* m_BlendState;
 
-	BasicRenderTarget* m_BackBuffer;
+	RenderTarget* m_BackBuffer;
 
 	ID3D11RenderTargetView* m_BackBufferRTV;
 	ID3D11ShaderResourceView* m_BackBufferSRV;
 
-	ID3D11ShaderResourceView* m_AlbedoSRV;
-	ID3D11ShaderResourceView* m_NormalSRV;
-	ID3D11ShaderResourceView* m_PositionSRV;
-	ID3D11ShaderResourceView* m_ShadowSRV;
-	ID3D11ShaderResourceView* m_SSAOSRV;
+	RenderTarget* m_AlbedoRT;
+	RenderTarget* m_NormalRT;
+	RenderTarget* m_PositionRT;
+	RenderTarget* m_ShadowRT;
+	RenderTarget* m_SSAORT;
 
 	D3D11_VIEWPORT* m_ScreenViewport;
 };

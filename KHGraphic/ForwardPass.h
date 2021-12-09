@@ -17,6 +17,7 @@ public:
 	void Update(MeshData* mesh, GlobalData* global);
 	void Render(MeshData* mesh);
 
+	void StaticUpdate(StaticData* data);
 private:
 	VertexShader* m_MeshVS;
 	VertexShader* m_SkinVS;
@@ -28,7 +29,7 @@ private:
 	ID3D11RasterizerState* m_RasterizerState;
 	ID3D11BlendState* m_BlendState;
 
-	BasicRenderTarget* m_BackBuffer;
+	RenderTarget* m_BackBuffer;
 
 	ID3D11RenderTargetView* m_BackBufferRTV;
 	ID3D11ShaderResourceView* m_BackBufferSRV;

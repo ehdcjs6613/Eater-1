@@ -2,13 +2,13 @@
 #include <unordered_map>
 #include "ResourceManagerBase.h"
 
-class D3D11Graphic;
+interface ID3D11Graphic;
 class SamplerState;
 
 class GraphicResourceManager : public IGraphicResourceManager
 {
 public:
-	GraphicResourceManager(D3D11Graphic* graphic, IShaderManager* shaderManager);
+	GraphicResourceManager(ID3D11Graphic* graphic, IShaderManager* shaderManager);
 	~GraphicResourceManager();
 
 public:
@@ -17,12 +17,12 @@ public:
 	void Release() override;
 
 public:
-	BasicRenderTarget* GetMainRenderTarget() override;
+	RenderTarget* GetMainRenderTarget() override;
 	void AddMainRenderTarget(RenderTarget* rtv) override;
 
 public:
-	OriginalRenderTarget GetRenderTarget(Hash_Code hash_code) override;
-	DepthStencilView* GetDepthStencilView(Hash_Code hash_code) override;
+	RenderTarget* GetRenderTarget(Hash_Code hash_code) override;
+	DepthStencil* GetDepthStencil(Hash_Code hash_code) override;
 	BlendState* GetBlendState(Hash_Code hash_code) override;
 	RasterizerState* GetRasterizerState(Hash_Code hash_code) override;
 	DepthStencilState* GetDepthStencilState(Hash_Code hash_code) override;
@@ -33,17 +33,11 @@ public:
 	void AddResource(Hash_Code hash_code, ResourceBase* resource) override;
 
 private:
-	BasicRenderTarget* GetBasicRenderTarget(Hash_Code hash_code) override;
-	ComputeRenderTarget* GetComputeRenderTarget(Hash_Code hash_code) override;
-
-private:
 	void SetShaderSampler();
 
 private:
+	ID3D11Graphic* m_Graphic;
 	IShaderManager* m_ShaderManager;
-
-	Microsoft::WRL::ComPtr<ID3D11Device> m_Device;
-	Microsoft::WRL::ComPtr<IDXGISwapChain> m_SwapChain;
 
 	/////////////////////////////////////////////////////////////////////////////////////////
 	// RenderTarget Resource List
@@ -56,7 +50,7 @@ private:
 	// View Resource List
 	/////////////////////////////////////////////////////////////////////////////////////////
 
-	std::unordered_map<Hash_Code, DepthStencilView*> m_DepthStencilViewList;
+	std::unordered_map<Hash_Code, DepthStencil*> m_DepthStencilList;
 
 	/////////////////////////////////////////////////////////////////////////////////////////
 	// Graphic State Resource List

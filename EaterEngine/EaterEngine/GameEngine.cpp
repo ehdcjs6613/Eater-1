@@ -112,7 +112,8 @@ void GameEngine::Update()
 	mGraphicManager->Render(mObjectManager->GetRenderQueue(), mObjectManager->GetGlobalData());
 	mGraphicManager->SSAORender(mObjectManager->GetRenderQueue(), mObjectManager->GetGlobalData());
 	mGraphicManager->UIRender(mObjectManager->GetRenderQueue(), mObjectManager->GetGlobalData());
-
+	mGraphicManager->LightRender(mObjectManager->GetGlobalData());
+	mGraphicManager->EndRender();
 
 	//랜더링이 끝나고 오브젝트 Delete
 	mObjectManager->DeleteObject();
