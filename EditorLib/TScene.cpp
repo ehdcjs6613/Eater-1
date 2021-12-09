@@ -62,8 +62,12 @@ void TScene::Awake()
 
 
 
+
+
 	///캐릭터
 	testobj = Instance("Player");
+	testobj->GetTransform()->Scale = { 0.5f, 0.5f, 0.5f };
+	testobj->GetTransform()->Position = { -5,0,0 };
 	MeshFilter* Mf = testobj->AddComponent<MeshFilter>();
 	//AnimationController* ac = testobj->AddComponent<AnimationController>();
 	Transform* tr = testobj->GetTransform();
@@ -73,7 +77,17 @@ void TScene::Awake()
 	//Mf->SetAnimationName("Enemy");
 	//tr->Rotation = { 90 ,0,0 };
 
-
+	testobj2 = Instance("Player2");
+	testobj2->GetTransform()->Scale = { 1.0f, 1.0f, 1.0f };
+	testobj2->GetTransform()->Position = { 0,0,0 };
+	MeshFilter* Mf2 = testobj2->AddComponent<MeshFilter>();
+	//AnimationController* ac = testobj->AddComponent<AnimationController>();
+	Transform* tr2 = testobj2->GetTransform();
+	////컨퍼넌트 초기화
+	Mf2->SetMeshName("box");
+	Mf2->SetTextureName("Dump.png");
+	//Mf->SetAnimationName("Enemy");
+	//tr->Rotation = { 90 ,0,0 };
 
 	
 }

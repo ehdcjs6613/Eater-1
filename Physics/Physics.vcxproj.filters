@@ -39,6 +39,12 @@
     <ClCompile Include="VertexPositionColor.cpp">
       <Filter>Vertex</Filter>
     </ClCompile>
+    <ClCompile Include="VirtualMesh.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="BuildGeometry.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DllDefine.h">
@@ -55,6 +61,12 @@
     </ClInclude>
     <ClInclude Include="VertexPositionColor.h">
       <Filter>Vertex</Filter>
+    </ClInclude>
+    <ClInclude Include="VirtualMesh.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="BuildGeometry.h">
+      <Filter>소스 파일</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

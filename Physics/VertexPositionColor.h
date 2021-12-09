@@ -1,5 +1,21 @@
 #pragma once
 #include "DxDefine.h"
+namespace VertexStruct
+{
+	struct VertexType
+	{
+		DirectX::XMFLOAT3 Pos;
+		DirectX::XMFLOAT2 Texture;
+	};
+
+	struct Basic32
+	{
+		DirectX::XMFLOAT3 Pos;
+		DirectX::XMFLOAT3 Normal;
+		DirectX::XMFLOAT2 Tex;
+	};
+}
+
 
 class VertexPositionColor
 {

@@ -33,5 +33,6 @@ public:
 	virtual void End()override;
 private:
 	GameObject* testobj;
+	GameObject* testobj2;
 };
 
