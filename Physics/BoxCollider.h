@@ -1,5 +1,7 @@
 #pragma once
 
+#include <fstream>
+
 #include "DxDefine.h"
 #include "DllDefine.h"
 #include "VirtualMesh.h"
@@ -10,28 +12,37 @@ class GameObject;
 class VertexPositionColor;
 class VertexBuffer;
 class IndexBuffer;
+class Transform;
 
 class BoxCollider : public Collider
 {
 private:
-	DirectX::XMFLOAT4X4					 mWorldTM;
-	DirectX::XMFLOAT4X4					 mView;
-	DirectX::XMFLOAT4X4					 mProj;
+	struct Vertex
+	{
+		DirectX::XMFLOAT3 Pos;
+		DirectX::XMFLOAT4 Color;
+	};
+	ID3D11Device* md3dDevice;						/// D3D11 디바이스
+	ID3D11DeviceContext* md3dImmediateContext;		/// 디바이스 컨텍스트
+
+	ID3D11Buffer* mVB;	// 버텍스버퍼
+	ID3D11Buffer* mIB;	// 인덱스버퍼
+
+	ID3DX11Effect* mFX;								// 이펙트
+	ID3DX11EffectTechnique* mTech;					// 테크
+	ID3DX11EffectMatrixVariable* mfxWorldViewProj;	// 이펙트용변수
+
+	ID3D11InputLayout* mInputLayout;				// 인풋레이아웃
+
+	// 변환 관련
+	DirectX::XMMATRIX mWorld;	// 월드 변환 행렬 (로컬->월드)
+	DirectX::XMMATRIX mView;	// 시야 변환 행렬 (카메라 뷰)
+	DirectX::XMMATRIX mProj;	// 투영 변환 행렬 (원근/직교)
 
 
-	ID3D11Buffer* buffer;
+	// 렌더스테이트. 렌더링을 어떻게 할 것인가에 대한 것.
+	ID3D11RasterizerState* m_pRenderstate;			/// 외부에서 생성해서 적당히 상황에 따라서 적용함. 쉐이더에서 해도 된다.
 
-	VertexBuffer* m_pVertexBuffer;
-	IndexBuffer* m_pIndexBuffer;
-	D3D11_BUFFER_DESC vertexBufferDESC;
-	D3D11_SUBRESOURCE_DATA vertexBufferDATA;
-	UINT indexCount = 0;
-	VertexPositionColor* mVertex = nullptr;
-	Build						 mBuild;
-	VirtualMesh					 mVirtualMesh;
-
-	ID3D11Device* m_Device;
-	ID3D11DeviceContext* m_DeviceContext;
 public:
 	float m_Size[3];
 

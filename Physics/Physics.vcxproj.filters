@@ -25,6 +25,9 @@
     <Filter Include="Vertex">
       <UniqueIdentifier>{6b5c04b3-a1cd-4052-803f-4b1160943e4b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ColliderManager">
+      <UniqueIdentifier>{e003af83-c7f4-4eb9-a741-83d4a9e9b876}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Collider.cpp">
@@ -44,6 +47,9 @@
     </ClCompile>
     <ClCompile Include="BuildGeometry.cpp">
       <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="CollistionManager.cpp">
+      <Filter>ColliderManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -67,6 +73,9 @@
     </ClInclude>
     <ClInclude Include="BuildGeometry.h">
       <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="CollistionManager.h">
+      <Filter>ColliderManager</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

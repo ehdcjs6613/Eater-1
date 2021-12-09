@@ -14,7 +14,6 @@ class GameManager;
 class SaveData;
 
 
-
 class CMainFrame : public CMDIFrameWndEx
 {
 private:

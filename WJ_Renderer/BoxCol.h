@@ -32,13 +32,13 @@ class BoxCol
 	// 렌더스테이트. 렌더링을 어떻게 할 것인가에 대한 것.
 	ID3D11RasterizerState* m_pRenderstate;			/// 외부에서 생성해서 적당히 상황에 따라서 적용함. 쉐이더에서 해도 된다.
 public:
-	BoxCol();
-	~BoxCol();
-public:
 	void Update(DirectX::SimpleMath::Matrix _view, DirectX::SimpleMath::Matrix _proj);
 	void Initialize(ID3D11Device*, ID3D11DeviceContext*);
 	void Render(std::queue<MeshData*>* meshList);
 public:
 	void init();
+public:
+	BoxCol();
+	~BoxCol();
 };
 

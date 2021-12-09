@@ -4,7 +4,16 @@
 #include "InputLayout.h"
 #include "EngineData.h"
 #include "../Physics/VertexPositionColor.h"
+//#include "../EaterEngine/EaterEngine/DebugManager.h"
 #include "BoxCol.h"
+
+#ifdef DEBUG
+#pragma  comment(lib,"../Library/lib/EaterEngine_x64d.lib")
+#else
+#pragma  comment(lib,"../Library/lib/EaterEngine_x64r.lib")
+
+#endif // DEBUG
+
 
 BoxCol::BoxCol()
 {
@@ -22,21 +31,21 @@ void BoxCol::init()
 	VertexPositionColor vertices[] =
 	{
 		{ XMFLOAT3(+6.0f, -1.0f, -1.0f), XMFLOAT4((const float*)&Colors::White)      },
-		{ XMFLOAT3(+6.0f, +1.0f, -1.0f), XMFLOAT4((const float*)&Colors::Black)      },
+		{ XMFLOAT3(+6.0f, +1.0f, -1.0f), XMFLOAT4((const float*)&Colors::Green)      },
 
-		{ XMFLOAT3(+8.0f, +1.0f, -1.0f), XMFLOAT4((const float*)&Colors::Red)          },
+		{ XMFLOAT3(+8.0f, +1.0f, -1.0f), XMFLOAT4((const float*)&Colors::White)          },
 		{ XMFLOAT3(+8.0f, -1.0f, -1.0f), XMFLOAT4((const float*)&Colors::Green)      },
 
-		{ XMFLOAT3(+6.0f, -1.0f, +1.0f), XMFLOAT4((const float*)&Colors::Blue)        },
-		{ XMFLOAT3(+6.0f, +1.0f, +1.0f), XMFLOAT4((const float*)&Colors::Yellow)    },
+		{ XMFLOAT3(+6.0f, -1.0f, +1.0f), XMFLOAT4((const float*)&Colors::White)        },
+		{ XMFLOAT3(+6.0f, +1.0f, +1.0f), XMFLOAT4((const float*)&Colors::Green)    },
 
-		{ XMFLOAT3(+8.0f, +1.0f, +1.0f), XMFLOAT4((const float*)&Colors::Cyan)        },
-		{ XMFLOAT3(+8.0f, -1.0f, +1.0f), XMFLOAT4((const float*)&Colors::Magenta)  },
+		{ XMFLOAT3(+8.0f, +1.0f, +1.0f), XMFLOAT4((const float*)&Colors::White)        },
+		{ XMFLOAT3(+8.0f, -1.0f, +1.0f), XMFLOAT4((const float*)&Colors::Green)  },
 		//
 		{ XMFLOAT3(+3.0f, -1.0f, -2.0f), XMFLOAT4((const float*)&Colors::White)      },
-		{ XMFLOAT3(+3.0f, +4.0f, -2.0f), XMFLOAT4((const float*)&Colors::Black)      },
+		{ XMFLOAT3(+3.0f, +4.0f, -2.0f), XMFLOAT4((const float*)&Colors::Green)      },
 
-		{ XMFLOAT3(+2.0f, +5.0f, +3.0f), XMFLOAT4((const float*)&Colors::Red)          },
+		{ XMFLOAT3(+2.0f, +5.0f, +3.0f), XMFLOAT4((const float*)&Colors::White)          },
 		{ XMFLOAT3(+2.0f, -3.0f, +3.0f), XMFLOAT4((const float*)&Colors::Green)      },
 
 	};
@@ -150,7 +159,8 @@ void BoxCol::Initialize(ID3D11Device* _pDevice, ID3D11DeviceContext* _pDeviceCon
 
 void BoxCol::Render(std::queue<MeshData*>* meshList)
 {
-	
+	//printf("안녕하세요\n");
+
 	// 입력 배치 객체 셋팅
 	md3dImmediateContext->IASetInputLayout(mInputLayout);
 	md3dImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -164,16 +174,7 @@ void BoxCol::Render(std::queue<MeshData*>* meshList)
 
 	/// WVP TM등을 셋팅
 
-	static float a, b, c;
 	
-	if (GetAsyncKeyState(VK_RETURN) & 0x8001)
-	{
-		a += 0.1f;
-	}
-	if (GetAsyncKeyState(VK_BACK) & 0x8001)
-	{
-		a -= 0.1f;
-	}
 
 	// Set constants
 

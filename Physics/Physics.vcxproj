@@ -166,6 +166,7 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\lib"</Command>
     <ClCompile Include="BoxCollider.cpp" />
     <ClCompile Include="BuildGeometry.cpp" />
     <ClCompile Include="Collider.cpp" />
+    <ClCompile Include="CollistionManager.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="VertexPositionColor.cpp" />
     <ClCompile Include="VirtualMesh.cpp" />
@@ -174,6 +175,7 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\lib"</Command>
     <ClInclude Include="BoxCollider.h" />
     <ClInclude Include="BuildGeometry.h" />
     <ClInclude Include="Collider.h" />
+    <ClInclude Include="CollistionManager.h" />
     <ClInclude Include="DllDefine.h" />
     <ClInclude Include="DxDefine.h" />
     <ClInclude Include="VertexPositionColor.h" />

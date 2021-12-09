@@ -68,6 +68,7 @@ void TScene::Awake()
 	testobj = Instance("Player");
 	testobj->GetTransform()->Scale = { 0.5f, 0.5f, 0.5f };
 	testobj->GetTransform()->Position = { -5,0,0 };
+	testobj->GetTransform()->Rotation = { 0,45,0 };
 	MeshFilter* Mf = testobj->AddComponent<MeshFilter>();
 	//AnimationController* ac = testobj->AddComponent<AnimationController>();
 	Transform* tr = testobj->GetTransform();
