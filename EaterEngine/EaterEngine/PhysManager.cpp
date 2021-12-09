@@ -1,5 +1,6 @@
 #include "PhysManager.h"
 #include "PhysEngine.h"
+
 PhysManager::PhysManager()
 {
 	Phys = nullptr;
@@ -18,6 +19,11 @@ void PhysManager::Initialize()
 
 void PhysManager::Release()
 {
-	Phys->Release();
+	//Phys->Release();
+}
+
+void PhysManager::Update()
+{
+	Phys->Run();
 }
 

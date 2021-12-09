@@ -10,8 +10,8 @@ public:
 
 	void Initialize();	//초기화 
 	void Release();		//삭제
+	void Update();
 
-	
 private:
 	PhysEngine* Phys;
 };

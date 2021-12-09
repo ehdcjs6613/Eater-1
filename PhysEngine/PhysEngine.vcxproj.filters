@@ -19,6 +19,9 @@
     <Filter Include="소스 파일\PhysEngine">
       <UniqueIdentifier>{e91549e7-96f0-4c22-9c19-5bded107d307}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\RIgidbody">
+      <UniqueIdentifier>{1ad5ca0a-d990-4f08-988d-41cfe7c62cc6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">

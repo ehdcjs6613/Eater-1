@@ -12,6 +12,9 @@ namespace physx
 	class PxMaterial;
 	class PxRigidDynamic;
 	class PxRigidStatic;
+	class PxCooking;
+	class PxPvd;
+	class PxTolerancesScale;
 }
 
 
@@ -21,11 +24,11 @@ public:
 	PHYS_ENGINEDLL PhysEngine();
 	PHYS_ENGINEDLL ~PhysEngine();
 
-	
+
 	PHYS_ENGINEDLL bool Initialize();	//초기화
 	PHYS_ENGINEDLL void Release();		//삭제
+	PHYS_ENGINEDLL void Run();		//삭제
 
-	
 
 private:
 	//실질적인 물리연산될 공간을 생성한다
@@ -34,17 +37,13 @@ private:
 
 	physx::PxDefaultAllocator*		m_Allocator;
 	physx::PxDefaultErrorCallback*	m_ErrorCallback;
+	physx::PxTolerancesScale*		m_TolerancesScale;
 
+	physx::PxCooking*				m_Cooking;
 	physx::PxFoundation*			m_Foundation;
 	physx::PxPhysics*				m_Physics;
 	physx::PxDefaultCpuDispatcher*	m_Dispatcher;
 	physx::PxScene*					m_Scene;
 	physx::PxMaterial*				m_Material;
 
-	//PxRigidStatic* groundPlane;
-
-	//버전 디버깅용
-	//physx::PxPvd*					gPvd = NULL;
-
-	//PxRigidDynamic* CreateBox();
 };
