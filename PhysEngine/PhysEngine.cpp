@@ -58,7 +58,7 @@ bool PhysEngine::Initialize()
 	//스크린 생성
 	CreateScene();
 
-	CreateRigidbody();
+	//CreateRigidbody();
 	return true;
 }
 

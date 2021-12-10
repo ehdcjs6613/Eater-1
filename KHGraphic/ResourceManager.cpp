@@ -4,6 +4,7 @@
 #include "D3D11GraphicBase.h"
 #include "BufferData.h"
 #include "GraphicState.h"
+#include "GraphicView.h"
 #include "BufferData.h"
 #include "Texture2D.h"
 #include "DepthStencil.h"
@@ -224,6 +225,24 @@ DepthStencil* GraphicResourceManager::GetDepthStencil(Hash_Code hash_code)
 	return itor->second;
 }
 
+ShaderResourceView* GraphicResourceManager::GetShaderResourceView(Hash_Code hash_code)
+{
+	std::unordered_map<Hash_Code, ShaderResourceView*>::iterator itor = m_ShaderResourceViewList.find(hash_code);
+
+	if (itor == m_ShaderResourceViewList.end()) return nullptr;
+
+	return itor->second;
+}
+
+UnorderedAccessView* GraphicResourceManager::GetUnorderedAccessView(Hash_Code hash_code)
+{
+	std::unordered_map<Hash_Code, UnorderedAccessView*>::iterator itor = m_UnorderedAccessViewList.find(hash_code);
+
+	if (itor == m_UnorderedAccessViewList.end()) return nullptr;
+
+	return itor->second;
+}
+
 BlendState* GraphicResourceManager::GetBlendState(Hash_Code hash_code)
 {
 	std::unordered_map<Hash_Code, BlendState*>::iterator itor = m_BlendStateList.find(hash_code);
@@ -273,6 +292,12 @@ void GraphicResourceManager::AddResource(Hash_Code hash_code, ResourceBase* reso
 {
 	switch (resource->GetType())
 	{
+	case eResourceType::SRV:
+		m_ShaderResourceViewList.insert(std::make_pair(hash_code, (ShaderResourceView*)resource));
+		break;
+	case eResourceType::UAV:
+		m_UnorderedAccessViewList.insert(std::make_pair(hash_code, (UnorderedAccessView*)resource));
+		break;
 	case eResourceType::DSS:
 		m_DepthStencilStateList.insert(std::make_pair(hash_code, (DepthStencilState*)resource));
 		break;

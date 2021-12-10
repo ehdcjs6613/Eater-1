@@ -49,7 +49,7 @@ ID3D11ShaderResourceView* DepthStencil::GetSRV()
 ID3D11ShaderResourceView** DepthStencil::GetAddressSRV(bool is_release)
 {
 	if (is_release)
-		m_SRV.ReleaseAndGetAddressOf();
+		return m_SRV.ReleaseAndGetAddressOf();
 	else
 		return m_SRV.GetAddressOf();
 }

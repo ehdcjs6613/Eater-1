@@ -23,6 +23,10 @@ public:
 public:
 	RenderTarget* GetRenderTarget(Hash_Code hash_code) override;
 	DepthStencil* GetDepthStencil(Hash_Code hash_code) override;
+	ShaderResourceView* GetShaderResourceView(Hash_Code hash_code) override;
+	UnorderedAccessView* GetUnorderedAccessView(Hash_Code hash_code) override;
+
+public:
 	BlendState* GetBlendState(Hash_Code hash_code) override;
 	RasterizerState* GetRasterizerState(Hash_Code hash_code) override;
 	DepthStencilState* GetDepthStencilState(Hash_Code hash_code) override;
@@ -40,17 +44,15 @@ private:
 	IShaderManager* m_ShaderManager;
 
 	/////////////////////////////////////////////////////////////////////////////////////////
-	// RenderTarget Resource List
+	// Graphic View Resource List
 	/////////////////////////////////////////////////////////////////////////////////////////
 
 	RenderTarget* m_BackBuffer;
 	std::unordered_map<Hash_Code, RenderTarget*> m_RenderTargetList;
-
-	/////////////////////////////////////////////////////////////////////////////////////////
-	// View Resource List
-	/////////////////////////////////////////////////////////////////////////////////////////
-
 	std::unordered_map<Hash_Code, DepthStencil*> m_DepthStencilList;
+	std::unordered_map<Hash_Code, ShaderResourceView*> m_ShaderResourceViewList;
+	std::unordered_map<Hash_Code, UnorderedAccessView*> m_UnorderedAccessViewList;
+
 
 	/////////////////////////////////////////////////////////////////////////////////////////
 	// Graphic State Resource List

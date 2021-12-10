@@ -2,10 +2,10 @@
 #include "RenderManagerBase.h"
 
 class RenderPassBase;
-class ForwardPass;
 class ShadowPass;
 class DeferredPass;
 class LightPass;
+class SSAOPass;
 class RenderManager : public IRenderManager
 {
 public:
@@ -34,5 +34,5 @@ private:
 	DeferredPass* m_Deferred;
 	LightPass* m_Light;
 	ShadowPass* m_Shadow;
-	//SSAOPass* m_SSAO;
+	SSAOPass* m_SSAO;
 };

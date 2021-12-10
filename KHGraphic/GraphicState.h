@@ -5,7 +5,7 @@
 class DepthStencilState : public ResourceBase
 {
 public:
-	DepthStencilState(ID3D11DepthStencilState** dss);
+	DepthStencilState(ID3D11DepthStencilState* dss);
 	~DepthStencilState();
 
 public:
@@ -23,7 +23,7 @@ private:
 class RasterizerState : public ResourceBase
 {
 public:
-	RasterizerState(ID3D11RasterizerState** rs);
+	RasterizerState(ID3D11RasterizerState* rs);
 	~RasterizerState();
 
 public:
@@ -41,7 +41,7 @@ private:
 class BlendState : public ResourceBase
 {
 public:
-	BlendState(ID3D11BlendState** bs);
+	BlendState(ID3D11BlendState* bs);
 	~BlendState();
 
 public:
@@ -59,7 +59,7 @@ private:
 class SamplerState : public ResourceBase
 {
 public:
-	SamplerState(ID3D11SamplerState** ss);
+	SamplerState(ID3D11SamplerState* ss);
 	~SamplerState();
 
 public:

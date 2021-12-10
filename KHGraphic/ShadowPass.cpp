@@ -45,7 +45,6 @@ void ShadowPass::Create(int width, int height)
 	texDesc.Height = height * 4;
 	texDesc.MipLevels = 1;
 	texDesc.ArraySize = 1;
-	//texDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
 	texDesc.Format = DXGI_FORMAT_R24G8_TYPELESS;
 	texDesc.SampleDesc.Count = 1;
 	texDesc.SampleDesc.Quality = 0;
@@ -121,7 +120,7 @@ void ShadowPass::BeginRender()
 void ShadowPass::Update(MeshData* mesh, GlobalData* global)
 {
 	Matrix world = mesh->mWorld;
-	Matrix view = *global->mLightViewMX;
+	Matrix view = *global->mLightVPT;
 	Matrix proj = *global->mLightProj;
 
 	switch (mesh->ObjType)

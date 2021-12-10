@@ -96,9 +96,9 @@ void ForwardPass::BeginRender()
 void ForwardPass::Update(MeshData* mesh, GlobalData* global)
 {
 	Matrix world = mesh->mWorld;
-	Matrix view = *global->mViewMX;
-	Matrix proj = *global->mProj;
-	Matrix shadowTrans = *global->mShadowTrans;
+	Matrix view = *global->mCamView;
+	Matrix proj = *global->mCamProj;
+	Matrix shadowTrans = *global->mLightVPT;
 	Vector3 eye(view._41, view._42, view._43);
 
 	switch (mesh->ObjType)

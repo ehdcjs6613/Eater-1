@@ -33,7 +33,6 @@ private:
 	RenderTarget* m_BackBuffer;
 
 	ID3D11RenderTargetView* m_BackBufferRTV;
-	ID3D11ShaderResourceView* m_BackBufferSRV;
 
 	RenderTarget* m_AlbedoRT;
 	RenderTarget* m_NormalRT;

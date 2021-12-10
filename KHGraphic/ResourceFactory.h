@@ -26,6 +26,9 @@ private:
 	void CreateDSV(Hash_Code hash_code, D3D11_TEXTURE2D_DESC* texDesc, D3D11_DEPTH_STENCIL_VIEW_DESC* dsvDesc, D3D11_SHADER_RESOURCE_VIEW_DESC* srvDesc) override;
 	void CreateRT(Hash_Code hash_code, D3D11_TEXTURE2D_DESC* texDesc, D3D11_RENDER_TARGET_VIEW_DESC* rtvDesc, D3D11_SHADER_RESOURCE_VIEW_DESC* srvDesc, D3D11_UNORDERED_ACCESS_VIEW_DESC* uavDesc) override;
 
+	void CreateSRV(Hash_Code hash_code, D3D11_TEXTURE2D_DESC* texDesc, D3D11_SHADER_RESOURCE_VIEW_DESC* srvDesc) override;
+	void CreateUAV(Hash_Code hash_code, D3D11_TEXTURE2D_DESC* texDesc, D3D11_UNORDERED_ACCESS_VIEW_DESC* uavDesc) override;
+
 public:
 	Vertexbuffer* CreateVertexBuffer(ParserData::Mesh* mesh) override;
 	Indexbuffer* CreateIndexBuffer(ParserData::Mesh* mesh) override;

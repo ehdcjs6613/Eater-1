@@ -39,9 +39,7 @@ DeferredPass::~DeferredPass()
 
 void DeferredPass::Create(int width, int height)
 {
-	///////////////////////////////////////////////////////////////////////////
 	// Texture 2D
-	///////////////////////////////////////////////////////////////////////////
 	D3D11_TEXTURE2D_DESC texDescDiffuse;
 	ZeroMemory(&texDescDiffuse, sizeof(texDescDiffuse));
 	texDescDiffuse.Width = width;
@@ -70,9 +68,7 @@ void DeferredPass::Create(int width, int height)
 	texDescPosNormal.CPUAccessFlags = 0;
 	texDescPosNormal.MiscFlags = 0;
 
-	///////////////////////////////////////////////////////////////////////////
 	// RenderTargetView 2D
-	///////////////////////////////////////////////////////////////////////////
 	D3D11_RENDER_TARGET_VIEW_DESC rtvDescDiffuse;
 	ZeroMemory(&rtvDescDiffuse, sizeof(rtvDescDiffuse));
 	rtvDescDiffuse.Format = texDescDiffuse.Format;
@@ -85,9 +81,7 @@ void DeferredPass::Create(int width, int height)
 	rtvDescPosNormal.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
 	rtvDescPosNormal.Texture2D.MipSlice = 0;
 
-	///////////////////////////////////////////////////////////////////////////
 	// ShaderResourceView 2D
-	///////////////////////////////////////////////////////////////////////////
 	D3D11_SHADER_RESOURCE_VIEW_DESC srvDescDiffuse;
 	ZeroMemory(&srvDescDiffuse, sizeof(srvDescDiffuse));
 	srvDescDiffuse.Format = texDescDiffuse.Format;
@@ -198,9 +192,9 @@ void DeferredPass::BeginRender()
 void DeferredPass::Update(MeshData* mesh, GlobalData* global)
 {
 	Matrix world = mesh->mWorld;
-	Matrix view = *global->mViewMX;
-	Matrix proj = *global->mProj;
-	Matrix shadowTrans = *global->mShadowTrans;
+	Matrix view = *global->mCamView;
+	Matrix proj = *global->mCamProj;
+	Matrix shadowTrans = *global->mLightVPT;
 	Vector3 eye(view._41, view._42, view._43);
 
 	switch (mesh->ObjType)
