@@ -251,6 +251,7 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\lib"
     <ClInclude Include="Export\MainHeader.h" />
     <ClInclude Include="Export\MeshFilter.h" />
     <ClInclude Include="Export\ResourcesData.h" />
+    <ClInclude Include="Export\Rigidbody.h" />
     <ClInclude Include="Export\Scene.h" />
     <ClInclude Include="Export\SkinningFilter.h" />
     <ClInclude Include="Export\Transform.h" />
@@ -264,7 +265,6 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\lib"
     <ClInclude Include="ObjectManager.h" />
     <ClInclude Include="LoadManager.h" />
     <ClInclude Include="PhysManager.h" />
-    <ClInclude Include="Rigidbody.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="TimeManager.h" />
   </ItemGroup>
