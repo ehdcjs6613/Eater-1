@@ -5,6 +5,7 @@
 #include "SkinningFilter.h"
 #include "AnimationController.h"
 #include "Transform.h"
+#include "Rigidbody.h"
 #include "AI.h"
 #include "Player.h"
 #include "KeyInput.h"
@@ -24,6 +25,7 @@ void intro::Awake()
 	LoadMesh("Player_Idle", false, true);
 	LoadMesh("Pistol", true, false);
 	LoadMesh("Weapon", true, false);
+	LoadMesh("box", true, false);
 
 	LoadTexture("Player.dds");
 	LoadTexture("Dump.png");
@@ -40,16 +42,20 @@ void intro::Awake()
 	testobj->AddComponent<DirectionLight>();
 
 	///Ä³¸¯ÅÍ
-	testobj = Instance("Player");
-	testobj->AddComponent<AnimationController>();
-	testobj->AddComponent<MeshFilter>();
-	testobj->AddComponent<Player>();
+	//testobj = Instance("Player");
+	//testobj->AddComponent<AnimationController>();
+	//testobj->AddComponent<MeshFilter>();
+	//testobj->AddComponent<Player>();
 
 	/// ¹Ù´Ú
 	testobj = Instance("Field");
-	testobj->AddComponent<MeshFilter>()->SetMeshName("Field");
-	testobj->GetComponent<Transform>()->Scale = { 0.5f, 0.5f, 0.5f };
+	testobj->AddComponent<MeshFilter>()->SetMeshName("box");
+	testobj->AddComponent<Rigidbody>();
+	Transform* tr = testobj->GetComponent<Transform>();
+	tr->Scale = { 0.5f,0.5f ,0.5f };
+	tr->Position = { 5,10,0 };
 
+	
 	//testobj = Instance("Table");
 	//testobj->AddComponent<MeshFilter>()->SetMeshName("Table");
 	//testobj->GetComponent<Transform>()->Scale = { 0.1f, 0.1f, 0.1f };
