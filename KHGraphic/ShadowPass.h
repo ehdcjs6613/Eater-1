@@ -19,17 +19,12 @@ private:
 	VertexShader* m_MeshShadowVS;
 	VertexShader* m_SkinShadowVS;
 
-	PixelShader* m_ForwardPS;
+	PixelShader* m_LightPS;
 
-	DepthStencilView* m_ShadowDepthStencilView;
+	DepthStencil* m_ShadowDepthStencilView;
 	
-	BasicRenderTarget* m_ShadowRT;
-
 	ID3D11DepthStencilView* m_ShadowDSV;
-	ID3D11ShaderResourceView* m_ShadowSRV;
-
 	ID3D11RasterizerState* m_RasterizerState;
-
 	D3D11_VIEWPORT* m_ShadowViewport;
 };
 

@@ -9,7 +9,7 @@ public:
 	~DepthStencilState();
 
 public:
-	void Reset();
+	void Reset() override;
 
 public:
 	ID3D11DepthStencilState* Get();
@@ -27,7 +27,7 @@ public:
 	~RasterizerState();
 
 public:
-	void Reset();
+	void Reset() override;
 
 public:
 	ID3D11RasterizerState* Get();
@@ -45,7 +45,7 @@ public:
 	~BlendState();
 
 public:
-	void Reset();
+	void Reset() override;
 
 public:
 	ID3D11BlendState* Get();
@@ -63,7 +63,7 @@ public:
 	~SamplerState();
 
 public:
-	void Reset();
+	void Reset() override;
 
 public:
 	ID3D11SamplerState* Get();
@@ -71,4 +71,27 @@ public:
 
 private:
 	Microsoft::WRL::ComPtr<ID3D11SamplerState> m_SS;
+};
+
+// DirectX 11 ViewPort Class
+class ViewPort : public ResourceBase
+{
+public:
+	ViewPort(float ratio_offsetX, float ratio_offsetY, float ratio_sizeX, float ratio_sizeY, float width, float height);
+	~ViewPort();
+
+public:
+	void Reset() override;
+	void OnResize(int width, int height);
+
+public:
+	D3D11_VIEWPORT* Get();
+
+private:
+	D3D11_VIEWPORT* m_ViewPort;
+
+	float m_OffsetX;
+	float m_OffsetY;
+	float m_SizeX;
+	float m_SizeY;
 };
