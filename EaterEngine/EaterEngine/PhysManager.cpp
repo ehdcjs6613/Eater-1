@@ -1,5 +1,6 @@
 #include "PhysManager.h"
-#include "PhysEngine.h"
+#include "PhysX_API.h"
+#include "PhysData.h"
 
 PhysManager::PhysManager()
 {
@@ -13,17 +14,16 @@ PhysManager::~PhysManager()
 
 void PhysManager::Initialize()
 {
-	Phys = new PhysEngine();
-	Phys->Initialize();
+	PhysX_Initialize(2,true);
 }
 
 void PhysManager::Release()
 {
-	//Phys->Release();
+	PhysX_Release();
 }
 
-void PhysManager::Update()
+void PhysManager::Update(float m_Time)
 {
-	Phys->Run();
+	PhysX_Update(m_Time);
 }
 

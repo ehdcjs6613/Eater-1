@@ -213,7 +213,7 @@
     <ClInclude Include="Collider.h">
       <Filter>소스 파일\Component\Collider\BoxCollider</Filter>
     </ClInclude>
-    <ClInclude Include="Rigidbody.h">
+    <ClInclude Include="Export\Rigidbody.h">
       <Filter>소스 파일\Component\Rigidbody</Filter>
     </ClInclude>
   </ItemGroup>

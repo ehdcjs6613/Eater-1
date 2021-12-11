@@ -10,7 +10,7 @@ public:
 
 	void Initialize();	//초기화 
 	void Release();		//삭제
-	void Update();
+	void Update(float m_Time);
 
 private:
 	PhysEngine* Phys;

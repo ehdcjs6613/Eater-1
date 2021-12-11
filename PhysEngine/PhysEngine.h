@@ -1,6 +1,7 @@
 #pragma once
 #include "PhysEngineDLL.h"
 
+
 namespace physx
 {
 	class PxDefaultAllocator;
@@ -15,29 +16,41 @@ namespace physx
 	class PxCooking;
 	class PxPvd;
 	class PxTolerancesScale;
+	class PxTransform;
 }
 
+class Factory;
 
 class PhysEngine
 {
 public:
-	PHYS_ENGINEDLL PhysEngine();
-	PHYS_ENGINEDLL ~PhysEngine();
+	PhysEngine();
+	~PhysEngine();
 
+	//초기화
+	bool Initialize(int ThreadCount,  bool Debug);
+	bool CreateScene(bool Debug);
+	
 
-	PHYS_ENGINEDLL bool Initialize();	//초기화
-	PHYS_ENGINEDLL void Release();		//삭제
-	PHYS_ENGINEDLL void Run();		//삭제
-
+	void Release();					
+	void Update(float m_time);		
+	void CreateStack(PhysData data);
+	PhysData GetActors();
 
 private:
-	//실질적인 물리연산될 공간을 생성한다
 	void CreateRigidbody();//물리 충돌하는 객체를 생성
-	bool CreateScene();
+
+	bool Initialize_Release(int ThreadCount);
+	bool Initialize_Debug(int ThreadCount);
+	void CreateStart();
+
+	bool Start = false;
+
 
 	physx::PxDefaultAllocator*		m_Allocator;
 	physx::PxDefaultErrorCallback*	m_ErrorCallback;
 	physx::PxTolerancesScale*		m_TolerancesScale;
+
 
 	physx::PxCooking*				m_Cooking;
 	physx::PxFoundation*			m_Foundation;
@@ -45,5 +58,10 @@ private:
 	physx::PxDefaultCpuDispatcher*	m_Dispatcher;
 	physx::PxScene*					m_Scene;
 	physx::PxMaterial*				m_Material;
+	physx::PxPvd*					m_Pvd;				//디버깅을 사용하기위해
 
+	physx::PxTransform* Test;
+
+
+	Factory* m_Factory;
 };
