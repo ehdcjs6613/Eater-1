@@ -1,3 +1,5 @@
+#pragma pack_matrix(row_major)
+
 cbuffer cbSsaoObject : register(b0)
 {
 	float4x4 gViewToTexSpace; // Proj * Texture
@@ -17,8 +19,8 @@ cbuffer cbSsaoOption : register(b1)
 Texture2D gDepthMap		: register(t0);
 Texture2D gRandomVecMap	: register(t1);
 
-SamplerState samBorderLinerPoint	: register(s0);
-SamplerState samWrapLinerPoint		: register(s1);
+SamplerState gSamBorderLinearPoint : register(s0);
+SamplerState gSamWrapLinerPoint : register(s1);
 
 struct VertexIn
 {
@@ -72,7 +74,7 @@ float4 main(VertexIn pin) : SV_Target
 
 	// Get viewspace normal and z-coord of this pixel.  The tex-coords for
 	// the fullscreen quad we drew are already in uv-space.
-    float4 normalDepth = gDepthMap.SampleLevel(samBorderLinerPoint, pin.Tex, 0.0f);
+    float4 normalDepth = gDepthMap.SampleLevel(gSamBorderLinearPoint, pin.Tex, 0.0f);
     float3 n = normalDepth.xyz;
     float pz = normalDepth.w;
 
@@ -85,7 +87,7 @@ float4 main(VertexIn pin) : SV_Target
 	float3 p = (pz / pin.ToFarPlane.z) * pin.ToFarPlane;
 
 	// Extract random vector and map from [0,1] --> [-1, +1].
-	float3 randVec = 2.0f * gRandomVecMap.SampleLevel(samWrapLinerPoint, 4.0f * pin.Tex, 0.0f).rgb - 1.0f;
+    float3 randVec = 2.0f * gRandomVecMap.SampleLevel(gSamWrapLinerPoint, 4.0f * pin.Tex, 0.0f).rgb - 1.0f;
 
 	float occlusionSum = 0.0f;
 
@@ -105,14 +107,14 @@ float4 main(VertexIn pin) : SV_Target
 		float3 q = p + flip * gOcclusionRadius * offset;
 
 		// Project q and generate projective tex-coords.  
-        float4 projQ = mul(gViewToTexSpace, float4(q, 1.0f));
+        float4 projQ = mul(float4(q, 1.0f), gViewToTexSpace);
 		projQ /= projQ.w;
 
 		// Find the nearest depth value along the ray from the eye to q (this is not
 		// the depth of q, as q is just an arbitrary point near p and might
 		// occupy empty space).  To find the nearest depth we look it up in the depthmap.
 
-        float rz = gDepthMap.SampleLevel(samBorderLinerPoint, projQ.xy, 0.0f).w;
+        float rz = gDepthMap.SampleLevel(gSamBorderLinearPoint, projQ.xy, 0.0f).w;
 
 		// Reconstruct full view space position r = (rx,ry,rz).  We know r
 		// lies on the ray of q, so there exists a t such that r = t*q.

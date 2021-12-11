@@ -111,7 +111,7 @@ void Camera::CreateProj(int winsizeX, int WinSizeY, bool ViewPoint)
 		mProj_M = DirectX::XMMatrixPerspectiveFovLH(mFovY, mAspect, mNearZ, mFarZ);
 
 		//View TexSpace
-		mView_M = mProj_M * gTexSpace;
+		mViewTex_M = mProj_M * gTexSpace;
 	}
 	else
 	{
@@ -119,7 +119,7 @@ void Camera::CreateProj(int winsizeX, int WinSizeY, bool ViewPoint)
 		mProj_M = DirectX::XMMatrixOrthographicLH(mFovY, mAspect, mNearZ, mFarZ);
 
 		//View TexSpace
-		mView_M = mProj_M * gTexSpace;
+		mViewTex_M = mProj_M * gTexSpace;
 	}
 }
 

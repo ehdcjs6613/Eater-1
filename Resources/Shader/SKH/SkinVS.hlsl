@@ -3,10 +3,11 @@
 cbuffer cbSkinObject : register(b0)
 {
     float4x4 gWorld                 : packoffset(c0);
-    float4x4 gWorldViewProj         : packoffset(c4);
-    float4x4 gTexTransform          : packoffset(c8);
-    float4x4 gShadowTransform       : packoffset(c12);
-    float4x4 gBoneTransforms[96]    : packoffset(c16);
+    float4x4 gWorldView             : packoffset(c4);
+    float4x4 gWorldViewProj         : packoffset(c8);
+    float4x4 gTexTransform          : packoffset(c12);
+    float4x4 gShadowTransform       : packoffset(c16);
+    float4x4 gBoneTransforms[96]    : packoffset(c20);
 };
 
 struct VertexIn
@@ -63,9 +64,15 @@ VertexOut main(VertexIn vin)
     // 세계 공간 변환
     vout.PosW = mul(float4(posL, 1.0f), gWorld).xyz;
 
+    // 뷰 공간 변환
+    vout.PosV = mul(float4(posL, 1.0f), gWorldView).xyz;
+    
     vout.NormalW = mul(normalL, (float3x3) gWorld);
     vout.NormalW = normalize(vout.NormalW);
 	
+    vout.NormalV = mul(normalL, (float3x3) gWorldView);
+    vout.NormalV = normalize(vout.NormalV);
+    
 	// Output vertex attributes for interpolation across triangle.
     vout.Tex = mul(float4(vin.Tex, 0.0f, 1.0f), gTexTransform).xy;
     

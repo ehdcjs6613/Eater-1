@@ -2,10 +2,11 @@
 
 cbuffer cbMeshObject : register(b0)
 {
-    float4x4 gWorld             : packoffset(c0);
-    float4x4 gWorldViewProj     : packoffset(c4);
-    float4x4 gTexTransform      : packoffset(c8);
-    float4x4 gShadowTransform   : packoffset(c12);
+    float4x4 gWorld                 : packoffset(c0);
+    float4x4 gWorldView             : packoffset(c4);
+    float4x4 gWorldViewProj         : packoffset(c8);
+    float4x4 gTexTransform          : packoffset(c12);
+    float4x4 gShadowTransform       : packoffset(c16);
 };
 
 struct VertexIn
@@ -39,9 +40,15 @@ VertexOut main(VertexIn vin)
 	// 세계 공간 변환
     vout.PosW = mul(float4(vin.PosL, 1.0f), gWorld).xyz;
 
+    // 뷰 공간 변환
+    vout.PosV = mul(float4(vin.PosL, 1.0f), gWorldView).xyz;
+    
     vout.NormalW = mul(vin.NormalL, (float3x3) gWorld);
     vout.NormalW = normalize(vout.NormalW);
 	
+    vout.NormalV = mul(vin.NormalL, (float3x3) gWorldView);
+    vout.NormalV = normalize(vout.NormalV);
+    
 	// Output vertex attributes for interpolation across triangle.
     vout.Tex = mul(float4(vin.Tex, 0.0f, 1.0f), gTexTransform).xy;
     
