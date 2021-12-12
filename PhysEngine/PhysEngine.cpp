@@ -98,64 +98,90 @@ void PhysEngine::Update(float m_time)
 
 void PhysEngine::CreateRigidbody()
 {
-	Test = new physx::PxTransform(PxVec3(0, 40, 100));
-
-
-	PxMaterial* pMaterial = m_Physics->createMaterial(0.5f, 0.5f, 0.5f);
-
-
-	//충돌체 모양을 설정해준다
-	// 1. Geometry로 반지름인1인 구 모양을 만든다
-	// 2. 충돌재질
-	// 3. Actor가 오브젝트를 독점할것인가?
-	PxShape* pShape = m_Physics->createShape(PxSphereGeometry(1.0f),*pMaterial,true);
-	pShape->setFlag(PxShapeFlag::eVISUALIZATION, true);
-	pShape->setFlag(PxShapeFlag::eSCENE_QUERY_SHAPE, true); //ray , sweep 등의 충돌을 검출할때 사용
 	
-	pShape->setFlag(PxShapeFlag::eSIMULATION_SHAPE, false); 
-	pShape->setFlag(PxShapeFlag::eTRIGGER_SHAPE, false);	//Trigger로 사용할것인지 선택 
-
-
-	//생성한다
-	PxRigidDynamic* pActor = m_Physics->createRigidDynamic(*Test);
-	pActor->attachShape(*pShape);
-	pActor->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, false);
-
-	pActor->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, false); //중력을 받도록 설정한다
-	////위에서 생성한 pShape를 붙여준다
-	////Scene에 추가한다
-	m_Scene->addActor(*pActor);
-
 }
 
-void PhysEngine::CreateStack(PhysData data)
+int PhysEngine::Create_DinamicActor(PhysData data)
 {
-	PxTransform* TR			= new physx::PxTransform(data.Position.x, data.Position.y, data.Position.z);
-	PxMaterial* pMaterial	= m_Factory->CreateMaterial(data.MT_StaticFriction, data.MT_DynamicFriction, data.MT_Restitution);
-	PxShape* shape			= m_Factory->CreateBoxCollider(pMaterial,data.Col.x, data.Col.y, data.Col.z);
+	static int DinamicActorIndex = 0;
 
-	
-	PxRigidDynamic* body = m_Physics->createRigidDynamic(*TR);
+	PxTransform TR			= physx::PxTransform(data.WorldPosition.x, data.WorldPosition.y, data.WorldPosition.z);
+	PxMaterial* pMaterial	= m_Factory->CreateMaterial(data.MT_StaticFriction, data.MT_DynamicFriction, data.MT_Restitution);
+	PxShape*	shape		= m_Factory->CreateBoxCollider(pMaterial, data.Col.x, data.Col.y, data.Col.z);
+
+	PxRigidDynamic* body = m_Physics->createRigidDynamic(TR);
 	body->attachShape(*shape);
-	
-	PxRigidBodyExt::updateMassAndInertia(*body, 1.0f);
+
+	PxRigidBodyExt::updateMassAndInertia(*body, data.MT_Mass);
 	m_Scene->addActor(*body);
 
 	shape->release();
+
+	int index = DinamicActorIndex;
+	DinamicActorIndex++;
+
+	return index;
 }
 
-PhysData  PhysEngine::GetActors()
+int PhysEngine::Create_StaticActor(PhysData data)
 {
-	PxU32 nbActors = m_Scene->getNbActors(PxActorTypeFlag::eRIGID_DYNAMIC | PxActorTypeFlag::eRIGID_STATIC);
-	std::vector<PxRigidActor*> actors(nbActors);
-	m_Scene->getActors(PxActorTypeFlag::eRIGID_DYNAMIC | PxActorTypeFlag::eRIGID_STATIC, reinterpret_cast<PxActor**>(&actors[0]), nbActors);
+	static int StaticActorIndex = 0;
+
+	PxTransform	TR			= physx::PxTransform(data.WorldPosition.x, data.WorldPosition.y, data.WorldPosition.z);
+	PxMaterial* pMaterial	= m_Factory->CreateMaterial(data.MT_StaticFriction, data.MT_DynamicFriction, data.MT_Restitution);
+	PxShape* shape			= m_Factory->CreateBoxCollider(pMaterial, data.Col.x, data.Col.y, data.Col.z);
+
+	PxRigidStatic* body = m_Physics->createRigidStatic(TR);
+	body->attachShape(*shape);
+
+	//PxRigidBodyExt::updateMassAndInertia(*body, data.MT_Mass);
+	m_Scene->addActor(*body);
+
+	shape->release();
+
+	int index = StaticActorIndex;
+	StaticActorIndex++;
+
+	return index;
+}
+
+int PhysEngine::Create_KnematicActor(PhysData data)
+{
+	return 0;
+}
+
+PhysData  PhysEngine::GetActors(int Index, ACTOR_TYPE type)
+{
+	std::vector<PxRigidActor*> actors;
+	switch (type)
+	{
+		case ACTOR_TYPE::DINAMIC:
+		{
+			PxU32 nbActors = m_Scene->getNbActors(PxActorTypeFlag::eRIGID_DYNAMIC);
+			actors.resize(nbActors);
+			m_Scene->getActors(PxActorTypeFlag::eRIGID_DYNAMIC, reinterpret_cast<PxActor**>(&actors[0]), nbActors);
+			break;
+		}
+		case ACTOR_TYPE::STATIC:
+		{
+			PxU32 nbActors = m_Scene->getNbActors(PxActorTypeFlag::eRIGID_STATIC);
+			actors.resize(nbActors);
+			m_Scene->getActors(PxActorTypeFlag::eRIGID_STATIC, reinterpret_cast<PxActor**>(&actors[0]), nbActors);
+			break;
+		}
+		case ACTOR_TYPE::KNEMATIC:
+		{
+
+			break;
+		}
+	}
 	
-	PxTransform temp = actors[1]->getGlobalPose();
+	PxTransform temp = actors[Index]->getGlobalPose();
 
 	PhysData test;
-	test.Position.x = temp.p.x;
-	test.Position.y = temp.p.y;
-	test.Position.z = temp.p.z;
+	test.WorldPosition.x = temp.p.x;
+	test.WorldPosition.y = temp.p.y;
+	test.WorldPosition.z = temp.p.z;
 
 
 	test.Rotation.x = temp.q.x;

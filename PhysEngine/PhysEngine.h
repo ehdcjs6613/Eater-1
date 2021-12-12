@@ -33,10 +33,14 @@ public:
 	
 
 	void Release();					
-	void Update(float m_time);		
-	void CreateStack(PhysData data);
-	PhysData GetActors();
+	void Update(float m_time);
 
+	int Create_DinamicActor	(PhysData data);
+	int	Create_StaticActor	(PhysData data);
+	int	Create_KnematicActor(PhysData data);
+
+
+	PhysData GetActors(int Index, ACTOR_TYPE type);
 private:
 	void CreateRigidbody();//물리 충돌하는 객체를 생성
 
@@ -52,16 +56,12 @@ private:
 	physx::PxTolerancesScale*		m_TolerancesScale;
 
 
-	physx::PxCooking*				m_Cooking;
 	physx::PxFoundation*			m_Foundation;
 	physx::PxPhysics*				m_Physics;
 	physx::PxDefaultCpuDispatcher*	m_Dispatcher;
 	physx::PxScene*					m_Scene;
 	physx::PxMaterial*				m_Material;
 	physx::PxPvd*					m_Pvd;				//디버깅을 사용하기위해
-
-	physx::PxTransform* Test;
-
 
 	Factory* m_Factory;
 };

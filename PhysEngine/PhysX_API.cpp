@@ -24,24 +24,39 @@ void PhysX_Update(float m_time)
 	}
 }
 
-void PhysX_CreateInstance(PhysData data)
+int PhysX_Create_DinamicActor(PhysData data)
 {
 	if (Engine != nullptr)
 	{
-		Engine->CreateStack(data);
+		return Engine->Create_DinamicActor(data);
 	}
 }
 
-PhysData GetActors()
+PHYS_ENGINEDLL int PhysX_Create_StaticActor(PhysData data)
 {
 	if (Engine != nullptr)
 	{
-		return Engine->GetActors();
+		return Engine->Create_StaticActor(data);
+	}
+}
+
+PhysData Get_DinamicActors(int index)
+{
+	if (Engine != nullptr)
+	{
+		return Engine->GetActors(index,ACTOR_TYPE::DINAMIC);
+	}
+}
+
+ PhysData Get_StaticActors(int index)
+{
+	if (Engine != nullptr)
+	{
+		return Engine->GetActors(index, ACTOR_TYPE::STATIC);
 	}
 }
 
  void PhysX_CreateScene()
 {
-
-
+	 
 }

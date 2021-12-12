@@ -14,7 +14,7 @@ PhysManager::~PhysManager()
 
 void PhysManager::Initialize()
 {
-	PhysX_Initialize(2,true);
+	PhysX_Initialize(4,true);
 }
 
 void PhysManager::Release()
