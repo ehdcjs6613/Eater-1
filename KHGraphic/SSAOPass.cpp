@@ -245,7 +245,7 @@ void SSAOPass::SetOffsetVectors()
 	{
 		// Create random lengths in [0.25, 1.0].
 		float s = randF(randEngine);
-
+		
 		XMVECTOR v = s * XMVector4Normalize(XMLoadFloat4(&m_Offsets[i]));
 
 		// OffsetVector Constant Buffer Data »ðÀÔ..
@@ -271,9 +271,6 @@ void SSAOPass::SetRandomVectorTexture()
 	texDesc.CPUAccessFlags = 0;
 	texDesc.MiscFlags = 0;
 
-	D3D11_SUBRESOURCE_DATA initData = { 0 };
-	initData.SysMemPitch = 256 * sizeof(XMCOLOR);
-
 	std::mt19937 randEngine;
 	randEngine.seed(std::random_device()());
 	std::uniform_real_distribution<float> randF(0.0f, 1.0f);
@@ -284,6 +281,7 @@ void SSAOPass::SetRandomVectorTexture()
 		color[i] = XMCOLOR(randF(randEngine), randF(randEngine), randF(randEngine), 0.0f);
 	}
 
+	D3D11_SUBRESOURCE_DATA initData = { 0 };
 	initData.pSysMem = color;
 	initData.SysMemPitch = 256 * sizeof(XMCOLOR);
 
@@ -297,7 +295,7 @@ void SSAOPass::SetFrustumFarCorners(int width, int height)
 	
 	float aspect = (float)width / (float)height;
 
-	float fovY = 0.25f * 3.141592f;
+	float fovY = 0.25f * 3.1415926535f;
 	float farZ = 4000.0f;
 	float halfHeight = farZ * tanf(0.5f * fovY);
 	float halfWidth = aspect * halfHeight;

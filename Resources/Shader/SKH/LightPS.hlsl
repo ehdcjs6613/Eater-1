@@ -1,5 +1,3 @@
-#pragma pack_matrix(row_major)
-
 #include "LightHelper.fx"
 
 cbuffer cbLightSub : register(b0)
@@ -42,7 +40,7 @@ float4 main(VertexIn pin) : SV_TARGET
     float4 normal = gNormalRT.Sample(gSamWrapLinear, pin.Tex);
     float4 position = gPositionRT.Sample(gSamWrapLinear, pin.Tex);
     float4 shadow = gShadowRT.Sample(gSamWrapLinear, pin.Tex);
-    float4 ssao = mul(float4(position.xyz, 1.0f), gViewProjTex);
+    float4 ssao = mul(gViewProjTex, float4(position.xyz, 1.0f));
 	
     // Gamma Correction
 	// Gamma Space -> Linear Space

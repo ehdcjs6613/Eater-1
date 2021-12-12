@@ -1,5 +1,3 @@
-#pragma pack_matrix(row_major)
-
 cbuffer cbSsaoObject : register(b0)
 {
 	float4x4 gViewToTexSpace; // Proj * Texture
@@ -24,9 +22,9 @@ SamplerState gSamWrapLinerPoint : register(s1);
 
 struct VertexIn
 {
-	float4 PosH       : SV_POSITION;
-	float3 ToFarPlane : TEXCOORD0;
-	float2 Tex        : TEXCOORD1;
+    float4 PosH : SV_POSITION;
+    float3 ToFarPlane : TEXCOORD0;
+    float2 Tex : TEXCOORD1;
 };
 
 // Determines how much the sample point q occludes the point p as a function
@@ -52,17 +50,17 @@ float OcclusionFunction(float distZ)
 	//        0     Eps          z0            z1        
 	//
 
-	float occlusion = 0.0f;
-	if (distZ > gSurfaceEpsilon)
-	{
-		float fadeLength = gOcclusionFadeEnd - gOcclusionFadeStart;
+    float occlusion = 0.0f;
+    if (distZ > gSurfaceEpsilon)
+    {
+        float fadeLength = gOcclusionFadeEnd - gOcclusionFadeStart;
 
 		// Linearly decrease occlusion from 1 to 0 as distZ goes 
 		// from gOcclusionFadeStart to gOcclusionFadeEnd.	
-		occlusion = saturate((gOcclusionFadeEnd - distZ) / fadeLength);
-	}
+        occlusion = saturate((gOcclusionFadeEnd - distZ) / fadeLength);
+    }
 
-	return occlusion;
+    return occlusion;
 }
 
 float4 main(VertexIn pin) : SV_Target
@@ -84,31 +82,31 @@ float4 main(VertexIn pin) : SV_Target
 	// p.z = t*pin.ToFarPlane.z
 	// t = p.z / pin.ToFarPlane.z
 	//
-	float3 p = (pz / pin.ToFarPlane.z) * pin.ToFarPlane;
+    float3 p = (pz / pin.ToFarPlane.z) * pin.ToFarPlane;
 
 	// Extract random vector and map from [0,1] --> [-1, +1].
     float3 randVec = 2.0f * gRandomVecMap.SampleLevel(gSamWrapLinerPoint, 4.0f * pin.Tex, 0.0f).rgb - 1.0f;
 
-	float occlusionSum = 0.0f;
+    float occlusionSum = 0.0f;
 
 	// Sample neighboring points about p in the hemisphere oriented by n.
 	[unroll]
-	for (int i = 0; i < 14; ++i)
-	{
+    for (int i = 0; i < 14; ++i)
+    {
 		// Are offset vectors are fixed and uniformly distributed (so that our offset vectors
 		// do not clump in the same direction).  If we reflect them about a random vector
 		// then we get a random uniform distribution of offset vectors.
-		float3 offset = reflect(gOffsetVectors[i].xyz, randVec);
+        float3 offset = reflect(gOffsetVectors[i].xyz, randVec);
 
 		// Flip offset vector if it is behind the plane defined by (p, n).
-		float flip = sign(dot(offset, n));
+        float flip = sign(dot(offset, n));
 
 		// Sample a point near p within the occlusion radius.
-		float3 q = p + flip * gOcclusionRadius * offset;
+        float3 q = p + flip * gOcclusionRadius * offset;
 
 		// Project q and generate projective tex-coords.  
-        float4 projQ = mul(float4(q, 1.0f), gViewToTexSpace);
-		projQ /= projQ.w;
+        float4 projQ = mul(gViewToTexSpace, float4(q, 1.0f));
+        projQ /= projQ.w;
 
 		// Find the nearest depth value along the ray from the eye to q (this is not
 		// the depth of q, as q is just an arbitrary point near p and might
@@ -120,7 +118,7 @@ float4 main(VertexIn pin) : SV_Target
 		// lies on the ray of q, so there exists a t such that r = t*q.
 		// r.z = t*q.z ==> t = r.z / q.z
 
-		float3 r = (rz / q.z) * q;
+        float3 r = (rz / q.z) * q;
 
 		//
 		// Test whether r occludes p.
@@ -134,17 +132,17 @@ float4 main(VertexIn pin) : SV_Target
 		//     from p, then it does not occlude it.
 		// 
 
-		float distZ = p.z - r.z;
-		float dp = max(dot(n, normalize(r - p)), 0.0f);
-		float occlusion = dp * OcclusionFunction(distZ);
+        float distZ = p.z - r.z;
+        float dp = max(dot(n, normalize(r - p)), 0.0f);
+        float occlusion = dp * OcclusionFunction(distZ);
 
-		occlusionSum += occlusion;
-	}
+        occlusionSum += occlusion;
+    }
 
-	occlusionSum /= 14;
+    occlusionSum /= 14;
 
-	float access = 1.0f - occlusionSum;
+    float access = 1.0f - occlusionSum;
 
 	// Sharpen the contrast of the SSAO map to make the SSAO affect more dramatic.
-	return saturate(pow(access, 4.0f));
+    return saturate(pow(access, 4.0f));
 }

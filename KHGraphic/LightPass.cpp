@@ -116,7 +116,6 @@ void LightPass::Render(GlobalData* global)
 {
 	Matrix view = *global->mCamView;
 	Matrix proj = *global->mCamProj;
-	Vector3 eye(view._41, view._42, view._43);
 	LightData* lightData = global->mLightData;
 	
 	CB_Light lightBuf;
@@ -140,7 +139,7 @@ void LightPass::Render(GlobalData* global)
 	}
 
 	CB_LightSub lightsubBuf;
-	lightsubBuf.gEyePosW = -eye;
+	lightsubBuf.gEyePosW = *global->mCamPos;
 	lightsubBuf.gViewProjTex = view * proj * Matrix(
 		0.5f, 0.0f, 0.0f, 0.0f,
 		0.0f, -0.5f, 0.0f, 0.0f,
