@@ -29,7 +29,7 @@ PxShape* Factory::CreateBoxCollider(PxMaterial* m)
 PxShape* Factory::CreateBoxCollider(PxMaterial* m,float x,float y,float z)
 {
 	PxBoxGeometry temp = PxBoxGeometry(PxReal(x), PxReal(y), PxReal(z));
-	PxShape* shape = m_Phys->createShape(temp, *m);
+	PxShape* shape = m_Phys->createShape(temp, *m,true);
 	return shape;
 }
 

@@ -48,14 +48,30 @@ void intro::Awake()
 	//testobj->AddComponent<Player>();
 
 	/// ¹Ù´Ú
+
+	for (int j = -5; j < 5; j++)
+	{
+		for (int i = -5; i < 5; i++)
+		{
+			testobj = Instance("Field");
+			testobj->AddComponent<MeshFilter>()->SetMeshName("box");
+			testobj->AddComponent<Rigidbody>();
+			Transform* tr = testobj->GetComponent<Transform>();
+			tr->Scale = { 0.1f,0.1f ,0.1f };
+			tr->Position = { (float)i,(float)10 + j,(float)0 };
+		}
+	}
+
+
 	testobj = Instance("Field");
 	testobj->AddComponent<MeshFilter>()->SetMeshName("box");
-	testobj->AddComponent<Rigidbody>();
+	testobj->AddComponent<Rigidbody>()->SetType(Rigidbody::STATIC);
 	Transform* tr = testobj->GetComponent<Transform>();
-	tr->Scale = { 0.5f,0.5f ,0.5f };
-	tr->Position = { 5,10,0 };
-
+	tr->Scale = { 1.0f,1.0f ,1.0f };
+	tr->Position = { 0,0,0};
 	
+	
+
 	//testobj = Instance("Table");
 	//testobj->AddComponent<MeshFilter>()->SetMeshName("Table");
 	//testobj->GetComponent<Transform>()->Scale = { 0.1f, 0.1f, 0.1f };
