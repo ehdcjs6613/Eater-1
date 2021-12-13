@@ -1,13 +1,14 @@
 
-#include "BuildGeometry.h"
+#include "VertexPositionColor.h"
 #include "GameObject.h"
 #include "Transform.h"
-#include "VertexPositionColor.h"
 #include "BoxCollider.h"
+#include <DirectXMath.h>
 
-BoxCollider::BoxCollider() : m_Size{1,1,1}
+BoxCollider::BoxCollider() : m_Size{1,1,1} 
 {
 	
+	mWorld = DirectX::XMMatrixIdentity();
 	//Hight
 }
 
@@ -51,22 +52,31 @@ void BoxCollider::Update()
 void BoxCollider::EndUpdate()
 {
 }
-
-void BoxCollider::Draw(const DirectX::XMFLOAT4X4 _View, const DirectX::XMFLOAT4X4 _Proj, const DirectX::XMFLOAT4X4 _WorldTM)
+void BoxCollider::Translasion(DirectX::XMMATRIX* _World)
 {
-	Enabled;
-	gameobject->transform->GetWorld();
+	if (!this)
+	{
+		return;
+	}
+	//mWorld = (*const_cast<DirectX::XMMATRIX*>(&_World));
+	this->mWorld = *_World;
+	this->gameobject;
 	
+}
+
+void BoxCollider::Draw(const DirectX::XMFLOAT4X4 _View, const DirectX::XMFLOAT4X4 _Proj)
+{
+	this->gameobject;
 	//요기수정
-	//mView = _View;
-	//mProj = _Proj;
+	mView = DirectX::XMLoadFloat4x4(&_View);
+	mProj = DirectX::XMLoadFloat4x4(&_Proj);
 
 	// 입력 배치 객체 셋팅
 	md3dImmediateContext->IASetInputLayout(mInputLayout);
 	md3dImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	//D3D11_PRIMITIVE_TOPOLOGY_LINELIST
 
-	// 인덱스버퍼와 버텍스버퍼 셋팅
+// 인덱스버퍼와 버텍스버퍼 셋팅
 	UINT stride = sizeof(Vertex);
 	UINT offset = 0;
 	md3dImmediateContext->IASetVertexBuffers(0, 1, &mVB, &stride, &offset);
@@ -80,7 +90,23 @@ void BoxCollider::Draw(const DirectX::XMFLOAT4X4 _View, const DirectX::XMFLOAT4X
 
 	//mWorld = DirectX::XMMatrixIdentity();
 
-	DirectX::XMMATRIX worldViewProj = mWorld * mView * mProj;
+	float v[16] =
+	{
+		2, 0, 0, 0,
+		0, 2, 0, 0,
+		0, 0, 2, 0,
+		this->gameobject->GetTransform()->Position.x, this->gameobject->GetTransform()->Position.y, this->gameobject->GetTransform()->Position.z, 1,
+
+	};
+
+
+
+	mWorld =
+	{
+		DirectX::XMMATRIX(v),
+	};
+
+ 	DirectX::XMMATRIX worldViewProj = this->mWorld * mView * mProj;
 	mfxWorldViewProj->SetMatrix(reinterpret_cast<float*>(&worldViewProj));
 
 
@@ -109,6 +135,77 @@ void BoxCollider::Draw(const DirectX::XMFLOAT4X4 _View, const DirectX::XMFLOAT4X
 	}
 }
 
+void BoxCollider::Rnder()
+{
+	this->gameobject;
+	//요기수정
+
+	// 입력 배치 객체 셋팅
+	md3dImmediateContext->IASetInputLayout(mInputLayout);
+	md3dImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	//D3D11_PRIMITIVE_TOPOLOGY_LINELIST
+
+// 인덱스버퍼와 버텍스버퍼 셋팅
+	UINT stride = sizeof(Vertex);
+	UINT offset = 0;
+	md3dImmediateContext->IASetVertexBuffers(0, 1, &mVB, &stride, &offset);
+	md3dImmediateContext->IASetIndexBuffer(mIB, DXGI_FORMAT_R32_UINT, 0);
+
+	/// WVP TM등을 셋팅
+
+
+
+	// Set constants
+
+	//mWorld = DirectX::XMMatrixIdentity();
+
+	//loat v[16] = 
+	// 
+	//	2,0,0,0,
+	//	0,2,0,0,
+	//	0,0,2,0,
+	//	1,1,1,1,
+	//;
+	//
+	//
+	//
+	//
+	//_World =
+	//
+	//		DirectX::XMMATRIX(v) ,
+	//
+	//;
+
+	DirectX::XMMATRIX worldViewProj = this->mWorld * mView * mProj;
+	mfxWorldViewProj->SetMatrix(reinterpret_cast<float*>(&worldViewProj));
+
+
+	//mWorld =
+	//{
+	//	1,0,0,0,
+	//	0,1,0,0,
+	//	0,0,1,0,
+	//	0,0,0,1,
+	//};
+
+	// 렌더스테이트
+	//md3dImmediateContext->RSSetState(m_pRenderstate);
+
+	// 테크닉은...
+	D3DX11_TECHNIQUE_DESC techDesc;
+	mTech->GetDesc(&techDesc);
+
+	// 렌더패스는...
+	for (UINT p = 0; p < techDesc.Passes; ++p)
+	{
+		mTech->GetPassByIndex(p)->Apply(0, md3dImmediateContext);
+
+		// 36개의 인덱스로 축을 그린다.
+		md3dImmediateContext->DrawIndexed(36, 0, 0);
+	}
+}
+
+
 void BoxCollider::CalculateOBB()
 {
 
@@ -118,33 +215,29 @@ void BoxCollider::CalculateAABB()
 {
 
 }
-
-void BoxCollider::Initialize(ID3D11Device* _pDevice, ID3D11DeviceContext* _pDeviceContext , VertexPositionColor* _pData, UINT indexCount)
+void BoxCollider::init()
 {
-	md3dDevice = _pDevice;
-	md3dImmediateContext = _pDeviceContext;
-
 	// 정점 버퍼를 생성한다. 
 	// 각 축에 맞도록 6개의 정점을 만들었다.
 	VertexPositionColor vertices[] =
 	{
 		{ DirectX::XMFLOAT3(+6.0f, -1.0f, -1.0f), DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green)      },
-		{ DirectX::XMFLOAT3(+6.0f, +1.0f, -1.0f), DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green)      },
+		{ DirectX::XMFLOAT3(+6.0f, +1.0f, -1.0f),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green)      },
 
-		{ DirectX::XMFLOAT3(+8.0f, +1.0f, -1.0f), DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green)          },
-		{ DirectX::XMFLOAT3(+8.0f, -1.0f, -1.0f), DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green)      },
+		{ DirectX::XMFLOAT3(+8.0f, +1.0f, -1.0f),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green)          },
+		{ DirectX::XMFLOAT3(+8.0f, -1.0f, -1.0f),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green)      },
 
-		{ DirectX::XMFLOAT3(+6.0f, -1.0f, +1.0f), DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green)        },
-		{ DirectX::XMFLOAT3(+6.0f, +1.0f, +1.0f), DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green)    },
+		{ DirectX::XMFLOAT3(+6.0f, -1.0f, +1.0f),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green)        },
+		{ DirectX::XMFLOAT3(+6.0f, +1.0f, +1.0f),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green)    },
 
-		{ DirectX::XMFLOAT3(+8.0f, +1.0f, +1.0f), DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green)        },
-		{ DirectX::XMFLOAT3(+8.0f, -1.0f, +1.0f), DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green)  },
+		{ DirectX::XMFLOAT3(+8.0f, +1.0f, +1.0f),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green)        },
+		{ DirectX::XMFLOAT3(+8.0f, -1.0f, +1.0f),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green)  },
 		//
-		{ DirectX::XMFLOAT3(+3.0f, -1.0f, -2.0f), DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green)      },
-		{ DirectX::XMFLOAT3(+3.0f, +4.0f, -2.0f), DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green)      },
+		{ DirectX::XMFLOAT3(+3.0f, -1.0f, -2.0f),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green)      },
+		{ DirectX::XMFLOAT3(+3.0f, +4.0f, -2.0f),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green)      },
 
-		{ DirectX::XMFLOAT3(+2.0f, +5.0f, +3.0f), DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green)          },
-		{ DirectX::XMFLOAT3(+2.0f, -3.0f, +3.0f), DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green)      },
+		{ DirectX::XMFLOAT3(+2.0f, +5.0f, +3.0f),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green)          },
+		{ DirectX::XMFLOAT3(+2.0f, -3.0f, +3.0f),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green)      },
 
 	};
 
@@ -157,7 +250,11 @@ void BoxCollider::Initialize(ID3D11Device* _pDevice, ID3D11DeviceContext* _pDevi
 	vbd.StructureByteStride = 0;
 	D3D11_SUBRESOURCE_DATA vinitData;
 	vinitData.pSysMem = vertices;
-	HR(md3dDevice->CreateBuffer(&vbd, &vinitData, &mVB));
+	if (md3dDevice->CreateBuffer(&vbd, &vinitData, &mVB))
+	{
+
+	}
+	int _lastError_0 = GetLastError();
 
 
 	// 인덱스 버퍼를 생성한다.
@@ -209,8 +306,11 @@ void BoxCollider::Initialize(ID3D11Device* _pDevice, ID3D11DeviceContext* _pDevi
 	ibd.StructureByteStride = 0;
 	D3D11_SUBRESOURCE_DATA iinitData;
 	iinitData.pSysMem = indices;
-	HR(md3dDevice->CreateBuffer(&ibd, &iinitData, &mIB));
+	if (md3dDevice->CreateBuffer(&ibd, &iinitData, &mIB))
+	{
 
+	}
+	int _lastError_1 = GetLastError();
 
 	std::ifstream fin("../Resources/Shader/LWJ/color.cso", std::ios::binary);
 
@@ -222,8 +322,12 @@ void BoxCollider::Initialize(ID3D11Device* _pDevice, ID3D11DeviceContext* _pDevi
 	fin.read(&compiledShader[0], size);
 	fin.close();
 
-	HR(D3DX11CreateEffectFromMemory(&compiledShader[0], size,
+	if (D3DX11CreateEffectFromMemory(&compiledShader[0], size,
 		0, md3dDevice, &mFX));
+	{
+
+	}
+	int _lastError_2 = GetLastError();
 
 	mTech = mFX->GetTechniqueByName("ColorTech");
 	mfxWorldViewProj = mFX->GetVariableByName("gWorldViewProj")->AsMatrix();
@@ -238,7 +342,21 @@ void BoxCollider::Initialize(ID3D11Device* _pDevice, ID3D11DeviceContext* _pDevi
 	// Create the input layout
 	D3DX11_PASS_DESC passDesc;
 	mTech->GetPassByIndex(0)->GetDesc(&passDesc);
-	HR(md3dDevice->CreateInputLayout(vertexDesc, 2, passDesc.pIAInputSignature,
-		passDesc.IAInputSignatureSize, &mInputLayout));
+	if (md3dDevice->CreateInputLayout
+	(
+		vertexDesc, 2, passDesc.pIAInputSignature,
+		passDesc.IAInputSignatureSize, &mInputLayout)
+		)
+	{
 
+	}
+	int _lastError_3 = GetLastError();
+}
+
+void BoxCollider::Initialize(ID3D11Device* _pDevice, ID3D11DeviceContext* _pDeviceContext)
+{
+	md3dDevice = _pDevice;
+	md3dImmediateContext = _pDeviceContext;
+
+	init();
 }

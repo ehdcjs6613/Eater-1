@@ -17,8 +17,9 @@
 #include "ParserData.h"
 #include "ResourcesData.h"
 #include "CBox.h"
-#include "BoxCol.h"
+#include "../Physics/BoxCollider.h"
 #include "X3Engine.h"
+
 //스마트포인터 인클르드
 
 /*
@@ -54,7 +55,7 @@ X3Engine::X3Engine() :
 	m_pAdapter = new DirectXAdapter();
 	m_pRenderTargeter = new DirectXRenderTargeter();
 	m_CBox = new CBox();
-	m_BoxCol = new BoxCol();
+	m_BoxCollider = new BoxCollider();
 
 	this->m_pDirectXSwapChain = new DirectXSwapChain(m_pDevice->GetDevice());
 
@@ -253,8 +254,15 @@ void X3Engine::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 	m_CBox->Update(mView, mProj);
 	m_CBox->Render(meshList);
 
-	m_BoxCol->Update(mView, mProj);
-	m_BoxCol->Render(meshList);
+	//m_BoxCollider->Update();
+	////const DirectX::XMFLOAT4X4 _WorldTM = {  };
+	//DirectX::XMMATRIX r = XMMatrixIdentity();
+	//m_BoxCollider->Translasion(&r);
+	//m_BoxCollider->Draw(mView, mProj);
+	//m_BoxCollider->Rnder();
+
+	//m_BoxCol->Update(mView, mProj);
+	//m_BoxCol->Render(meshList);
 	
 
 	///2D렌더링 처리
@@ -281,7 +289,8 @@ void X3Engine::SetDevice(void* Devie, void* DevieContext)
 	InputLayouts::InitAll(m_pDevice->GetDevice());
 
 	m_CBox->Initialize(m_pDevice->GetDevice(), m_pDeviceContext->GetDeviceContext());
-	m_BoxCol->Initialize(m_pDevice->GetDevice(), m_pDeviceContext->GetDeviceContext());
+	m_BoxCollider->Initialize(m_pDevice->GetDevice(), m_pDeviceContext->GetDeviceContext());
+
 }
 
 void X3Engine::CreateRenderState()

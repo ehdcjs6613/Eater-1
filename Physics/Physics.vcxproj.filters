@@ -28,6 +28,9 @@
     <Filter Include="ColliderManager">
       <UniqueIdentifier>{e003af83-c7f4-4eb9-a741-83d4a9e9b876}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GeometryGenerator">
+      <UniqueIdentifier>{6658f3f1-520f-466e-996e-bde1203b509b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Collider.cpp">
@@ -42,14 +45,11 @@
     <ClCompile Include="VertexPositionColor.cpp">
       <Filter>Vertex</Filter>
     </ClCompile>
-    <ClCompile Include="VirtualMesh.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="BuildGeometry.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="CollistionManager.cpp">
+    <ClCompile Include="ColliderManager.cpp">
       <Filter>ColliderManager</Filter>
+    </ClCompile>
+    <ClCompile Include="GeometryGenerator.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -65,17 +65,17 @@
     <ClInclude Include="DxDefine.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="ColliderManager.h">
+      <Filter>ColliderManager</Filter>
+    </ClInclude>
     <ClInclude Include="VertexPositionColor.h">
       <Filter>Vertex</Filter>
     </ClInclude>
-    <ClInclude Include="VirtualMesh.h">
-      <Filter>소스 파일</Filter>
+    <ClInclude Include="d3dx11effect.h">
+      <Filter>Vertex</Filter>
     </ClInclude>
-    <ClInclude Include="BuildGeometry.h">
+    <ClInclude Include="GeometryGenerator.h">
       <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="CollistionManager.h">
-      <Filter>ColliderManager</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

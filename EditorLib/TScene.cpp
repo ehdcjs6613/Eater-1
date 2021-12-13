@@ -1,3 +1,4 @@
+#include "LibDefine.h"
 #include "framework.h"
 #include "MainHeader.h"
 #include "MeshFilter.h"
@@ -51,14 +52,12 @@ void TScene::Awake()
 
 	///카메라
 	testobj = Instance("Cam");
-	testobj->AddComponent<Camera>();
 	testobj->AddComponent<TKeyInput>();
 	testobj->GetTransform()->Position = { 0,0,-25 };
 
 	///라이트
 	testobj = Instance("DirectionLight");
 	testobj->AddComponent<DirectionLight>();
-	testobj->AddComponent<BoxCollider>();
 
 
 
@@ -70,6 +69,8 @@ void TScene::Awake()
 	testobj->GetTransform()->Position = { -5,0,0 };
 	testobj->GetTransform()->Rotation = { 0,45,0 };
 	MeshFilter* Mf = testobj->AddComponent<MeshFilter>();
+	BoxCollider* Bc = testobj->AddComponent<BoxCollider>();
+	Camera* cam = testobj->AddComponent<Camera>();
 	//AnimationController* ac = testobj->AddComponent<AnimationController>();
 	Transform* tr = testobj->GetTransform();
 	////컨퍼넌트 초기화
@@ -99,6 +100,24 @@ void TScene::Start()
 
 void TScene::Update()
 {
+	testobj->GetComponent<BoxCollider>()->Translasion(testobj->GetTransform()->GetWorld());
+	
+	DirectX::XMFLOAT4X4 view;
+	DirectX::XMFLOAT4X4 proj;
+	
+	if (nullptr != testobj->GetComponent<BoxCollider>()->md3dDevice)
+	{
+	
+	}
+	if (nullptr != testobj->GetComponent<BoxCollider>()->md3dImmediateContext)
+	{
+		DirectX::XMStoreFloat4x4(&view, *testobj->GetComponent<Camera>()->GetView());
+		DirectX::XMStoreFloat4x4(&proj, *testobj->GetComponent<Camera>()->GetProj());
+		testobj->GetComponent<BoxCollider>()->Draw(view, proj);
+	}
+
+		
+
 }
 
 void TScene::End()

@@ -23,11 +23,11 @@ public:
 	// Camera Position
 	DirectX::XMFLOAT3* GetPos();
 	//현재 카메라의 뷰행렬
-	DirectX::XMMATRIX* GetView();
+	EATER_ENGINEDLL DirectX::XMMATRIX* GetView();
 	//메인으로 지정한 카메라의 뷰행렬
 	static DirectX::XMMATRIX* GetMainView();
 	//프로젝션 행렬을 가져온다
-	static DirectX::XMMATRIX* GetProj();
+	EATER_ENGINEDLL static DirectX::XMMATRIX* GetProj();
 	// Main Camera Position
 	static DirectX::XMFLOAT3* GetMainPos();
 

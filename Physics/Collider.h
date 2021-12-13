@@ -1,10 +1,14 @@
 #pragma once
 
 #include "DllDefine.h"
-#include "Component.h"
+#include "DxDefine.h"
+#include "../Library/inc/Component/Component.h"
 
 class Collider : public Component
 {
+public:
+	ID3D11Device* md3dDevice;						/// D3D11 디바이스
+	ID3D11DeviceContext* md3dImmediateContext;		/// 디바이스 컨텍스트
 public:
 	PhysicsExport Collider();
 	PhysicsExport virtual ~Collider();
@@ -23,5 +27,11 @@ public:
 	virtual void Update() override;
 	//마지막 업데이트
 	virtual void EndUpdate() override;
+public:
+	void SetDevice(ID3D11Device*);						/// D3D11 디바이스
+	void SetDeviceContext(ID3D11DeviceContext*);		/// 디바이스 컨텍스트
+
+	ID3D11Device* GetDevice();						/// D3D11 디바이스
+	ID3D11DeviceContext* GetDeviceContext();		/// 디바이스 컨텍스트
 };
 

@@ -22,7 +22,8 @@ class DirectXSamplerState;
 class SharedRenderData;
 
 class CBox;
-class BoxCol;
+
+class BoxCollider;
 //그리기를 위한 포인터의  클래스
 
 
@@ -154,7 +155,8 @@ private:
 
 private:
 	CBox* m_CBox;
-	BoxCol* m_BoxCol;
+
+	BoxCollider* m_BoxCollider;
 	//ID3DX11Effect* m_FX;
 	//ID3DX11EffectTechnique* mTech;
 	//ID3DX11EffectMatrixVariable* mfxWorldViewProj;

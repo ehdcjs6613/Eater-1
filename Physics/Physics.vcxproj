@@ -164,22 +164,21 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\lib"</Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BoxCollider.cpp" />
-    <ClCompile Include="BuildGeometry.cpp" />
     <ClCompile Include="Collider.cpp" />
-    <ClCompile Include="CollistionManager.cpp" />
+    <ClCompile Include="ColliderManager.cpp" />
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="GeometryGenerator.cpp" />
     <ClCompile Include="VertexPositionColor.cpp" />
-    <ClCompile Include="VirtualMesh.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BoxCollider.h" />
-    <ClInclude Include="BuildGeometry.h" />
     <ClInclude Include="Collider.h" />
-    <ClInclude Include="CollistionManager.h" />
+    <ClInclude Include="ColliderManager.h" />
+    <ClInclude Include="d3dx11effect.h" />
     <ClInclude Include="DllDefine.h" />
     <ClInclude Include="DxDefine.h" />
+    <ClInclude Include="GeometryGenerator.h" />
     <ClInclude Include="VertexPositionColor.h" />
-    <ClInclude Include="VirtualMesh.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

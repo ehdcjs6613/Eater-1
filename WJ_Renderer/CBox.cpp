@@ -1,6 +1,6 @@
 #include "MathHelper.h"
 #include "Effects.h"
-#include "d3dx11effect.h"
+#include "../Physics/d3dx11effect.h"
 #include "InputLayout.h"
 #include "EngineData.h"
 #include "CBox.h"
@@ -15,8 +15,8 @@ CBox::~CBox()
 
 void CBox::Update(DirectX::SimpleMath::Matrix _view, DirectX::SimpleMath::Matrix _proj)
 {
-	mView = _view;
-	mProj = _proj;
+	m_View = _view;
+	m_Proj = _proj;
 }
 
 void CBox::Initialize(ID3D11Device* _pDevice, ID3D11DeviceContext* _pDeviceContext)
@@ -55,12 +55,14 @@ void CBox::Render(std::queue<MeshData*>* meshList)
 		Vertex_Buffer_Offset = 0;
 
 		/// WVP TM등을 셋팅
-		mWorld = _Mesh_Data->mWorld;//_Mesh_Data->mWorld;
+
+
+		m_World = _Mesh_Data->mWorld;//_Mesh_Data->mWorld;
 		//mWorld = DirectX::SimpleMath::Matrix();
-		Mul_WVP = mWorld * mView * mProj;
+		Mul_WVP = m_World * m_View * m_Proj;
 
 		// 월드의 역행렬
-		World_Inverse = mWorld.Invert();
+		World_Inverse = m_World.Invert();
 
 		// Set per frame constants.
 		DirectionalLight _temp_Dir;
@@ -87,7 +89,7 @@ void CBox::Render(std::queue<MeshData*>* meshList)
 		Effects::BasicTextureFX->SetDirLights(&_temp_Dir);
 
 		// 월드 Eye 포지션.
-		DirectX::SimpleMath::Vector3 _Camera_Vec(mView._41, mView._42, mView._43);
+		DirectX::SimpleMath::Vector3 _Camera_Vec(m_View._41, m_View._42, m_View._43);
 		Effects::BasicTextureFX->SetEyePosW(_Camera_Vec);
 
 		ID3DX11EffectTechnique* mTech = nullptr;
@@ -104,8 +106,8 @@ void CBox::Render(std::queue<MeshData*>* meshList)
 			m_pDeviceContext->IASetVertexBuffers(0, 1, &Render_VB, &Vertex_Buffer_Stride, &Vertex_Buffer_Offset);
 			m_pDeviceContext->IASetIndexBuffer(Render_IB, DXGI_FORMAT_R32_UINT, 0);
 
-			World_Inverse_Transpose = MathHelper::InverseTranspose(mWorld);
-			Effects::BasicTextureFX->SetWorld(mWorld);
+			World_Inverse_Transpose = MathHelper::InverseTranspose(m_World);
+			Effects::BasicTextureFX->SetWorld(m_World);
 			Effects::BasicTextureFX->SetWorldInvTranspose(World_Inverse_Transpose);
 			Effects::BasicTextureFX->SetWorldViewProj(Mul_WVP);
 			Effects::BasicTextureFX->SetMaterial(_Temp_Mat);

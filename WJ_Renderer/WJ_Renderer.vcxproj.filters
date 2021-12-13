@@ -131,9 +131,6 @@
     <ClCompile Include="CBox.cpp">
       <Filter>2.Graphics\3.Box</Filter>
     </ClCompile>
-    <ClCompile Include="BoxCol.cpp">
-      <Filter>2.Graphics\1.ViewGird</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="X3Engine.h">
@@ -192,9 +189,6 @@
     </ClInclude>
     <ClInclude Include="CBox.h">
       <Filter>2.Graphics\3.Box</Filter>
-    </ClInclude>
-    <ClInclude Include="BoxCol.h">
-      <Filter>2.Graphics\1.ViewGird</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

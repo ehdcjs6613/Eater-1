@@ -15,3 +15,4 @@
 	#endif 
 #endif // X3Engine_DLL __declspec(dllimport)
 
+#pragma comment(lib,"Physics.lib");

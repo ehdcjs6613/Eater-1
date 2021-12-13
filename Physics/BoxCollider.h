@@ -2,12 +2,13 @@
 
 #include <fstream>
 
-#include "DxDefine.h"
+#include "d3dx11effect.h"
 #include "DllDefine.h"
-#include "VirtualMesh.h"
-#include "BuildGeometry.h"
+#include "DxDefine.h"
 #include "Collider.h"
+#include <queue>
 
+class MeshData;
 class GameObject;
 class VertexPositionColor;
 class VertexBuffer;
@@ -16,14 +17,15 @@ class Transform;
 
 class BoxCollider : public Collider
 {
+public:
+	
 private:
 	struct Vertex
 	{
 		DirectX::XMFLOAT3 Pos;
 		DirectX::XMFLOAT4 Color;
 	};
-	ID3D11Device* md3dDevice;						/// D3D11 디바이스
-	ID3D11DeviceContext* md3dImmediateContext;		/// 디바이스 컨텍스트
+
 
 	ID3D11Buffer* mVB;	// 버텍스버퍼
 	ID3D11Buffer* mIB;	// 인덱스버퍼
@@ -38,6 +40,7 @@ private:
 	DirectX::XMMATRIX mWorld;	// 월드 변환 행렬 (로컬->월드)
 	DirectX::XMMATRIX mView;	// 시야 변환 행렬 (카메라 뷰)
 	DirectX::XMMATRIX mProj;	// 투영 변환 행렬 (원근/직교)
+
 
 
 	// 렌더스테이트. 렌더링을 어떻게 할 것인가에 대한 것.
@@ -66,12 +69,18 @@ public:
 	virtual void EndUpdate() override;
 private:
 	//그려주는 함수
-	void Draw(const DirectX::XMFLOAT4X4 _View, const DirectX::XMFLOAT4X4 _Proj, const DirectX::XMFLOAT4X4 _WorldTM);
 	//계산해서 충돌체크하는 OBB(Orient Bounding Box)함수
 	//영역과 축이 같이돔
 	void CalculateOBB();
 	//정렬된 정사격형끼리의 충돌
 	void CalculateAABB();
 public:
-	void Initialize(ID3D11Device*, ID3D11DeviceContext*, VertexPositionColor* , UINT );
+	PhysicsExport void Initialize(ID3D11Device*, ID3D11DeviceContext*);
+	PhysicsExport void Draw(const DirectX::XMFLOAT4X4 _View, const DirectX::XMFLOAT4X4 _Proj);
+	PhysicsExport void Rnder();
+
+
+	PhysicsExport void Translasion(DirectX::XMMATRIX* _World);
+
+	void init();
 };

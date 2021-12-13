@@ -12,7 +12,6 @@
 //
 // http://go.microsoft.com/fwlink/p/?LinkId=271568
 //--------------------------------------------------------------------------------------
-
 #pragma once
 
 #define D3DX11_EFFECTS_VERSION 1118

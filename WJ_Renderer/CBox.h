@@ -22,9 +22,9 @@ private:
 	// 폰트때문에 뎁스스탠실 스테이트가 강제가 됐다.
 	ID3D11DepthStencilState* NormalDSS;
 
-	DirectX::SimpleMath::Matrix mWorld;	// Transform Matrix
-	DirectX::SimpleMath::Matrix mView;
-	DirectX::SimpleMath::Matrix mProj;
+	DirectX::SimpleMath::Matrix m_World;	// Transform Matrix
+	DirectX::SimpleMath::Matrix m_View;
+	DirectX::SimpleMath::Matrix m_Proj;
 
 	// Buffer 관련
 	UINT Vertex_Buffer_Stride = 0;

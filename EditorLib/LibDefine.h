@@ -48,4 +48,14 @@
 #endif
 #endif
 
+#ifdef DEBUG
+#pragma comment(lib,"../Library/lib/EaterEngine_x64d.lib")
+#pragma comment(lib,"../Library/lib/Physics.lib")
+#else
+#pragma comment(lib,"../Library/lib/EaterEngine_x64r.lib")
+#pragma comment(lib,"../Library/lib/Physics.lib")
+
+#endif // DEBUG
+
+
 

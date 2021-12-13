@@ -14,7 +14,7 @@
 #include <DirectXMath.h>
 #include <DirectXPackedVector.h>
 #include <string>
-#include "d3dx11Effect.h"	// effect, tech
+#include "../Physics/d3dx11Effect.h"	// effect, tech
 #include "LightHelper.h"
 
 #pragma region Effect
