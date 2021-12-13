@@ -99,8 +99,8 @@ void GameEngine::Update()
 	mTimeManager->Update();
 	mKeyManager->Update();
 	mSceneManager->Update();
-	mObjectManager->PlayUpdate();
 	mDebugManager->Update();
+	mObjectManager->PlayUpdate();
 	mPhysManager->Update(mTimeManager->DeltaTime());
 	
 

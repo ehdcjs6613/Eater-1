@@ -26,6 +26,7 @@ void intro::Awake()
 	LoadMesh("Pistol", true, false);
 	LoadMesh("Weapon", true, false);
 	LoadMesh("box", true, false);
+	LoadMesh("Sphere", true, false);
 
 	LoadTexture("Player.dds");
 	LoadTexture("Dump.png");
@@ -48,33 +49,31 @@ void intro::Awake()
 	//testobj->AddComponent<Player>();
 
 	/// ¹Ù´Ú
-
-	for (int j = -5; j < 5; j++)
+	for (int i = 0; i < 10; i++)
 	{
-		for (int i = -5; i < 5; i++)
-		{
-			testobj = Instance("Field");
-			testobj->AddComponent<MeshFilter>()->SetMeshName("box");
-			testobj->AddComponent<Rigidbody>();
-			Transform* tr = testobj->GetComponent<Transform>();
-			tr->Scale = { 0.1f,0.1f ,0.1f };
-			tr->Position = { (float)i,(float)10 + j,(float)0 };
-		}
-	}
+		testobj = Instance("Field");
+		testobj->AddComponent<MeshFilter>()->SetMeshName("Sphere");
+		Rigidbody* rig = testobj->AddComponent<Rigidbody>();
+		Transform* tr = testobj->GetComponent<Transform>();
 
+		rig->SetShapeType(Rigidbody::SPHERE);
+		rig->SetGrvity(true);
+		tr->Scale = { 0.1f,0.1f ,0.1f };
+		tr->Position = { (float)0,(float)10 + i,(float)0 };
+	}
 
 	testobj = Instance("Field");
 	testobj->AddComponent<MeshFilter>()->SetMeshName("box");
-	testobj->AddComponent<Rigidbody>()->SetType(Rigidbody::STATIC);
+	Rigidbody* rig = testobj->AddComponent<Rigidbody>();
 	Transform* tr = testobj->GetComponent<Transform>();
-	tr->Scale = { 1.0f,1.0f ,1.0f };
-	tr->Position = { 0,0,0};
 	
-	
+	rig->SetShapeType(Rigidbody::BOX);
+	rig->SetType(false);
 
-	//testobj = Instance("Table");
-	//testobj->AddComponent<MeshFilter>()->SetMeshName("Table");
-	//testobj->GetComponent<Transform>()->Scale = { 0.1f, 0.1f, 0.1f };
+	
+	tr->Scale		= { 1.0f,1.0f ,1.0f };
+	tr->Position	= { 0,0,0};
+	tr->Rotation	= { 25,0,0 };
 }
 
 void intro::Start()
