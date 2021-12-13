@@ -1,9 +1,10 @@
 #pragma once
 
- enum class COLLIDER_TYPE
+ enum class SHAPE_TYPE
 {
 	BOX,
 	SPHERE,
+	CAPSULE,
 };
 
  enum class ACTOR_TYPE
@@ -16,52 +17,98 @@
 
 struct Vec
 {
-	float x;
-	float y;
-	float z;
-	float w = 0; //회전값 있을때만
+	float x = 0.0f;
+	float y = 0.0f;
+	float z = 0.0f;
+	float w = 0.0f;; //회전값 있을때만
 };
 
-///하나의 강체를 만드는 구조체 무슨내용인지 보고싶으면 아래쪽에 설명 
+///하나의 강체를 만드는 구조체 무슨내용인지 보고싶으면 아래쪽에 설명
+///사용하지 않는 값은 그냥 디폴트값으로 놔두면된다
 struct PhysData
 {
-	// 위치
-	Vec WorldPosition = { 0,0,0 };
-	Vec LocalPosition = { 0,0,0 };
-
-	// 크기
-	Vec Scale = {0.5f,0.5f, 0.5f};
-
+public:
+	///위치 데이터
+	//월드 위치
+	Vec WorldPosition	= { 0.0f,0.0f,0.0f,0.0f };
+	//로컬 위치 (계층 구조일때)
+	Vec LocalPosition	= { 0.0f,0.0f,0.0f,0.0f };
 	//회전
-	Vec Rotation = { 0,0,0,0 };
-	
+	Vec Rotation		= { 1.0f,1.0f,1.0f,1.0f };
+	//어떠한 축 이동을 고정 시킬때 사용 
+	Vec FreezePositon	= { 0.0f,0.0f,0.0f,0.0f };
+	//어떠한 축 회전을 고정 시킬때 사용
+	Vec FreezeRotaticon = { 0.0f,0.0f,0.0f,0.0f };
+	//이객체의 이동값을 넣어준다
+	Vec Velocity		= { 0.0f,0.0f,0.0f,0.0f };
+	//이객체의 무게 중심점
+	Vec CenterPoint		= { 0.0f,0.0f,0.0f,0.0f };
+public:
+	///재질(메테리얼) 데이터
+	//정지 마찰력
+	float MT_StaticFriction = 0.5f;
+	//운동 마찰력
+	float MT_DynamicFriction = 0.5f;
+	//복원력
+	float MT_Restitution = 0.6f;
+	//무게
+	float MT_Mass = 1.0f;				
+public:
+	///객체 정보 데이터
+	//움직이는 객체인지 (Dinamic , Static)
+	bool isDinamic		= true;
+	//중력 작용 여부
+	bool isGrvity		= true;
+	//움직이진 않는데 충돌 할것인지
+	bool isKinematic	= false;
+public:
+	///콜라이더 데이터
+	//콜라이더의 사이즈
+	Vec Shape_Size = { 0.5f,0.5f, 0.5f,0.0f };
 
-	//강체의 재질(메테리얼) 데이터
-	float MT_StaticFriction		= 0.5f;	//정지 마찰력
-	float MT_DynamicFriction	= 0.5f;	//운동 마찰력
-	float MT_Restitution		= 0.6f;	//복원력
-	float MT_Mass				= 1;	//무게
-
-
-	void Collider_length(COLLIDER_TYPE _type, float x, float y, float z)
+	//콜라이더 만들때 이걸로 만들면 편함
+	void CreateBoxCollider(float x,float y,float z)
 	{
-		Collider_type = _type;
-		Col.x = x;
-		Col.y = y;
-		Col.z = z;
+		Shape_Size = { x,y,z };
+		Shape_type = SHAPE_TYPE::BOX;
 	}
-	void Collider_length(COLLIDER_TYPE _type, float length = 0.5f)
+	//반지름
+	void CreateBoxCollider(float Radius)
 	{
-		Collider_type = _type;
-		Col.x = length;
-		Col.y = length;
-		Col.z = length;
+		Shape_Size = { Radius,Radius,Radius,Radius };
+		Shape_type = SHAPE_TYPE::BOX;
 	}
-	
-	Vec Col;
-	COLLIDER_TYPE	Collider_type;
-	ACTOR_TYPE		Actor_TYPE;
+
+	//반지름
+	void CreateSphereCollider(float Radius)
+	{
+		Shape_Size = { Radius,0.0f,0.0f,0.0f};
+		Shape_type = SHAPE_TYPE::SPHERE;
+	}
+
+	//반지름,높이
+	void CreateCapsuleCollider(float Radius,float Height)
+	{
+		Shape_Size = { Radius,Height,0.0f,0.0f };
+		Shape_type = SHAPE_TYPE::CAPSULE;
+	}
+
+	//콜라이더의 타입
+	SHAPE_TYPE	Shape_type = SHAPE_TYPE::BOX;
+
+	//이데이터와 PhysX안에 Actor는 서로 알고있도록하기위해
+	void* ActorObj;
 };
+
+//Phys 공간의 월드 데이터
+struct PhysSceneData
+{
+	
+
+};
+
+
+
 
 /*
 *
