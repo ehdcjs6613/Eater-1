@@ -5,7 +5,6 @@
 #include "SkinningFilter.h"
 #include "AnimationController.h"
 #include "Transform.h"
-#include "Rigidbody.h"
 #include "AI.h"
 #include "Player.h"
 #include "KeyInput.h"
@@ -18,15 +17,14 @@ void intro::Awake()
 	LoadMeshPath("../Resources/Mesh/");
 	LoadTexturePath("../Resources/Texture/");
 
-	//LoadMesh("Table");
+	LoadMesh("Table");
 	LoadMesh("Field");
+	LoadMesh("CHARACTER_idle", true, false);
 	LoadMesh("Player_Run", false, false);
 	LoadMesh("Player_Roll", false, true);
 	LoadMesh("Player_Idle", false, true);
 	LoadMesh("Pistol", true, false);
 	LoadMesh("Weapon", true, false);
-	LoadMesh("box", true, false);
-	LoadMesh("Sphere", true, false);
 
 	LoadTexture("Player.dds");
 	LoadTexture("Dump.png");
@@ -43,47 +41,46 @@ void intro::Awake()
 	testobj->AddComponent<DirectionLight>();
 
 	///캐릭터
-	//testobj = Instance("Player");
-	//testobj->AddComponent<AnimationController>();
-	//testobj->AddComponent<MeshFilter>();
-	//testobj->AddComponent<Player>();
+	testobj = Instance("CHARACTER");
+	testobj->AddComponent<AnimationController>();
+	testobj->AddComponent<MeshFilter>();
+	testobj->GetComponent<MeshFilter>()->SetMeshName("CHARACTER");
+	testobj->GetComponent<MeshFilter>()->SetAnimationName("CHARACTER");
+	testobj->GetComponent<AnimationController>()->Choice("idle");
+	testobj->GetTransform()->Scale = { 0.2f, 0.2f, 0.2f };
+	testobj->GetTransform()->Position = { 100.0f, 0.0f, 0.0f };
+
+	///캐릭터
+	testobj = Instance("Player");
+	testobj->AddComponent<AnimationController>();
+	testobj->AddComponent<MeshFilter>();
+	testobj->AddComponent<Player>();
 
 	/// 바닥
-	for (int i = 0; i < 10; i++)
-	{
-		testobj = Instance("Field");
-		testobj->AddComponent<MeshFilter>()->SetMeshName("Sphere");
-		Rigidbody* rig = testobj->AddComponent<Rigidbody>();
-		Transform* tr = testobj->GetComponent<Transform>();
-
-		rig->SetShapeType(Rigidbody::SPHERE);
-		rig->SetGrvity(true);
-		tr->Scale = { 0.1f,0.1f ,0.1f };
-		tr->Position = { (float)0,(float)10 + i,(float)0 };
-	}
-
 	testobj = Instance("Field");
-	testobj->AddComponent<MeshFilter>()->SetMeshName("box");
-	Rigidbody* rig = testobj->AddComponent<Rigidbody>();
-	Transform* tr = testobj->GetComponent<Transform>();
-	
-	rig->SetShapeType(Rigidbody::BOX);
-	rig->SetType(false);
+	testobj->AddComponent<MeshFilter>()->SetMeshName("Field");
+	testobj->GetComponent<Transform>()->Scale = { 0.5f, 0.5f, 0.5f };
 
-	
-	tr->Scale		= { 1.0f,1.0f ,1.0f };
-	tr->Position	= { 0,0,0};
-	tr->Rotation	= { 25,0,0 };
+	testobj = Instance("Field1");
+	testobj->AddComponent<MeshFilter>()->SetMeshName("Field");
+	testobj->GetComponent<Transform>()->Rotation = { 90.0f, 0.0f, 0.0f };
+	testobj->GetComponent<Transform>()->Scale = { 0.5f, 0.5f, 0.5f };
+	testobj->GetComponent<Transform>()->Position = { 0.0f, 2.5f, 2.5f };
+
+	testobj = Instance("Table");
+	testobj->AddComponent<MeshFilter>()->SetMeshName("Table");
+	testobj->GetComponent<Transform>()->Scale = { 0.1f, 0.1f, 0.1f };
+	testobj->GetTransform()->Position = { -5.0f, 0.0f, -5.0f };
 }
 
 void intro::Start()
 {
-	
+
 }
 
 void intro::Update()
 {
-	
+
 }
 
 void intro::End()
