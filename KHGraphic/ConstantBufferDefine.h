@@ -25,6 +25,7 @@ CONSTANT_BUFFER(cbMeshObject)
 struct CB_MeshObject : public cbMeshObject
 {
 	DirectX::SimpleMath::Matrix gWorld;
+	DirectX::SimpleMath::Matrix gWorldView;
 	DirectX::SimpleMath::Matrix gWorldViewProj;
 	DirectX::SimpleMath::Matrix gTexTransform;
 	DirectX::SimpleMath::Matrix gShadowTransform;
@@ -40,6 +41,7 @@ CONSTANT_BUFFER(cbSkinObject)
 struct CB_SkinObject : public cbSkinObject
 {
 	DirectX::SimpleMath::Matrix gWorld;
+	DirectX::SimpleMath::Matrix gWorldView;
 	DirectX::SimpleMath::Matrix gWorldViewProj;
 	DirectX::SimpleMath::Matrix gTexTransform;
 	DirectX::SimpleMath::Matrix gShadowTransform;
@@ -56,8 +58,8 @@ struct CB_ShadowSkinObject : public cbShadowSkinObject
 CONSTANT_BUFFER(cbLightSub)
 struct CB_LightSub : public cbLightSub
 {
-	DirectX::SimpleMath::Vector3 gEyePosW;
 	DirectX::SimpleMath::Matrix gViewProjTex;
+	DirectX::SimpleMath::Vector3 gEyePosW;
 };
 
 CONSTANT_BUFFER(cbLight)
@@ -84,50 +86,36 @@ struct CB_Material : public cbMaterial
 /////////////////////////////////////////////////////////////////////////////////////////////
 //// SSAO Constant Buffer
 /////////////////////////////////////////////////////////////////////////////////////////////
-//
-//CONSTANT_BUFFER(cbTexel)
-//{
-//	float gTexelSize;
-//};
-//
-//CONSTANT_BUFFER(cbSsaoFrame)
-//{
-//	DirectX::SimpleMath::Matrix  gViewToTexSpace;
-//	DirectX::SimpleMath::Vector4 gOffsetVectors[14];
-//	DirectX::SimpleMath::Vector4 gFrustumCorners[4];
-//
-//	float    gOcclusionRadius = 0.5f;
-//	float    gOcclusionFadeStart = 0.2f;
-//	float    gOcclusionFadeEnd = 2.0f;
-//	float    gSurfaceEpsilon = 0.05f;
-//};
-//
-/////////////////////////////////////////////////////////////////////////////////////////////
-//// Full Screen Constant Buffer
-/////////////////////////////////////////////////////////////////////////////////////////////
-//
-//CONSTANT_BUFFER(cbFullScreen)
-//{
-//	DirectX::SimpleMath::Matrix gNowViewProj;
-//	DirectX::SimpleMath::Matrix gPrevViewProj;
-//	float gDeltaTime;
-//};
-//
-/////////////////////////////////////////////////////////////////////////////////////////////
-//// UI Constant Buffer
-/////////////////////////////////////////////////////////////////////////////////////////////
-//
-//CONSTANT_BUFFER(cbPerUI)
-//{
-//	DirectX::SimpleMath::Matrix gWorldViewProj;
-//};
-//
-//CONSTANT_BUFFER(cbAlpha)
-//{
-//	float alpha = 0.0f;
-//};
 
+CONSTANT_BUFFER(cbBlurOption)
+struct CB_BlurOption : public cbBlurOption
+{
+	DirectX::SimpleMath::Vector2 gTexelSize;
+	bool gHorizon;
+};
 
+CONSTANT_BUFFER(cbSsaoObject)
+struct CB_SsaoObject : public cbSsaoObject
+{
+	DirectX::SimpleMath::Matrix  gViewToTexSpace;
+};
+
+CONSTANT_BUFFER(cbSsaoFrustum)
+struct CB_SsaoFrustum : public cbSsaoFrustum
+{
+	DirectX::SimpleMath::Vector4 gFrustumCorners[4];
+};
+
+CONSTANT_BUFFER(cbSsaoOption)
+struct CB_SsaoOption : public cbSsaoOption
+{
+	DirectX::SimpleMath::Vector4 gOffsetVectors[14];
+
+	float    gOcclusionRadius = 0.1f;
+	float    gOcclusionFadeStart = 0.01f;
+	float    gOcclusionFadeEnd = 1.0f;
+	float    gSurfaceEpsilon = 0.1f;
+};
 
 /// Resource Hash 재등록 방지 Define
 RESOURCE_DEFINE(DEFINE_CB)

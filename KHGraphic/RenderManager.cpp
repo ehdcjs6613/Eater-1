@@ -1,6 +1,7 @@
 #include "DirectDefine.h"
 #include "D3D11GraphicBase.h"
 #include "GraphicState.h"
+#include "GraphicView.h"
 #include "BufferData.h"
 #include "Texture2D.h"
 #include "DepthStencil.h"
@@ -16,10 +17,12 @@
 #include "ComputeShader.h"
 
 #include "MathDefine.h"
+#include "ConstantBufferDefine.h"
+
 #include "ShadowPass.h"
 #include "DeferredPass.h"
 #include "LightPass.h"
-//#include "SSAOPass.h"
+#include "SSAOPass.h"
 #include "VertexDefine.h"
 
 RenderManager::RenderManager(ID3D11Graphic* graphic, IGraphicResourceFactory* factory, IGraphicResourceManager* resource, IShaderManager* shader)
@@ -32,12 +35,12 @@ RenderManager::RenderManager(ID3D11Graphic* graphic, IGraphicResourceFactory* fa
 	m_Deferred = new DeferredPass();
 	m_Light = new LightPass();
 	m_Shadow = new ShadowPass();
-	//m_SSAO = new SSAOPass();
+	m_SSAO = new SSAOPass();
 
 	m_RenderPassList.push_back(m_Deferred);
 	m_RenderPassList.push_back(m_Light);
 	m_RenderPassList.push_back(m_Shadow);
-	//m_RenderPassList.push_back(m_SSAO);
+	m_RenderPassList.push_back(m_SSAO);
 }
 
 RenderManager::~RenderManager()
@@ -56,7 +59,7 @@ void RenderManager::Initialize(int width, int height)
 	// Render Pass Resource Set..
 	for (RenderPassBase* renderPass : m_RenderPassList)
 	{
-		renderPass->Start();
+		renderPass->Start(width, height);
 	}
 }
 
@@ -113,9 +116,12 @@ void RenderManager::ShadowRender(std::queue<MeshData*>* meshList, GlobalData* gl
 	}
 }
 
-void RenderManager::SSAORender()
+void RenderManager::SSAORender(GlobalData* global)
 {
+	m_SSAO->BeginRender();
 
+	m_SSAO->Render(global);
+	m_SSAO->BlurRender(4);
 }
 
 void RenderManager::UIRender(std::queue<MeshData*>* meshList, GlobalData* global)

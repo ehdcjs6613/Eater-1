@@ -21,10 +21,10 @@ void GraphicEngineManager::Initialize(HWND Hwnd, int WinSizeWidth, int WinSizeHe
 	ObjManager = GM;
 
 	// Graphic Engine Create..
-	//GEngine = GraphicEngine::Create();
+	GEngine = GraphicEngine::Create();
 
 	/// 인터페이스 채워서 쓰면 됨
-	GEngine = GraphicEngine::CreateHS();
+	//GEngine = GraphicEngine::CreateHS();
 
 	// Graphic Engine Initialize..
 	GEngine->Initialize(Hwnd, WinSizeWidth, WinSizeHeight);
@@ -48,12 +48,10 @@ void GraphicEngineManager::ShadowRender(std::queue<MeshData*>* meshList, GlobalD
 	GEngine->ShadowRender(ObjManager->GetRenderQueue(), global);
 }
 
-void GraphicEngineManager::SSAORender(std::queue<MeshData*>* meshList, GlobalData* global)
+void GraphicEngineManager::SSAORender(GlobalData* global)
 {
-	//if (NowEngine != nullptr)
-	//{
-	//	NowEngine->SSAORender();
-	//}
+	//해당 엔진을 랜더링
+	GEngine->SSAORender(global);
 }
 
 void GraphicEngineManager::UIRender(std::queue<MeshData*>* meshList, GlobalData* global)

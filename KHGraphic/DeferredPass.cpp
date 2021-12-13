@@ -4,6 +4,7 @@
 #include "VertexShader.h"
 #include "PixelShader.h"
 #include "GraphicState.h"
+#include "GraphicView.h"
 #include "Texture2D.h"
 #include "DepthStencil.h"
 #include "RenderTarget.h"
@@ -39,9 +40,7 @@ DeferredPass::~DeferredPass()
 
 void DeferredPass::Create(int width, int height)
 {
-	///////////////////////////////////////////////////////////////////////////
 	// Texture 2D
-	///////////////////////////////////////////////////////////////////////////
 	D3D11_TEXTURE2D_DESC texDescDiffuse;
 	ZeroMemory(&texDescDiffuse, sizeof(texDescDiffuse));
 	texDescDiffuse.Width = width;
@@ -70,9 +69,7 @@ void DeferredPass::Create(int width, int height)
 	texDescPosNormal.CPUAccessFlags = 0;
 	texDescPosNormal.MiscFlags = 0;
 
-	///////////////////////////////////////////////////////////////////////////
 	// RenderTargetView 2D
-	///////////////////////////////////////////////////////////////////////////
 	D3D11_RENDER_TARGET_VIEW_DESC rtvDescDiffuse;
 	ZeroMemory(&rtvDescDiffuse, sizeof(rtvDescDiffuse));
 	rtvDescDiffuse.Format = texDescDiffuse.Format;
@@ -85,9 +82,7 @@ void DeferredPass::Create(int width, int height)
 	rtvDescPosNormal.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
 	rtvDescPosNormal.Texture2D.MipSlice = 0;
 
-	///////////////////////////////////////////////////////////////////////////
 	// ShaderResourceView 2D
-	///////////////////////////////////////////////////////////////////////////
 	D3D11_SHADER_RESOURCE_VIEW_DESC srvDescDiffuse;
 	ZeroMemory(&srvDescDiffuse, sizeof(srvDescDiffuse));
 	srvDescDiffuse.Format = texDescDiffuse.Format;
@@ -103,14 +98,14 @@ void DeferredPass::Create(int width, int height)
 	srvDescPosNormal.Texture2D.MipLevels = 1;
 
 	// RenderTarget 생성..
-	g_Factory->CreateRenderTarget<RT_Deffered_Albedo>(&texDescDiffuse, &rtvDescDiffuse, &srvDescDiffuse);
-	g_Factory->CreateRenderTarget<RT_Deffered_Normal>(&texDescPosNormal, &rtvDescPosNormal, &srvDescPosNormal);
-	g_Factory->CreateRenderTarget<RT_Deffered_Position>(&texDescPosNormal, &rtvDescPosNormal, &srvDescPosNormal);
-	g_Factory->CreateRenderTarget<RT_Deffered_Shadow>(&texDescPosNormal, &rtvDescPosNormal, &srvDescPosNormal);
-	g_Factory->CreateRenderTarget<RT_Deffered_Depth>(&texDescPosNormal, &rtvDescPosNormal, &srvDescPosNormal);
+	g_Factory->CreateRenderTarget<RT_Deffered_Albedo>(&texDescDiffuse, nullptr, &rtvDescDiffuse, &srvDescDiffuse);
+	g_Factory->CreateRenderTarget<RT_Deffered_Normal>(&texDescPosNormal, nullptr, &rtvDescPosNormal, &srvDescPosNormal);
+	g_Factory->CreateRenderTarget<RT_Deffered_Position>(&texDescPosNormal, nullptr, &rtvDescPosNormal, &srvDescPosNormal);
+	g_Factory->CreateRenderTarget<RT_Deffered_Shadow>(&texDescPosNormal, nullptr, &rtvDescPosNormal, &srvDescPosNormal);
+	g_Factory->CreateRenderTarget<RT_Deffered_Depth>(&texDescPosNormal, nullptr, &rtvDescPosNormal, &srvDescPosNormal);
 }
 
-void DeferredPass::Start()
+void DeferredPass::Start(int width, int height)
 {
 	// Shader 설정..
 	m_MeshVS = g_Shader->GetShader("MeshVS");
@@ -118,7 +113,7 @@ void DeferredPass::Start()
 	m_DeferredPS = g_Shader->GetShader("DeferredPS");
 
 	// DepthStencilView 설정..
-	m_DepthStencilView = g_Resource->GetDepthStencil<DS_Defalt>()->GetDSV();
+	m_DepthStencilView = g_Resource->GetDepthStencil<DS_Defalt>()->GetDSV()->Get();
 
 	// Graphic State 설정..
 	m_DepthStencilState = g_Resource->GetDepthStencilState<DSS_Defalt>()->Get();
@@ -137,39 +132,39 @@ void DeferredPass::Start()
 
 	// RenderTargetView 설정..
 	m_RTVList.resize(5);
-	m_RTVList[0] = m_AlbedoRT->GetRTV();
-	m_RTVList[1] = m_NormalRT->GetRTV();
-	m_RTVList[2] = m_PositionRT->GetRTV();
-	m_RTVList[3] = m_ShadowRT->GetRTV();
-	m_RTVList[4] = m_DepthRT->GetRTV();
+	m_RTVList[0] = m_AlbedoRT->GetRTV()->Get();
+	m_RTVList[1] = m_NormalRT->GetRTV()->Get();
+	m_RTVList[2] = m_PositionRT->GetRTV()->Get();
+	m_RTVList[3] = m_ShadowRT->GetRTV()->Get();
+	m_RTVList[4] = m_DepthRT->GetRTV()->Get();
 
 	// ShaderResourceView 설정..
 	m_SRVList.resize(5);
-	m_SRVList[0] = m_AlbedoRT->GetSRV();
-	m_SRVList[1] = m_NormalRT->GetSRV();
-	m_SRVList[2] = m_PositionRT->GetSRV();
-	m_SRVList[3] = m_ShadowRT->GetSRV();
-	m_SRVList[4] = m_DepthRT->GetSRV();
+	m_SRVList[0] = m_AlbedoRT->GetSRV()->Get();
+	m_SRVList[1] = m_NormalRT->GetSRV()->Get();
+	m_SRVList[2] = m_PositionRT->GetSRV()->Get();
+	m_SRVList[3] = m_ShadowRT->GetSRV()->Get();
+	m_SRVList[4] = m_DepthRT->GetSRV()->Get();
 }
 
 void DeferredPass::OnResize(int width, int height)
 {
 	// DepthStencilView 재설정..
-	m_DepthStencilView = g_Resource->GetDepthStencil<DS_Defalt>()->GetDSV();
+	m_DepthStencilView = g_Resource->GetDepthStencil<DS_Defalt>()->GetDSV()->Get();
 	
 	// ShaderResourceView List 재설정..
-	m_SRVList[0] = m_AlbedoRT->GetSRV();
-	m_SRVList[1] = m_NormalRT->GetSRV();
-	m_SRVList[2] = m_PositionRT->GetSRV();
-	m_SRVList[3] = m_ShadowRT->GetSRV();
-	m_SRVList[4] = m_DepthRT->GetSRV();
+	m_SRVList[0] = m_AlbedoRT->GetSRV()->Get();
+	m_SRVList[1] = m_NormalRT->GetSRV()->Get();
+	m_SRVList[2] = m_PositionRT->GetSRV()->Get();
+	m_SRVList[3] = m_ShadowRT->GetSRV()->Get();
+	m_SRVList[4] = m_DepthRT->GetSRV()->Get();
 	
 	// RenderTargetView List 재설정..
-	m_RTVList[0] = m_AlbedoRT->GetRTV();
-	m_RTVList[1] = m_NormalRT->GetRTV();
-	m_RTVList[2] = m_PositionRT->GetRTV();
-	m_RTVList[3] = m_ShadowRT->GetRTV();
-	m_RTVList[4] = m_DepthRT->GetRTV();
+	m_RTVList[0] = m_AlbedoRT->GetRTV()->Get();
+	m_RTVList[1] = m_NormalRT->GetRTV()->Get();
+	m_RTVList[2] = m_PositionRT->GetRTV()->Get();
+	m_RTVList[3] = m_ShadowRT->GetRTV()->Get();
+	m_RTVList[4] = m_DepthRT->GetRTV()->Get();
 }
 
 void DeferredPass::Release()
@@ -198,10 +193,9 @@ void DeferredPass::BeginRender()
 void DeferredPass::Update(MeshData* mesh, GlobalData* global)
 {
 	Matrix world = mesh->mWorld;
-	Matrix view = *global->mViewMX;
-	Matrix proj = *global->mProj;
-	Matrix shadowTrans = *global->mShadowTrans;
-	Vector3 eye(view._41, view._42, view._43);
+	Matrix view = *global->mCamView;
+	Matrix proj = *global->mCamProj;
+	Matrix shadowTrans = *global->mLightVPT;
 
 	switch (mesh->ObjType)
 	{
@@ -209,6 +203,7 @@ void DeferredPass::Update(MeshData* mesh, GlobalData* global)
 	{
 		CB_MeshObject objectBuf;
 		objectBuf.gWorld = world;
+		objectBuf.gWorldView = world * view;
 		objectBuf.gWorldViewProj = world * view * proj;
 		objectBuf.gShadowTransform = world * shadowTrans;
 
@@ -222,6 +217,7 @@ void DeferredPass::Update(MeshData* mesh, GlobalData* global)
 	{
 		CB_SkinObject objectBuf;
 		objectBuf.gWorld = world;
+		objectBuf.gWorldView = world * view;
 		objectBuf.gWorldViewProj = world * view * proj;
 		objectBuf.gShadowTransform = world * shadowTrans;
 
