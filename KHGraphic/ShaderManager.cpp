@@ -109,6 +109,12 @@ void ShaderManager::CreateShader()
 	// Shadow Shader
 	LoadShader(eShaderType::VERTEX, "ShadowMeshVS.cso");
 	LoadShader(eShaderType::VERTEX, "ShadowSkinVS.cso");
+
+	// SSAO Shader
+	LoadShader(eShaderType::VERTEX, "SSAOVS.cso");
+	LoadShader(eShaderType::PIXEL, "SSAOPS.cso");
+	LoadShader(eShaderType::VERTEX, "SSAOBlurVS.cso");
+	LoadShader(eShaderType::PIXEL, "SSAOBlurPS.cso");
 }
 
 void ShaderManager::AddSampler(Hash_Code hash_code, ID3D11SamplerState* sampler)

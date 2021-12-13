@@ -102,50 +102,74 @@ void D3D11Graphic::CreateBackBuffer(UINT width, UINT height, ID3D11Texture2D** t
 	HR(m_Device->CreateShaderResourceView(*tex2D, nullptr, srv));
 }
 
-void D3D11Graphic::CreateTexture2D(D3D11_TEXTURE2D_DESC* texDesc, ID3D11Texture2D** tex2D)
+void D3D11Graphic::CreateTexture2D(D3D11_TEXTURE2D_DESC* texDesc, D3D11_SUBRESOURCE_DATA* subData, ID3D11Texture2D** tex2D)
 {
 	if (texDesc == nullptr) return;
-	
+
 	// Texture2D Resource 积己..
-	HR(m_Device->CreateTexture2D(texDesc, 0, tex2D));
+	HR(m_Device->CreateTexture2D(texDesc, subData, tex2D));
 }
 
 void D3D11Graphic::CreateDepthStencilView(ID3D11Texture2D* tex2D, D3D11_DEPTH_STENCIL_VIEW_DESC* dsvDesc, ID3D11DepthStencilView** dsv)
 {
-	if (dsvDesc == nullptr) return;
-	
-	// RenderTargetView Resource 积己..
-	HR(m_Device->CreateDepthStencilView(tex2D, dsvDesc, dsv));
+	// Texture2D Description 眠免..
+	D3D11_TEXTURE2D_DESC texDesc;
+	tex2D->GetDesc(&texDesc);
+
+	// BindFlag Check..
+	if (texDesc.BindFlags & D3D11_BIND_DEPTH_STENCIL)
+	{
+		// RenderTargetView Resource 积己..
+		HR(m_Device->CreateDepthStencilView(tex2D, dsvDesc, dsv));
+	}
 }
 
 void D3D11Graphic::CreateRenderTargetView(ID3D11Texture2D* tex2D, D3D11_RENDER_TARGET_VIEW_DESC* rtvDesc, ID3D11RenderTargetView** rtv)
 {
-	if (rtvDesc == nullptr) return;
+	// Texture2D Description 眠免..
+	D3D11_TEXTURE2D_DESC texDesc;
+	tex2D->GetDesc(&texDesc);
 
-	// RenderTargetView Resource 积己..
-	HR(m_Device->CreateRenderTargetView(tex2D, rtvDesc, rtv));
+	// BindFlag Check..
+	if (texDesc.BindFlags & D3D11_BIND_RENDER_TARGET)
+	{
+		// RenderTargetView Resource 积己..
+		HR(m_Device->CreateRenderTargetView(tex2D, rtvDesc, rtv));
+	}
 }
 
 void D3D11Graphic::CreateShaderResourceView(ID3D11Texture2D* tex2D, D3D11_SHADER_RESOURCE_VIEW_DESC* srvDesc, ID3D11ShaderResourceView** srv)
 {
-	if (srvDesc == nullptr) return;
+	// Texture2D Description 眠免..
+	D3D11_TEXTURE2D_DESC texDesc;
+	tex2D->GetDesc(&texDesc);
 
-	// ShaderResourceView Resource 积己..
-	HR(m_Device->CreateShaderResourceView(tex2D, srvDesc, srv));
+	// BindFlag Check..
+	if (texDesc.BindFlags & D3D11_BIND_SHADER_RESOURCE)
+	{
+		// ShaderResourceView Resource 积己..
+		HR(m_Device->CreateShaderResourceView(tex2D, srvDesc, srv));
+	}
 }
 
 void D3D11Graphic::CreateUnorderedAccessView(ID3D11Texture2D* tex2D, D3D11_UNORDERED_ACCESS_VIEW_DESC* uavDesc, ID3D11UnorderedAccessView** uav)
 {
-	if (uavDesc == nullptr) return;
-	
-	// UnorderedAccessView Resource 积己..
-	HR(m_Device->CreateUnorderedAccessView(tex2D, uavDesc, uav));
+	// Texture2D Description 眠免..
+	D3D11_TEXTURE2D_DESC texDesc;
+	tex2D->GetDesc(&texDesc);
+
+	// BindFlag Check..
+	if (texDesc.BindFlags & D3D11_BIND_UNORDERED_ACCESS)
+	{
+		// UnorderedAccessView Resource 积己..
+		HR(m_Device->CreateUnorderedAccessView(tex2D, uavDesc, uav));
+	}
 }
 
 void D3D11Graphic::CreateDepthStencilState(D3D11_DEPTH_STENCIL_DESC* dssDesc, ID3D11DepthStencilState** dss)
 {
 	if (dssDesc == nullptr) return;
-	
+
 	// DepthStencilState Resource 积己..
 	HR(m_Device->CreateDepthStencilState(dssDesc, dss));
 }

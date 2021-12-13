@@ -6,9 +6,8 @@
 
 using namespace DirectX;
 std::vector<Camera*> Camera::CamList;
-Camera* Camera::MainCam = nullptr;
+Camera* Camera::g_MainCam = nullptr;
 
-DirectX::XMMATRIX Camera::mProj_M;
 Camera::Camera()
 {
 	PushCamList();
@@ -16,7 +15,7 @@ Camera::Camera()
 
 Camera::~Camera()
 {
-	if (MainCam == this) { MainCam = nullptr; }
+	if (g_MainCam == this) { g_MainCam = nullptr; }
 
 	CamList[MyIndex] = nullptr;
 }
@@ -39,32 +38,32 @@ DirectX::XMMATRIX* Camera::GetProj()
 	return &mProj_M;
 }
 
-DirectX::XMFLOAT3* Camera::GetMainPos()
-{
-	return MainCam->GetPos();
-}
-
 //DirectX::XMFLOAT3 Camera::GetLocalPos_Up()
 //{
-//	if (MainCam == nullptr) { return; }
-//	return MainCam->gameobject->GetTransform()->GetLocalPosition_UP();
+//	if (g_MainCam == nullptr) { return; }
+//	return g_MainCam->gameobject->GetTransform()->GetLocalPosition_UP();
 //}
 //
 //DirectX::XMFLOAT3 Camera::GetLocalPos_Right()
 //{
-//	if (MainCam == nullptr) { return; }
-//	return MainCam->gameobject->GetTransform()->GetLocalPosition_Right();
+//	if (g_MainCam == nullptr) { return; }
+//	return g_MainCam->gameobject->GetTransform()->GetLocalPosition_Right();
 //}
 //
 //DirectX::XMFLOAT3 Camera::GetLocalPos_Look()
 //{
-//	if (MainCam == nullptr) { return; }
-//	return MainCam->gameobject->GetTransform()->GetLocalPosition_Look();
+//	if (g_MainCam == nullptr) { return; }
+//	return g_MainCam->gameobject->GetTransform()->GetLocalPosition_Look();
 //}
 
 DirectX::XMFLOAT3* Camera::GetPos()
 {
 	return &tranform->Position;
+}
+
+DirectX::XMMATRIX* Camera::GetViewTex()
+{
+	return &mViewTex_M;
 }
 
 void Camera::SetSize(int Change_Width, int Change_Height)
@@ -74,7 +73,7 @@ void Camera::SetSize(int Change_Width, int Change_Height)
 
 void Camera::ChoiceMainCam()
 {
-	MainCam = this;
+	g_MainCam = this;
 }
 
 DirectX::XMMATRIX* Camera::GetView()
@@ -82,25 +81,25 @@ DirectX::XMMATRIX* Camera::GetView()
 	return &mView_M;
 }
 
-DirectX::XMMATRIX* Camera::GetMainView()
-{
-	return MainCam->GetView();
-}
-
 void Camera::CreateProj(int winsizeX, int WinSizeY, bool ViewPoint)
 {
 	///모르면 MSDN 참고 
 	///XMMatrixPerspectiveFovLH 함수 검색하면됨
+	
+	static XMMATRIX gTexSpace = XMMATRIX(
+		0.5f, 0.0f, 0.0f, 0.0f,
+		0.0f, -0.5f, 0.0f, 0.0f,
+		0.0f, 0.0f, 1.0f, 0.0f,
+		0.5f, 0.5f, 0.0f, 1.0f);
 
 	//시야각
-	float mFovY	= 0.25f * 3.141592f;
+	float mFovY	= 0.25f * 3.1415926535f;
 	//뷰 공간 X:Y 가로세로비율
 	float mAspect = (float)winsizeX / (float)WinSizeY;
 	//근접평면 까지의 거리 0보다 커야됨
 	float mNearZ	= 0.1f;
 	//먼 평면 까지의 거리 0보다 커야됨
 	float mFarZ	= 4000.0f;
-
 
 	float mNearWindowHeight = 2.0f * mNearZ * tanf(0.5f * mFovY);
 	float mFarWindowHeight = 2.0f * mFarZ * tanf(0.5f * mFovY);
@@ -109,11 +108,17 @@ void Camera::CreateProj(int winsizeX, int WinSizeY, bool ViewPoint)
 	{
 		//원근 투영
 		mProj_M = DirectX::XMMatrixPerspectiveFovLH(mFovY, mAspect, mNearZ, mFarZ);
+
+		//View TexSpace
+		mViewTex_M = mProj_M * gTexSpace;
 	}
 	else
 	{
 		//직교 투영
 		mProj_M = DirectX::XMMatrixOrthographicLH(mFovY, mAspect, mNearZ, mFarZ);
+
+		//View TexSpace
+		mViewTex_M = mProj_M * gTexSpace;
 	}
 }
 
@@ -129,6 +134,9 @@ void Camera::CreateView()
 	DirectX::XMVECTOR L = XMLoadFloat3(&l_);
 	DirectX::XMVECTOR P = XMLoadFloat3(&tranform->Position);
 
+	L = XMVector3Normalize(L);
+	U = XMVector3Normalize(XMVector3Cross(L, R));
+	R = XMVector3Cross(U, L);
 
 	float x = DirectX::XMVectorGetX(DirectX::XMVector3Dot(P, R));
 	float y = DirectX::XMVectorGetX(DirectX::XMVector3Dot(P, U));
@@ -146,9 +154,9 @@ void Camera::CreateView()
 void Camera::PushCamList()
 {
 	//만약 메인카메라로 지정한놈이없다면 처음생성한놈이 메인카메라다
-	if (MainCam == nullptr)
+	if (g_MainCam == nullptr)
 	{
-		MainCam = this;
+		g_MainCam = this;
 	}
 
 	//카메라 리스트로 넣느다

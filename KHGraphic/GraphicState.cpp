@@ -1,20 +1,24 @@
 #include "DirectDefine.h"
 #include "GraphicState.h"
 
-DepthStencilState::DepthStencilState(ID3D11DepthStencilState** dss)
-	:ResourceBase(eResourceType::DSS)
+DepthStencilState::DepthStencilState(ID3D11DepthStencilState* dss)
+	:ResourceBase(eResourceType::DSS), m_DSS(dss)
 {
-	if (dss) m_DSS = *dss;
 }
 
 DepthStencilState::~DepthStencilState()
 {
-	Reset();
+	Release();
 }
 
 void DepthStencilState::Reset()
 {
 	RESET_COM(m_DSS);
+}
+
+void DepthStencilState::Release()
+{
+	RELEASE_COM(m_DSS);
 }
 
 ID3D11DepthStencilState* DepthStencilState::Get()
@@ -27,20 +31,24 @@ ID3D11DepthStencilState** DepthStencilState::GetAddress()
 	return m_DSS.GetAddressOf();
 }
 
-RasterizerState::RasterizerState(ID3D11RasterizerState** rs)
-	:ResourceBase(eResourceType::RS)
+RasterizerState::RasterizerState(ID3D11RasterizerState* rs)
+	:ResourceBase(eResourceType::RS), m_RS(rs)
 {
-	if (rs) m_RS = *rs;
 }
 
 RasterizerState::~RasterizerState()
 {
-	Reset();
+	Release();
 }
 
 void RasterizerState::Reset()
 {
 	RESET_COM(m_RS);
+}
+
+void RasterizerState::Release()
+{
+	RELEASE_COM(m_RS);
 }
 
 ID3D11RasterizerState* RasterizerState::Get()
@@ -53,20 +61,24 @@ ID3D11RasterizerState** RasterizerState::GetAddress()
 	return m_RS.GetAddressOf();
 }
 
-BlendState::BlendState(ID3D11BlendState** bs)
-	:ResourceBase(eResourceType::BS)
+BlendState::BlendState(ID3D11BlendState* bs)
+	:ResourceBase(eResourceType::BS), m_BS(bs)
 {
-	if (bs) m_BS = *bs;
 }
 
 BlendState::~BlendState()
 {
-	Reset();
+	Release();
 }
 
 void BlendState::Reset()
 {
 	RESET_COM(m_BS);
+}
+
+void BlendState::Release()
+{
+	RELEASE_COM(m_BS);
 }
 
 ID3D11BlendState* BlendState::Get()
@@ -79,20 +91,24 @@ ID3D11BlendState** BlendState::GetAddress()
 	return m_BS.GetAddressOf();
 }
 
-SamplerState::SamplerState(ID3D11SamplerState** ss)
-	:ResourceBase(eResourceType::SS)
+SamplerState::SamplerState(ID3D11SamplerState* ss)
+	:ResourceBase(eResourceType::SS), m_SS(ss)
 {
-	if (ss) m_SS = *ss;
 }
 
 SamplerState::~SamplerState()
 {
-	Reset();
+	Release();
 }
 
 void SamplerState::Reset()
 {
 	RESET_COM(m_SS);
+}
+
+void SamplerState::Release()
+{
+	RELEASE_COM(m_SS);
 }
 
 ID3D11SamplerState* SamplerState::Get()
@@ -125,10 +141,15 @@ ViewPort::ViewPort(float ratio_offsetX, float ratio_offsetY, float ratio_sizeX, 
 
 ViewPort::~ViewPort()
 {
-	Reset();
+	Release();
 }
 
 void ViewPort::Reset()
+{
+	SAFE_DELETE(m_ViewPort);
+}
+
+void ViewPort::Release()
 {
 	SAFE_DELETE(m_ViewPort);
 }

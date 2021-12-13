@@ -7,11 +7,17 @@ typedef size_t Hash_Code;
 
 class RenderTarget;
 class DepthStencil;
+
+class RenderTargetView;
+class DepthStencilView;
+class ShaderResourceView;
+class UnorderedAccessView;
+
 class DepthStencilState;
 class BlendState;
 class RasterizerState;
-class BufferData;
 class ViewPort;
+class BufferData;
 
 ///
 /// 2021/11/07 23:02
@@ -38,10 +44,23 @@ public:
 	// BackBuffer RenderTarget Add Function
 	virtual void AddMainRenderTarget(RenderTarget* rtv) abstract;
 
+public:
 	// RenderTarget Get Function
 	template<typename T, Enable_Check<T> = NULL> RenderTarget* GetRenderTarget();
-	// DepthStencilView Get Function
+	// DepthStencil Get Function
 	template<typename T, Enable_Check<T> = NULL> DepthStencil* GetDepthStencil();
+
+public:
+	// RenderTargetView Get Function
+	template<typename T, Enable_Check<T> = NULL> RenderTargetView* GetRenderTargetView();
+	// DepthStencilView Get Function
+	template<typename T, Enable_Check<T> = NULL> DepthStencilView* GetDepthStencilView();
+	// ShaderResourceView Get Function
+	template<typename T, Enable_Check<T> = NULL> ShaderResourceView* GetShaderResourceView();
+	// UnorderedAccessView Get Function
+	template<typename T, Enable_Check<T> = NULL> UnorderedAccessView* GetUnorderedAccessView();
+
+public:
 	// DepthStencilState Get Function
 	template<typename T, Enable_Check<T> = NULL> DepthStencilState* GetDepthStencilState();
 	// RasterizerState Get Function
@@ -58,8 +77,16 @@ public:
 	template<typename T, Enable_Check<T> = NULL> void AddResource(ResourceBase* resource);
 
 private:
+	// Graphic View Resource Getter..
 	virtual RenderTarget* GetRenderTarget(Hash_Code hash_code) abstract;
 	virtual DepthStencil* GetDepthStencil(Hash_Code hash_code) abstract;
+	virtual RenderTargetView* GetRenderTargetView(Hash_Code hash_code) abstract;
+	virtual DepthStencilView* GetDepthStencilView(Hash_Code hash_code) abstract;
+	virtual ShaderResourceView* GetShaderResourceView(Hash_Code hash_code) abstract;
+	virtual UnorderedAccessView* GetUnorderedAccessView(Hash_Code hash_code) abstract;
+
+private:
+	// Graphic State Resource Getter..
 	virtual BlendState* GetBlendState(Hash_Code hash_code) abstract;
 	virtual RasterizerState* GetRasterizerState(Hash_Code hash_code) abstract;
 	virtual DepthStencilState* GetDepthStencilState(Hash_Code hash_code) abstract;
@@ -87,6 +114,42 @@ inline DepthStencil* IGraphicResourceManager::GetDepthStencil()
 	assert(T::GetType() == eResourceType::DS);
 	
 	return GetDepthStencil(T::GetHashCode());
+}
+
+template<typename T, Enable_Check<T>>
+inline DepthStencilView* IGraphicResourceManager::GetDepthStencilView()
+{
+	// Template Struct Resource Type Check..
+	assert(T::GetType() == eResourceType::DSV || T::GetType() == eResourceType::DS);
+
+	return GetDepthStencilView(T::GetHashCode());
+}
+
+template<typename T, Enable_Check<T>>
+inline RenderTargetView* IGraphicResourceManager::GetRenderTargetView()
+{
+	// Template Struct Resource Type Check..
+	assert(T::GetType() == eResourceType::RTV || T::GetType() == eResourceType::RT);
+	
+	return GetRenderTargetView(T::GetHashCode());
+}
+
+template<typename T, Enable_Check<T>>
+inline ShaderResourceView* IGraphicResourceManager::GetShaderResourceView()
+{
+	// Template Struct Resource Type Check..
+	assert(T::GetType() == eResourceType::SRV || T::GetType() == eResourceType::RT || T::GetType() == eResourceType::DS);
+
+	return GetShaderResourceView(T::GetHashCode());
+}
+
+template<typename T, Enable_Check<T>>
+inline UnorderedAccessView* IGraphicResourceManager::GetUnorderedAccessView()
+{
+	// Template Struct Resource Type Check..
+	assert(T::GetType() == eResourceType::UAV || T::GetType() == eResourceType::RT);
+
+	return GetUnorderedAccessView(T::GetHashCode());
 }
 
 template<typename T, Enable_Check<T>>
