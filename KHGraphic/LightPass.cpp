@@ -96,7 +96,7 @@ void LightPass::OnResize(int width, int height)
 	ShaderResourceView* ssaoSRV = g_Resource->GetShaderResourceView<RT_SSAO_Main>();
 	ShaderResourceView* shadowSRV = g_Resource->GetShaderResourceView<DS_Shadow>();
 
-	m_LightPS->SetShaderResourceView<gShadowRT>(m_ShadowRT->GetSRV()->Get());
+	m_LightPS->SetShaderResourceView<gShadowMap>(m_ShadowRT->GetSRV()->Get());
 	m_LightPS->SetShaderResourceView<gSsaoMap>(ssaoSRV->Get());
 }
 

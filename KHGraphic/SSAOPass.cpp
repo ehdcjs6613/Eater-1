@@ -138,6 +138,12 @@ void SSAOPass::Release()
 
 }
 
+void SSAOPass::Reset()
+{
+	g_Context->ClearRenderTargetView(m_SsaoRTV, reinterpret_cast<const float*>(&DXColors::White));
+	g_Context->ClearRenderTargetView(m_SsaoBlurRTV, reinterpret_cast<const float*>(&DXColors::White));
+}
+
 void SSAOPass::BeginRender()
 {
 	g_Context->OMSetBlendState(0, 0, 0xffffffff);

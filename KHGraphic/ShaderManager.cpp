@@ -93,28 +93,28 @@ ComputeShader* ShaderManager::GetComputeShader(std::string shaderName)
 void ShaderManager::CreateShader()
 {
 	// Object Shader
-	LoadShader(eShaderType::VERTEX, "MeshVS.cso");
-	LoadShader(eShaderType::VERTEX, "SkinVS.cso");
+	LoadShader(eShaderType::VERTEX, "ObjectVS.hlsl", "MeshVS");
+	LoadShader(eShaderType::VERTEX, "ObjectVS.hlsl", "SkinVS");
 
 	// Forward Shader
-	LoadShader(eShaderType::PIXEL, "ForwardPS.cso");
+	LoadShader(eShaderType::PIXEL, "ForwardPS.hlsl", "ForwardPS");
 
 	// Deffered Shader
-	LoadShader(eShaderType::PIXEL, "DeferredPS.cso");
+	LoadShader(eShaderType::PIXEL, "DeferredPS.hlsl", "DeferredPS");
 
 	// Light Shader
-	LoadShader(eShaderType::VERTEX, "LightVS.cso");
-	LoadShader(eShaderType::PIXEL, "LightPS.cso");
+	LoadShader(eShaderType::VERTEX, "LightVS.hlsl", "LightVS");
+	LoadShader(eShaderType::PIXEL, "LightPS.hlsl", "LightPS");
 
 	// Shadow Shader
-	LoadShader(eShaderType::VERTEX, "ShadowMeshVS.cso");
-	LoadShader(eShaderType::VERTEX, "ShadowSkinVS.cso");
+	LoadShader(eShaderType::VERTEX, "ShadowVS.hlsl", "MeshShadowVS");
+	LoadShader(eShaderType::VERTEX, "ShadowVS.hlsl", "SkinShadowVS");
 
 	// SSAO Shader
-	LoadShader(eShaderType::VERTEX, "SSAOVS.cso");
-	LoadShader(eShaderType::PIXEL, "SSAOPS.cso");
-	LoadShader(eShaderType::VERTEX, "SSAOBlurVS.cso");
-	LoadShader(eShaderType::PIXEL, "SSAOBlurPS.cso");
+	LoadShader(eShaderType::VERTEX, "SSAOVS.hlsl", "SSAOVS");
+	LoadShader(eShaderType::PIXEL, "SSAOPS.hlsl", "SSAOPS");
+	LoadShader(eShaderType::VERTEX, "SSAOBlurVS.hlsl", "SSAOBlurVS");
+	LoadShader(eShaderType::PIXEL, "SSAOBlurPS.hlsl", "SSAOBlurPS");
 }
 
 void ShaderManager::AddSampler(Hash_Code hash_code, ID3D11SamplerState* sampler)
@@ -138,7 +138,7 @@ void ShaderManager::AddSampler(Hash_Code hash_code, ID3D11SamplerState* sampler)
 	}
 }
 
-ShaderBase* ShaderManager::LoadShader(eShaderType shaderType, std::string shaderName)
+ShaderBase* ShaderManager::LoadShader(eShaderType shaderType, std::string shaderName, std::string entry_point, const D3D_SHADER_MACRO* pDefines)
 {
 	// Shader Type에 맞는 Shader 생성..
 	ShaderBase* newShader = nullptr;
@@ -146,13 +146,13 @@ ShaderBase* ShaderManager::LoadShader(eShaderType shaderType, std::string shader
 	switch (shaderType)
 	{
 	case eShaderType::VERTEX:
-		newShader = new VertexShader(shaderName.c_str());
+		newShader = new VertexShader(shaderName.c_str(), entry_point.c_str(), "vs_5_0", pDefines);
 		break;
 	case eShaderType::PIXEL:
-		newShader = new PixelShader(shaderName.c_str());
+		newShader = new PixelShader(shaderName.c_str(), entry_point.c_str(), "ps_5_0", pDefines);
 		break;
 	case eShaderType::COMPUTE:
-		newShader = new ComputeShader(shaderName.c_str());
+		newShader = new ComputeShader(shaderName.c_str(), entry_point.c_str(), "cs_5_0", pDefines);
 		break;
 	default:
 		throw std::exception("ERROR: None Shader Type.\n");
@@ -163,15 +163,15 @@ ShaderBase* ShaderManager::LoadShader(eShaderType shaderType, std::string shader
 	if (newShader == nullptr)
 		return nullptr;
 
-	std::string shaderKey(shaderName);
-	size_t pointPosition = shaderName.rfind(".");
+	//std::string shaderKey(shaderName);
+	//size_t pointPosition = shaderName.rfind(".");
 
 	// Shader File Name 기준 Key 설정..
-	if (pointPosition != std::string::npos)
-		shaderKey = shaderName.substr(0, pointPosition);
+	//if (pointPosition != std::string::npos)
+	//	shaderKey = shaderName.substr(0, pointPosition);
 
 	// 새로 생성한 Shader 삽입..
-	m_ShaderList.insert(std::make_pair(shaderKey, newShader));
+	m_ShaderList.insert(std::make_pair(entry_point, newShader));
 
 	return newShader;
 }

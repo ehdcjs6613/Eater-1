@@ -97,12 +97,13 @@ void RenderManager::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 
 void RenderManager::ShadowRender(std::queue<MeshData*>* meshList, GlobalData* global)
 {
+	m_Shadow->Reset();
 	m_Shadow->BeginRender();
-
+	
 	while (meshList->size() != 0)
 	{
 		MeshData* mesh = meshList->front();
-
+	
 		switch (mesh->ObjType)
 		{
 		case OBJECT_TYPE::BASE:
@@ -111,13 +112,15 @@ void RenderManager::ShadowRender(std::queue<MeshData*>* meshList, GlobalData* gl
 			m_Shadow->Render(mesh);
 			break;
 		}
-
+	
 		meshList->pop();
 	}
 }
 
 void RenderManager::SSAORender(GlobalData* global)
 {
+	m_SSAO->Reset();
+
 	m_SSAO->BeginRender();
 
 	m_SSAO->Render(global);

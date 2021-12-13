@@ -2,8 +2,9 @@
 
 cbuffer cbLightSub : register(b0)
 {
-    float4x4 gViewProjTex;
-    float3 gEyePosW;
+    float4x4 gViewProjTex : packoffset(c0);
+    float3 gEyePosW : packoffset(c4.x);
+    uint gInt : packoffset(c4.w);
 }
 
 cbuffer cbLight : register(b1)
@@ -34,7 +35,7 @@ struct VertexIn
 	float2 Tex     : TEXCOORD;
 };
 
-float4 main(VertexIn pin) : SV_TARGET
+float4 LightPS(VertexIn pin) : SV_TARGET
 {
     float4 albedo = gAlbedoRT.Sample(gSamWrapLinear, pin.Tex);
     float4 normal = gNormalRT.Sample(gSamWrapLinear, pin.Tex);
@@ -59,7 +60,6 @@ float4 main(VertexIn pin) : SV_TARGET
 	ViewDirection = normalize(ViewDirection);
 
 	// 현재 픽셀의 Shadow 값..
-    
     float shadows = CalcShadowFactor(gSamBorderComparisonLinearPoint, gShadowMap, float3(shadow.xyz));
 	
 	// 현재 픽셀의 SSAO 값..

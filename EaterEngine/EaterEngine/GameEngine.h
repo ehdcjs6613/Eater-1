@@ -70,7 +70,7 @@ public:
 
 private:
 	void CreateObject();			//기본 생성 오브젝트
-
+	void RenderOption();
 private:
 	///각종 매니저들
 	ObjectManager*			mObjectManager;		// 오브젝트 관리 매니저
