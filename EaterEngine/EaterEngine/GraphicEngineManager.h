@@ -32,6 +32,7 @@ public:
 	void Initialize(HWND Hwnd, int WinSizeWidth, int WinSizeHeight,ObjectManager* GM);
 
 	//선택한 그래픽엔진 랜더링
+	void BeginRender(UINT& renderOption);
 	void Render(std::queue<MeshData*>* meshList, GlobalData* global);
 	void ShadowRender(std::queue<MeshData*>* meshList, GlobalData* global);
 	void SSAORender(GlobalData* global);

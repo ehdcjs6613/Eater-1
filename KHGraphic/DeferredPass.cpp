@@ -108,9 +108,9 @@ void DeferredPass::Create(int width, int height)
 void DeferredPass::Start(int width, int height)
 {
 	// Shader 설정..
-	m_MeshVS = g_Shader->GetShader("MeshVS");
-	m_SkinVS = g_Shader->GetShader("SkinVS");
-	m_DeferredPS = g_Shader->GetShader("DeferredPS");
+	m_MeshVS = g_Shader->GetShader("Mesh_VS");
+	m_SkinVS = g_Shader->GetShader("Skin_VS");
+	m_DeferredPS = g_Shader->GetShader("Deferred_PS");
 
 	// DepthStencilView 설정..
 	m_DepthStencilView = g_Resource->GetDepthStencil<DS_Defalt>()->GetDSV()->Get();

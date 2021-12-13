@@ -12,7 +12,7 @@ GraphicEngineManager::GraphicEngineManager()
 
 GraphicEngineManager::~GraphicEngineManager()
 {
-	
+
 
 }
 
@@ -28,6 +28,14 @@ void GraphicEngineManager::Initialize(HWND Hwnd, int WinSizeWidth, int WinSizeHe
 
 	// Graphic Engine Initialize..
 	GEngine->Initialize(Hwnd, WinSizeWidth, WinSizeHeight);
+}
+
+void GraphicEngineManager::BeginRender(UINT& renderOption)
+{
+	if (renderOption)
+	{
+		GEngine->BeginRender(renderOption);
+	}
 }
 
 void GraphicEngineManager::Render(std::queue<MeshData*>* meshList, GlobalData* global)

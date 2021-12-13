@@ -48,6 +48,11 @@ void KHGraphic::Initialize(HWND hwnd, int screenWidth, int screenHeight)
 	m_RenderManager = renderer;
 }
 
+void KHGraphic::BeginRender(UINT& renderOption)
+{
+	m_RenderManager->BeginRender(renderOption);
+}
+
 void KHGraphic::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 {
 	m_RenderManager->Render(meshList, global);

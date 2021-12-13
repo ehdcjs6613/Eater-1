@@ -43,6 +43,7 @@ public:
 	virtual GRAPHIC_DLL void Delete() = 0;
 
 	/// 랜더링을 한다 매쉬 랜더데이터 리스트, 글로벌 데이터
+	virtual GRAPHIC_DLL void BeginRender(UINT& renderOption) {}
 	virtual GRAPHIC_DLL void Render(std::queue<MeshData*>* meshList, GlobalData* global) = 0;
 	virtual GRAPHIC_DLL void ShadowRender(std::queue<MeshData*>* meshList, GlobalData* global) { return; }
 	virtual GRAPHIC_DLL void SSAORender(GlobalData* global) { return; }

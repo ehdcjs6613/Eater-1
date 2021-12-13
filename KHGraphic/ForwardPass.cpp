@@ -45,9 +45,9 @@ void ForwardPass::Create(int width, int height)
 void ForwardPass::Start(int width, int height)
 {
 	// Shader 설정..
-	m_MeshVS = g_Shader->GetShader("MeshVS");
-	m_SkinVS = g_Shader->GetShader("SkinVS");
-	m_ForwardPS = g_Shader->GetShader("ForwardPS");
+	m_MeshVS = g_Shader->GetShader("Mesh_VS");
+	m_SkinVS = g_Shader->GetShader("Skin_VS");
+	m_ForwardPS = g_Shader->GetShader("Forward_PS");
 
 	// ViewPort 설정..
 	m_ScreenViewport = g_Resource->GetViewPort<VP_FullScreen>()->Get();

@@ -24,12 +24,12 @@ struct SkinVertexIn
     float3 PosL : POSITION;
 };
 
-float4 MeshShadowVS(MeshVertexIn vin) : SV_POSITION
+float4 MeshShadow_VS(MeshVertexIn vin) : SV_POSITION
 {
     return mul(gMeshWorldViewProj, float4(vin.PosL, 1.0f));
 };
 
-float4 SkinShadowVS(SkinVertexIn vin) : SV_POSITION
+float4 SkinShadow_VS(SkinVertexIn vin) : SV_POSITION
 {
     float3 posL = float3(0.0f, 0.0f, 0.0f);
 

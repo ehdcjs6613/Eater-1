@@ -70,7 +70,7 @@ public:
 
 private:
 	void CreateObject();			//기본 생성 오브젝트
-	void RenderOption();
+	void RenderOptionCheck();
 private:
 	///각종 매니저들
 	ObjectManager*			mObjectManager;		// 오브젝트 관리 매니저
@@ -83,12 +83,15 @@ private:
 	MaterialManager*		mMaterialManager;	// 메테리얼 관리 매니저
 	LightManager*			mLightManager;		// 라이트 관리 매니저
 	PhysManager*			mPhysManager;		// 물리 관리 매니저
+
 private:
 	///클라쪽에서 받아야 하는 데이터
 	HWND mHwnd; //핸들
 	int WinSizeWidth;	//윈도우 사이즈 가로
 	int WinSizeHeight;	//윈도우 사이즈 세로
 	bool ConsoleDebug;
+
 private:
+	UINT m_RenderOption;
 };
 
