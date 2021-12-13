@@ -31,6 +31,8 @@ private:
 private:
 	std::vector<RenderPassBase*> m_RenderPassList;
 
+	UINT m_RenderOption = 0;
+
 	DeferredPass* m_Deferred;
 	LightPass* m_Light;
 	ShadowPass* m_Shadow;

@@ -93,7 +93,6 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 
 void GameEngine::Update()
 {
-	
 	//매니저들 업데이트 (컨퍼넌트 업데이트후 변경된 사항을 각각의 게임오브젝트 OneMeshData에 전달)
 	//타임매니저는 먼저실행되어야함
 	mTimeManager->Update();
@@ -103,7 +102,7 @@ void GameEngine::Update()
 	mObjectManager->PlayUpdate();
 	mPhysManager->Update(mTimeManager->DeltaTime());
 	
-
+	//mKeyManager->GetKeyToggle()
 	//컨퍼넌트 업데이트 끝
 	//그래픽엔진으로 넘겨줄 랜더큐도 생성완료
 
@@ -267,4 +266,16 @@ void GameEngine::CreateObject()
 {
 	GameObject* light = Instance();
 	light->AddComponent<DirectionLight>();
+}
+
+void GameEngine::RenderOption()
+{
+	if (mKeyManager->GetKeyToggle(VK_F1))
+	{
+		// Shadow On/Off
+	}
+	if (mKeyManager->GetKeyToggle(VK_F2))
+	{
+		// SSAO On/Off
+	}
 }

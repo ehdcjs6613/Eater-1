@@ -17,7 +17,7 @@ struct VertexOut
 	float2 Tex        : TEXCOORD1;
 };
 
-VertexOut main(VertexIn vin)
+VertexOut SSAOVS(VertexIn vin)
 {
 	VertexOut vout;
 

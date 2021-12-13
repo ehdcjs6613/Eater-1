@@ -11,12 +11,20 @@ using namespace SimpleMath;
 using namespace ParserData;
 
 class Component;
+
+typedef enum RENDER_OPTION_DESC
+{
+	RENDER_GAMMA_CORRECTION	= 0x00000001,
+	RENDER_SHADOW			= 0x00000010,
+	RENDER_SSAO				= 0x00000100,
+}RENDER_OPTION_DESC;
+
 enum class OBJECT_TYPE
 {
 	///현재 기본형으로 넣어둔 오브젝트 종류
 	///나중에 필요한건 넣고 필요없는건 빼자
 
-	DEFALT,		//값을 넣지않았을때 기본형
+	DEFALT,			//값을 넣지않았을때 기본형
 	GAMEOBJECT,		//다른 오브젝트들을 묶어놓는 용도
 	BASE,			//상속구조로 되어있는 오브젝트
 	SKINNING,		//스키닝이 추가된 오브젝트
