@@ -171,6 +171,53 @@ void LoadManager::LoadPrefap(std::string Name)
 	///나중에 구현
 }
 
+void createRandomTerrain(const XMFLOAT3& origin, int numRows, int numColumns,
+	int cellSizeRow, int cellSizeCol, int heightScale,
+	int*& vertices, int*& indices)
+{
+	//PxU32 numX = (numColumns + 1);
+	//PxU32 numZ = (numRows + 1);
+	//PxU32 numVertices = numX * numZ;
+	//PxU32 numTriangles = numRows * numColumns * 2;
+	//
+	//if (vertices == NULL)
+	//	vertices = new PxVec3[numVertices];
+	//if (indices == NULL)
+	//	indices = new PxU32[numTriangles * 3];
+	//
+	//PxU32 currentIdx = 0;
+	//for (PxU32 i = 0; i <= numRows; i++)
+	//{
+	//	for (PxU32 j = 0; j <= numColumns; j++)
+	//	{
+	//		PxVec3 v(origin.x + PxReal(j) * cellSizeRow, origin.y, origin.z + PxReal(i) * cellSizeCol);
+	//		vertices[currentIdx++] = v;
+	//	}
+	//}
+	//
+	//currentIdx = 0;
+	//for (PxU32 i = 0; i < numRows; i++)
+	//{
+	//	for (PxU32 j = 0; j < numColumns; j++)
+	//	{
+	//		PxU32 base = (numColumns + 1) * i + j;
+	//		indices[currentIdx++] = base + 1;
+	//		indices[currentIdx++] = base;
+	//		indices[currentIdx++] = base + numColumns + 1;
+	//		indices[currentIdx++] = base + numColumns + 2;
+	//		indices[currentIdx++] = base + 1;
+	//		indices[currentIdx++] = base + numColumns + 1;
+	//	}
+	//}
+	//
+	//for (PxU32 i = 0; i < numVertices; i++)
+	//{
+	//	PxVec3& v = vertices[i];
+	//	int num = (rand() % 2);
+	//	v.y += heightScale * num;
+	//}
+}
+
 void LoadManager::LoadMeshPath(std::string mPath)
 {
 	//모델 경로 입력

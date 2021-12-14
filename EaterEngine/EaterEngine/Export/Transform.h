@@ -37,8 +37,6 @@ public:
 	//로컬 앞방향 벡터를 가져온다
 	DirectX::XMFLOAT3 GetLocalPosition_Look();
 
-	
-
 	//현재위치값에 값을 더해줌
 	EATER_ENGINEDLL void SetLocalPosition(float X, float Y, float Z);
 	EATER_ENGINEDLL void SetTranlate(float X, float Y, float Z);

@@ -1,10 +1,11 @@
 #pragma once
-
+#include "PhysEngineDLL.h"
  enum class SHAPE_TYPE
 {
 	BOX,
 	SPHERE,
 	CAPSULE,
+	TRIANGLE
 };
 
  enum class ACTOR_TYPE
@@ -20,84 +21,85 @@ struct Vec
 	float x = 0.0f;
 	float y = 0.0f;
 	float z = 0.0f;
-	float w = 0.0f;; //회전값 있을때만
+	float w = 0.0f; //회전값 있을때만
 };
 
 ///하나의 강체를 만드는 구조체 무슨내용인지 보고싶으면 아래쪽에 설명
 ///사용하지 않는 값은 그냥 디폴트값으로 놔두면된다
-struct PhysData
+class PHYS_ENGINEDLL PhysData
 {
 public:
-	///위치 데이터
+	PhysData();
+	~PhysData();
 	//월드 위치
-	Vec WorldPosition	= { 0.0f,0.0f,0.0f,0.0f };
-	//로컬 위치 (계층 구조일때)
-	Vec LocalPosition	= { 0.0f,0.0f,0.0f,0.0f };
+	Vec WorldPosition;
 	//회전
-	Vec Rotation		= { 1.0f,1.0f,1.0f,1.0f };
-	//어떠한 축 이동을 고정 시킬때 사용 
-	Vec FreezePositon	= { 0.0f,0.0f,0.0f,0.0f };
-	//어떠한 축 회전을 고정 시킬때 사용
-	Vec FreezeRotaticon = { 0.0f,0.0f,0.0f,0.0f };
-	//이객체의 이동값을 넣어준다
-	Vec Velocity		= { 0.0f,0.0f,0.0f,0.0f };
+	Vec Rotation;
 	//이객체의 무게 중심점
-	Vec CenterPoint		= { 0.0f,0.0f,0.0f,0.0f };
+	Vec CenterPoint;
+	//월드상의 위치
+	void SetWorldPosition(float x,float y,float z);
+	void SetLocalPosition(float x, float y, float z);
+	void SetTranlate(float x, float y, float z);
+
+	//월드상의 회전
+	void SetRotation(float x, float y, float z);
+	void SetRotate(float x, float y, float z);
+	void AddForce(float x,float y,float z);
+	
 public:
 	///재질(메테리얼) 데이터
 	//정지 마찰력
-	float MT_StaticFriction = 0.5f;
+	float MT_StaticFriction;
 	//운동 마찰력
-	float MT_DynamicFriction = 0.5f;
+	float MT_DynamicFriction;
 	//복원력
-	float MT_Restitution = 0.6f;
+	float MT_Restitution;
 	//무게
-	float MT_Mass = 1.0f;				
+	float MT_Mass;				
 public:
 	///객체 정보 데이터
 	//움직이는 객체인지 (Dinamic , Static)
-	bool isDinamic		= true;
+	bool isDinamic;
 	//중력 작용 여부
-	bool isGrvity		= true;
+	bool isGrvity;
 	//움직이진 않는데 충돌 할것인지
-	bool isKinematic	= false;
+	bool isKinematic;
 public:
-	///콜라이더 데이터
-	//콜라이더의 사이즈
-	Vec Shape_Size = { 0.5f,0.5f, 0.5f,0.0f };
-
-	//콜라이더 만들때 이걸로 만들면 편함
-	void CreateBoxCollider(float x,float y,float z)
-	{
-		Shape_Size = { x,y,z };
-		Shape_type = SHAPE_TYPE::BOX;
-	}
+	//가로 세로 높이
+	void CreateBoxCollider(float x, float y, float z);
 	//반지름
-	void CreateBoxCollider(float Radius)
-	{
-		Shape_Size = { Radius,Radius,Radius,Radius };
-		Shape_type = SHAPE_TYPE::BOX;
-	}
-
+	void CreateBoxCollider(float Radius);
 	//반지름
-	void CreateSphereCollider(float Radius)
-	{
-		Shape_Size = { Radius,0.0f,0.0f,0.0f};
-		Shape_type = SHAPE_TYPE::SPHERE;
-	}
-
+	void CreateSphereCollider(float Radius);
 	//반지름,높이
-	void CreateCapsuleCollider(float Radius,float Height)
-	{
-		Shape_Size = { Radius,Height,0.0f,0.0f };
-		Shape_type = SHAPE_TYPE::CAPSULE;
-	}
+	void CreateCapsuleCollider(float Radius, float Height);
 
-	//콜라이더의 타입
-	SHAPE_TYPE	Shape_type = SHAPE_TYPE::BOX;
-
-	//이데이터와 PhysX안에 Actor는 서로 알고있도록하기위해
+	void CreateTriangleCollider();
+private:
+	///위치 데이터
+	Vec MovePoint;
+	//로컬 위치 (계층 구조일때)
+	Vec LocalPosition;
+	//어떠한 축 이동을 고정 시킬때 사용 
+	Vec FreezePositon;
+	//어떠한 축 회전을 고정 시킬때 사용
+	Vec FreezeRotaticon;
+	//이객체의 이동속력을 넣어준다
+	Vec Velocity;
+	
+	Vec Force;
+private:
+	///콜라이더 데이터
+	Vec Shape_Size;			//사이즈
+	SHAPE_TYPE	Shape_type; //타입
+private:
+	bool isMove;
+	bool isForce;
+private:
 	void* ActorObj;
+	friend class Factory;
+	friend class PhysEngine;
 };
 
 //Phys 공간의 월드 데이터
@@ -137,9 +139,4 @@ Knematic 객체
 Static 객체
 	이객체는 어떠한 방법을 쓰더라도 움직일 수 없는 객체이다
 	고정된 물체를 의미한다
-
-
-
-
-
 */

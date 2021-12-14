@@ -5,7 +5,7 @@
 #include "Component.h"
 
 class Transform;
-struct PhysData;
+class PhysData;
 class Rigidbody : public Component
 {
 public:
@@ -31,12 +31,27 @@ public:
 	EATER_ENGINEDLL void SetFreezeRotation(bool x,bool y,bool z);
 	//rigdbody를 이용해서 움직임
 	EATER_ENGINEDLL void SetVelocity(float x, float y, float z);
-	//Shape Type
-	EATER_ENGINEDLL void SetShapeType(int type);
 
-	static const int BOX	= 0;
-	static const int SPHERE	= 1;
-	static const int CAPSULE = 2;
+	EATER_ENGINEDLL void SetTranlate(float x, float y, float z);
+	EATER_ENGINEDLL void SetAddForce(float x, float y, float z);
+
+	
+	//콜라이더 설정
+	//가로 세로 높이
+	EATER_ENGINEDLL void CreateBoxCollider(float x, float y, float z);
+	//반지름
+	EATER_ENGINEDLL void CreateBoxCollider(float Radius);
+	//반지름
+	EATER_ENGINEDLL void CreateSphereCollider(float Radius);
+	//반지름,높이
+	EATER_ENGINEDLL void CreateCapsuleCollider(float Radius, float Height);
+
+	EATER_ENGINEDLL void CreateTriangleCollider();
+
+
+	static const int BOX		= 0;
+	static const int SPHERE		= 1;
+	static const int CAPSULE	= 2;
 private:
 	Transform* Tr;
 	PhysData* RigidbodyData;

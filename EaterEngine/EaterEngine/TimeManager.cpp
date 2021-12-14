@@ -42,10 +42,6 @@ void TimeManager::Update()
 		_addedTime = 0;
 	}
 
-	
-
-	
-
 	_addedTime += (deltaTime);
 	debugTime += (deltaTime);
 

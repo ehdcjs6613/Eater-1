@@ -11,8 +11,6 @@
 	#endif
 #endif
 
-#include "PhysData.h"
-
 //필요dll들
 /*
 	항상필요

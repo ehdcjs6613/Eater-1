@@ -55,25 +55,71 @@ void intro::Awake()
 		testobj->AddComponent<MeshFilter>()->SetMeshName("Sphere");
 		Rigidbody* rig = testobj->AddComponent<Rigidbody>();
 		Transform* tr = testobj->GetComponent<Transform>();
-
-		rig->SetShapeType(Rigidbody::SPHERE);
+	
 		rig->SetGrvity(true);
-		tr->Scale = { 0.1f,0.1f ,0.1f };
-		tr->Position = { (float)0,(float)10 + i,(float)0 };
+		rig->CreateSphereCollider(0.5f);
+		tr->Scale = { 0.5f,0.5f ,0.5f };
+		tr->Position = { (float)i,(float)25 + (i*2),(float)0 };
 	}
 
 	testobj = Instance("Field");
-	testobj->AddComponent<MeshFilter>()->SetMeshName("box");
+	testobj->AddComponent<MeshFilter>()->SetMeshName("Sphere");
 	Rigidbody* rig = testobj->AddComponent<Rigidbody>();
 	Transform* tr = testobj->GetComponent<Transform>();
-	
-	rig->SetShapeType(Rigidbody::BOX);
+	rig->SetGrvity(true);
 	rig->SetType(false);
+	rig->CreateTriangleCollider();
+	tr->Scale = { 0.5f,0.5f ,0.5f };
+	tr->Position = { -20,4,-20 };
 
-	
-	tr->Scale		= { 1.0f,1.0f ,1.0f };
-	tr->Position	= { 0,0,0};
-	tr->Rotation	= { 25,0,0 };
+
+
+
+	testobj = Instance("Field");
+	testobj->AddComponent<MeshFilter>();
+	testobj->AddComponent<Rigidbody>();
+	testobj->AddComponent<Player>();
+
+
+
+	//testobj = Instance("Field");
+	//testobj->AddComponent<MeshFilter>()->SetMeshName("box");
+	//Rigidbody* rig= testobj->AddComponent<Rigidbody>();
+	//Transform* tr = testobj->GetComponent<Transform>();
+	//rig->SetType(false);
+	//rig->CreateBoxCollider(20.0f,1.0f,1.0f);
+	//tr->Scale = { 20.0f,1.0f ,1.0f };
+	//tr->Position = { 0,1,20 };
+	//
+	//testobj = Instance("Field");
+	//testobj->AddComponent<MeshFilter>()->SetMeshName("box");
+	//rig = testobj->AddComponent<Rigidbody>();
+	//tr = testobj->GetComponent<Transform>();
+	//rig->SetType(false);
+	//rig->CreateBoxCollider(20.0f, 1.0f, 1.0f);
+	//tr->Scale = { 20.0f,1.0f ,1.0f };
+	//tr->Position = { 0,1,-20 };
+	//
+	//
+	//testobj = Instance("Field");
+	//testobj->AddComponent<MeshFilter>()->SetMeshName("box");
+	//rig = testobj->AddComponent<Rigidbody>();
+	//tr = testobj->GetComponent<Transform>();
+	//rig->SetType(false);
+	//rig->CreateBoxCollider(1.0f, 1.0f, 20.0f);
+	//tr->Scale = { 1.0f,1.0f ,20.0f };
+	//tr->Position = { 20,1,0 };
+	//
+	//
+	//testobj = Instance("Field");
+	//testobj->AddComponent<MeshFilter>()->SetMeshName("box");
+	//rig = testobj->AddComponent<Rigidbody>();
+	//tr = testobj->GetComponent<Transform>();
+	//rig->SetType(false);
+	//rig->CreateBoxCollider(1.0f, 1.0f, 20.0f);
+	//tr->Scale = { 1.0f,1.0f ,20.0f };
+	//tr->Position = { -20,1,0 };
+
 }
 
 void intro::Start()

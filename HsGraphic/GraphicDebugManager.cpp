@@ -372,6 +372,8 @@ void GraphicDebugManager::Create_Grid(int CountX, int CountY)
 	Create_2D_Line_Buffers(XMFLOAT3(0, 0.1f, 0), XMFLOAT3(0, 50, 0), XMFLOAT3(0, 1, 0));
 	Create_2D_Line_Buffers(XMFLOAT3(0, 0.1f, 0), XMFLOAT3(50, 0.1f, 0), XMFLOAT3(0, 0, 1));
 
+	
+
 	////이대로 버퍼생성
 	GridBuffer = CreateBuffer("Grid");
 	int num = 0;

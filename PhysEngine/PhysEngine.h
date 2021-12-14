@@ -21,6 +21,7 @@ namespace physx
 }
 
 class Factory;
+class PhysData;
 struct PhysSceneData;
 
 class PhysEngine
@@ -44,6 +45,8 @@ public:
 	void Update_Actor(PhysData* data);
 	//ø¢≈Õ ªË¡¶
 	void Delete_Actor(PhysData* data);
+
+	float GetGrvity();
 private:
 	bool Initialize_Release(int ThreadCount);
 	bool Initialize_Debug(int ThreadCount);
@@ -56,7 +59,7 @@ private:
 	physx::PxDefaultErrorCallback*	m_ErrorCallback;
 	physx::PxTolerancesScale*		m_TolerancesScale;
 
-
+	physx::PxCooking*				m_Cooking;
 	physx::PxFoundation*			m_Foundation;
 	physx::PxPhysics*				m_Physics;
 	physx::PxDefaultCpuDispatcher*	m_Dispatcher;
