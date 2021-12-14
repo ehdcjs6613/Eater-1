@@ -26,6 +26,7 @@ public:
 
 	Indexbuffer* CreateIndexBuffer(ParserData::Mesh* mesh) override;
 	Vertexbuffer* CreateVertexBuffer(ParserData::Mesh* mesh) override;
+	Vertexbuffer* CreateTerrainVertexBuffer(ParserData::Mesh* mesh, std::string maskName) override;
 	TextureBuffer* CreateTextureBuffer(std::string path) override;
 
 private:

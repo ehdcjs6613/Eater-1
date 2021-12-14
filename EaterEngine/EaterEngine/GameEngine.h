@@ -50,6 +50,7 @@ public:
 	void LoadMeshPath(std::string mPath);
 	void LoadTexturePath(std::string mPath);
 	void LoadMesh(std::string mMeshName, bool Scale = true, bool LoadAnime = false);
+	void LoadTerrain(std::string mMeshName, std::string mMaskName, bool Scale = true);
 	void LoadTexture(std::string mMeshName);
 public:
 	///Å°°ü·Ã 

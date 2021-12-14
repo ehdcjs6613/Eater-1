@@ -103,6 +103,11 @@ Vertexbuffer* KHGraphic::CreateVertexBuffer(ParserData::Mesh* mesh)
 	return m_ResourceFactory->CreateVertexBuffer(mesh);
 }
 
+Vertexbuffer* KHGraphic::CreateTerrainVertexBuffer(ParserData::Mesh* mesh, std::string maskName)
+{
+	return m_ResourceFactory->CreateTerrainVertexBuffer(mesh, maskName);
+}
+
 TextureBuffer* KHGraphic::CreateTextureBuffer(std::string path)
 {
 	return m_ResourceFactory->CreateTextureBuffer(path);

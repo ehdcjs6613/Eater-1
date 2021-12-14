@@ -20,13 +20,14 @@ MaterialManager::~MaterialManager()
 void MaterialManager::Initialize()
 {
 	// Basic Material..
-	MaterialData mat;
-	mat.Ambient = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-	mat.Diffuse = Vector4(0.8f, 0.8f, 0.8f, 1.0f);
-	mat.Specular = Vector4(0.4f, 0.4f, 0.4f, 1.0f);
-	mat.Reflect = Vector4(0.4f, 0.4f, 0.4f, 1.0f);
+	MaterialData* mat = new MaterialData();
+	mat->Ambient = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+	mat->Diffuse = Vector4(0.8f, 0.8f, 0.8f, 1.0f);
+	mat->Specular = Vector4(0.4f, 0.4f, 0.4f, 1.0f);
+	mat->Reflect = Vector4(0.4f, 0.4f, 0.4f, 1.0f);
 
-	Global->mMatData[m_MaterialCount++] = mat;
+	Global->mMatData.push_back(mat);
+	m_MaterialCount++;
 }
 
 void MaterialManager::Release()
@@ -40,15 +41,23 @@ void MaterialManager::AddMaterial(Material* mat)
 	for (auto& matData : m_MaterialList)
 	{
 		Material* material = matData.second;
-		if (material->GetMaterialData() == mat->GetMaterialData())
+
+		// 해당 Material Data가 List에 올라가있는지 체크..
+		if (material->m_MaterialBuffer->Material_Data == mat->m_MaterialBuffer->Material_Data)
 		{
-			mat->SetMaterialIndex(material->GetMaterialIndex());
+			mat->SetMaterialIndex(material->m_Material_Index);
 			return;
 		}
 	}
 
 	// Material 추가 될때마다 Global Data 설정..
-	Global->mMatData[m_MaterialCount] = mat->GetMaterialData();
+	MaterialBuffer* matBuf = mat->GetMaterialData();
+
+	// 현재 Material Index 설정..
+	matBuf->Material_Index = m_MaterialCount;
+	
+	// 현재 Material Data 삽입..
+	Global->mMatData.push_back(matBuf->Material_Data);
 
 	// Material List 추가..
 	m_MaterialList.insert(std::make_pair(m_MaterialCount++, mat));

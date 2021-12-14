@@ -67,24 +67,6 @@ struct SpotLightData
 	float Pad; // Pad the last float so we can set an array of lights if we wanted.
 };
 
-struct MaterialData
-{
-	MaterialData() = default;
-
-	DirectX::SimpleMath::Vector4 Ambient;
-	DirectX::SimpleMath::Vector4 Diffuse;
-	DirectX::SimpleMath::Vector4 Specular; // w = SpecPower
-	DirectX::SimpleMath::Vector4 Reflect;
-
-	bool operator==(MaterialData mat)
-	{
-		if (Ambient == mat.Ambient && Diffuse == mat.Diffuse && Specular == mat.Specular && Reflect == mat.Reflect)
-			return true;
-		else
-			return false;
-	}
-};
-
 struct LightData
 {
 	DirectionalLightData* DirLights[3];

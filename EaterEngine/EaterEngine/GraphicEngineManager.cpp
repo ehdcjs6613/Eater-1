@@ -93,6 +93,12 @@ Vertexbuffer* GraphicEngineManager::CreateVertexBuffer(ParserData::Mesh* mModel)
 	return GEngine->CreateVertexBuffer(mModel);
 }
 
+Vertexbuffer* GraphicEngineManager::CreateTerrainVertexBuffer(ParserData::Mesh* mModel, std::string maskName)
+{
+	//버텍스 버퍼 생성
+	return GEngine->CreateTerrainVertexBuffer(mModel, maskName);
+}
+
 TextureBuffer* GraphicEngineManager::CreateTextureBuffer(std::string Name)
 {
 	//텍스쳐 생성

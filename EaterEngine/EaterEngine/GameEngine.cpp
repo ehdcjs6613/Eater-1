@@ -208,6 +208,12 @@ void GameEngine::LoadMesh(std::string mMeshName, bool Scale, bool LoadAnime)
 	mLoadManager->LoadMesh(mMeshName, Scale, LoadAnime);
 }
 
+void GameEngine::LoadTerrain(std::string mMeshName, std::string mMaskName, bool Scale)
+{
+	std::string temp = "터레인을 로드합니다 : " + mMeshName;
+	mLoadManager->LoadTerrain(mMeshName, mMaskName, Scale);
+}
+
 void GameEngine::LoadTexture(std::string mTextureName)
 {
 	mLoadManager->LoadTexture(mTextureName);

@@ -12,7 +12,7 @@ using namespace ParserData;
 
 class Component;
 
-typedef enum RENDER_OPTION_DESC
+typedef enum RENDER_OPTION_DESC : UINT
 {
 	RENDER_GAMMA_CORRECTION	= 0x00000001,
 	RENDER_SHADOW			= 0x00000010,
@@ -33,9 +33,41 @@ enum class OBJECT_TYPE
 	LIGHT,			//라이트 객체
 	SKYBOX,			//스카이 박스
 	TEXTURE,		//한개의 텍스쳐로된 오브젝트(페이스두개가 합쳐진 사각형 텍스쳐)
-	DEBUGOBJECT,			//디버깅 오브젝트
+	DEBUGOBJECT,	//디버깅 오브젝트
 	PARTICLE,		//파티클 오브젝트
 	EFFECT			//이펙트 오브젝트
+};
+
+
+struct MaterialData
+{
+	MaterialData() = default;
+
+	DirectX::SimpleMath::Vector4 Ambient;
+	DirectX::SimpleMath::Vector4 Diffuse;
+	DirectX::SimpleMath::Vector4 Specular; // w = SpecPower
+	DirectX::SimpleMath::Vector4 Reflect;
+
+	bool operator==(MaterialData mat)
+	{
+		if (Ambient == mat.Ambient && Diffuse == mat.Diffuse && Specular == mat.Specular && Reflect == mat.Reflect)
+			return true;
+		else
+			return false;
+	}
+};
+
+class MaterialBuffer
+{
+public:
+	UINT Material_Index = 0;				// Material Index
+
+	MaterialData* Material_Data = nullptr;	// Material Data
+
+	TextureBuffer* Albedo = nullptr;		// DiffuseMap Texture
+	TextureBuffer* Normal = nullptr;		// NormalMap Texture
+	TextureBuffer* Roughness = nullptr;		// RoughnessMap Texture
+	TextureBuffer* Metallic = nullptr;		// MetallicMap Texture
 };
 
 /// <summary>
@@ -55,19 +87,8 @@ public:
 	DirectX::XMMATRIX* mLightVPT;	// Light View * Proj * TexSpace Matrix
 
 	LightData* mLightData;
-	MaterialData mMatData[5];
+	std::vector<MaterialData*> mMatData;
 };
-
-/// <summary>
-/// 게임엔진에서 그래픽엔진으로 던저줄 정적 데이터
-/// </summary>
-class StaticData
-{
-public:
-	LightData* mLightData;
-	MaterialData mMatData[5];
-};
-
 
 /// <summary>
 /// 게임엔진에서 그래픽엔진으로 던저줄 한개의 메쉬 데이터
@@ -89,19 +110,18 @@ public:
 
 	TextureBuffer* Albedo = nullptr;	// DiffuseMap Texture
 	TextureBuffer* Normal = nullptr;	// NormalMap Texture
-	TextureBuffer* Height = nullptr;	// HeightMap Texture
 	TextureBuffer* Roughness = nullptr;	// RoughnessMap Texture
 	TextureBuffer* Metallic = nullptr;	// MetallicMap Texture
 
 	UINT Material_Index = 0;			// Material Index
+
+	std::vector<MaterialBuffer*> Material_List;
 
 	std::vector<DirectX::SimpleMath::Matrix> BoneOffsetTM; //본 오프셋 TM
 
 	DirectX::XMMATRIX mWorld = DirectX::XMMatrixIdentity();	//매쉬의 월드 행렬
 	DirectX::XMMATRIX mLocal = DirectX::XMMatrixIdentity();	//매쉬의 로컬행렬
 };
-
-
 
 
 /// <summary>
@@ -125,9 +145,9 @@ public:
 		Parent = nullptr;
 	};
 
+	MESH_TYPE MeshType;			// 매쉬 타입
+
 	bool Top_Object = false;		//가장 최상위 오브젝트인지 여부
-	bool Bone_Object = false;		//본오브젝트 여부
-	bool Skinning_Object = false;		//스키닝 오브젝트 여부
 
 	int BoneIndex = -1;						//본일경우 자신의 인덱스
 
@@ -142,7 +162,6 @@ public:
 
 	TextureBuffer* Albedo = nullptr;	// DiffuseMap Texture
 	TextureBuffer* Normal = nullptr;	// NormalMap Texture
-	TextureBuffer* Height = nullptr;	// HeightMap Texture
 	TextureBuffer* Roughness = nullptr;	// RoughnessMap Texture
 	TextureBuffer* Metallic = nullptr;	// MetallicMap Texture
 

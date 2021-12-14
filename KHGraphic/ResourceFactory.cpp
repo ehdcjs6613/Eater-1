@@ -293,17 +293,20 @@ void GraphicResourceFactory::CreateMainRenderTarget(Hash_Code hash_Code, UINT wi
 
 Vertexbuffer* GraphicResourceFactory::CreateVertexBuffer(ParserData::Mesh* mesh)
 {
-	if (mesh->m_IsSkinningObject)
+	switch (mesh->m_MeshType)
 	{
-		return CreateMeshVertexBuffer<SkinVertex>(mesh);
-	}
-	else
-	{
+	case MESH_TYPE::STATIC_MESH:
 		return CreateMeshVertexBuffer<MeshVertex>(mesh);
-
-		// Terrain Type
-		//return CreateMeshVertexBuffer<TerrainVertex>(mesh);
+	case MESH_TYPE::SKIN_MESH:
+		return CreateMeshVertexBuffer<SkinVertex>(mesh);
+	default:
+		return nullptr;
 	}
+}
+
+Vertexbuffer* GraphicResourceFactory::CreateTerrainVertexBuffer(ParserData::Mesh* mesh, std::string maskName)
+{
+	return CreateMeshVertexBuffer<TerrainVertex>(mesh);
 }
 
 Indexbuffer* GraphicResourceFactory::CreateIndexBuffer(ParserData::Mesh* mesh)

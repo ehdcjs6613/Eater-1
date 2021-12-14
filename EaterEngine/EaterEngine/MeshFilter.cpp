@@ -85,9 +85,6 @@ void MeshFilter::PushModelData(LoadMeshData* mModel)
 	data->mLocal = *(mModel->LocalTM);
 	data->mWorld = *(mModel->WorldTM);
 
-	data->Albedo = mModel->Albedo;
-	data->Normal = mModel->Normal;
-
 	// Diffuse Map이 없는경우 Dump Map으로 기본 출력..
 	if (data->Albedo == nullptr)
 	{
@@ -147,9 +144,12 @@ void MeshFilter::CreateChild_Mesh(LoadMeshData* data, Transform* parent, ModelDa
 	///컨퍼넌트 생성후 초기화
 	Transform* Tr		= OBJ->AddComponent<Transform>();
 	MeshFilter* Filter	= OBJ->AddComponent<MeshFilter>();
+	Material* Mat		= OBJ->AddComponent<Material>();
 
 	///스키닝 오브젝트 여부
-	if (data->Skinning_Object == true)
+	switch (data->MeshType)
+	{
+	case MESH_TYPE::SKIN_MESH:
 	{
 		SkinningFilter* SF = OBJ->AddComponent<SkinningFilter>();
 		SF->PushBoneList(&BoneList);
@@ -157,23 +157,30 @@ void MeshFilter::CreateChild_Mesh(LoadMeshData* data, Transform* parent, ModelDa
 		OBJ->OneMeshData->ObjType = OBJECT_TYPE::SKINNING;
 		Tr->Rotation = { 180,0,0 };
 	}
-	else
+	break;
+	case MESH_TYPE::TERRAIN_MESH:
+	{
+
+	}
+	break;
+	default:
 	{
 		LinkHierarchy(Tr, parent);
 		OBJ->OneMeshData->ObjType = OBJECT_TYPE::BASE;
+	}
+	break;
 	}
 
 	///메테리얼 정보 여부
 	if (data->Material)
 	{
-		Material* mat = OBJ->AddComponent<Material>();
-		MaterialData matData;
-		matData.Ambient		= data->Material->m_Material_Ambient;
-		matData.Diffuse		= data->Material->m_Material_Diffuse;
-		matData.Specular	= data->Material->m_Material_Specular;
-		mat->SetMaterialData(matData);	// 해당 Material 삽입..
-		MAT_Manager->AddMaterial(mat);	// Material 등록..
+		// 해당 Material 삽입..
+		Mat->SetMaterialData(data);
+
+		// Material 등록..
+		MAT_Manager->AddMaterial(Mat);	
 	}
+	
 
 	///기본 데이터 초기화
 	OBJ->Name = data->Name;
@@ -239,7 +246,7 @@ void MeshFilter::CreateMesh()
 	ModelData* data = LoadManager::GetMesh(MeshName);
 	Transform* Tr = gameobject->GetTransform();
 	if (data == nullptr) { return; }
-
+	
 	///본 오브젝트 생성
 	int index = 0;
 	index = (int)data->TopBoneList.size();

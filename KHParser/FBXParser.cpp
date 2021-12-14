@@ -264,7 +264,7 @@ void FBXParser::ProcessSkeleton(fbxsdk::FbxNode* node)
 	CreateMesh();
 
 	m_OneMesh->m_NodeName = node->GetName();
-	m_OneMesh->m_IsBone = true;
+	m_OneMesh->m_MeshType = BONE_MESH;
 
 	// 현 Node Parent 찾기..
 	const char* parentName = node->GetParent()->GetName();
@@ -356,7 +356,11 @@ void FBXParser::ProcessMesh(fbxsdk::FbxNode* node)
 	bool isSkin = ProcessBoneWeights(node, boneWeights);
 
 	// Bone Data 설정 결과에 따른 Skinning Object 판별..
-	m_OneMesh->m_IsSkinningObject = isSkin;
+	if (isSkin)
+	{
+		m_OneMesh->m_MeshType = SKIN_MESH;
+	}
+	
 
 	// 새로운 버텍스 생성..
 	CreateVertex(pMesh, boneWeights, vertexTotalCount);
@@ -525,7 +529,7 @@ void FBXParser::ProcessAnimation(fbxsdk::FbxNode* node)
 	else
 	{
 		// 만약 스키닝 오브젝트라면 애니메이션 데이터는 Bone에 저장되어 있으므로..
-		if (m_OneMesh->m_IsSkinningObject) return;
+		if (m_OneMesh->m_MeshType == SKIN_MESH) return;
 	}
 
 	FbxNodeAttribute* nodeAttribute = node->GetNodeAttribute();
@@ -1094,7 +1098,7 @@ void FBXParser::SetTexture(fbxsdk::FbxSurfaceMaterial* material, const char* mat
 						{
 							std::string mapName("Diffuse Map" + count);
 							m_MaterialData->m_DiffuseMap = new MaterialMap();
-							m_MaterialData->m_IsDiffuseMap = true;
+							m_MaterialData->m_TextureBind |= DIFFUSE_TEXTURE;
 							m_MaterialData->m_DiffuseMap->m_MapName = mapName;
 							m_MaterialData->m_DiffuseMap->m_BitMap = fileRoute;
 							m_MaterialData->m_MapList.push_back(m_MaterialData->m_DiffuseMap);
@@ -1103,7 +1107,7 @@ void FBXParser::SetTexture(fbxsdk::FbxSurfaceMaterial* material, const char* mat
 						{
 							std::string mapName("Specular Map" + count);
 							m_MaterialData->m_SpecularMap = new MaterialMap();
-							m_MaterialData->m_IsSpecularMap = true;
+							m_MaterialData->m_TextureBind |= SPECULAR_TEXTURE;
 							m_MaterialData->m_SpecularMap->m_MapName = mapName;
 							m_MaterialData->m_SpecularMap->m_BitMap = fileRoute;
 							m_MaterialData->m_MapList.push_back(m_MaterialData->m_SpecularMap);
@@ -1111,11 +1115,11 @@ void FBXParser::SetTexture(fbxsdk::FbxSurfaceMaterial* material, const char* mat
 						else if (textureType == "NormalMap")
 						{
 							std::string mapName("Normal Map" + count);
-							m_MaterialData->m_BumpMap = new MaterialMap();
-							m_MaterialData->m_IsBumpMap = true;
-							m_MaterialData->m_BumpMap->m_MapName = mapName;
-							m_MaterialData->m_BumpMap->m_BitMap = fileRoute;
-							m_MaterialData->m_MapList.push_back(m_MaterialData->m_BumpMap);
+							m_MaterialData->m_NormalMap = new MaterialMap();
+							m_MaterialData->m_TextureBind |= NORMAL_TEXTURE;
+							m_MaterialData->m_NormalMap->m_MapName = mapName;
+							m_MaterialData->m_NormalMap->m_BitMap = fileRoute;
+							m_MaterialData->m_MapList.push_back(m_MaterialData->m_NormalMap);
 						}
 						else if (textureType == "TransparentColor")	// MaskMap
 						{
