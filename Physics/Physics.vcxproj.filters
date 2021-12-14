@@ -31,6 +31,9 @@
     <Filter Include="GeometryGenerator">
       <UniqueIdentifier>{6658f3f1-520f-466e-996e-bde1203b509b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Colliders\SphereCollider">
+      <UniqueIdentifier>{d3699332-527a-4107-b8bc-97ef156fc5fd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Collider.cpp">
@@ -49,7 +52,10 @@
       <Filter>ColliderManager</Filter>
     </ClCompile>
     <ClCompile Include="GeometryGenerator.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>GeometryGenerator</Filter>
+    </ClCompile>
+    <ClCompile Include="SphereCollider.cpp">
+      <Filter>Colliders\SphereCollider</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -75,7 +81,10 @@
       <Filter>Vertex</Filter>
     </ClInclude>
     <ClInclude Include="GeometryGenerator.h">
-      <Filter>소스 파일</Filter>
+      <Filter>GeometryGenerator</Filter>
+    </ClInclude>
+    <ClInclude Include="SphereCollider.h">
+      <Filter>Colliders\SphereCollider</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

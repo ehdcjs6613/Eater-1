@@ -168,6 +168,7 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\lib"</Command>
     <ClCompile Include="ColliderManager.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="GeometryGenerator.cpp" />
+    <ClCompile Include="SphereCollider.cpp" />
     <ClCompile Include="VertexPositionColor.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -178,6 +179,7 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\lib"</Command>
     <ClInclude Include="DllDefine.h" />
     <ClInclude Include="DxDefine.h" />
     <ClInclude Include="GeometryGenerator.h" />
+    <ClInclude Include="SphereCollider.h" />
     <ClInclude Include="VertexPositionColor.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -33,5 +33,8 @@ public:
 
 	ID3D11Device* GetDevice();						/// D3D11 디바이스
 	ID3D11DeviceContext* GetDeviceContext();		/// 디바이스 컨텍스트
+
+protected:
+	virtual void Initialize();
 };
 

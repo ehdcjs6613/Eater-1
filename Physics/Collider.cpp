@@ -55,3 +55,7 @@ ID3D11DeviceContext* Collider::GetDeviceContext()
 {
 	return this->md3dImmediateContext;
 }
+
+void Collider::Initialize()
+{
+}

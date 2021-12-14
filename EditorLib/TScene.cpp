@@ -52,6 +52,7 @@ void TScene::Awake()
 
 	///카메라
 	testobj = Instance("Cam");
+	testobj->AddComponent<Camera>();
 	testobj->AddComponent<TKeyInput>();
 	testobj->GetTransform()->Position = { 0,0,-25 };
 
@@ -65,12 +66,13 @@ void TScene::Awake()
 
 	///캐릭터
 	testobj = Instance("Player");
-	testobj->GetTransform()->Scale = { 0.5f, 0.5f, 0.5f };
-	testobj->GetTransform()->Position = { -5,0,0 };
-	testobj->GetTransform()->Rotation = { 0,45,0 };
+	testobj->GetTransform()->Scale = { 1.f, 1.0f, 1.0f };
+	testobj->GetTransform()->Position = { +10,0,0 };
+	testobj->GetTransform()->Rotation = { 0,0,0 };
 	MeshFilter* Mf = testobj->AddComponent<MeshFilter>();
 	BoxCollider* Bc = testobj->AddComponent<BoxCollider>();
-	Camera* cam = testobj->AddComponent<Camera>();
+	//Camera* cam = testobj->AddComponent<Camera>();
+	//Camera* cam = testobj->AddComponent<Camera>();
 	//AnimationController* ac = testobj->AddComponent<AnimationController>();
 	Transform* tr = testobj->GetTransform();
 	////컨퍼넌트 초기화
@@ -79,15 +81,15 @@ void TScene::Awake()
 	//Mf->SetAnimationName("Enemy");
 	//tr->Rotation = { 90 ,0,0 };
 
-	testobj2 = Instance("Player2");
-	testobj2->GetTransform()->Scale = { 1.0f, 1.0f, 1.0f };
-	testobj2->GetTransform()->Position = { 0,0,0 };
-	MeshFilter* Mf2 = testobj2->AddComponent<MeshFilter>();
-	//AnimationController* ac = testobj->AddComponent<AnimationController>();
-	Transform* tr2 = testobj2->GetTransform();
-	////컨퍼넌트 초기화
-	Mf2->SetMeshName("box");
-	Mf2->SetTextureName("Dump.png");
+	//testobj2 = Instance("Player2");
+	//testobj2->GetTransform()->Scale = { 1.0f, 1.0f, 1.0f };
+	//testobj2->GetTransform()->Position = { 1,0,0 };
+	//MeshFilter* Mf2 = testobj2->AddComponent<MeshFilter>();
+	////AnimationController* ac = testobj->AddComponent<AnimationController>();
+	//Transform* tr2 = testobj2->GetTransform();
+	//////컨퍼넌트 초기화
+	//Mf2->SetMeshName("box");
+	//Mf2->SetTextureName("Dump.png");
 	//Mf->SetAnimationName("Enemy");
 	//tr->Rotation = { 90 ,0,0 };
 
@@ -100,21 +102,21 @@ void TScene::Start()
 
 void TScene::Update()
 {
-	testobj->GetComponent<BoxCollider>()->Translasion(testobj->GetTransform()->GetWorld());
+	//testobj->GetComponent<BoxCollider>()->Translasion(testobj->GetTransform()->GetWorld());
 	
-	DirectX::XMFLOAT4X4 view;
-	DirectX::XMFLOAT4X4 proj;
-	
-	if (nullptr != testobj->GetComponent<BoxCollider>()->md3dDevice)
-	{
-	
-	}
-	if (nullptr != testobj->GetComponent<BoxCollider>()->md3dImmediateContext)
-	{
-		DirectX::XMStoreFloat4x4(&view, *testobj->GetComponent<Camera>()->GetView());
-		DirectX::XMStoreFloat4x4(&proj, *testobj->GetComponent<Camera>()->GetProj());
-		testobj->GetComponent<BoxCollider>()->Draw(view, proj);
-	}
+	//DirectX::XMFLOAT4X4 view;
+	//DirectX::XMFLOAT4X4 proj;
+	//
+	//if (nullptr != testobj->GetComponent<BoxCollider>()->md3dDevice)
+	//{
+	//
+	//}
+	//if (nullptr != testobj->GetComponent<BoxCollider>()->md3dImmediateContext)
+	//{
+	//	DirectX::XMStoreFloat4x4(&view, *testobj->GetComponent<Camera>()->GetView());
+	//	DirectX::XMStoreFloat4x4(&proj, *testobj->GetComponent<Camera>()->GetProj());
+	//	testobj->GetComponent<BoxCollider>()->Draw(view, proj);
+	//}
 
 		
 

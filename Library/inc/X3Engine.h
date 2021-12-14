@@ -24,6 +24,7 @@ class SharedRenderData;
 class CBox;
 
 class BoxCollider;
+class SphereCollider;
 //그리기를 위한 포인터의  클래스
 
 
@@ -157,6 +158,9 @@ private:
 	CBox* m_CBox;
 
 	BoxCollider* m_BoxCollider;
+	SphereCollider* m_SphereCollider;
+
+
 	//ID3DX11Effect* m_FX;
 	//ID3DX11EffectTechnique* mTech;
 	//ID3DX11EffectMatrixVariable* mfxWorldViewProj;

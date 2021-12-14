@@ -1,7 +1,5 @@
 #pragma once
 
-#include <fstream>
-
 #include "DllDefine.h"
 #include "DxDefine.h"
 #include "Collider.h"
@@ -9,8 +7,7 @@
 #include "VertexPositionColor.h"
 #include "GeometryGenerator.h"
 
-
-class BoxCollider : public Collider
+class SphereCollider : public Collider
 {
 private:
 	GeometryGenerator m_Gemetry;
@@ -20,8 +17,8 @@ private:
 	DirectX::XMMATRIX mProj;	// 투영 변환 행렬 (원근/직교)
 
 public:
-	PhysicsExport BoxCollider();
-	PhysicsExport virtual ~BoxCollider();
+	PhysicsExport SphereCollider();
+	PhysicsExport virtual ~SphereCollider();
 public:
 	//시작 단계에 가장먼저 실행되는 함수
 	virtual void Awake() override;
@@ -57,5 +54,6 @@ public:
 public:
 	//상속 함수
 	virtual void Initialize() override;
-	
+
 };
+
