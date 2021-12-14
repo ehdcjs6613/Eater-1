@@ -26,6 +26,8 @@ void intro::Awake()
 	LoadMesh("Pistol", true, false);
 	LoadMesh("Weapon", true, false);
 
+	//LoadTerrain("Terrain", "mask", true);
+
 	LoadTexture("Player.dds");
 	LoadTexture("Dump.png");
 

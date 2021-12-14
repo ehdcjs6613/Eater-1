@@ -196,6 +196,7 @@ void DeferredPass::Update(MeshData* mesh, GlobalData* global)
 	Matrix view = *global->mCamView;
 	Matrix proj = *global->mCamProj;
 	Matrix shadowTrans = *global->mLightVPT;
+	MaterialBuffer* mat = *mesh->Material_List.begin();
 
 	switch (mesh->ObjType)
 	{
@@ -237,17 +238,17 @@ void DeferredPass::Update(MeshData* mesh, GlobalData* global)
 	}
 
 	CB_Material materialBuf;
-	materialBuf.gMatID = mesh->Material_Index;
+	materialBuf.gMatID = mat->Material_Index;
 	
-	if (mesh->Albedo)
+	if (mat->Albedo)
 	{
  		materialBuf.gTexID |= ALBEDO_MAP;
-		m_DeferredPS->SetShaderResourceView<gDiffuseMap>((ID3D11ShaderResourceView*)mesh->Albedo->TextureBufferPointer);
+		m_DeferredPS->SetShaderResourceView<gDiffuseMap>((ID3D11ShaderResourceView*)mat->Albedo->TextureBufferPointer);
 	}
-	if (mesh->Normal)
+	if (mat->Normal)
 	{
 		materialBuf.gTexID |= NORMAL_MAP;
-		m_DeferredPS->SetShaderResourceView<gNormalMap>((ID3D11ShaderResourceView*)mesh->Normal->TextureBufferPointer);
+		m_DeferredPS->SetShaderResourceView<gNormalMap>((ID3D11ShaderResourceView*)mat->Normal->TextureBufferPointer);
 	}
 
 	m_DeferredPS->SetConstantBuffer(materialBuf);

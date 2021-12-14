@@ -121,7 +121,6 @@ void ShaderManager::CreateShader()
 	// Deffered Shader
 	LoadShader(eShaderType::PIXEL, "DeferredPS.hlsl", "Deferred_PS");
 
-
 	// Shadow Shader
 	LoadShader(eShaderType::VERTEX, "ShadowVS.hlsl", "MeshShadow_VS");
 	LoadShader(eShaderType::VERTEX, "ShadowVS.hlsl", "SkinShadow_VS");
@@ -171,7 +170,6 @@ ShaderBase* ShaderManager::LoadShader(eShaderType shaderType, std::string shader
 		newShader = new ComputeShader(shaderName.c_str(), entry_point.c_str(), "cs_5_0", pDefines);
 		break;
 	default:
-		throw std::exception("ERROR: None Shader Type.\n");
 		return nullptr;
 	}
 

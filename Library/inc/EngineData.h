@@ -1,10 +1,9 @@
 #pragma once
+#include <map>
+#include <functional>
 #include "ResourcesData.h"
 #include "ParserData.h"
-#include <functional>
-#include <map>
 #include "LightHelper.h"
-
 
 using namespace DirectX;
 using namespace SimpleMath;
@@ -38,25 +37,6 @@ enum class OBJECT_TYPE
 	EFFECT			//이펙트 오브젝트
 };
 
-
-struct MaterialData
-{
-	MaterialData() = default;
-
-	DirectX::SimpleMath::Vector4 Ambient;
-	DirectX::SimpleMath::Vector4 Diffuse;
-	DirectX::SimpleMath::Vector4 Specular; // w = SpecPower
-	DirectX::SimpleMath::Vector4 Reflect;
-
-	bool operator==(MaterialData mat)
-	{
-		if (Ambient == mat.Ambient && Diffuse == mat.Diffuse && Specular == mat.Specular && Reflect == mat.Reflect)
-			return true;
-		else
-			return false;
-	}
-};
-
 class MaterialBuffer
 {
 public:
@@ -77,14 +57,14 @@ class GlobalData
 {
 public:
 	//카메라 정보들
-	DirectX::XMMATRIX* mCamView;	// Camera View Matrix
-	DirectX::XMMATRIX* mCamProj;	// Camera Proj Matrix
-	DirectX::XMMATRIX* mCamPT;		// Camera Proj * TexSpace Matrix
-	DirectX::XMFLOAT3* mCamPos;		// Camera Pos
+	XMMATRIX* mCamView;	// Camera View Matrix
+	XMMATRIX* mCamProj;	// Camera Proj Matrix
+	XMMATRIX* mCamPT;		// Camera Proj * TexSpace Matrix
+	XMFLOAT3* mCamPos;		// Camera Pos
 
-	DirectX::XMMATRIX* mLightView;	// Light View Matrix
-	DirectX::XMMATRIX* mLightProj;	// Light Proj Matrix
-	DirectX::XMMATRIX* mLightVPT;	// Light View * Proj * TexSpace Matrix
+	XMMATRIX* mLightView;	// Light View Matrix
+	XMMATRIX* mLightProj;	// Light Proj Matrix
+	XMMATRIX* mLightVPT;	// Light View * Proj * TexSpace Matrix
 
 	LightData* mLightData;
 	std::vector<MaterialData*> mMatData;
@@ -108,19 +88,12 @@ public:
 	Indexbuffer* IB = nullptr;			//인덱스 버퍼
 	Vertexbuffer* VB = nullptr;			//버텍스 버퍼
 
-	TextureBuffer* Albedo = nullptr;	// DiffuseMap Texture
-	TextureBuffer* Normal = nullptr;	// NormalMap Texture
-	TextureBuffer* Roughness = nullptr;	// RoughnessMap Texture
-	TextureBuffer* Metallic = nullptr;	// MetallicMap Texture
+	std::vector<MaterialBuffer*> Material_List;		// Material List
 
-	UINT Material_Index = 0;			// Material Index
+	std::vector<Matrix> BoneOffsetTM; //본 오프셋 TM
 
-	std::vector<MaterialBuffer*> Material_List;
-
-	std::vector<DirectX::SimpleMath::Matrix> BoneOffsetTM; //본 오프셋 TM
-
-	DirectX::XMMATRIX mWorld = DirectX::XMMatrixIdentity();	//매쉬의 월드 행렬
-	DirectX::XMMATRIX mLocal = DirectX::XMMatrixIdentity();	//매쉬의 로컬행렬
+	XMMATRIX mWorld = XMMatrixIdentity();	//매쉬의 월드 행렬
+	XMMATRIX mLocal = XMMatrixIdentity();	//매쉬의 로컬행렬
 };
 
 
@@ -145,17 +118,17 @@ public:
 		Parent = nullptr;
 	};
 
-	MESH_TYPE MeshType;			// 매쉬 타입
+	MESH_TYPE MeshType;				// 매쉬 타입
 
 	bool Top_Object = false;		//가장 최상위 오브젝트인지 여부
 
-	int BoneIndex = -1;						//본일경우 자신의 인덱스
+	int BoneIndex = -1;				//본일경우 자신의 인덱스
 
-	std::string ParentName = "";			//부모의 이름
+	std::string ParentName = "";	//부모의 이름
 	std::string	Name = "";			//자기자신의 이름
 
-	DirectX::SimpleMath::Matrix* WorldTM = nullptr;	//월드 매트릭스
-	DirectX::SimpleMath::Matrix* LocalTM = nullptr;	//로컬 매트릭스
+	Matrix* WorldTM = nullptr;	//월드 매트릭스
+	Matrix* LocalTM = nullptr;	//로컬 매트릭스
 
 	Indexbuffer* IB = nullptr;			//인덱스 버퍼
 	Vertexbuffer* VB = nullptr;			//버텍스 버퍼
@@ -164,6 +137,9 @@ public:
 	TextureBuffer* Normal = nullptr;	// NormalMap Texture
 	TextureBuffer* Roughness = nullptr;	// RoughnessMap Texture
 	TextureBuffer* Metallic = nullptr;	// MetallicMap Texture
+
+	std::vector<UINT> Index_List;		//	
+	std::vector<Vector3> Vertex_List;	//
 
 	ParserData::CMaterial* Material = nullptr;	//메테리얼 정보
 	ParserData::OneAnimation* Animation = nullptr;	//애니메이션 정보
@@ -174,9 +150,7 @@ public:
 	LoadMeshData* Parent = nullptr;			//부모 매쉬
 	std::vector<LoadMeshData*> Child;		//자식 매쉬 리스트
 
-
 	Matrix* BoneOffset = nullptr;			//본 매트릭스
-	Mesh* BoneNumber = nullptr;			//본 매쉬
 };
 
 /// <summary>

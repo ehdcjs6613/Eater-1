@@ -75,6 +75,7 @@ private:
 	std::string TextureName;	//로드한 텍스쳐 이름
 	std::string AnimationName;	//로드한 애니메이션 이름
 
+	Material* Materials;
 
 	//본리스트들을 GameObject 타입으로 저장
 	std::vector<GameObject*>	BoneList;

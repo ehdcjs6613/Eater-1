@@ -84,12 +84,6 @@ void MeshFilter::PushModelData(LoadMeshData* mModel)
 
 	data->mLocal = *(mModel->LocalTM);
 	data->mWorld = *(mModel->WorldTM);
-
-	// Diffuse Map이 없는경우 Dump Map으로 기본 출력..
-	if (data->Albedo == nullptr)
-	{
-		data->Albedo = LoadManager::GetTexture("Dump");
-	}
 }
 
 void MeshFilter::CheckTexture()
@@ -101,11 +95,20 @@ void MeshFilter::CheckTexture()
 
 		for (int i = 0; i <(int)MeshList.size(); i++)
 		{
+			// 현재 Mesh Data..
 			MeshData* data = MeshList[i]->OneMeshData;
+
+			// 현재 Mesh의 Material..
+			MaterialBuffer* material = *data->Material_List.begin();
+
+			// 설정된 Diffuse Map이 없다면 기본 Texture 적용..
+			if (material->Albedo == nullptr)
+			{
+				TextureName = "Dump";
+			}
 
 			// 설정 Texture Buffer..
 			TextureBuffer* texBuffer = LoadManager::GetTexture(TextureName);
-		
 
 			// 해당 Texture가 Load되지 않은 경우 기존 Texture 사용..
 			if (texBuffer == nullptr)
@@ -114,7 +117,7 @@ void MeshFilter::CheckTexture()
 			}
 
 			// Texture 설정..
-			data->Albedo = texBuffer;
+			material->Albedo = texBuffer;
 		}
 	}
 }
@@ -181,7 +184,7 @@ void MeshFilter::CreateChild_Mesh(LoadMeshData* data, Transform* parent, ModelDa
 		MAT_Manager->AddMaterial(Mat);	
 	}
 	
-
+	
 	///기본 데이터 초기화
 	OBJ->Name = data->Name;
 	OBJ->transform = Tr;
@@ -245,6 +248,7 @@ void MeshFilter::CreateMesh()
 	///이름으로 로드할 데이터를 찾아서 가져옴
 	ModelData* data = LoadManager::GetMesh(MeshName);
 	Transform* Tr = gameobject->GetTransform();
+
 	if (data == nullptr) { return; }
 	
 	///본 오브젝트 생성

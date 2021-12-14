@@ -17,18 +17,21 @@ Material::~Material()
 
 }
 
+void Material::Awake()
+{
+	// Material 추가..
+	gameobject->OneMeshData->Material_List.push_back(m_MaterialBuffer);
+}
+
 void Material::SetMaterialIndex(UINT index)
 {
 	// 해당 Material Index 삽입..
-	m_Material_Index = index;
-
-	// Object 연동..
-	gameobject->OneMeshData->Material_Index = index;
+	m_MaterialBuffer->Material_Index = index;
 }
 
 UINT Material::GetMaterialIndex()
 {
-	return m_Material_Index;
+	return m_MaterialBuffer->Material_Index;
 }
 
 void Material::SetMaterialData(LoadMeshData* mesh)
@@ -46,8 +49,6 @@ void Material::SetMaterialData(LoadMeshData* mesh)
 	m_MaterialBuffer->Albedo = mesh->Albedo;
 	m_MaterialBuffer->Normal = mesh->Normal;
 
-	// Material 추가..
-	gameobject->OneMeshData->Material_List.push_back(m_MaterialBuffer);
 }
 
 MaterialBuffer* Material::GetMaterialData()

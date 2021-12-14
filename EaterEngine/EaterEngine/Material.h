@@ -2,7 +2,7 @@
 #include "Component.h"
 #include "EaterEngineDLL.h"
 
-class MaterialData;
+class MaterialBuffer;
 class LoadMeshData;
 
 class Material : public Component
@@ -15,6 +15,9 @@ public:
 	friend class MaterialManager;
 
 public:
+	void Awake() override;
+
+public:
 	void SetMaterialIndex(UINT index);
 	UINT GetMaterialIndex();
 
@@ -22,8 +25,6 @@ public:
 	MaterialBuffer* GetMaterialData();
 
 private:
-	UINT m_Material_Index;
-
 	MaterialBuffer* m_MaterialBuffer;
 };
 

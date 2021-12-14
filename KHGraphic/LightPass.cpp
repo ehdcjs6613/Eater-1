@@ -159,7 +159,7 @@ void LightPass::Render(GlobalData* global)
 
 	for (UINT m = 0; m < 5; m++)
 	{
-		lightBuf.gMaterials[m] = global->mMatData[m];
+		lightBuf.gMaterials[m] = *global->mMatData[m];
 	}
 
 	CB_LightSub lightsubBuf;

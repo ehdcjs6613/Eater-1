@@ -9,10 +9,9 @@
 
 #include <Windows.h>
 
-// LEHIDE
 //#include <xnamath.h>
-#include <DirectXMath.h>
-#include "SimpleMath.h"
+//#include <DirectXMath.h>
+//#include "SimpleMath.h"
 
 // Note: Make sure structure alignment agrees with HLSL structure padding rules. 
 //   Elements are packed into 4D vectors with the restriction that an element
@@ -78,4 +77,21 @@ struct LightData
 	UINT gSpotLightCount;
 };
 
+struct MaterialData
+{
+	MaterialData() = default;
+
+	DirectX::SimpleMath::Vector4 Ambient;
+	DirectX::SimpleMath::Vector4 Diffuse;
+	DirectX::SimpleMath::Vector4 Specular; // w = SpecPower
+	DirectX::SimpleMath::Vector4 Reflect;
+
+	bool operator==(MaterialData mat)
+	{
+		if (Ambient == mat.Ambient && Diffuse == mat.Diffuse && Specular == mat.Specular && Reflect == mat.Reflect)
+			return true;
+		else
+			return false;
+	}
+};
 #endif // LIGHTHELPER_H
