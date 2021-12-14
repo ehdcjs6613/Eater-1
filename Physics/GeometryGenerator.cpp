@@ -16,14 +16,14 @@ bool GeometryGenerator::CreateLineMesh(ID3D11Device* _pDevice,MeshType _mesh)
 
 		vertices[0x00] = { DirectX::XMFLOAT3(+1, -1.0f, -1.0f),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green) };
 		vertices[0x01] = { DirectX::XMFLOAT3(+1, +1.0f, -1.0f),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green) };
-		
+
 		vertices[0x02] = { DirectX::XMFLOAT3(-1, -1.0f, -1.0f),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green) };
 		vertices[0x03] = { DirectX::XMFLOAT3(+1, +1.0f, -1.0f),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green) };
 
 		vertices[0x04] = { DirectX::XMFLOAT3(+5, -1.0f, +1.0f),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green) };
 		vertices[0x05] = { DirectX::XMFLOAT3(+5, +1.0f, +1.0f),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green) };
 
-		
+
 
 		UINT indices[6];
 
@@ -46,7 +46,7 @@ bool GeometryGenerator::CreateLineMesh(ID3D11Device* _pDevice,MeshType _mesh)
 
 		vertices[0x02] = { DirectX::XMFLOAT3(+8, +1.0f, -1.0f),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green) };
 		vertices[0x03] = { DirectX::XMFLOAT3(+8, -1.0f, -1.0f),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green) };
-											  
+
 		vertices[0x04] = { DirectX::XMFLOAT3(+8, -1.0f, +1.0f),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green) };
 		vertices[0x05] = { DirectX::XMFLOAT3(+8, +1.0f, +1.0f),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green) };
 
@@ -81,7 +81,7 @@ bool GeometryGenerator::CreateLineMesh(ID3D11Device* _pDevice,MeshType _mesh)
 		//#_countof : 정적배열의 개수를 구하는 매크로
 		CreateIndexBuffer(_pDevice, indices, _countof(indices));
 	}
-		break;
+	break;
 	case GeometryGenerator::MeshType::Cylinder:
 		break;
 	case GeometryGenerator::MeshType::Mesh:
@@ -89,6 +89,11 @@ bool GeometryGenerator::CreateLineMesh(ID3D11Device* _pDevice,MeshType _mesh)
 	case GeometryGenerator::MeshType::Capsule:
 		break;
 
+	}
+	if (nullptr != _pDevice)
+	{
+		CreateBulildFX(_pDevice);
+		CreateBulildInputLayout(_pDevice);
 	}
 
 	return false;

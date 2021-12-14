@@ -155,6 +155,6 @@ void SphereCollider::CalculateAABB()
 void SphereCollider::Initialize()
 {
 	m_Gemetry.CreateLineMesh(md3dDevice, GeometryGenerator::MeshType::Sphere);
-	m_Gemetry.CreateBulildFX(md3dDevice);
-	m_Gemetry.CreateBulildInputLayout(md3dDevice);
+	//m_Gemetry.CreateBulildFX(md3dDevice);
+	//m_Gemetry.CreateBulildInputLayout(md3dDevice);
 }

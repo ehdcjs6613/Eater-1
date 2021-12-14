@@ -189,8 +189,8 @@ void BoxCollider::CalculateAABB()
 void BoxCollider::Initialize()
 {
 	m_Gemetry.CreateLineMesh(md3dDevice, GeometryGenerator::MeshType::Box);
-	m_Gemetry.CreateBulildFX(md3dDevice);
-	m_Gemetry.CreateBulildInputLayout(md3dDevice);
+	//m_Gemetry.CreateBulildFX(md3dDevice);
+	//m_Gemetry.CreateBulildInputLayout(md3dDevice);
 }
 
 void BoxCollider::Initialize(ID3D11Device* _pDevice, ID3D11DeviceContext* _pDeviceContext)

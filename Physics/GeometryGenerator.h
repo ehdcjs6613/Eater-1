@@ -33,10 +33,10 @@ struct GeometryGenerator
 public:
 	/// 라인으로만 그릴 함수
 	bool CreateLineMesh(ID3D11Device* ,MeshType );
-
+protected:
 	template<class Arcive>
 	bool CreateVertexBuffer(ID3D11Device*, Arcive* ,int ,typename std::enable_if<std::is_class<Arcive>::value, bool>::type );
-
+private:
 	bool CreateIndexBuffer (ID3D11Device*, unsigned int*, int );
 	bool CreateBulildFX(ID3D11Device* _pDevice);
 	bool CreateBulildInputLayout(ID3D11Device*);
