@@ -31,7 +31,6 @@ public:
 public:
 	std::string Name;						//이름
 
-
 	MeshData* OneMeshData;					//그래픽 엔진으로 넘겨줄 데이터
 	Transform* transform;					//기본적으로 생성해주는 Transform 커너넌트
 public:

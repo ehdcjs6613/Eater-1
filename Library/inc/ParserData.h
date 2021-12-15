@@ -128,7 +128,6 @@ namespace ParserData
 		int	m_MaterialNumber;
 		std::string	m_MaterialName;
 
-
 		DirectX::SimpleMath::Vector4 m_Material_Ambient;
 		DirectX::SimpleMath::Vector4 m_Material_Diffuse;
 		DirectX::SimpleMath::Vector4 m_Material_Specular;

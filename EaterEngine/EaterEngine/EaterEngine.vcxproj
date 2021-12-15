@@ -230,6 +230,7 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\lib"
     <ClInclude Include="Export\Rigidbody.h" />
     <ClInclude Include="Export\Scene.h" />
     <ClInclude Include="Export\SkinningFilter.h" />
+    <ClInclude Include="Export\Terrain.h" />
     <ClInclude Include="Export\Transform.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="GameEngine.h" />
@@ -271,6 +272,7 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\lib"
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="SkinningFilter.cpp" />
+    <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="TimeManager.cpp" />
     <ClCompile Include="Transform.cpp" />
   </ItemGroup>

@@ -144,6 +144,7 @@ void RenderManager::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 		{
 		case OBJECT_TYPE::BASE:
 		case OBJECT_TYPE::SKINNING:
+		case OBJECT_TYPE::TERRAIN:
 			m_Deferred->Update(mesh, global);
 			m_Deferred->Render(mesh);
 			break;
@@ -167,6 +168,7 @@ void RenderManager::ShadowRender(std::queue<MeshData*>* meshList, GlobalData* gl
 			{
 			case OBJECT_TYPE::BASE:
 			case OBJECT_TYPE::SKINNING:
+			case OBJECT_TYPE::TERRAIN:
 				m_Shadow->Update(mesh, global);
 				m_Shadow->Render(mesh);
 				break;

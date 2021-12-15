@@ -111,15 +111,19 @@ void ShaderManager::CreateShader()
 	LoadShader(eShaderType::PIXEL, "LightPS.hlsl", "Light_PS", "Light_PS_Option5" ,light5_macro);
 	LoadShader(eShaderType::PIXEL, "LightPS.hlsl", "Light_PS", "Light_PS_Option6" ,light6_macro);
 
+	D3D_SHADER_MACRO terrain_macro[] = { {"TERRAIN_MESH"}, {NULL, NULL} };
+
 	// Object Shader
-	LoadShader(eShaderType::VERTEX, "ObjectVS.hlsl", "Mesh_VS");
 	LoadShader(eShaderType::VERTEX, "ObjectVS.hlsl", "Skin_VS");
+	LoadShader(eShaderType::VERTEX, "ObjectVS.hlsl", "Mesh_VS");
+	LoadShader(eShaderType::VERTEX, "ObjectVS.hlsl", "Mesh_VS", "Terrain_VS", terrain_macro);
+
+	// Deffered Shader
+	LoadShader(eShaderType::PIXEL, "DeferredPS.hlsl", "BasicDeferred_PS");
+	LoadShader(eShaderType::PIXEL, "DeferredPS.hlsl", "BasicDeferred_PS", "TerrainDeferred_PS", terrain_macro);
 
 	// Forward Shader
 	LoadShader(eShaderType::PIXEL, "ForwardPS.hlsl", "Forward_PS");
-
-	// Deffered Shader
-	LoadShader(eShaderType::PIXEL, "DeferredPS.hlsl", "Deferred_PS");
 
 	// Shadow Shader
 	LoadShader(eShaderType::VERTEX, "ShadowVS.hlsl", "MeshShadow_VS");

@@ -7,10 +7,10 @@
 /// </summary>
 
 #include "EaterEngineDLL.h"
+
 class TimeManager;
 class KeyinputManager;
 class GameObject;
-
 
 class Component
 {

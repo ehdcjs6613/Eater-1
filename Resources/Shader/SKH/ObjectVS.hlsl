@@ -23,6 +23,10 @@ struct MeshVertexIn
     float2 Tex : TEXCOORD;
     float3 NormalL : NORMAL;
     float3 TangentL : TANGENT;
+    
+#ifdef TERRAIN_MESH
+    float4 MaskColor : MASK;
+#endif
 };
 
 struct SkinVertexIn
@@ -50,6 +54,10 @@ struct VertexOut
     
     float3x3 TBNW : TANGENTW;
     float3x3 TBNV : TANGENTV;
+    
+#ifdef TERRAIN_MESH
+    float4 MaskColor : MASK;
+#endif
 };
 
 VertexOut Mesh_VS(MeshVertexIn vin)
@@ -97,6 +105,10 @@ VertexOut Mesh_VS(MeshVertexIn vin)
     B = cross(N, T);
 
     vout.TBNV = float3x3(T, B, N);
+    
+#ifdef TERRAIN_MESH
+    vout.MaskColor = vin.MaskColor;
+#endif
     
     return vout;
 }

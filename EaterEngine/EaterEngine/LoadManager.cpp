@@ -80,13 +80,14 @@ ModelAnimationData* LoadManager::GetAnimation(std::string Name)
 void LoadManager::LoadTerrain(std::string Name, std::string MaskName, bool Scale)
 {
 	// "../ 이거와 .fbx 이거를 붙여준다"
-	std::string Strtemp = ".fbx";
-	std::string FullName = MeshPath + Name + Strtemp;
+	std::string modelExtention = ".fbx";
+	std::string modelPath = MeshPath + Name + modelExtention;
+	std::string texPath = TexturePath + MaskName;
 
 	ModelData* SaveMesh = new ModelData();
 
 	//파서를 통해서 매쉬를 로드
-	ParserData::Model* temp = EaterParser->LoadModel(FullName, Scale, false);
+	ParserData::Model* temp = EaterParser->LoadModel(modelPath, Scale, false);
 
 	if (temp == nullptr)
 	{
@@ -113,7 +114,7 @@ void LoadManager::LoadTerrain(std::string Name, std::string MaskName, bool Scale
 			//터레인 매쉬 타입 설정
 			mesh->m_MeshType = TERRAIN_MESH;
 
-			LoadMeshData* TopMesh = CreateTerrainObject(mesh, MaskName);
+			LoadMeshData* TopMesh = CreateTerrainObject(mesh, texPath);
 			SaveMesh->TopMeshList.push_back(TopMesh);
 		}
 	}
@@ -128,13 +129,13 @@ void LoadManager::LoadTerrain(std::string Name, std::string MaskName, bool Scale
 void LoadManager::LoadMesh(std::string Name, bool Scale, bool LoadAnime)
 {
 	// "../ 이거와 .fbx 이거를 붙여준다"
-	std::string Strtemp = ".fbx";
-	std::string FullName = MeshPath + Name + Strtemp;
+	std::string modelExtention = ".fbx";
+	std::string modelPath = MeshPath + Name + modelExtention;
 
 	ModelData* SaveMesh = new ModelData();
 
 	//파서를 통해서 매쉬를 로드
-	ParserData::Model* temp = EaterParser->LoadModel(FullName, Scale, LoadAnime);
+	ParserData::Model* temp = EaterParser->LoadModel(modelPath, Scale, LoadAnime);
 	if (temp == nullptr)
 	{
 		DebugManager::Print(DebugManager::MSG_TYPE::MSG_LOAD, "Mesh", Name, true);
@@ -150,7 +151,6 @@ void LoadManager::LoadMesh(std::string Name, bool Scale, bool LoadAnime)
 
 	//애니메이션 정보만 읽을거면 여기서 종료
 	if (LoadAnime == true) { return; }
-
 	
 
 	//본오프셋 TM과 본리스트를 먼저읽어오기위해 
@@ -269,24 +269,24 @@ LoadMeshData* LoadManager::CreateTerrainObject(ParserData::Mesh* mesh, std::stri
 LoadMeshData* LoadManager::CreateMeshObject(ParserData::Mesh* mesh)
 {
 	//계층정보 받기
-	LoadMeshData* box = new LoadMeshData();
+	LoadMeshData* model = new LoadMeshData();
 
-	SetData(box, mesh);
+	SetData(model, mesh);
 
 	//버퍼값 읽어오기
-	box->IB = GEngine->CreateIndexBuffer(mesh);
-	box->VB = GEngine->CreateVertexBuffer(mesh);
+	model->IB = GEngine->CreateIndexBuffer(mesh);
+	model->VB = GEngine->CreateVertexBuffer(mesh);
 
 	//자식객체가 있다면 정보읽어옴
 	int ChildCount = (int)mesh->m_ChildList.size();
 	for (int i = 0; i < ChildCount; i++)
 	{
 		LoadMeshData* temp = CreateMeshObject(mesh->m_ChildList[i]);
-		box->Child.push_back(temp);
-		temp->Parent = box;
+		model->Child.push_back(temp);
+		temp->Parent = model;
 	}
 
-	return box;
+	return model;
 }
 
 LoadMeshData* LoadManager::CreateBoneObject(ModelData* SaveData)

@@ -4,6 +4,8 @@
 
 class MaterialBuffer;
 class LoadMeshData;
+class TextureBuffer;
+class MaterialManager;
 
 class Material
 {
@@ -15,13 +17,26 @@ public:
 	friend class MaterialManager;
 
 public:
-	void SetMaterialIndex(UINT index);
-	UINT GetMaterialIndex();
+	static void SetManager(MaterialManager* mat);
 
-	void SetMaterialData(LoadMeshData* mesh);
+public:
+	void SetMaterialIndex(UINT index);
+
+	void PushMaterialData(LoadMeshData* mesh);
+
+	void SetDiffuseMap(TextureBuffer* diffuse);
+	void SetNormalMap(TextureBuffer* noraml);
+
+	void SetBaseColor(DirectX::SimpleMath::Vector4 color);
+	void SetAddColor(DirectX::SimpleMath::Vector4 color);
+
+public:
+	UINT GetMaterialIndex();
 	MaterialBuffer* GetMaterialData();
 
 private:
+	static MaterialManager* MAT_Manager;
+
 	MaterialBuffer* MaterialBuffers;
 };
 

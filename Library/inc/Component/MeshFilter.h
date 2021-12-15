@@ -28,7 +28,6 @@ class Transform;
 class Material;
 
 class ObjectManager;
-class MaterialManager;
 
 class  MeshFilter : public Component
 {
@@ -36,7 +35,9 @@ public:
 	EATER_ENGINEDLL MeshFilter();
 	virtual ~MeshFilter();
 
+public:
 	virtual void Start() override;
+
 public:
 	//메쉬의 이름을 넣으면 데이터 로드
 	EATER_ENGINEDLL void SetMeshName(std::string mMeshName);
@@ -44,13 +45,15 @@ public:
 	EATER_ENGINEDLL void SetNormalTextureName(std::string mTextureName);
 	EATER_ENGINEDLL void SetAnimationName(std::string mTextureName);
 
+public:
+	static void SetManager(ObjectManager* obj);
 
-	static void SetManager(ObjectManager* obj, MaterialManager* mat);
 private:
 	//Transform을 연결한다
 	void LinkHierarchy(Transform* my,Transform*parent);
 
 	void CreateMesh();
+
 	//LoadMeshData를 게임에 사용할 오브젝트로 생성하면서 값을 넣어준다
 	void CreateChild_Mesh(LoadMeshData* data,Transform* parent,  ModelData* modeldata);
 
@@ -64,10 +67,9 @@ private:
 	void CheckTexture();
 	void CheckAnimation();
 
-
-	static ObjectManager* OBJ_Manager;
-	static MaterialManager* MAT_Manager;
 private:
+	static ObjectManager* OBJ_Manager;
+
 	bool isLoad_Mesh;			//매쉬 로드여부
 	bool isLoad_Texture;		//텍스쳐 로드 여부
 	bool isLoad_Animation;		//애니메이션 로드여부

@@ -19,8 +19,9 @@ public:
 private:
 	VertexShader* m_MeshVS;
 	VertexShader* m_SkinVS;
-	PixelShader* m_DeferredPS;
-	PixelShader* m_DeferredTexturePS;
+	VertexShader* m_TerrainVS;
+	PixelShader* m_BasicDeferredPS;
+	PixelShader* m_TerrainDeferredPS;
 
 	ID3D11DepthStencilView* m_DepthStencilView;
 	

@@ -1006,9 +1006,9 @@ void FBXParser::SetMaterial(fbxsdk::FbxSurfaceMaterial* material)
 	if (material->GetClassId().Is(FbxSurfacePhong::ClassId))
 	{
 		// Ambient Data
-		m_MaterialData->m_Material_Ambient.x = static_cast<float>(((FbxSurfacePhong*)material)->Ambient.Get()[0]);
-		m_MaterialData->m_Material_Ambient.y = static_cast<float>(((FbxSurfacePhong*)material)->Ambient.Get()[1]);
-		m_MaterialData->m_Material_Ambient.z = static_cast<float>(((FbxSurfacePhong*)material)->Ambient.Get()[2]);
+		m_MaterialData->m_Material_Ambient.x = static_cast<float>(((FbxSurfacePhong*)material)->Ambient.Get()[0]) * 10.0f;
+		m_MaterialData->m_Material_Ambient.y = static_cast<float>(((FbxSurfacePhong*)material)->Ambient.Get()[1]) * 10.0f;
+		m_MaterialData->m_Material_Ambient.z = static_cast<float>(((FbxSurfacePhong*)material)->Ambient.Get()[2]) * 10.0f;
 		m_MaterialData->m_Material_Ambient.w = 1.0f;
 
 		// Diffuse Data

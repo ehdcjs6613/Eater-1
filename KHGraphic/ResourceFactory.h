@@ -46,8 +46,8 @@ public:
 
 private:
 	template<typename T>
-	Vertexbuffer* CreateMeshVertexBuffer(ParserData::Mesh* mesh);
-	//Vertexbuffer* CreateTerrainVertexBuffer(ParserData::Mesh* mesh, std::string maskName);
+	Vertexbuffer* CreateMeshVB(ParserData::Mesh* mesh);
+	Vertexbuffer* CreateTerrainVB(ParserData::Mesh* mesh, std::string maskName);
 
 	void CreateMainRenderTarget(Hash_Code hash_Code, UINT width, UINT height);
 
@@ -90,13 +90,10 @@ struct SkinVertex;
 struct TerrainVertex;
 
 template<typename T>
-inline Vertexbuffer* GraphicResourceFactory::CreateMeshVertexBuffer(ParserData::Mesh* mesh) { return nullptr; }
+inline Vertexbuffer* GraphicResourceFactory::CreateMeshVB(ParserData::Mesh* mesh) { return nullptr; }
 
 template<>
-inline Vertexbuffer* GraphicResourceFactory::CreateMeshVertexBuffer<MeshVertex>(ParserData::Mesh* mesh);
+inline Vertexbuffer* GraphicResourceFactory::CreateMeshVB<MeshVertex>(ParserData::Mesh* mesh);
 
 template<>
-inline Vertexbuffer* GraphicResourceFactory::CreateMeshVertexBuffer<SkinVertex>(ParserData::Mesh* mesh);
-
-template<>
-inline Vertexbuffer* GraphicResourceFactory::CreateMeshVertexBuffer<TerrainVertex>(ParserData::Mesh* mesh);
+inline Vertexbuffer* GraphicResourceFactory::CreateMeshVB<SkinVertex>(ParserData::Mesh* mesh);

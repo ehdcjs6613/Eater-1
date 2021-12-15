@@ -28,6 +28,7 @@ enum class OBJECT_TYPE
 	BASE,			//상속구조로 되어있는 오브젝트
 	SKINNING,		//스키닝이 추가된 오브젝트
 	BONE,			//본만 있는 오브젝트
+	TERRAIN,		//터레인 오브젝트
 	CAMERA,			//카메라 기능만 하는 오브젝트
 	LIGHT,			//라이트 객체
 	SKYBOX,			//스카이 박스
@@ -48,6 +49,9 @@ public:
 	TextureBuffer* Normal = nullptr;		// NormalMap Texture
 	TextureBuffer* Roughness = nullptr;		// RoughnessMap Texture
 	TextureBuffer* Metallic = nullptr;		// MetallicMap Texture
+
+	Vector4 Color_Base;			// Base Color
+	Vector4 Color_Add;			// Add Color
 };
 
 /// <summary>
@@ -83,17 +87,17 @@ public:
 	}
 
 public:
-	OBJECT_TYPE ObjType = OBJECT_TYPE::DEFALT;	//오브젝트 타입
+	OBJECT_TYPE ObjType = OBJECT_TYPE::DEFALT;		//오브젝트 타입
 
-	Indexbuffer* IB = nullptr;			//인덱스 버퍼
-	Vertexbuffer* VB = nullptr;			//버텍스 버퍼
+	Indexbuffer* IB = nullptr;						//인덱스 버퍼
+	Vertexbuffer* VB = nullptr;						//버텍스 버퍼
 
 	std::vector<MaterialBuffer*> Material_List;		// Material List
 
-	std::vector<Matrix> BoneOffsetTM; //본 오프셋 TM
+	std::vector<Matrix> BoneOffsetTM;				//본 오프셋 TM
 
-	XMMATRIX mWorld = XMMatrixIdentity();	//매쉬의 월드 행렬
-	XMMATRIX mLocal = XMMatrixIdentity();	//매쉬의 로컬행렬
+	XMMATRIX mWorld = XMMatrixIdentity();			//매쉬의 월드 행렬
+	XMMATRIX mLocal = XMMatrixIdentity();			//매쉬의 로컬행렬
 };
 
 
