@@ -26,8 +26,9 @@ void LoadManager::Initialize(GraphicEngineManager* Graphic)
 {
 	//그래픽 엔진 받아오기
 	GEngine = Graphic;
-	EaterParser = ModelParser::Create(ModelParser::FBX);
 
+	// Parser 생성 및 초기화..
+	EaterParser = ModelParser::Create(MODEL_TYPE::FBX_MODEL);
 	EaterParser->Initialize();
 }
 

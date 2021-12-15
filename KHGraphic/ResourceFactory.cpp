@@ -25,12 +25,16 @@
 #include "BufferDataDefine.h"
 #include "ViewPortDefine.h"
 #include "RenderTargetDefine.h"
+#include "ImageParser.h"
 
 using namespace DirectX::SimpleMath;
 
 GraphicResourceFactory::GraphicResourceFactory(ID3D11Graphic* graphic, IGraphicResourceManager* resource)
 	:m_Graphic(graphic), m_ResourceManager(resource)
 {
+	// Parser 생성 및 초기화..
+	m_Parser = ImageParser::Create(IMAGE_TYPE::FLOAT_IMAGE);
+	m_Parser->Initialize();
 }
 
 GraphicResourceFactory::~GraphicResourceFactory()
@@ -549,6 +553,9 @@ Vertexbuffer* GraphicResourceFactory::CreateMeshVertexBuffer<TerrainVertex>(Pars
 
 	// Vertex Count..
 	UINT vCount = (UINT)mesh->m_VertexList.size();
+
+	// Mask Pixel Data Parsing..
+	//ParserData::ImageData maskImage = m_Parser->LoadImagePixel()
 
 	std::vector<TerrainVertex> vertices(vCount);
 	for (UINT i = 0; i < vCount; i++)

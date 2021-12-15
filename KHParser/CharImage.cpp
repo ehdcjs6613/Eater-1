@@ -21,7 +21,7 @@ ParserData::ImageData CharImage::LoadImagePixel(const char* fileName, unsigned i
 
 	ParserData::ImageData imgData;
 	imgData.imgColor = stbi_load(filePath.c_str(), &imgData.width, &imgData.height, nullptr, channels);
-	imgData.type = CHAR_COLOR;
+	imgData.type = CHAR_IMAGE;
 	imgData.channels = channels;
 
 	return imgData;

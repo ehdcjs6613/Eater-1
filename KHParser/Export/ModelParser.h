@@ -18,16 +18,8 @@ public:
 	virtual ~ModelParser() = default;
 
 public:
-	// 사용 할 Model Parser 타입
-	enum Type
-	{
-		ASE,
-		FBX
-	};
-
-public:
 	// Create 함수를 통해 ModelParser 생성..
-	static PARSER_DLL ModelParser* Create(Type type);
+	static PARSER_DLL ModelParser* Create(MODEL_TYPE type);
 
 	// 기본 Texture 경로 설정 함수..
 	static PARSER_DLL void SetTextureRoute(std::string texRoute);
