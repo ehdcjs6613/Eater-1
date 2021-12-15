@@ -167,7 +167,7 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\lib"
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)Library\inc;$(ProjectDir)Export;$(SolutionDir)Library\inc\Graphic;$(SolutionDir)Library\inc\Parser</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Library\inc;$(ProjectDir)Export;$(SolutionDir)Library\inc\Graphic;$(SolutionDir)Library\inc\Parser;$(SolutionDir)Library\inc\PhysX</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
@@ -192,7 +192,7 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\lib"
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)Library\inc;$(ProjectDir)Export;$(SolutionDir)Library\inc\Graphic;$(SolutionDir)Library\inc\Parser</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Library\inc;$(ProjectDir)Export;$(SolutionDir)Library\inc\Graphic;$(SolutionDir)Library\inc\Parser;$(SolutionDir)Library\inc\PhysX</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>

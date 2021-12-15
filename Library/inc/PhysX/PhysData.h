@@ -1,0 +1,140 @@
+#pragma once
+
+ enum class SHAPE_TYPE
+{
+	BOX,
+	SPHERE,
+	CAPSULE,
+};
+
+ enum class ACTOR_TYPE
+ {
+	 DINAMIC,
+	 STATIC,
+	 KNEMATIC,
+ };
+
+
+struct Vec
+{
+	float x = 0.0f;
+	float y = 0.0f;
+	float z = 0.0f;
+	float w = 0.0f;; //회전값 있을때만
+};
+
+///하나의 강체를 만드는 구조체 무슨내용인지 보고싶으면 아래쪽에 설명
+///사용하지 않는 값은 그냥 디폴트값으로 놔두면된다
+struct PhysData
+{
+public:
+	///위치 데이터
+	//월드 위치
+	Vec WorldPosition	= { 0.0f,0.0f,0.0f,0.0f };
+	//로컬 위치 (계층 구조일때)
+	Vec LocalPosition	= { 0.0f,0.0f,0.0f,0.0f };
+	//회전
+	Vec Rotation		= { 1.0f,1.0f,1.0f,1.0f };
+	//어떠한 축 이동을 고정 시킬때 사용 
+	Vec FreezePositon	= { 0.0f,0.0f,0.0f,0.0f };
+	//어떠한 축 회전을 고정 시킬때 사용
+	Vec FreezeRotaticon = { 0.0f,0.0f,0.0f,0.0f };
+	//이객체의 이동값을 넣어준다
+	Vec Velocity		= { 0.0f,0.0f,0.0f,0.0f };
+	//이객체의 무게 중심점
+	Vec CenterPoint		= { 0.0f,0.0f,0.0f,0.0f };
+public:
+	///재질(메테리얼) 데이터
+	//정지 마찰력
+	float MT_StaticFriction = 0.5f;
+	//운동 마찰력
+	float MT_DynamicFriction = 0.5f;
+	//복원력
+	float MT_Restitution = 0.6f;
+	//무게
+	float MT_Mass = 1.0f;				
+public:
+	///객체 정보 데이터
+	//움직이는 객체인지 (Dinamic , Static)
+	bool isDinamic		= true;
+	//중력 작용 여부
+	bool isGrvity		= true;
+	//움직이진 않는데 충돌 할것인지
+	bool isKinematic	= false;
+public:
+	///콜라이더 데이터
+	//콜라이더의 사이즈
+	Vec Shape_Size = { 0.5f,0.5f, 0.5f,0.0f };
+
+	//콜라이더 만들때 이걸로 만들면 편함
+	void CreateBoxCollider(float x,float y,float z)
+	{
+		Shape_Size = { x,y,z };
+		Shape_type = SHAPE_TYPE::BOX;
+	}
+	//반지름
+	void CreateBoxCollider(float Radius)
+	{
+		Shape_Size = { Radius,Radius,Radius,Radius };
+		Shape_type = SHAPE_TYPE::BOX;
+	}
+
+	//반지름
+	void CreateSphereCollider(float Radius)
+	{
+		Shape_Size = { Radius,0.0f,0.0f,0.0f};
+		Shape_type = SHAPE_TYPE::SPHERE;
+	}
+
+	//반지름,높이
+	void CreateCapsuleCollider(float Radius,float Height)
+	{
+		Shape_Size = { Radius,Height,0.0f,0.0f };
+		Shape_type = SHAPE_TYPE::CAPSULE;
+	}
+
+	//콜라이더의 타입
+	SHAPE_TYPE	Shape_type = SHAPE_TYPE::BOX;
+
+	//이데이터와 PhysX안에 Actor는 서로 알고있도록하기위해
+	void* ActorObj;
+};
+
+//Phys 공간의 월드 데이터
+struct PhysSceneData
+{
+	
+
+};
+
+
+
+
+/*
+*
+ 복원력 (Restitution)
+	당구공을 예로 들자면 움직이는 공이 가만히있는 공과 충돌했을떄 움직이는 공은 멈추고
+	멈춰있던 공은 움직이게 된다 이때 작용되는것이 복원력 1일수록 충돌하였을떄 속도가 보존된다
+	0이라면 충돌 하자마자 멈춘다 즉 1 = 완전 탄성  0 = 비탄성 충돌
+
+ 정지 마찰력 (StaticFriction) , 운동 마찰력 (DynamicFriction)
+	물체가 움직이기 위한 마찰력을 의미 예를 들자면 가만히 있는 자동차를 처음움직이기는 힘들지만
+	움직이기 시작하면 큰힘이 들지않는다 물체가 움직이기 시작하면 운동 마찰력이 적용된다 많은 경우에
+	운동 마찰력은 정지 마찰력보다 작기때문에 
+	
+	F(힘) = u(마찰계수) * m(질량) * g(중력) 
+
+Dinamic 객체
+	힘에 의해서 움직일 수도 있고 충돌도 가능한 객체
+
+Knematic 객체
+	한 위치에서 다른 위치에서 이동은 가능하지만 힘에 의해서
+	움직일 수 있는 객체는 아니다
+
+	무한 질량을 가진 물체로 간주하며 moveGlobal 함수로 움직일수 있다
+	일반적인 Dynamic 액터를 밀수도 있다 하지만 static 과 다른 Knematic 물체와 충돌하지않음
+
+Static 객체
+	이객체는 어떠한 방법을 쓰더라도 움직일 수 없는 객체이다
+	고정된 물체를 의미한다
+*/
