@@ -10,7 +10,7 @@
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
-
+//
 // CChildFrame
 
 IMPLEMENT_DYNCREATE(CChildFrame, CMDIChildWnd)
