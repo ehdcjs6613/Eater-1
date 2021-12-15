@@ -463,6 +463,21 @@ void LoadManager::SetData(LoadMeshData* MeshData, ParserData::Mesh* LoadData)
 		}
 	}
 
+	// Index List 삽입..
+	for (int i = 0; i < LoadData->m_IndexList.size(); i++)
+	{
+		for (int j = 0; j < 3; j++)
+		{
+			MeshData->Index_List.push_back(LoadData->m_IndexList[i]->m_Index[j]);
+		}
+	}
+
+	// Vertex List 삽입..
+	for (int i = 0; i < LoadData->m_VertexList.size(); i++)
+	{
+		MeshData->Vertex_List.push_back(LoadData->m_VertexList[i]->m_Pos);
+	}
+
 	//매트릭스 정보 받기
 	MeshData->WorldTM = &LoadData->m_WorldTM;
 	MeshData->LocalTM = &LoadData->m_LocalTM;

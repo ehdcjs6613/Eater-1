@@ -475,7 +475,7 @@ Vertexbuffer* GraphicResourceFactory::CreateMeshVertexBuffer<MeshVertex>(ParserD
 	vBuffer->Count = vCount;
 	vBuffer->VertexbufferPointer = VB;
 	vBuffer->VertexDataSize = sizeof(MeshVertex);
-
+	
 	return vBuffer;
 }
 
