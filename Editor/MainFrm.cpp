@@ -204,3 +204,12 @@ DockableView* CMainFrame::GetDockableView()
 	}
 	return m_pDockableView;
 }
+
+DockableBase* CMainFrame::GetDockableBase()
+{
+	if (nullptr == m_pDlg)
+	{
+		return nullptr;
+	}
+	return m_pDlg;
+}

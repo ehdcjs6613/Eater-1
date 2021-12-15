@@ -25,6 +25,7 @@ class CBox;
 
 class BoxCollider;
 class SphereCollider;
+class ColliderExporter;
 //그리기를 위한 포인터의  클래스
 
 
@@ -41,6 +42,8 @@ class SphereCollider;
 #include "WJDefine.h"
 #include "GraphicsEngine.h"
 #include "XShader.h"
+
+
 
 /// <summary>
 /// 개별 렌더러 엔진?
@@ -158,7 +161,8 @@ private:
 	CBox* m_CBox;
 
 	BoxCollider* m_BoxCollider;
-	SphereCollider* m_SphereCollider;
+	ColliderExporter* m_ColliderExporter;
+	//SphereCollider* m_SphereCollider;
 
 
 	//ID3DX11Effect* m_FX;

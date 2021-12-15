@@ -62,6 +62,7 @@ public:
 	afx_msg void OnDockTable();
 public:
 	DockableView* GetDockableView();
+	DockableBase* GetDockableBase();
 };
 
 

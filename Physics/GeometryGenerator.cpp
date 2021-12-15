@@ -23,8 +23,6 @@ bool GeometryGenerator::CreateLineMesh(ID3D11Device* _pDevice,MeshType _mesh)
 		vertices[0x04] = { DirectX::XMFLOAT3(+5, -1.0f, +1.0f),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green) };
 		vertices[0x05] = { DirectX::XMFLOAT3(+5, +1.0f, +1.0f),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green) };
 
-
-
 		UINT indices[6];
 
 		///============================================================================================================================================///
@@ -41,23 +39,24 @@ bool GeometryGenerator::CreateLineMesh(ID3D11Device* _pDevice,MeshType _mesh)
 		int cnt = _countof(vertices);
 		ZeroMemory(&vertices, sizeof(VertexPositionColor) * cnt);
 
-		vertices[0x00] = { DirectX::XMFLOAT3(+6, -1.0f, -1.0f),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green) };
-		vertices[0x01] = { DirectX::XMFLOAT3(+6, +1.0f, -1.0f),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green) };
 
-		vertices[0x02] = { DirectX::XMFLOAT3(+8, +1.0f, -1.0f),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green) };
-		vertices[0x03] = { DirectX::XMFLOAT3(+8, -1.0f, -1.0f),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green) };
+		vertices[0x00] = { DirectX::XMFLOAT3(-x, -y, -z),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green) };
+		vertices[0x01] = { DirectX::XMFLOAT3(-x, +y, -z),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green) };
 
-		vertices[0x04] = { DirectX::XMFLOAT3(+8, -1.0f, +1.0f),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green) };
-		vertices[0x05] = { DirectX::XMFLOAT3(+8, +1.0f, +1.0f),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green) };
+		vertices[0x02] = { DirectX::XMFLOAT3(+x, +y, -z),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green) };
+		vertices[0x03] = { DirectX::XMFLOAT3(+x, -y, -z),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green) };
 
-		vertices[0x06] = { DirectX::XMFLOAT3(+6, +1.0f, +1.0f),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green) };
-		vertices[0x07] = { DirectX::XMFLOAT3(+6, -1.0f, +1.0f),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green) };
+		vertices[0x04] = { DirectX::XMFLOAT3(-x, -y, +z),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green) };
+		vertices[0x05] = { DirectX::XMFLOAT3(-x, +y, +z),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green) };
 
-		vertices[0x08] = { DirectX::XMFLOAT3(+2, -1.0f, -1.0f),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green) };
-		vertices[0x09] = { DirectX::XMFLOAT3(+2, +1.0f, -1.0f),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green) };
+		vertices[0x06] = { DirectX::XMFLOAT3(+x, +y, +z),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green) };
+		vertices[0x07] = { DirectX::XMFLOAT3(+x, -y, +z),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green) };
 
-		vertices[0x0a] = { DirectX::XMFLOAT3(+2, +1.0f, +1.0f),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green) };
-		vertices[0x0b] = { DirectX::XMFLOAT3(+2, -1.0f, +1.0f),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green) };
+		vertices[0x08] = { DirectX::XMFLOAT3(+x, -y, -z),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green) };
+		vertices[0x09] = { DirectX::XMFLOAT3(+x, +y, -z),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green) };
+
+		vertices[0x0a] = { DirectX::XMFLOAT3(+x, +y, +z),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green) };
+		vertices[0x0b] = { DirectX::XMFLOAT3(+x, -y, +z),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green) };
 
 
 		UINT indices[48];
@@ -77,7 +76,7 @@ bool GeometryGenerator::CreateLineMesh(ID3D11Device* _pDevice,MeshType _mesh)
 		///============================================================================================================================================///                 
 
 
-		CreateVertexBuffer<VertexPositionColor>(_pDevice, vertices, 8, vertices);
+		CreateVertexBuffer<VertexPositionColor>(_pDevice, vertices, 12, vertices);
 		//#_countof : 정적배열의 개수를 구하는 매크로
 		CreateIndexBuffer(_pDevice, indices, _countof(indices));
 	}
@@ -97,6 +96,13 @@ bool GeometryGenerator::CreateLineMesh(ID3D11Device* _pDevice,MeshType _mesh)
 	}
 
 	return false;
+}
+
+void GeometryGenerator::Position(float _x, float _y, float _z)
+{
+	x = _x;
+	y = _y;
+	z = _z;
 }
 
 

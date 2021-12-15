@@ -2,10 +2,22 @@
 
 #include "DllDefine.h"
 #include "DxDefine.h"
+#include "GeometryGenerator.h"
 #include "../Library/inc/Component/Component.h"
 
 class Collider : public Component
 {
+protected:
+	GeometryGenerator m_Gemetry;
+	unsigned int m_Num;							//콜라이더의 넘버
+
+	DirectX::XMFLOAT4X4 mWorld;	// 월드 변환 행렬 (로컬->월드)
+	DirectX::XMFLOAT4X4 mView;	// 시야 변환 행렬 (카메라 뷰)
+	DirectX::XMFLOAT4X4 mProj;	// 투영 변환 행렬 (원근/직교)
+
+	float Center[3];
+	float Size[3];
+
 public:
 	ID3D11Device* md3dDevice;						/// D3D11 디바이스
 	ID3D11DeviceContext* md3dImmediateContext;		/// 디바이스 컨텍스트
@@ -34,7 +46,13 @@ public:
 	ID3D11Device* GetDevice();						/// D3D11 디바이스
 	ID3D11DeviceContext* GetDeviceContext();		/// 디바이스 컨텍스트
 
+	PhysicsExport float* GetCenter();
+	PhysicsExport float* GetSize();
+
 protected:
 	virtual void Initialize();
+	virtual void SetSize(float _x, float _y, float _z);
+	virtual void SetCenter(float _x, float _y, float _z) ;
+
 };
 

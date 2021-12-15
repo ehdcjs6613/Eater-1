@@ -1,10 +1,13 @@
 #include "LibDefine.h"
 #include "MainHeader.h"
 #include "TScene.h"
+#include "ColliderExporter.h"
 #include "EditorSystem.h"
+
 
 EditorSystem::EditorSystem()
 {
+	
 }
 
 EditorSystem::~EditorSystem()
@@ -24,4 +27,5 @@ void EditorSystem::Start(HWND _g_hWnd)
 void EditorSystem::Update()
 {
 	UpdateEngine();
+	
 }

@@ -17,8 +17,10 @@
 #include "ParserData.h"
 #include "ResourcesData.h"
 #include "CBox.h"
+#include "../Physics/Collider.h"
 #include "../Physics/BoxCollider.h"
 #include "../Physics/SphereCollider.h"
+#include "../EditorLib/ColliderExporter.h"
 #include "X3Engine.h"
 
 //스마트포인터 인클르드
@@ -57,11 +59,12 @@ X3Engine::X3Engine() :
 	m_pRenderTargeter = new DirectXRenderTargeter();
 	m_CBox = new CBox();
 	m_BoxCollider = new BoxCollider();
-	m_SphereCollider = new SphereCollider();
+	//m_SphereCollider = new SphereCollider();
+	m_ColliderExporter = new ColliderExporter();
 
 	this->m_pDirectXSwapChain = new DirectXSwapChain(m_pDevice->GetDevice());
 
-	
+	m_ColliderExporter->PushInfo(m_BoxCollider);
 }
 
 X3Engine::~X3Engine()
@@ -244,6 +247,11 @@ void X3Engine::Delete()
 
 void X3Engine::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 {
+	if (GetAsyncKeyState(VK_RETURN) & 8001)
+	{
+		//
+		m_ColliderExporter->Export();
+	}
 	//렌더링시작의 순서.
 	//나중에 렌더 큐? 같은걸로 해보자,
 	m_pDeviceContext->GetDeviceContext()->RSSetViewports(1, &this->m_ViewPort);
@@ -256,16 +264,16 @@ void X3Engine::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 	m_CBox->Update(mView, mProj);
 	m_CBox->Render(meshList);
 
-	m_BoxCollider->Update();
+	//m_BoxCollider->Update();
 	////const DirectX::XMFLOAT4X4 _WorldTM = {  };
 	DirectX::XMMATRIX r = XMMatrixIdentity();
 	m_BoxCollider->Translasion(&r);
 	m_BoxCollider->Draw(mView, mProj);
 	m_BoxCollider->Rnder();
-
-	//m_SphereCollider->Translasion(&r);
-	m_SphereCollider->Draw(mView, mProj);
-	m_SphereCollider->Rnder();
+	//
+	////m_SphereCollider->Translasion(&r);
+	//m_SphereCollider->Draw(mView, mProj);
+	//m_SphereCollider->Rnder();
 
 	//m_BoxCol->Update(mView, mProj);
 	//m_BoxCol->Render(meshList);
@@ -296,7 +304,7 @@ void X3Engine::SetDevice(void* Devie, void* DevieContext)
 
 	m_CBox->Initialize(m_pDevice->GetDevice(), m_pDeviceContext->GetDeviceContext());
 	m_BoxCollider->Initialize(m_pDevice->GetDevice(), m_pDeviceContext->GetDeviceContext());
-	m_SphereCollider->Initialize(m_pDevice->GetDevice(), m_pDeviceContext->GetDeviceContext());
+	//m_SphereCollider->Initialize(m_pDevice->GetDevice(), m_pDeviceContext->GetDeviceContext());
 
 }
 

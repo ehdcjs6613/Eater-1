@@ -13,11 +13,6 @@
 class BoxCollider : public Collider
 {
 private:
-	GeometryGenerator m_Gemetry;
-
-	DirectX::XMMATRIX mWorld;	// 월드 변환 행렬 (로컬->월드)
-	DirectX::XMMATRIX mView;	// 시야 변환 행렬 (카메라 뷰)
-	DirectX::XMMATRIX mProj;	// 투영 변환 행렬 (원근/직교)
 
 public:
 	PhysicsExport BoxCollider();
@@ -57,5 +52,9 @@ public:
 public:
 	//상속 함수
 	virtual void Initialize() override;
+	virtual void SetSize(float _x, float _y, float _z) override;
+	virtual void SetCenter(float _x, float _y, float _z) override;
+
+	
 	
 };

@@ -1,7 +1,8 @@
 #include "Collider.h"
 
-Collider::Collider()
+Collider::Collider() :Size{ 1,1,1}, Center{0,0, 0}
 {
+	m_Num = 1;
 }
 
 Collider::~Collider()
@@ -56,6 +57,31 @@ ID3D11DeviceContext* Collider::GetDeviceContext()
 	return this->md3dImmediateContext;
 }
 
+float* Collider::GetCenter()
+{
+
+	return this->Center;
+}
+
+float* Collider::GetSize()
+{
+	return  this->Size;
+}
+
 void Collider::Initialize()
 {
+}
+
+void Collider::SetSize(float _x, float _y, float _z)
+{
+	 Size[0] = _x;
+	 Size[1] = _y;
+	 Size[2] = _z;
+}
+
+void Collider::SetCenter(float _x, float _y, float _z)
+{
+	Center[0] = _x;
+	Center[1] = _y;
+	Center[2] = _z;
 }

@@ -195,11 +195,23 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\lib"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ColliderExporter.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="EDDockableBase.cpp" />
     <ClCompile Include="EditorLib.cpp" />
     <ClCompile Include="EditorSystem.cpp" />
+    <ClCompile Include="EFile.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="EWGameView.cpp" />
     <ClCompile Include="DockableView.cpp" />
+    <ClCompile Include="Exporter.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="TKeyInput.cpp" />
     <ClCompile Include="TScene.cpp" />
   </ItemGroup>
@@ -208,12 +220,24 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\lib"</Command>
     <None Include="res\EditorLib.rc2" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ColliderExporter.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="DllExport.h" />
     <ClInclude Include="EDDockableBase.h" />
     <ClInclude Include="EditorLib.h" />
     <ClInclude Include="EditorSystem.h" />
+    <ClInclude Include="EFile.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="EWGameView.h" />
     <ClInclude Include="DockableView.h" />
+    <ClInclude Include="Exporter.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="LibDefine.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="TKeyInput.h" />

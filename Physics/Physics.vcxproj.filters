@@ -42,9 +42,6 @@
     <ClCompile Include="BoxCollider.cpp">
       <Filter>Colliders\BoxCollider</Filter>
     </ClCompile>
-    <ClCompile Include="dllmain.cpp">
-      <Filter>헤더 파일</Filter>
-    </ClCompile>
     <ClCompile Include="VertexPositionColor.cpp">
       <Filter>Vertex</Filter>
     </ClCompile>

@@ -20,6 +20,7 @@ struct GeometryGenerator
 
 	ID3D11InputLayout*			 m_pInputLayout;				// 인풋레이아웃
 
+	float x = 1, y = 1, z = 1;
 
 	//일단 효율적인 계산식부터 나열
 	enum class MeshType
@@ -33,6 +34,7 @@ struct GeometryGenerator
 public:
 	/// 라인으로만 그릴 함수
 	bool CreateLineMesh(ID3D11Device* ,MeshType );
+	void Position(float _x, float _y, float _z);
 protected:
 	template<class Arcive>
 	bool CreateVertexBuffer(ID3D11Device*, Arcive* ,int ,typename std::enable_if<std::is_class<Arcive>::value, bool>::type );
