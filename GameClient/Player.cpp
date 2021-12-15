@@ -1,12 +1,13 @@
 #include "Player.h"
+#include "AnimationController.h"
 #include "Transform.h"
 #include "MeshFilter.h"
 #include "GameObject.h"
 #include "MainHeader.h"
-#include "Rigidbody.h"
 
 Player::Player()
 {
+	AC = nullptr;
 	Tr = nullptr;
 	Mf = nullptr;
 }
@@ -21,57 +22,97 @@ void Player::Awake()
 	//컨퍼넌트 가져오기
 	Tr = gameobject->GetTransform();
 	Mf = gameobject->GetComponent<MeshFilter>();
-	ri = gameobject->GetComponent<Rigidbody>();
+	AC = gameobject->GetComponent<AnimationController>();
+
+
+	//총 오브젝트 생성
+	Gun = Instance("Gun");
+	Gun->AddComponent<MeshFilter>()->SetMeshName("Pistol");
+
+	//몽둥이 오브젝트 생성
+	Weapon = Instance("Weapon");
+	Weapon->AddComponent<MeshFilter>()->SetMeshName("Weapon");
 }
 
 void Player::Start()
 {
-	Mf->SetMeshName("box");
-	ri->CreateBoxCollider(1.0f);
-	Tr->Position = { 0,5,0 };
+	//컨퍼넌트 초기화
+	Mf->SetTextureName("Player");
+	Mf->SetAnimationName("Player");
+	Mf->SetMeshName("Player");
+
+	Tr->Position = { 0,0,0 };
+	Tr->Scale = { 1 ,1, 1 };
+	Tr->Rotation = { 0 ,0,0 };
+
+	//무기를 넣을 본을 찾아옴
+	RightHand	= gameobject->GetChildBone("mixamorig:RightHand");
+	LeftHand	= gameobject->GetChildBone("mixamorig:LeftHand");
+
+
+	//무기를 해당 본의 자식으로 넣는다
+	RightHand->ChoiceChild(Gun);
+	LeftHand->ChoiceChild(Weapon);
+
+	//각각의 무기들의 위치값을 조정
+	Gun->transform->Scale = { 1,1 ,1 };
+	Gun->transform->Rotation = { -90,-90,0 };
+	
+	Weapon->transform->Scale = { 1,1 ,1 };
+	Weapon->transform->Rotation = { -90,90,0 };
 }
 
 void Player::Update()
 {
-	float Speed = 5.0f * GetDeltaTime();
+	float Speed = 2.5f * GetDeltaTime();
 
 	if (GetKey(VK_RIGHT))
 	{
 		Move = true;
-		ri->SetTranlate(Speed, 0, 0);
+		gameobject->transform->SetLocalPosition(Speed,0,0);
 	}
-	if (GetKey(VK_LEFT))
+	else if (GetKey(VK_LEFT))
 	{
-		ri->SetTranlate(-Speed, 0, 0);
+		gameobject->transform->SetLocalPosition(-Speed, 0, 0);
+		Move = true;
 	}
-	if (GetKey(VK_UP))
+	else if (GetKey(VK_UP))
 	{
-		ri->SetTranlate(0, 0, Speed);
+		gameobject->transform->SetLocalPosition(0, 0, Speed);
+		Move = true;
 	}
-	if (GetKey(VK_DOWN))
+	else if (GetKey(VK_DOWN))
 	{
-		ri->SetTranlate(0, 0, -Speed);
+		gameobject->transform->SetLocalPosition(0, 0, -Speed);
+		Move = true;
+	}
+	else
+	{
+		Move = false;
 	}
 
-	if (GetKeyDown(VK_SPACE))
+	if (GetKey('Q'))
 	{
-		ri->SetTranlate(0, 1,0);
+		gameobject->transform->SetRotate(0,1,0);
+	}
+	else if (GetKey('E'))
+	{
+		gameobject->transform->SetRotate(0, 1, 0);
 	}
 
-	//else
-	//{
-	//	Move = false;
-	//}
-	//
-	//if (GetKey('Q'))
-	//{
-	//	gameobject->transform->SetRotate(0,1,0);
-	//}
-	//else if (GetKey('E'))
-	//{
-	//	gameobject->transform->SetRotate(0, 1, 0);
-	//}
 
+
+
+	if (Move == true)
+	{
+		AC->Choice("Run");
+	}
+	else
+	{
+		AC->Choice("Idle");
+	}
+
+	AC->Play(1, true);
 }
 
 

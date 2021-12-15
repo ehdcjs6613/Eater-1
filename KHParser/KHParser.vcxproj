@@ -170,7 +170,7 @@ copy/Y "$(SolutionDir)Library\lib\FBX\86\r\libfbxsdk.dll"   "..\\Library\lib"</C
     <PostBuildEvent>
       <Command>copy/Y "$(TargetPath)"      "..\\Library\lib"
 copy/Y "$(OutDir)$(TargetName).lib"      "..\\Library\lib"
-copy/Y "$(ProjectDir)Export\*.h"   "..\\Library\inc"
+copy/Y "$(ProjectDir)Export\*.h"   "..\\Library\inc\Parser"
 
 copy/Y "$(SolutionDir)Library\lib\FBX\64\d\libfbxsdk.dll"   "..\\Library\lib"</Command>
     </PostBuildEvent>
@@ -201,7 +201,7 @@ copy/Y "$(SolutionDir)Library\lib\FBX\64\d\libfbxsdk.dll"   "..\\Library\lib"</C
     <PostBuildEvent>
       <Command>copy/Y "$(TargetPath)"      "..\\Library\lib"
 copy/Y "$(OutDir)$(TargetName).lib"      "..\\Library\lib"
-copy/Y "$(ProjectDir)Export\*.h"   "..\\Library\inc"
+copy/Y "$(ProjectDir)Export\*.h"   "..\\Library\inc\Parser"
 
 copy/Y "$(SolutionDir)Library\lib\FBX\64\r\libfbxsdk.dll"   "..\\Library\lib"</Command>
     </PostBuildEvent>

@@ -1,7 +1,6 @@
 #include "Factory.h"
 #include "PxPhysicsAPI.h"
 #include "PhysData.h"
-#include "GeometryGenerator.h"
 
 using namespace physx;
 Factory::Factory()
@@ -16,62 +15,10 @@ Factory::~Factory()
 	m_Scene = nullptr;
 }
 
-
-void createRandomTerrain(const PxVec3& origin, PxU32 numRows, PxU32 numColumns,
-	PxReal cellSizeRow, PxReal cellSizeCol, PxReal heightScale,
-	PxVec3*& vertices, PxU32*& indices)
+void Factory::Initialize(physx::PxPhysics* Phys, physx::PxScene* Scene)
 {
-	PxU32 numX = (numColumns + 1);
-	PxU32 numZ = (numRows + 1);
-	PxU32 numVertices = numX * numZ;
-	PxU32 numTriangles = numRows * numColumns * 2;
-
-	if (vertices == NULL)
-		vertices = new PxVec3[numVertices];
-	if (indices == NULL)
-		indices = new PxU32[numTriangles * 3];
-
-	PxU32 currentIdx = 0;
-	for (PxU32 i = 0; i <= numRows; i++)
-	{
-		for (PxU32 j = 0; j <= numColumns; j++)
-		{
-			PxVec3 v(origin.x + PxReal(j) * cellSizeRow, origin.y, origin.z + PxReal(i) * cellSizeCol);
-			vertices[currentIdx++] = v;
-		}
-	}
-
-	currentIdx = 0;
-	for (PxU32 i = 0; i < numRows; i++)
-	{
-		for (PxU32 j = 0; j < numColumns; j++)
-		{
-			PxU32 base = (numColumns + 1) * i + j;
-			indices[currentIdx++] = base + 1;
-			indices[currentIdx++] = base;
-			indices[currentIdx++] = base + numColumns + 1;
-			indices[currentIdx++] = base + numColumns + 2;
-			indices[currentIdx++] = base + 1;
-			indices[currentIdx++] = base + numColumns + 1;
-		}
-	}
-
-	for (PxU32 i = 0; i < numVertices; i++)
-	{
-		PxVec3& v = vertices[i];
-		int num = (rand() % 2);
-		v.y += heightScale * num;
-	}
-}
-
-
-void Factory::Initialize(physx::PxPhysics* Phys, physx::PxScene* Scene, physx::PxCooking* Cooking)
-{
-	m_Phys		= Phys;
-	m_Scene		= Scene;
-	m_Cooking	= Cooking;
-
-	m_Geometry = new GeometryGenerator();
+	m_Phys = Phys;
+	m_Scene = Scene;
 }
 
 PxShape* Factory::CreateBoxCollider(PxMaterial* m)
@@ -95,6 +42,12 @@ PxShape* Factory::CreateBoxCollider(PxMaterial* m,float length)
 	return shape;
 }
 
+
+PxMaterial* Factory::CreateMaterial()
+{
+	return m_Phys->createMaterial(0, 0, 0);
+}
+
 PxMaterial* Factory::CreateMaterial(float x, float y, float z)
 {
 	return m_Phys->createMaterial(x, y, z);
@@ -103,44 +56,6 @@ PxMaterial* Factory::CreateMaterial(float x, float y, float z)
 PxMaterial* Factory::CreateMaterial(float length)
 {
 	return m_Phys->createMaterial(length, length, length);
-}
-
-physx::PxTriangleMesh* Factory::CreateTriangleCollider()
-{
-	const PxU32 numColumns = 128;
-	const PxU32 numRows = 128;
-	const PxU32 numVertices = (numColumns + 1) * (numRows + 1);
-	const PxU32 numTriangles = numColumns * numRows * 2;
-
-	PxVec3* vertices = new PxVec3[numVertices];
-	PxU32* indices = new PxU32[numTriangles * 3];
-
-	srand(50);
-
-	createRandomTerrain(PxVec3(0.0f, 0.0f, 0.0f), numRows, numColumns, 10.0f, 10.0f, 10.f, vertices, indices);
-
-	PxTriangleMeshDesc meshDesc;
-	//버텍스 관련 데이터
-	meshDesc.points.count = numVertices;
-	meshDesc.points.data = vertices;
-	meshDesc.points.stride = sizeof(PxVec3);
-
-	//페이스 관련 데이터
-	meshDesc.triangles.count = numTriangles;
-	meshDesc.triangles.data = indices;
-	meshDesc.triangles.stride =  3 * sizeof(PxU32);
-
-	bool t = m_Cooking->validateTriangleMesh(meshDesc);
-
-
-	PxDefaultMemoryOutputStream writeBuffer;
-	PxTriangleMeshCookingResult::Enum result;
-	bool status = m_Cooking->cookTriangleMesh(meshDesc, writeBuffer, &result);
-	if (!status)
-		return NULL;
-
-	PxDefaultMemoryInputData readBuffer(writeBuffer.getData(), writeBuffer.getSize());
-	return m_Phys->createTriangleMesh(readBuffer);
 }
 
 physx::PxShape* Factory::CreateSphereCollider(physx::PxMaterial* m, float length)
@@ -162,6 +77,9 @@ physx::PxShape* Factory::CreateCapsuleCollider(physx::PxMaterial* m, float Radiu
 
 void Factory::CreateDinamicActor(PhysData* Data, physx::PxShape* shape, physx::PxTransform* Tr)
 {
+	Tr->rotate(physx::PxVec3(45, 45, 45));
+	Tr->transform(PxVec3(10, 0, 0));
+
 	PxRigidDynamic* body = m_Phys->createRigidDynamic(*Tr);
 
 	shape->setFlag(PxShapeFlag::eSCENE_QUERY_SHAPE, true);
@@ -181,6 +99,7 @@ void Factory::CreateDinamicActor(PhysData* Data, physx::PxShape* shape, physx::P
 
 	body->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC,Data->isKinematic);
 	body->setActorFlag(PxActorFlag::eDISABLE_GRAVITY ,!Data->isGrvity);
+	int num = 0;
 }
 
 void Factory::CreateStaticActor(PhysData* Data, physx::PxShape* shape, physx::PxTransform* Tr)
@@ -193,8 +112,6 @@ void Factory::CreateStaticActor(PhysData* Data, physx::PxShape* shape, physx::Px
 	body->userData = Data;
 	Data->ActorObj = body;
 }
-
-
 
 
 

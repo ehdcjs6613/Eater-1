@@ -48,9 +48,4 @@ void PhysX_Delete_Actor(PhysData* data)
 	}
 }
 
-float PhysX_GetGrvity()
-{
-	return Engine->GetGrvity();
-}
-
 

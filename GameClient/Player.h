@@ -4,7 +4,6 @@
 class AnimationController;
 class Transform;
 class MeshFilter;
-class Rigidbody;
 
 class Player :public Component
 {
@@ -15,9 +14,15 @@ public:
 	void Start();
 	void Update();
 private:
+	AnimationController* AC;
 	Transform*	Tr;
 	MeshFilter* Mf;
-	Rigidbody* ri;
-	
+
+	GameObject* RightHand;
+	GameObject* LeftHand;
+
+	GameObject* Gun;
+	GameObject* Weapon;
+
 	bool Move;
 };

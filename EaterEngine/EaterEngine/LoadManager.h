@@ -54,8 +54,6 @@ public:
 	void LoadTexture(std::string Name);
 	//프리펩 로드
 	void LoadPrefap(std::string Name);
-	void CreateRandomTerrain();
-
 
 	///경로
 	//매쉬 경로 설정

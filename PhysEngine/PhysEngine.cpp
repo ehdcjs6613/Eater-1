@@ -4,7 +4,6 @@
 #include <ctype.h>
 #include "Broad.h"
 #include "Factory.h"
-#include "PhysData.h"
 
 #pragma comment(lib,"PhysX_64.lib")
 #pragma comment(lib,"PhysXFoundation_64.lib")
@@ -21,18 +20,11 @@
 using namespace physx;
 PhysEngine::PhysEngine()
 {
-	m_Allocator			= nullptr;
-	m_ErrorCallback		= nullptr;
-	m_TolerancesScale	= nullptr;
-
-
-	m_Cooking		= nullptr;
 	m_Foundation	= nullptr;
 	m_Physics		= nullptr;
 	m_Dispatcher	= nullptr;
 	m_Scene			= nullptr;
 	m_Material		= nullptr;
-	m_Pvd			= nullptr;
 }
 
 PhysEngine::~PhysEngine()
@@ -60,7 +52,7 @@ bool PhysEngine::Initialize(int ThreadCount, PhysSceneData* SceneData, bool Debu
 	
 	//펙토리 생성
 	m_Factory = new Factory();
-	m_Factory->Initialize(m_Physics,m_Scene,m_Cooking);
+	m_Factory->Initialize(m_Physics,m_Scene);
 
 
 	return true;
@@ -129,24 +121,16 @@ void PhysEngine::Create_Actor(PhysData* data)
 	case SHAPE_TYPE::CAPSULE:
 		shape = m_Factory->CreateCapsuleCollider(pMaterial, data->Shape_Size.x, data->Shape_Size.y);
 		break;
-	case SHAPE_TYPE::TRIANGLE:
-		PxTriangleMesh* Triangle = m_Factory->CreateTriangleCollider();
-
-		PxTriangleMeshGeometry geom;
-		geom.triangleMesh = Triangle;
-		shape = m_Physics->createShape(geom, *pMaterial);
-		break;
 	}
-
 
 	///물리 객체 생성
 	if (data->isDinamic == true)
 	{
-		m_Factory->CreateDinamicActor(data, shape, TR);
+		m_Factory->CreateDinamicActor(data, shape,TR);
 	}
 	else
 	{
-		m_Factory->CreateStaticActor(data, shape, TR);
+		m_Factory->CreateStaticActor(data, shape,TR);
 	}
 
 	if (shape != nullptr)
@@ -158,57 +142,16 @@ void PhysEngine::Create_Actor(PhysData* data)
 void  PhysEngine::Update_Actor(PhysData* data)
 {
 	PxRigidActor* rig = reinterpret_cast<PxRigidActor*>(data->ActorObj);
-	if (data->isDinamic == true)
-	{
-		PxRigidDynamic* rig = reinterpret_cast<PxRigidDynamic*>(data->ActorObj);
-		PxTransform Tr = rig->getGlobalPose();
-	
-		data->WorldPosition.x = Tr.p.x;
-		data->WorldPosition.y = Tr.p.y;
-		data->WorldPosition.z = Tr.p.z;
-	
-		data->Rotation.x = Tr.q.x;
-		data->Rotation.y = Tr.q.y;
-		data->Rotation.z = Tr.q.z;
-		data->Rotation.w = Tr.q.w;
-	
-		
-		if (data->isMove == true)
-		{
-			PxTransform Pos = rig->getGlobalPose();
-			Pos.p.x += data->MovePoint.x;
-			Pos.p.y += data->MovePoint.y;
-			Pos.p.z += data->MovePoint.z;
-			rig->setGlobalPose(Pos, false);
-	
-			data->MovePoint.x = 0.0f;
-			data->MovePoint.y = 0.0f;
-			data->MovePoint.z = 0.0f;
-			data->isMove = false;
-			rig->setLinearVelocity(PxVec3(0,0,0));
-		}
-	
-		if (data->isForce == true)
-		{
-			rig->addForce(PxVec3(data->Force.x, data->Force.y, data->Force.z));
-			data->isForce = false;
-		}
-	}
-	else
-	{
-		PxRigidActor* rig = reinterpret_cast<PxRigidActor*>(data->ActorObj);
-		PxTransform Tr = rig->getGlobalPose();
-	
-		data->WorldPosition.x = Tr.p.x;
-		data->WorldPosition.y = Tr.p.y;
-		data->WorldPosition.z = Tr.p.z;
-	
-		data->Rotation.x = Tr.q.x;
-		data->Rotation.y = Tr.q.y;
-		data->Rotation.z = Tr.q.z;
-		data->Rotation.w = Tr.q.w;
-	}
+	PxTransform Tr = rig->getGlobalPose();
 
+	data->WorldPosition.x = Tr.p.x;
+	data->WorldPosition.y = Tr.p.y;
+	data->WorldPosition.z = Tr.p.z;
+
+	data->Rotation.x = Tr.q.x;
+	data->Rotation.y = Tr.q.y;
+	data->Rotation.z = Tr.q.z;
+	data->Rotation.w = Tr.q.w;
 }
 
 void PhysEngine::Delete_Actor(PhysData* data)
@@ -216,12 +159,6 @@ void PhysEngine::Delete_Actor(PhysData* data)
 	//한개의 엑터 삭제
 	PxRigidActor* rig = reinterpret_cast<PxRigidActor*>(data->ActorObj);
 	rig->release();
-}
-
-float PhysEngine::GetGrvity()
-{
-	PxVec3 temp = m_Scene->getGravity();
-	return  temp.y;
 }
 
 bool PhysEngine::CreateScene(PhysSceneData* SceneData)
@@ -297,7 +234,6 @@ bool PhysEngine::Initialize_Debug(int ThreadCount)
 	m_Physics	= PxCreatePhysics(PX_PHYSICS_VERSION, *m_Foundation, PxTolerancesScale(), true, m_Pvd);
 	PxInitExtensions(*m_Physics, m_Pvd);
 
-	m_Cooking = PxCreateCooking(PX_PHYSICS_VERSION, *m_Foundation, PxTolerancesScale());
 
 	//쓰레드 개수만큼 Phys 를 돌림
 	m_Dispatcher = PxDefaultCpuDispatcherCreate(ThreadCount);
@@ -306,7 +242,6 @@ bool PhysEngine::Initialize_Debug(int ThreadCount)
 	if (m_Foundation == nullptr) { return false; }
 	if (m_Physics == nullptr) { return false; }
 	if (m_Dispatcher == nullptr) { return false; }
-	if (m_Cooking == nullptr) { return false; }
 
 	return true;
 }
