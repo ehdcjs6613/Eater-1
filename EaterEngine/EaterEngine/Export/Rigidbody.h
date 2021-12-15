@@ -2,7 +2,7 @@
 
 #include "EaterEngineDLL.h"
 #include "Component.h"
-
+#include <string>
 class Transform;
 class PhysData;
 class LoadManager;

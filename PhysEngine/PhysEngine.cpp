@@ -11,6 +11,7 @@
 #pragma comment(lib,"PhysXCommon_64.lib")
 #pragma comment(lib,"PhysXPvdSDK_static_64.lib")
 
+#include "Ps.h"
 //#pragma comment(lib,"PhysXVehicle_static_64.lib")				//차량
 //#pragma comment(lib,"PhysXCharacterKinematic_static_64.lib")	//캐릭터
 
@@ -244,6 +245,7 @@ bool PhysEngine::Initialize_Debug(int ThreadCount)
 	PxInitExtensions(*m_Physics, m_Pvd);
 
 	m_Cooking = PxCreateCooking(PX_PHYSICS_VERSION, *m_Foundation, PxTolerancesScale());
+
 
 
 	//쓰레드 개수만큼 Phys 를 돌림

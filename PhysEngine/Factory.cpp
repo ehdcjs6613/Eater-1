@@ -141,6 +141,9 @@ physx::PxShape* Factory::CreateTriangleCollider(physx::PxMaterial* m, TriangleMe
 	int IndexCount = TriangleData->IndexList->size();
 	int VertexCount = TriangleData->VertexList->size();
 
+	//std::vector<PxVec3> VectexList;
+	//std::vector<PxU32> VectexList;
+
 	PxVec3* VectexList	= new PxVec3[VertexCount];
 	PxU32* IndexList	= new PxU32[IndexCount];
 
@@ -158,22 +161,26 @@ physx::PxShape* Factory::CreateTriangleCollider(physx::PxMaterial* m, TriangleMe
 	meshDesc.triangles.stride	= 3*sizeof(PxU32);
 	meshDesc.triangles.data		= IndexList;
 
-
-	bool t = m_Cooking->validateTriangleMesh(meshDesc);
-
-	PxDefaultMemoryOutputStream writeBuffer;
-	PxTriangleMeshCookingResult::Enum result;
-	bool status = m_Cooking->cookTriangleMesh(meshDesc, writeBuffer, &result);
-	if (!status)
-		return NULL;
-
-	PxDefaultMemoryInputData readBuffer(writeBuffer.getData(), writeBuffer.getSize());
-	PxTriangleMesh* Triangle =  m_Phys->createTriangleMesh(readBuffer);
-
+	PxTriangleMesh* triMesh = m_Cooking->createTriangleMesh(meshDesc, m_Phys->getPhysicsInsertionCallback());
 	PxTriangleMeshGeometry geom;
-	geom.triangleMesh = Triangle;
-	
+	geom.triangleMesh = triMesh;
 	physx::PxShape* shape = m_Phys->createShape(geom, *m);
+
+	//bool t = m_Cooking->validateTriangleMesh(meshDesc);
+	//
+	//PxDefaultMemoryOutputStream writeBuffer;
+	//PxTriangleMeshCookingResult::Enum result;
+	//bool status = m_Cooking->cookTriangleMesh(meshDesc, writeBuffer, &result);
+	//if (!status)
+	//	return NULL;
+	//
+	//PxDefaultMemoryInputData readBuffer(writeBuffer.getData(), writeBuffer.getSize());
+	//PxTriangleMesh* Triangle =  m_Phys->createTriangleMesh(readBuffer);
+	//
+	//PxTriangleMeshGeometry geom;
+	//geom.triangleMesh = Triangle;
+	//
+	//physx::PxShape* shape = m_Phys->createShape(geom, *m);
 
 	//Triangle->release();
 	return shape;

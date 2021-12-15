@@ -19,9 +19,8 @@ void intro::Awake()
 	LoadTexturePath("../Resources/Texture/");
 
 	LoadMesh("box");
-	LoadMesh("Terrain_Sample");
+	LoadMesh("Terrain2");
 	LoadMesh("Sphere");
-	LoadMesh("Field");
 
 	LoadTexture("Dump.png");
 
@@ -41,33 +40,38 @@ void intro::Awake()
 	Tr = testobj->GetComponent<Transform>();
 	Rig = testobj->AddComponent<Rigidbody>();
 	
-	Rig->CreateTriangleCollider("Terrain");
-	Mf->SetMeshName("Terrain");
-	Tr->Position = { 10,0,0 };
+	Rig->CreateTriangleCollider("Terrain2");
+	Mf->SetMeshName("Terrain2");
+	Tr->Position = { 0,10,0 };
 	Tr->Rotation = { 0,0,0 };
 
-
-
-
-	///°ø
-	testobj = Instance("obj");
-	Mf	= testobj->AddComponent<MeshFilter>();
-	Rig = testobj->AddComponent<Rigidbody>();
-	Tr	= testobj->GetComponent<Transform>();
+	for (int i = 0; i < 9; i++)
+	{
+		///°ø
+		testobj = Instance("obj");
+		Mf	= testobj->AddComponent<MeshFilter>();
+		Rig = testobj->AddComponent<Rigidbody>();
+		Tr	= testobj->GetComponent<Transform>();
 	
-	Mf->SetMeshName("Sphere");
-	Rig->CreateSphereCollider(1);
-	Tr->Position = { 0,0,0 };
-	//
-	//
+		Mf->SetMeshName("Sphere");
+		Rig->CreateSphereCollider(0.5f);
+		Tr->Position = { (float)i,30,(float)i};
+		Tr->Scale = { 0.5f,0.5f,0.5f };
+	}
+
 	//testobj = Instance("obj");
 	//Mf = testobj->AddComponent<MeshFilter>();
 	//Rig = testobj->AddComponent<Rigidbody>();
 	//Tr = testobj->GetComponent<Transform>();
+	//testobj->GetComponent<Player>();
 	//
 	//Mf->SetMeshName("Sphere");
 	//Rig->CreateSphereCollider(0.5f);
-	//Tr->Position = { 0,6,0.5f };
+	//Tr->Position = { (float)0,30,(float)0 };
+	//Tr->Scale = { 0.5f,0.5f,0.5f };
+	
+	
+	
 }
 
 void intro::Start()
