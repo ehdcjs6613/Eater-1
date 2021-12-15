@@ -130,25 +130,32 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)Library\inc\PhysX\pxshared\include;$(SolutionDir)Library\inc\PhysX\source\foundation\include;$(SolutionDir)Library\inc\PhysX\source\physxextensions\src;$(SolutionDir)Library\inc\PhysX\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)inc\pxshared\include;$(ProjectDir)inc\source\foundation\include;$(ProjectDir)inc\source\physxextensions\src;$(ProjectDir)inc\include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalLibraryDirectories>$(SolutionDir)Library\lib\PhysX;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy/Y "$(TargetDir)*.lib"   "$(SolutionDir)Library\lib"
+
 copy/Y "$(TargetDir)*.dll"   "$(SolutionDir)Library\lib"
 
-copy/Y "$(SolutionDir)Library\lib\PhysX\*dll" "$(TargetDir)"
-copy/Y "$(SolutionDir)Library\lib\PhysX\*dll" "$(TargetDir)"
+
+
+copy/Y "$(ProectDir)lib\*dll" "$(TargetDir)"
+
+
+
 
 copy /Y "$(ProjectDir)PhysEngineDLL.h" "$(SolutionDir)Library\inc"
+
 copy /Y "$(ProjectDir)PhysX_API.h" "$(SolutionDir)Library\inc"
+
 copy /Y "$(ProjectDir)PhysData.h" "$(SolutionDir)Library\inc"
 </Command>
     </PostBuildEvent>
@@ -163,7 +170,7 @@ copy /Y "$(ProjectDir)PhysData.h" "$(SolutionDir)Library\inc"
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)Library\inc\PhysX\pxshared\include;$(SolutionDir)Library\inc\PhysX\source\foundation\include;$(SolutionDir)Library\inc\PhysX\source\physxextensions\src;$(SolutionDir)Library\inc\PhysX\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)inc\pxshared\include;$(ProjectDir)inc\source\foundation\include;$(ProjectDir)inc\source\physxextensions\src;$(ProjectDir)inc\include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -172,18 +179,25 @@ copy /Y "$(ProjectDir)PhysData.h" "$(SolutionDir)Library\inc"
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalLibraryDirectories>$(SolutionDir)Library\lib\PhysX;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy/Y "$(TargetDir)*.lib"   "$(SolutionDir)Library\lib"
+
 copy/Y "$(TargetDir)*.dll"   "$(SolutionDir)Library\lib"
 
-copy/Y "$(SolutionDir)Library\lib\PhysX\*dll" "$(TargetDir)"
-copy/Y "$(SolutionDir)Library\lib\PhysX\*dll" "$(TargetDir)"
+
+
+copy/Y "$(ProectDir)lib\*dll" "$(TargetDir)"
+
+
+
 
 copy /Y "$(ProjectDir)PhysEngineDLL.h" "$(SolutionDir)Library\inc"
+
 copy /Y "$(ProjectDir)PhysX_API.h" "$(SolutionDir)Library\inc"
+
 copy /Y "$(ProjectDir)PhysData.h" "$(SolutionDir)Library\inc"
 </Command>
     </PostBuildEvent>
