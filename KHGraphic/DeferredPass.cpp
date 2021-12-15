@@ -111,8 +111,8 @@ void DeferredPass::Start(int width, int height)
 	m_MeshVS = g_Shader->GetShader("Mesh_VS");
 	m_SkinVS = g_Shader->GetShader("Skin_VS");
 	m_TerrainVS = g_Shader->GetShader("Terrain_VS");
-	m_BasicDeferredPS = g_Shader->GetShader("BasicDeferred_PS");
-	m_TerrainDeferredPS = g_Shader->GetShader("TerrainDeferred_PS");
+	m_DeferredPS = g_Shader->GetShader("Deferred_PS");
+	m_TerrainPS = g_Shader->GetShader("Terrain_PS");
 
 	// DepthStencilView ¼³Á¤..
 	m_DepthStencilView = g_Resource->GetDepthStencil<DS_Defalt>()->GetDSV()->Get();
@@ -231,17 +231,17 @@ void DeferredPass::Update(MeshData* mesh, GlobalData* global)
 
 		MaterialBuffer* layer1 = mesh->Material_List[1];
 		MaterialBuffer* layer2 = mesh->Material_List[2];
-		m_TerrainDeferredPS->SetShaderResourceView<gDiffuseLayer1>((ID3D11ShaderResourceView*)layer1->Albedo->TextureBufferPointer);
-		m_TerrainDeferredPS->SetShaderResourceView<gNormalLayer1>((ID3D11ShaderResourceView*)layer1->Normal->TextureBufferPointer);
-		m_TerrainDeferredPS->SetShaderResourceView<gDiffuseLayer2>((ID3D11ShaderResourceView*)layer2->Albedo->TextureBufferPointer);
-		m_TerrainDeferredPS->SetShaderResourceView<gNormalLayer2>((ID3D11ShaderResourceView*)layer2->Normal->TextureBufferPointer);
+		m_TerrainPS->SetShaderResourceView<gDiffuseLayer1>((ID3D11ShaderResourceView*)layer1->Albedo->TextureBufferPointer);
+		m_TerrainPS->SetShaderResourceView<gNormalLayer1>((ID3D11ShaderResourceView*)layer1->Normal->TextureBufferPointer);
+		m_TerrainPS->SetShaderResourceView<gDiffuseLayer2>((ID3D11ShaderResourceView*)layer2->Albedo->TextureBufferPointer);
+		m_TerrainPS->SetShaderResourceView<gNormalLayer2>((ID3D11ShaderResourceView*)layer2->Normal->TextureBufferPointer);
 
 		CB_Material materialBuf;
 		materialBuf.gMatID = mat->Material_Index;
-		m_BasicDeferredPS->SetConstantBuffer(materialBuf);
+		m_TerrainPS->SetConstantBuffer(materialBuf);
 
 		// Pixel Shader Update..
-		m_BasicDeferredPS->Update();
+		m_TerrainPS->Update();
 
 		return;
 	}
@@ -275,18 +275,18 @@ void DeferredPass::Update(MeshData* mesh, GlobalData* global)
 	if (mat->Albedo)
 	{
  		materialBuf.gTexID |= ALBEDO_MAP;
-		m_BasicDeferredPS->SetShaderResourceView<gDiffuseMap>((ID3D11ShaderResourceView*)mat->Albedo->TextureBufferPointer);
+		m_DeferredPS->SetShaderResourceView<gDiffuseMap>((ID3D11ShaderResourceView*)mat->Albedo->TextureBufferPointer);
 	}
 	if (mat->Normal)
 	{
 		materialBuf.gTexID |= NORMAL_MAP;
-		m_BasicDeferredPS->SetShaderResourceView<gNormalMap>((ID3D11ShaderResourceView*)mat->Normal->TextureBufferPointer);
+		m_DeferredPS->SetShaderResourceView<gNormalMap>((ID3D11ShaderResourceView*)mat->Normal->TextureBufferPointer);
 	}
 
-	m_BasicDeferredPS->SetConstantBuffer(materialBuf);
+	m_DeferredPS->SetConstantBuffer(materialBuf);
 
 	// Pixel Shader Update..
-	m_BasicDeferredPS->Update();
+	m_DeferredPS->Update();
 }
 
 void DeferredPass::Render(MeshData* mesh)

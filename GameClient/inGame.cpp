@@ -58,10 +58,10 @@ void InGame::Awake()
 	//testobj->GetTransform()->Position = { 100.0f, 0.0f, 0.0f };
 
 	///캐릭터
-	//testobj = Instance("Player");
-	//testobj->AddComponent<AnimationController>();
-	//testobj->AddComponent<MeshFilter>();
-	//testobj->AddComponent<Player>();
+	testobj = Instance("Player");
+	testobj->AddComponent<AnimationController>();
+	testobj->AddComponent<MeshFilter>();
+	testobj->AddComponent<Player>();
 
 	///터레인
 	testobj = Instance("Terrain");
@@ -72,9 +72,9 @@ void InGame::Awake()
 	testobj->GetTransform()->Rotation = { 90, 0, 0 };
 
 	/// 바닥
-	//testobj = Instance("Field");
-	//testobj->AddComponent<MeshFilter>()->SetMeshName("Field");
-	//testobj->GetComponent<Transform>()->Scale = { 0.5f, 0.5f, 0.5f };
+	testobj = Instance("Field");
+	testobj->AddComponent<MeshFilter>()->SetMeshName("Field");
+	testobj->GetComponent<Transform>()->Scale = { 0.5f, 0.5f, 0.5f };
 
 	//testobj = Instance("Field1");
 	//testobj->AddComponent<MeshFilter>()->SetMeshName("Field");

@@ -156,6 +156,8 @@ void MeshFilter::CreateChild_Mesh(LoadMeshData* data, Transform* parent, ModelDa
 	if (data->Child.size() > 0)
 	{
 		OBJ = new GameObject();
+		OBJ_Manager->PushCreateObject(OBJ);
+		MeshList.push_back(OBJ);
 	}
 
 	///컨퍼넌트 생성후 초기화
@@ -201,8 +203,6 @@ void MeshFilter::CreateChild_Mesh(LoadMeshData* data, Transform* parent, ModelDa
 	Mat->PushMaterialData(data);
 	Filter->PushModelData(data);
 
-	OBJ_Manager->PushCreateObject(OBJ);
-	MeshList.push_back(OBJ);
 
 	///재귀 함수
 	int ChildCount = (int)data->Child.size();
