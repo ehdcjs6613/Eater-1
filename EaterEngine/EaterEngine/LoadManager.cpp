@@ -476,7 +476,16 @@ void LoadManager::SetData(LoadMeshData* MeshData, ParserData::Mesh* LoadData)
 	// Vertex List 삽입..
 	for (int i = 0; i < LoadData->m_VertexList.size(); i++)
 	{
-		MeshData->Vertex_List.push_back(LoadData->m_VertexList[i]->m_Pos);
+		DirectX::XMVECTOR  LocalVertex	= LoadData->m_VertexList[i]->m_Pos;
+		DirectX::XMMATRIX  LocalTM		= LoadData->m_LocalTM;
+
+		DirectX::XMVECTOR WorldVertex = DirectX::XMVector3Transform(LocalVertex, LocalTM);
+		DirectX::SimpleMath::Vector3 world = WorldVertex;
+		//DirectX::SimpleMath::
+		//LocalVertex* LocalTM;
+
+		
+		MeshData->Vertex_List.push_back(world);
 	}
 
 	//매트릭스 정보 받기

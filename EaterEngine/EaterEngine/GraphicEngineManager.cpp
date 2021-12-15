@@ -21,10 +21,10 @@ void GraphicEngineManager::Initialize(HWND Hwnd, int WinSizeWidth, int WinSizeHe
 	ObjManager = GM;
 
 	// Graphic Engine Create..
-	//GEngine = GraphicEngine::Create();
+	GEngine = GraphicEngine::Create();
 
 	/// 인터페이스 채워서 쓰면 됨
-	GEngine = GraphicEngine::CreateHS();
+	//GEngine = GraphicEngine::CreateHS();
 
 	// Graphic Engine Initialize..
 	GEngine->Initialize(Hwnd, WinSizeWidth, WinSizeHeight);
