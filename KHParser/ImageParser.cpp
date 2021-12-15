@@ -16,11 +16,11 @@ PARSER_DLL ImageParser* ImageParser::Create(IMAGE_TYPE type)
 
 	switch (type)
 	{
-	case IMAGE_TYPE::FLOAT_COLOR:
+	case IMAGE_TYPE::FLOAT_IMAGE:
 		newParser = new FloatImage();
 		newParser->Initialize();
 		break;
-	case IMAGE_TYPE::CHAR_COLOR:
+	case IMAGE_TYPE::CHAR_IMAGE:
 		newParser = new CharImage();
 		newParser->Initialize();
 		break;
@@ -33,7 +33,7 @@ PARSER_DLL ImageParser* ImageParser::Create(IMAGE_TYPE type)
 
 PARSER_DLL void ImageParser::WriteImagePixel(const char* fileName, ParserData::ImageData image, EXTENSION_TYPE extension_type)
 {
-	if (image.type == IMAGE_TYPE::FLOAT_COLOR)
+	if (image.type == IMAGE_TYPE::FLOAT_IMAGE)
 	{
 		for (int i = 0; i < image.width * image.height; i++)
 		{

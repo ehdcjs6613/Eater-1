@@ -19,14 +19,6 @@ protected:
 	virtual ~ImageParser() = default;
 
 public:
-	// 사용 할 Image Color 타입
-	enum Type
-	{
-		FLOAT,
-		CHAR
-	};
-
-public:
 	// Create 함수를 통해 ImageParser 생성..
 	static PARSER_DLL ImageParser* Create(IMAGE_TYPE type);
 

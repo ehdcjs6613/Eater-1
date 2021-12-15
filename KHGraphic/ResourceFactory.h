@@ -5,6 +5,7 @@
 interface ID3D11Graphic;
 class BasicRenderTarget;
 class ComputeRenderTarget;
+class ImageParser;
 
 class GraphicResourceFactory : public IGraphicResourceFactory
 {
@@ -46,6 +47,7 @@ public:
 private:
 	template<typename T>
 	Vertexbuffer* CreateMeshVertexBuffer(ParserData::Mesh* mesh);
+	//Vertexbuffer* CreateTerrainVertexBuffer(ParserData::Mesh* mesh, std::string maskName);
 
 	void CreateMainRenderTarget(Hash_Code hash_Code, UINT width, UINT height);
 
@@ -62,6 +64,7 @@ private:
 
 private:
 	ID3D11Graphic* m_Graphic;
+	ImageParser* m_Parser;
 	IShaderManager* m_ShaderManager;
 	IGraphicResourceManager* m_ResourceManager;
 };
