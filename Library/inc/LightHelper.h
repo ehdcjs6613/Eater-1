@@ -9,10 +9,9 @@
 
 #include <Windows.h>
 
-// LEHIDE
 //#include <xnamath.h>
-#include <DirectXMath.h>
-#include "SimpleMath.h"
+//#include <DirectXMath.h>
+//#include "SimpleMath.h"
 
 // Note: Make sure structure alignment agrees with HLSL structure padding rules. 
 //   Elements are packed into 4D vectors with the restriction that an element
@@ -67,6 +66,17 @@ struct SpotLightData
 	float Pad; // Pad the last float so we can set an array of lights if we wanted.
 };
 
+struct LightData
+{
+	DirectionalLightData* DirLights[3];
+	PointLightData* PointLights[5];
+	SpotLightData* SpotLights[5];
+
+	UINT gDirLightCount;
+	UINT gPointLightCount;
+	UINT gSpotLightCount;
+};
+
 struct MaterialData
 {
 	MaterialData() = default;
@@ -84,16 +94,4 @@ struct MaterialData
 			return false;
 	}
 };
-
-struct LightData
-{
-	DirectionalLightData* DirLights[3];
-	PointLightData* PointLights[5];
-	SpotLightData* SpotLights[5];
-
-	UINT gDirLightCount;
-	UINT gPointLightCount;
-	UINT gSpotLightCount;
-};
-
 #endif // LIGHTHELPER_H

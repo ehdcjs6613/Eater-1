@@ -4,6 +4,34 @@
 #include <vector>
 #include "SimpleMath.h"
 
+typedef enum MESH_TYPE
+{
+	STATIC_MESH,
+	BONE_MESH,
+	SKIN_MESH,
+	TERRAIN_MESH
+}MESH_TYPE;
+
+typedef enum TEXTURE_TYPE : UINT
+{
+	DIFFUSE_TEXTURE		= 0x00000001,
+	NORMAL_TEXTURE		= 0x00000010,
+	SPECULAR_TEXTURE	= 0x00000100,
+	SHINE_TEXTURE		= 0x00001000,
+}TEXTURE_TYPE;
+
+typedef enum IMAGE_TYPE
+{
+	FLOAT_COLOR,
+	CHAR_COLOR,
+}IMAGE_TYPE;
+
+typedef enum EXTENSION_TYPE
+{
+	PNG_IMAGE,
+	BMP_IMAGE,
+}EXTENSION_TYPE;
+
 namespace ParserData
 {
 	struct OneFrame
@@ -94,6 +122,7 @@ namespace ParserData
 		int	m_MaterialNumber;
 		std::string	m_MaterialName;
 
+
 		DirectX::SimpleMath::Vector4 m_Material_Ambient;
 		DirectX::SimpleMath::Vector4 m_Material_Diffuse;
 		DirectX::SimpleMath::Vector4 m_Material_Specular;
@@ -103,15 +132,12 @@ namespace ParserData
 		float m_Material_Transparency;
 		float m_Material_Reflectivity;
 
+		UINT m_TextureBind;					// Texture Bind Type
+
 		MaterialMap* m_DiffuseMap;			// DiffuseMap Data
-		MaterialMap* m_BumpMap;				// BumpMap Data
+		MaterialMap* m_NormalMap;			// NormalMap Data
 		MaterialMap* m_SpecularMap;			// SpecularMap Data
 		MaterialMap* m_ShineMap;			// ShineMap Data
-
-		bool m_IsDiffuseMap;
-		bool m_IsBumpMap;
-		bool m_IsSpecularMap;
-		bool m_IsShineMap;
 
 		std::vector<MaterialMap*> m_MapList;
 	};
@@ -128,9 +154,8 @@ namespace ParserData
 		std::string	m_ParentName;
 
 		/// Object Type Data
+		MESH_TYPE m_MeshType;
 		bool m_TopNode;
-		bool m_IsSkinningObject;
-		bool m_IsBone;
 
 		int m_BoneIndex;
 
@@ -227,6 +252,9 @@ namespace ParserData
 
 	struct ImageData
 	{
+		IMAGE_TYPE type;
+		unsigned int channels;
+
 		int width;
 		int height;
 		void* imgColor;

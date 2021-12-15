@@ -427,9 +427,6 @@
     <FxCompile Include="..\Resources\Shader\SKH\LightHelper.fx">
       <Filter>소스 파일\Shader\FX</Filter>
     </FxCompile>
-    <FxCompile Include="..\Resources\Shader\SKH\DeferredPS.hlsl">
-      <Filter>소스 파일\Shader\HLSL\Render\Deffered</Filter>
-    </FxCompile>
     <FxCompile Include="..\Resources\Shader\SKH\LightPS.hlsl">
       <Filter>소스 파일\Shader\HLSL\Render\Deffered\Light</Filter>
     </FxCompile>
@@ -447,6 +444,9 @@
     </FxCompile>
     <FxCompile Include="..\Resources\Shader\SKH\SSAOBlurVS.hlsl">
       <Filter>소스 파일\Shader\HLSL\SSAO\Blur</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Resources\Shader\SKH\DeferredPS.hlsl">
+      <Filter>소스 파일\Shader\HLSL\Render\Deffered</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

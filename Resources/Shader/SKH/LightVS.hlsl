@@ -10,7 +10,7 @@ struct FullScreenVertexOut
 	float2 Tex     : TEXCOORD;
 };
 
-FullScreenVertexOut LightVS(FullScreenVertexIn vin)
+FullScreenVertexOut Light_VS(FullScreenVertexIn vin)
 {
 	FullScreenVertexOut vout;
 

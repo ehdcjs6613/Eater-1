@@ -11,6 +11,7 @@
 /// - Parser Type을 통해 DLL 내부에서 할당 후 포인터 반환 형식
 /// - 해당 Parser Class가 아닌 InterFace Class를 통해 함수 호출 방식
 
+
 class ImageParser
 {
 protected:
@@ -27,7 +28,11 @@ public:
 
 public:
 	// Create 함수를 통해 ImageParser 생성..
-	static PARSER_DLL ImageParser* Create(Type type);
+	static PARSER_DLL ImageParser* Create(IMAGE_TYPE type);
+
+public:
+	// Pixel Data를 통해 Image File 생성..
+	static PARSER_DLL void WriteImagePixel(const char* fileName, ParserData::ImageData image, EXTENSION_TYPE extension_type);
 
 public:
 	// 기본적인 초기화 함수..

@@ -1,6 +1,6 @@
 #include "GraphicsEngine.h"
 #include "KHGraphic.h"
-#include "./HSEngine/HsGraphic.h"
+#include "../HsGraphic/HsGraphic.h"
 
 GraphicEngine* GraphicEngine::Create()
 {

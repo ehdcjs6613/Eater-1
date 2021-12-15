@@ -52,7 +52,7 @@ struct VertexOut
     float3x3 TBNV : TANGENTV;
 };
 
-VertexOut MeshVS(MeshVertexIn vin)
+VertexOut Mesh_VS(MeshVertexIn vin)
 {
     VertexOut vout;
 
@@ -101,7 +101,7 @@ VertexOut MeshVS(MeshVertexIn vin)
     return vout;
 }
 
-VertexOut SkinVS(SkinVertexIn vin)
+VertexOut Skin_VS(SkinVertexIn vin)
 {
     VertexOut vout;
 

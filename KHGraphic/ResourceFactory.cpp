@@ -293,17 +293,20 @@ void GraphicResourceFactory::CreateMainRenderTarget(Hash_Code hash_Code, UINT wi
 
 Vertexbuffer* GraphicResourceFactory::CreateVertexBuffer(ParserData::Mesh* mesh)
 {
-	if (mesh->m_IsSkinningObject)
+	switch (mesh->m_MeshType)
 	{
-		return CreateMeshVertexBuffer<SkinVertex>(mesh);
-	}
-	else
-	{
+	case MESH_TYPE::STATIC_MESH:
 		return CreateMeshVertexBuffer<MeshVertex>(mesh);
-
-		// Terrain Type
-		//return CreateMeshVertexBuffer<TerrainVertex>(mesh);
+	case MESH_TYPE::SKIN_MESH:
+		return CreateMeshVertexBuffer<SkinVertex>(mesh);
+	default:
+		return nullptr;
 	}
+}
+
+Vertexbuffer* GraphicResourceFactory::CreateTerrainVertexBuffer(ParserData::Mesh* mesh, std::string maskName)
+{
+	return CreateMeshVertexBuffer<TerrainVertex>(mesh);
 }
 
 Indexbuffer* GraphicResourceFactory::CreateIndexBuffer(ParserData::Mesh* mesh)
@@ -472,7 +475,7 @@ Vertexbuffer* GraphicResourceFactory::CreateMeshVertexBuffer<MeshVertex>(ParserD
 	vBuffer->Count = vCount;
 	vBuffer->VertexbufferPointer = VB;
 	vBuffer->VertexDataSize = sizeof(MeshVertex);
-
+	
 	return vBuffer;
 }
 
@@ -559,8 +562,7 @@ Vertexbuffer* GraphicResourceFactory::CreateMeshVertexBuffer<TerrainVertex>(Pars
 		vertices[i].Tangent = mesh->m_VertexList[i]->m_Tanget;
 
 		// 秦寸 Pixel Mask Color..
-		vertices[i].Mask1;
-		vertices[i].Mask2;
+		vertices[i].Mask;
 	}
 
 	// 货肺款 VertexBuffer 积己..
