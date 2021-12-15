@@ -25,6 +25,8 @@ namespace ParserData
 class ModelData;
 class LoadMeshData;
 class Transform;
+class Material;
+
 class ObjectManager;
 class MaterialManager;
 
@@ -70,11 +72,11 @@ private:
 	bool isLoad_Texture;		//텍스쳐 로드 여부
 	bool isLoad_Animation;		//애니메이션 로드여부
 
-
 	std::string MeshName;		//로드한 매쉬 이름
 	std::string TextureName;	//로드한 텍스쳐 이름
 	std::string AnimationName;	//로드한 애니메이션 이름
 
+	Material* Materials;		//Material Data
 
 	//본리스트들을 GameObject 타입으로 저장
 	std::vector<GameObject*>	BoneList;

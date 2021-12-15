@@ -67,10 +67,10 @@ void SSAOPass::Create(int width, int height)
 void SSAOPass::Start(int width, int height)
 {
 	// Shader 설정..
-	m_SsaoVS = g_Shader->GetShader("SSAOVS");
-	m_SsaoPS = g_Shader->GetShader("SSAOPS");
-	m_BlurVS = g_Shader->GetShader("SSAOBlurVS");
-	m_BlurPS = g_Shader->GetShader("SSAOBlurPS");
+	m_SsaoVS = g_Shader->GetShader("SSAO_VS");
+	m_SsaoPS = g_Shader->GetShader("SSAO_PS");
+	m_BlurVS = g_Shader->GetShader("SSAOBlur_VS");
+	m_BlurPS = g_Shader->GetShader("SSAOBlur_PS");
 
 	// Buffer 설정..
 	m_SsaoBuffer = g_Resource->GetBuffer<BD_SSAOScreen>();

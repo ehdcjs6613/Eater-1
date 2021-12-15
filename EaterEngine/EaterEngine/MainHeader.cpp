@@ -56,6 +56,11 @@ void EndEngine()
 	gGameEngine->LoadMesh(mMeshName,Scale,LoadAnime);
 }
 
+ void LoadTerrainMesh(std::string mMeshName, std::string maskName, bool Scale /*= true*/)
+ {
+	 gGameEngine->LoadTerrain(mMeshName, maskName, Scale);
+ }
+
 ///로드 관련
  void LoadMeshPath(std::string mPath)
 {

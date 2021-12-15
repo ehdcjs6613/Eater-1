@@ -108,9 +108,9 @@ void DeferredPass::Create(int width, int height)
 void DeferredPass::Start(int width, int height)
 {
 	// Shader 설정..
-	m_MeshVS = g_Shader->GetShader("MeshVS");
-	m_SkinVS = g_Shader->GetShader("SkinVS");
-	m_DeferredPS = g_Shader->GetShader("DeferredPS");
+	m_MeshVS = g_Shader->GetShader("Mesh_VS");
+	m_SkinVS = g_Shader->GetShader("Skin_VS");
+	m_DeferredPS = g_Shader->GetShader("Deferred_PS");
 
 	// DepthStencilView 설정..
 	m_DepthStencilView = g_Resource->GetDepthStencil<DS_Defalt>()->GetDSV()->Get();
@@ -196,6 +196,7 @@ void DeferredPass::Update(MeshData* mesh, GlobalData* global)
 	Matrix view = *global->mCamView;
 	Matrix proj = *global->mCamProj;
 	Matrix shadowTrans = *global->mLightVPT;
+	MaterialBuffer* mat = *mesh->Material_List.begin();
 
 	switch (mesh->ObjType)
 	{
@@ -237,17 +238,17 @@ void DeferredPass::Update(MeshData* mesh, GlobalData* global)
 	}
 
 	CB_Material materialBuf;
-	materialBuf.gMatID = mesh->Material_Index;
+	materialBuf.gMatID = mat->Material_Index;
 	
-	if (mesh->Albedo)
+	if (mat->Albedo)
 	{
  		materialBuf.gTexID |= ALBEDO_MAP;
-		m_DeferredPS->SetShaderResourceView<gDiffuseMap>((ID3D11ShaderResourceView*)mesh->Albedo->TextureBufferPointer);
+		m_DeferredPS->SetShaderResourceView<gDiffuseMap>((ID3D11ShaderResourceView*)mat->Albedo->TextureBufferPointer);
 	}
-	if (mesh->Normal)
+	if (mat->Normal)
 	{
 		materialBuf.gTexID |= NORMAL_MAP;
-		m_DeferredPS->SetShaderResourceView<gNormalMap>((ID3D11ShaderResourceView*)mesh->Normal->TextureBufferPointer);
+		m_DeferredPS->SetShaderResourceView<gNormalMap>((ID3D11ShaderResourceView*)mat->Normal->TextureBufferPointer);
 	}
 
 	m_DeferredPS->SetConstantBuffer(materialBuf);

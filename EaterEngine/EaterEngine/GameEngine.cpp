@@ -106,8 +106,11 @@ void GameEngine::Update()
 	//컨퍼넌트 업데이트 끝
 	//그래픽엔진으로 넘겨줄 랜더큐도 생성완료
 
-	
+	// 현재 랜더링 옵션 설정..
+	RenderOptionCheck();
+
 	//랜더큐 넘겨줌
+	mGraphicManager->BeginRender(m_RenderOption);
 	mGraphicManager->ShadowRender(mObjectManager->GetRenderQueue(), mObjectManager->GetGlobalData());
 	mGraphicManager->Render(mObjectManager->GetRenderQueue(), mObjectManager->GetGlobalData());
 	mGraphicManager->SSAORender(mObjectManager->GetGlobalData());
@@ -205,6 +208,12 @@ void GameEngine::LoadMesh(std::string mMeshName, bool Scale, bool LoadAnime)
 	mLoadManager->LoadMesh(mMeshName, Scale, LoadAnime);
 }
 
+void GameEngine::LoadTerrain(std::string mMeshName, std::string mMaskName, bool Scale)
+{
+	std::string temp = "터레인을 로드합니다 : " + mMeshName;
+	mLoadManager->LoadTerrain(mMeshName, mMaskName, Scale);
+}
+
 void GameEngine::LoadTexture(std::string mTextureName)
 {
 	mLoadManager->LoadTexture(mTextureName);
@@ -268,14 +277,21 @@ void GameEngine::CreateObject()
 	light->AddComponent<DirectionLight>();
 }
 
-void GameEngine::RenderOption()
+void GameEngine::RenderOptionCheck()
 {
-	if (mKeyManager->GetKeyToggle(VK_F1))
+	if (mKeyManager->GetKeyUp(VK_F1))
+	{
+		// Gamma Correction On/Off
+		m_RenderOption |= RENDER_GAMMA_CORRECTION;
+	}
+	if (mKeyManager->GetKeyUp(VK_F2))
 	{
 		// Shadow On/Off
+		m_RenderOption |= RENDER_SHADOW;
 	}
-	if (mKeyManager->GetKeyToggle(VK_F2))
+	if (mKeyManager->GetKeyUp(VK_F3))
 	{
 		// SSAO On/Off
+		m_RenderOption |= RENDER_SSAO;
 	}
 }
