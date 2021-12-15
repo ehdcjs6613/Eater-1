@@ -1,15 +1,13 @@
 #include "Material.h"
-#include "GameObject.h"
-#include "Transform.h"
 #include "EngineData.h"
 
 Material::Material()
 {
 	// Material Buffer »ý¼º..
-	m_MaterialBuffer = new MaterialBuffer();
+	MaterialBuffers = new MaterialBuffer();
 
 	// Material Data »ý¼º..
-	m_MaterialBuffer->Material_Data = new MaterialData();
+	MaterialBuffers->Material_Data = new MaterialData();
 }
 
 Material::~Material()
@@ -17,27 +15,21 @@ Material::~Material()
 
 }
 
-void Material::Awake()
-{
-	// Material Ãß°¡..
-	gameobject->OneMeshData->Material_List.push_back(m_MaterialBuffer);
-}
-
 void Material::SetMaterialIndex(UINT index)
 {
 	// ÇØ´ç Material Index »ðÀÔ..
-	m_MaterialBuffer->Material_Index = index;
+	MaterialBuffers->Material_Index = index;
 }
 
 UINT Material::GetMaterialIndex()
 {
-	return m_MaterialBuffer->Material_Index;
+	return MaterialBuffers->Material_Index;
 }
 
 void Material::SetMaterialData(LoadMeshData* mesh)
 {
 	// Material Data ÃßÃâ..
-	MaterialData* matData = m_MaterialBuffer->Material_Data;
+	MaterialData* matData = MaterialBuffers->Material_Data;
 
 	// Material Data »ðÀÔ..
 	matData->Ambient = mesh->Material->m_Material_Ambient;
@@ -46,12 +38,12 @@ void Material::SetMaterialData(LoadMeshData* mesh)
 	matData->Ambient = mesh->Material->m_Material_Ambient;
 
 	// Texture Map »ðÀÔ..
-	m_MaterialBuffer->Albedo = mesh->Albedo;
-	m_MaterialBuffer->Normal = mesh->Normal;
+	MaterialBuffers->Albedo = mesh->Albedo;
+	MaterialBuffers->Normal = mesh->Normal;
 
 }
 
 MaterialBuffer* Material::GetMaterialData()
 {
-	return m_MaterialBuffer;
+	return MaterialBuffers;
 }

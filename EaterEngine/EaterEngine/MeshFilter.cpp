@@ -19,6 +19,9 @@ MeshFilter::MeshFilter()
 {
 	MeshName = "";
 
+	// 기본으로 MeshFilter 생성시 Material을 보유..
+	Materials = new Material();
+
 	//모든 컨퍼넌트들 Start함수보다 나중에 실행될것이다
 	Start_Order = FUNCTION_ORDER_LAST;
 	//Awake_Order = FUNCTION_ORDER_CENTER;
@@ -31,6 +34,9 @@ MeshFilter::~MeshFilter()
 
 void MeshFilter::Start()
 {
+	// Material Data 추가..
+	//gameobject->OneMeshData->Material_List.push_back(Materials->GetMaterialData());
+
 	//클라이언트쪽에서 텍스쳐의 이름을 넣고 애니메이션을 넣고 모두 끝난상태
 	if (isLoad_Texture == true) 
 	{
@@ -78,12 +84,25 @@ void MeshFilter::SetAnimationName(std::string mAnimeName)
 void MeshFilter::PushModelData(LoadMeshData* mModel)
 {
 	MeshData* data = gameobject->OneMeshData;
+	MaterialBuffer* mat = Materials->GetMaterialData();
 
+	// Mesh Model Data 삽입..
 	data->IB = mModel->IB;
 	data->VB = mModel->VB;
 
 	data->mLocal = *(mModel->LocalTM);
 	data->mWorld = *(mModel->WorldTM);
+
+	mat->Albedo = mModel->Albedo;
+	mat->Normal = mModel->Normal;
+
+	// 로드된 Diffuse Map이 없을경우 Dump Map으로 대체..
+	if (mat->Albedo == nullptr)
+	{
+		mat->Albedo = LoadManager::GetTexture("Dump");
+	}
+
+	data->Material_List.push_back(Materials->GetMaterialData());
 }
 
 void MeshFilter::CheckTexture()
@@ -101,19 +120,13 @@ void MeshFilter::CheckTexture()
 			// 현재 Mesh의 Material..
 			MaterialBuffer* material = *data->Material_List.begin();
 
-			// 설정된 Diffuse Map이 없다면 기본 Texture 적용..
-			if (material->Albedo == nullptr)
-			{
-				TextureName = "Dump";
-			}
-
 			// 설정 Texture Buffer..
 			TextureBuffer* texBuffer = LoadManager::GetTexture(TextureName);
 
 			// 해당 Texture가 Load되지 않은 경우 기존 Texture 사용..
 			if (texBuffer == nullptr)
 			{
-				return;
+				texBuffer = LoadManager::GetTexture("Dump");
 			}
 
 			// Texture 설정..
@@ -147,7 +160,6 @@ void MeshFilter::CreateChild_Mesh(LoadMeshData* data, Transform* parent, ModelDa
 	///컨퍼넌트 생성후 초기화
 	Transform* Tr		= OBJ->AddComponent<Transform>();
 	MeshFilter* Filter	= OBJ->AddComponent<MeshFilter>();
-	Material* Mat		= OBJ->AddComponent<Material>();
 
 	///스키닝 오브젝트 여부
 	switch (data->MeshType)
@@ -178,10 +190,10 @@ void MeshFilter::CreateChild_Mesh(LoadMeshData* data, Transform* parent, ModelDa
 	if (data->Material)
 	{
 		// 해당 Material 삽입..
-		Mat->SetMaterialData(data);
+		Materials->SetMaterialData(data);
 
 		// Material 등록..
-		MAT_Manager->AddMaterial(Mat);	
+		MAT_Manager->AddMaterial(Materials);
 	}
 	
 	

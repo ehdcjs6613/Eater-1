@@ -157,7 +157,7 @@ void LightPass::Render(GlobalData* global)
 		lightBuf.gSpotLights[s] = *lightData->SpotLights[s];
 	}
 
-	for (UINT m = 0; m < 5; m++)
+	for (UINT m = 0; m < global->mMatData.size(); m++)
 	{
 		lightBuf.gMaterials[m] = *global->mMatData[m];
 	}

@@ -5,7 +5,7 @@
 class MaterialBuffer;
 class LoadMeshData;
 
-class Material : public Component
+class Material
 {
 public:
 	Material();
@@ -15,9 +15,6 @@ public:
 	friend class MaterialManager;
 
 public:
-	void Awake() override;
-
-public:
 	void SetMaterialIndex(UINT index);
 	UINT GetMaterialIndex();
 
@@ -25,6 +22,6 @@ public:
 	MaterialBuffer* GetMaterialData();
 
 private:
-	MaterialBuffer* m_MaterialBuffer;
+	MaterialBuffer* MaterialBuffers;
 };
 

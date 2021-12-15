@@ -43,7 +43,7 @@ void MaterialManager::AddMaterial(Material* mat)
 		Material* material = matData.second;
 
 		// 해당 Material Data가 List에 올라가있는지 체크..
-		if (material->m_MaterialBuffer->Material_Data == mat->m_MaterialBuffer->Material_Data)
+		if (material->MaterialBuffers->Material_Data == mat->MaterialBuffers->Material_Data)
 		{
 			mat->SetMaterialIndex(material->GetMaterialIndex());
 			return;
@@ -51,7 +51,7 @@ void MaterialManager::AddMaterial(Material* mat)
 	}
 
 	// Material 추가 될때마다 Global Data 설정..
-	MaterialBuffer* matBuf = mat->m_MaterialBuffer;
+	MaterialBuffer* matBuf = mat->MaterialBuffers;
 
 	// 현재 Material Index 설정..
 	matBuf->Material_Index = m_MaterialCount;

@@ -562,8 +562,7 @@ Vertexbuffer* GraphicResourceFactory::CreateMeshVertexBuffer<TerrainVertex>(Pars
 		vertices[i].Tangent = mesh->m_VertexList[i]->m_Tanget;
 
 		// 秦寸 Pixel Mask Color..
-		vertices[i].Mask1;
-		vertices[i].Mask2;
+		vertices[i].Mask;
 	}
 
 	// 货肺款 VertexBuffer 积己..
