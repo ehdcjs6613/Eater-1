@@ -12,6 +12,6 @@ GraphicEngine* GraphicEngine::Create()
 GraphicEngine* GraphicEngine::CreateHS()
 {
 	GraphicEngine* graphicEngine = new HsGraphic();
-
+	
 	return graphicEngine;
 }
