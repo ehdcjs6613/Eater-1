@@ -130,7 +130,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir)inc\pxshared\include;$(ProjectDir)inc\source\foundation\include;$(ProjectDir)inc\source\physxextensions\src;$(ProjectDir)inc\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)inc\pxshared\include;$(ProjectDir)inc\source\foundation\include;$(ProjectDir)inc\source\physxextensions\src;$(ProjectDir)inc\include;$(SolutionDir)Library\inc</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -170,7 +170,7 @@ copy /Y "$(ProjectDir)PhysData.h" "$(SolutionDir)Library\inc\PhysX"
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir)inc\pxshared\include;$(ProjectDir)inc\source\foundation\include;$(ProjectDir)inc\source\physxextensions\src;$(ProjectDir)inc\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)inc\pxshared\include;$(ProjectDir)inc\source\foundation\include;$(ProjectDir)inc\source\physxextensions\src;$(ProjectDir)inc\include;$(SolutionDir)Library\inc</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -205,24 +205,17 @@ copy /Y "$(ProjectDir)PhysData.h" "$(SolutionDir)Library\inc\PhysX"
   <ItemGroup>
     <ClInclude Include="PhysData.h" />
     <ClInclude Include="Factory.h" />
-    <ClInclude Include="PhysX_BoxCollider.h" />
-    <ClInclude Include="Broad.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="PhysEngine.h" />
     <ClInclude Include="PhysEngineDLL.h" />
     <ClInclude Include="PhysX_API.h" />
-    <ClInclude Include="PhysX_Collider.h" />
-    <ClInclude Include="PhysX_Rigidbody.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Factory.cpp" />
-    <ClCompile Include="PhysX_BoxCollider.cpp" />
-    <ClCompile Include="Broad.cpp" />
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="PhysData.cpp" />
     <ClCompile Include="PhysEngine.cpp" />
     <ClCompile Include="PhysX_API.cpp" />
-    <ClCompile Include="PhysX_Collider.cpp" />
-    <ClCompile Include="PhysX_Rigidbody.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

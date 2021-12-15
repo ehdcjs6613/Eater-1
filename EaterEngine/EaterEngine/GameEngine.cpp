@@ -23,6 +23,7 @@
 #include "MeshFilter.h"
 #include "SkinningFilter.h"
 #include "Light.h"
+#include "Rigidbody.h"
 
 GameEngine::GameEngine()
 {
@@ -73,6 +74,7 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 	//매니저들 인풋
 	MeshFilter::SetManager(mObjectManager, mMaterialManager);
 	Light::SetManager(mLightManager);
+	Rigidbody::SetLoadManager(mLoadManager);
 
 	//매니저들 초기화
 	BaseManager::Initialize();

@@ -2,7 +2,6 @@
 #include "PxPhysicsAPI.h"
 #include <vector>
 #include <ctype.h>
-#include "Broad.h"
 #include "Factory.h"
 
 #pragma comment(lib,"PhysX_64.lib")
@@ -20,11 +19,18 @@
 using namespace physx;
 PhysEngine::PhysEngine()
 {
+	m_Allocator			= nullptr;
+	m_ErrorCallback		= nullptr;
+	m_TolerancesScale	= nullptr;
+
 	m_Foundation	= nullptr;
 	m_Physics		= nullptr;
 	m_Dispatcher	= nullptr;
 	m_Scene			= nullptr;
 	m_Material		= nullptr;
+	m_Pvd			= nullptr;
+
+	m_Factory		= nullptr;
 }
 
 PhysEngine::~PhysEngine()
@@ -52,8 +58,7 @@ bool PhysEngine::Initialize(int ThreadCount, PhysSceneData* SceneData, bool Debu
 	
 	//펙토리 생성
 	m_Factory = new Factory();
-	m_Factory->Initialize(m_Physics,m_Scene);
-
+	m_Factory->Initialize(m_Physics,m_Scene, m_Cooking);
 
 	return true;
 }
@@ -99,11 +104,12 @@ void PhysEngine::Create_Actor(PhysData* data)
 
 	///위치,회전을 지정해준다
 	PxTransform P = PxTransform(data->WorldPosition.x, data->WorldPosition.y, data->WorldPosition.z);
-	PxTransform Rx = PxTransform(PxQuat(data->Rotation.x * Pi / 180, PxVec3(1, 0, 0)));
-	PxTransform Ry = PxTransform(PxQuat(data->Rotation.y * Pi / 180, PxVec3(0, 1, 0)));
-	PxTransform Rz = PxTransform(PxQuat(data->Rotation.z * Pi / 180, PxVec3(0, 0, 1)));
-
-	PxTransform*  TR = new PxTransform(P * (Rz * Ry* Rx));
+	//
+	//PxTransform Rx = PxTransform(PxQuat((data->Rotation.x)* Pi / 180, PxVec3(1, 0, 0)));
+	//PxTransform Ry = PxTransform(PxQuat(data->Rotation.y * Pi / 180, PxVec3(0, 1, 0)));
+	//PxTransform Rz = PxTransform(PxQuat(data->Rotation.z * Pi / 180, PxVec3(0, 0, 1)));
+	//
+	//PxTransform*  TR = new PxTransform(P * (Rz * Ry* Rx));
 
 	///재질을 지정해준다
 	PxMaterial* pMaterial	= m_Factory->CreateMaterial(data->MT_StaticFriction, data->MT_DynamicFriction, data->MT_Restitution);
@@ -121,16 +127,19 @@ void PhysEngine::Create_Actor(PhysData* data)
 	case SHAPE_TYPE::CAPSULE:
 		shape = m_Factory->CreateCapsuleCollider(pMaterial, data->Shape_Size.x, data->Shape_Size.y);
 		break;
+	case SHAPE_TYPE::TRIANGLE:
+		shape = m_Factory->CreateTriangleCollider(pMaterial,data->Triangle);
+		break;
 	}
 
 	///물리 객체 생성
 	if (data->isDinamic == true)
 	{
-		m_Factory->CreateDinamicActor(data, shape,TR);
+		m_Factory->CreateDinamicActor(data, shape, &P);
 	}
 	else
 	{
-		m_Factory->CreateStaticActor(data, shape,TR);
+		m_Factory->CreateStaticActor(data, shape, &P);
 	}
 
 	if (shape != nullptr)
@@ -233,6 +242,8 @@ bool PhysEngine::Initialize_Debug(int ThreadCount)
 	//physX 생성
 	m_Physics	= PxCreatePhysics(PX_PHYSICS_VERSION, *m_Foundation, PxTolerancesScale(), true, m_Pvd);
 	PxInitExtensions(*m_Physics, m_Pvd);
+
+	m_Cooking = PxCreateCooking(PX_PHYSICS_VERSION, *m_Foundation, PxTolerancesScale());
 
 
 	//쓰레드 개수만큼 Phys 를 돌림

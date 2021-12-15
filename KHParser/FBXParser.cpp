@@ -974,15 +974,15 @@ void FBXParser::SetTransform(fbxsdk::FbxNode* node)
 	DirectX::SimpleMath::Matrix world = ConvertMatrix(worldpos);
 	DirectX::SimpleMath::Matrix local = ConvertMatrix(localpos);
 
-	if (m_OneMesh->m_TopNode)
-	{
-		const auto yaw = -90.0f * DirectX::XM_PI / 180.0f;
-		
-		DirectX::SimpleMath::Quaternion q = XMQuaternionRotationRollPitchYaw(yaw, 0.0f, 0.0f);
-		
-		world *= XMMatrixRotationQuaternion(q);
-		local *= XMMatrixRotationQuaternion(q);
-	}
+	//if (m_OneMesh->m_TopNode)
+	//{
+	//	const auto yaw = -90.0f * DirectX::XM_PI / 180.0f;
+	//	
+	//	DirectX::SimpleMath::Quaternion q = XMQuaternionRotationRollPitchYaw(yaw, 0.0f, 0.0f);
+	//	
+	//	world *= XMMatrixRotationQuaternion(q);
+	//	local *= XMMatrixRotationQuaternion(q);
+	//}
 
 	m_OneMesh->m_WorldTM = world;
 	m_OneMesh->m_LocalTM = local;
