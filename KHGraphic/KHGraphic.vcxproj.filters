@@ -418,16 +418,10 @@
     <FxCompile Include="..\Resources\Shader\SKH\ForwardPS.hlsl">
       <Filter>소스 파일\Shader\HLSL\Render\Forward</Filter>
     </FxCompile>
-    <FxCompile Include="..\Resources\Shader\SKH\ShadowSkinVS.hlsl">
+    <FxCompile Include="..\Resources\Shader\SKH\ShadowVS.hlsl">
       <Filter>소스 파일\Shader\HLSL\Shadow</Filter>
     </FxCompile>
-    <FxCompile Include="..\Resources\Shader\SKH\ShadowMeshVS.hlsl">
-      <Filter>소스 파일\Shader\HLSL\Shadow</Filter>
-    </FxCompile>
-    <FxCompile Include="..\Resources\Shader\SKH\SkinVS.hlsl">
-      <Filter>소스 파일\Shader\HLSL\Render\Object</Filter>
-    </FxCompile>
-    <FxCompile Include="..\Resources\Shader\SKH\MeshVS.hlsl">
+    <FxCompile Include="..\Resources\Shader\SKH\ObjectVS.hlsl">
       <Filter>소스 파일\Shader\HLSL\Render\Object</Filter>
     </FxCompile>
     <FxCompile Include="..\Resources\Shader\SKH\LightHelper.fx">

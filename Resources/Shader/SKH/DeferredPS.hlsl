@@ -36,7 +36,7 @@ struct PixelOut
     float4 Depth        : SV_Target4;
 };
 
-PixelOut main(VertexIn pin)
+PixelOut DeferredPS(VertexIn pin)
 {
 	PixelOut vout;
 

@@ -10,7 +10,7 @@ struct VertexOut
 	float2 Tex   : TEXCOORD;
 };
 
-VertexOut main(VertexIn vin)
+VertexOut SSAOBlurVS(VertexIn vin)
 {
 	VertexOut vout;
 
