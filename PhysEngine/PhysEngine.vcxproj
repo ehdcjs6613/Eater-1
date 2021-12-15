@@ -152,11 +152,11 @@ copy/Y "$(ProectDir)lib\*dll" "$(TargetDir)"
 
 
 
-copy /Y "$(ProjectDir)PhysEngineDLL.h" "$(SolutionDir)Library\inc"
+copy /Y "$(ProjectDir)PhysEngineDLL.h" "$(SolutionDir)Library\inc\PhysX"
 
-copy /Y "$(ProjectDir)PhysX_API.h" "$(SolutionDir)Library\inc"
+copy /Y "$(ProjectDir)PhysX_API.h" "$(SolutionDir)Library\inc\PhysX"
 
-copy /Y "$(ProjectDir)PhysData.h" "$(SolutionDir)Library\inc"
+copy /Y "$(ProjectDir)PhysData.h" "$(SolutionDir)Library\inc\PhysX"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -194,11 +194,11 @@ copy/Y "$(ProectDir)lib\*dll" "$(TargetDir)"
 
 
 
-copy /Y "$(ProjectDir)PhysEngineDLL.h" "$(SolutionDir)Library\inc"
+copy /Y "$(ProjectDir)PhysEngineDLL.h" "$(SolutionDir)Library\inc\PhysX"
 
-copy /Y "$(ProjectDir)PhysX_API.h" "$(SolutionDir)Library\inc"
+copy /Y "$(ProjectDir)PhysX_API.h" "$(SolutionDir)Library\inc\PhysX"
 
-copy /Y "$(ProjectDir)PhysData.h" "$(SolutionDir)Library\inc"
+copy /Y "$(ProjectDir)PhysData.h" "$(SolutionDir)Library\inc\PhysX"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
