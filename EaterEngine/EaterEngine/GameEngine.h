@@ -49,8 +49,8 @@ public:
 	///로드 관련 
 	void LoadMeshPath(std::string mPath);
 	void LoadTexturePath(std::string mPath);
-	void LoadMesh(std::string mMeshName, bool Scale = true, bool LoadAnime = false);
-	void LoadTerrain(std::string mMeshName, std::string mMaskName, bool Scale = true);
+	void LoadMesh(std::string mMeshName, UINT parsingMode);
+	void LoadTerrain(std::string mMeshName, std::string mMaskName, UINT parsingMode);
 	void LoadTexture(std::string mMeshName);
 public:
 	///키관련 

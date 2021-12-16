@@ -20,14 +20,14 @@ void InGame::Awake()
 
 	LoadMesh("Table");
 	LoadMesh("Field");
-	LoadMesh("CHARACTER_idle", true, false);
-	LoadMesh("Player_Run", false, false);
-	LoadMesh("Player_Roll", false, true);
-	LoadMesh("Player_Idle", false, true);
-	LoadMesh("Pistol", true, false);
-	LoadMesh("Weapon", true, false);
+	LoadMesh("CHARACTER_idle", SCALING);
+	LoadMesh("Player_Run");
+	LoadMesh("Player_Roll", ANIMATION_ONLY);
+	LoadMesh("Player_Idle", ANIMATION_ONLY);
+	LoadMesh("Pistol", SCALING);
+	LoadMesh("Weapon", SCALING);
 
-	LoadTerrainMesh("Terrain", "Terrain_RGB.png");
+	LoadTerrainMesh("Terrain", "Terrain_RGB.png", SCALING);
 
 	LoadTexture("Player.dds");
 	LoadTexture("Dump.png");
@@ -48,16 +48,6 @@ void InGame::Awake()
 	testobj->AddComponent<DirectionLight>();
 
 	///캐릭터
-	testobj = Instance("CHARACTER");
-	testobj->AddComponent<AnimationController>();
-	testobj->AddComponent<MeshFilter>();
-	testobj->GetComponent<MeshFilter>()->SetMeshName("CHARACTER");
-	testobj->GetComponent<MeshFilter>()->SetAnimationName("CHARACTER");
-	testobj->GetComponent<AnimationController>()->Choice("idle");
-	testobj->GetTransform()->Scale = { 0.2f, 0.2f, 0.2f };
-	testobj->GetTransform()->Position = { 100.0f, 0.0f, 0.0f };
-
-	///캐릭터
 	testobj = Instance("Player");
 	testobj->AddComponent<AnimationController>();
 	testobj->AddComponent<MeshFilter>();
@@ -69,7 +59,20 @@ void InGame::Awake()
 	testobj->GetComponent<MeshFilter>()->SetMeshName("Terrain");
 	testobj->GetComponent<Terrain>()->AddLayer("ground01_Albedo", "ground01_Normal");
 	testobj->GetComponent<Terrain>()->AddLayer("ground02_Albedo", "ground02_Normal");
-	testobj->GetTransform()->Rotation = { 90, 0, 0 };
+	testobj->GetTransform()->Rotation = { 0, 0, 0 };
+
+
+	///캐릭터
+	testobj = Instance("CHARACTER");
+	testobj->AddComponent<AnimationController>();
+	testobj->AddComponent<MeshFilter>();
+	testobj->GetComponent<MeshFilter>()->SetMeshName("CHARACTER");
+	testobj->GetComponent<MeshFilter>()->SetAnimationName("CHARACTER");
+	testobj->GetComponent<AnimationController>()->Choice("idle");
+
+	testobj->GetTransform()->Scale = { 0.2f, 0.2f, 0.2f };
+	testobj->GetTransform()->Rotation = { -90.0f, 0.0f, 0.0f };
+	testobj->GetTransform()->Position = { 100.0f, 0.0f, 0.0f };
 
 	/// 바닥
 	//testobj = Instance("Field");
@@ -94,7 +97,25 @@ void InGame::Start()
 
 void InGame::Update()
 {
+	testobj->GetComponent<AnimationController>()->Play(1, true);
 	
+	if (GetKey(VK_LEFT) == true)
+	{
+		testobj->GetTransform()->Position.x -= 250.0f * GetDeltaTime();
+	}
+	if (GetKey(VK_RIGHT) == true)
+	{
+		testobj->GetTransform()->Position.x += 250.0f * GetDeltaTime();
+	}
+	
+	if (GetKey(VK_UP) == true)
+	{
+		testobj->GetTransform()->Position.z += 250.0f * GetDeltaTime();
+	}
+	if (GetKey(VK_DOWN) == true)
+	{
+		testobj->GetTransform()->Position.z -= 250.0f * GetDeltaTime();
+	}
 }
 
 void InGame::End()

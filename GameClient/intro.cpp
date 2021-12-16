@@ -19,14 +19,14 @@ void intro::Awake()
 
 	LoadMesh("Table");
 	LoadMesh("Field");
-	LoadMesh("CHARACTER_idle", true, false);
-	LoadMesh("Player_Run", false, false);
-	LoadMesh("Player_Roll", false, true);
-	LoadMesh("Player_Idle", false, true);
-	LoadMesh("Pistol", true, false);
-	LoadMesh("Weapon", true, false);
+	LoadMesh("CHARACTER_idle", SCALING);
+	LoadMesh("Player_Run");
+	LoadMesh("Player_Roll", ANIMATION_ONLY);
+	LoadMesh("Player_Idle", ANIMATION_ONLY);
+	LoadMesh("Pistol", SCALING);
+	LoadMesh("Weapon", SCALING);
 
-	//LoadTerrain("Terrain", "mask", true);
+	LoadTerrainMesh("Terrain", "Terrain_RGB.png", SCALING);
 
 	LoadTexture("Player.dds");
 	LoadTexture("Dump.png");

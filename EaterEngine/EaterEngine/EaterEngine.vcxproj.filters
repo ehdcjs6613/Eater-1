@@ -213,9 +213,6 @@
     <ClInclude Include="Collider.h">
       <Filter>소스 파일\Component\Collider\BoxCollider</Filter>
     </ClInclude>
-    <ClInclude Include="Export\Rigidbody.h">
-      <Filter>소스 파일\Component\Rigidbody</Filter>
-    </ClInclude>
     <ClInclude Include="Export\Terrain.h">
       <Filter>소스 파일\Component\Terrain</Filter>
     </ClInclude>
@@ -224,6 +221,9 @@
     </ClInclude>
     <ClInclude Include="Export\Component.h">
       <Filter>소스 파일\Component\ComponentBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Export\Rigidbody.h">
+      <Filter>소스 파일\Component\Rigidbody</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

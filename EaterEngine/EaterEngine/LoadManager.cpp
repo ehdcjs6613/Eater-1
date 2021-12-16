@@ -77,7 +77,7 @@ ModelAnimationData* LoadManager::GetAnimation(std::string Name)
 	}
 }
 
-void LoadManager::LoadTerrain(std::string Name, std::string MaskName, bool Scale)
+void LoadManager::LoadTerrain(std::string Name, std::string MaskName, UINT parsingMode)
 {
 	// "../ 이거와 .fbx 이거를 붙여준다"
 	std::string modelExtention = ".fbx";
@@ -87,7 +87,7 @@ void LoadManager::LoadTerrain(std::string Name, std::string MaskName, bool Scale
 	ModelData* SaveMesh = new ModelData();
 
 	//파서를 통해서 매쉬를 로드
-	ParserData::Model* temp = EaterParser->LoadModel(modelPath, Scale, false);
+	ParserData::Model* temp = EaterParser->LoadModel(modelPath, parsingMode);
 
 	if (temp == nullptr)
 	{
@@ -126,7 +126,7 @@ void LoadManager::LoadTerrain(std::string Name, std::string MaskName, bool Scale
 	ModelList.insert({ SaveName,SaveMesh });
 }
 
-void LoadManager::LoadMesh(std::string Name, bool Scale, bool LoadAnime)
+void LoadManager::LoadMesh(std::string Name, UINT parsingMode)
 {
 	// "../ 이거와 .fbx 이거를 붙여준다"
 	std::string modelExtention = ".fbx";
@@ -135,7 +135,7 @@ void LoadManager::LoadMesh(std::string Name, bool Scale, bool LoadAnime)
 	ModelData* SaveMesh = new ModelData();
 
 	//파서를 통해서 매쉬를 로드
-	ParserData::Model* temp = EaterParser->LoadModel(modelPath, Scale, LoadAnime);
+	ParserData::Model* temp = EaterParser->LoadModel(modelPath, parsingMode);
 	if (temp == nullptr)
 	{
 		DebugManager::Print(DebugManager::MSG_TYPE::MSG_LOAD, "Mesh", Name, true);
@@ -150,7 +150,7 @@ void LoadManager::LoadMesh(std::string Name, bool Scale, bool LoadAnime)
 	LoadAnimation(SaveMesh,temp, Name);
 
 	//애니메이션 정보만 읽을거면 여기서 종료
-	if (LoadAnime == true) { return; }
+	if (parsingMode & ANIMATION_ONLY) { return; }
 	
 
 	//본오프셋 TM과 본리스트를 먼저읽어오기위해 
@@ -476,7 +476,16 @@ void LoadManager::SetData(LoadMeshData* MeshData, ParserData::Mesh* LoadData)
 	// Vertex List 삽입..
 	for (int i = 0; i < LoadData->m_VertexList.size(); i++)
 	{
-		MeshData->Vertex_List.push_back(LoadData->m_VertexList[i]->m_Pos);
+		DirectX::XMVECTOR  LocalVertex	= LoadData->m_VertexList[i]->m_Pos;
+		DirectX::XMMATRIX  LocalTM		= LoadData->m_LocalTM;
+
+		DirectX::XMVECTOR WorldVertex = DirectX::XMVector3Transform(LocalVertex, LocalTM);
+		DirectX::SimpleMath::Vector3 world = WorldVertex;
+		//DirectX::SimpleMath::
+		//LocalVertex* LocalTM;
+
+		
+		MeshData->Vertex_List.push_back(world);
 	}
 
 	//매트릭스 정보 받기
