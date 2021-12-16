@@ -5,12 +5,9 @@
 #include <string>
 class Transform;
 class PhysData;
-class LoadManager;
 class Rigidbody : public Component
 {
 public:
-	
-
 	EATER_ENGINEDLL Rigidbody();
 	EATER_ENGINEDLL ~Rigidbody();
 
@@ -52,11 +49,8 @@ public:
 	static const int BOX		= 0;
 	static const int SPHERE		= 1;
 	static const int CAPSULE	= 2;
-
-	static void SetLoadManager(LoadManager* m_Load);
 private:
 	Transform* Tr;
 	PhysData* RigidbodyData;
-	static LoadManager* m_LoadManager;
 };
 

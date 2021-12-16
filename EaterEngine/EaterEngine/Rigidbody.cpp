@@ -7,8 +7,6 @@
 #include "EngineData.h"
 #include "PhysData.h"
 
-
-LoadManager* Rigidbody::m_LoadManager = nullptr;
 Rigidbody::Rigidbody()
 {
 	//컨퍼넌트 실행 순서를 변경
@@ -126,22 +124,13 @@ void Rigidbody::SetVelocity(float x, float y, float z)
 
  void Rigidbody::CreateTriangleCollider(std::string MeshName)
  {
-	 if (m_LoadManager == nullptr)
-	 {
-		 return;
-	 }
-	 ModelData* data = m_LoadManager->GetMesh(MeshName);
+	 ModelData* data = LoadManager::GetMesh(MeshName);
 
 	 TriangleMeshData* TRData = new TriangleMeshData();
 	 TRData->IndexList	= &(data->TopMeshList[0]->Index_List);
 	 TRData->VertexList = &(data->TopMeshList[0]->Vertex_List);
 
 	 RigidbodyData->CreateTriangleCollider(TRData);
- }
-
- void Rigidbody::SetLoadManager(LoadManager* m_Load)
- {
-	 m_LoadManager = m_Load;
  }
 
 

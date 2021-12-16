@@ -24,6 +24,7 @@
 #include "SkinningFilter.h"
 #include "Light.h"
 #include "Rigidbody.h"
+#include "Material.h"
 
 GameEngine::GameEngine()
 {
@@ -72,9 +73,9 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 	mPhysManager		= new PhysManager();
 
 	//매니저들 인풋
-	MeshFilter::SetManager(mObjectManager, mMaterialManager);
+	MeshFilter::SetManager(mObjectManager);
+	Material::SetManager(mMaterialManager);
 	Light::SetManager(mLightManager);
-	Rigidbody::SetLoadManager(mLoadManager);
 
 	//매니저들 초기화
 	BaseManager::Initialize();
@@ -204,16 +205,16 @@ void GameEngine::ChoiceScene(std::string name)
 }
 
 ///로드 관련 함수들
-void GameEngine::LoadMesh(std::string mMeshName, bool Scale, bool LoadAnime)
+void GameEngine::LoadMesh(std::string mMeshName, UINT parsingMode)
 {
 	std::string temp = "매쉬를 로드합니다 : " + mMeshName;
-	mLoadManager->LoadMesh(mMeshName, Scale, LoadAnime);
+	mLoadManager->LoadMesh(mMeshName, parsingMode);
 }
 
-void GameEngine::LoadTerrain(std::string mMeshName, std::string mMaskName, bool Scale)
+void GameEngine::LoadTerrain(std::string mMeshName, std::string mMaskName, UINT parsingMode)
 {
 	std::string temp = "터레인을 로드합니다 : " + mMeshName;
-	mLoadManager->LoadTerrain(mMeshName, mMaskName, Scale);
+	mLoadManager->LoadTerrain(mMeshName, mMaskName, parsingMode);
 }
 
 void GameEngine::LoadTexture(std::string mTextureName)

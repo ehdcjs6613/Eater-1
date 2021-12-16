@@ -49,8 +49,8 @@ public:
 	
 	///Load
 	//모델 로드(스크린 이름,모델의 이름,스케일 여부,애니메이션 여부)
-	void LoadTerrain(std::string Name, std::string MaskName, bool Scale = true);
-	void LoadMesh(std::string Name, bool Scale = true,bool LoadAnime = false);
+	void LoadTerrain(std::string Name, std::string MaskName, UINT parsingMode);
+	void LoadMesh(std::string Name, UINT parsingMode);
 	void LoadTexture(std::string Name);
 	//프리펩 로드
 	void LoadPrefap(std::string Name);

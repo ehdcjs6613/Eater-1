@@ -97,7 +97,7 @@ VertexOut Mesh_VS(MeshVertexIn vin)
     B = cross(N, T);
 
     vout.TBNV = float3x3(T, B, N);
-    
+
     return vout;
 }
 

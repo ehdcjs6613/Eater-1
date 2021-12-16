@@ -36,6 +36,6 @@ public:
 
 	// Model Load ÇÔ¼ö..
 	virtual PARSER_DLL ParserData::Model* LoadModel(std::string fileName) { return nullptr; }
-	virtual PARSER_DLL ParserData::Model* LoadModel(std::string fileName, bool scaling, bool onlyAni = false) { return nullptr; }
+	virtual PARSER_DLL ParserData::Model* LoadModel(std::string fileName, UINT state) { return nullptr; }
 };
 

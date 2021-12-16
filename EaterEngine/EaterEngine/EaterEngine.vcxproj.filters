@@ -112,6 +112,9 @@
     <Filter Include="소스 파일\Component\Rigidbody">
       <UniqueIdentifier>{d2678508-d693-4487-b08e-f8610a35fc5f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Component\Terrain">
+      <UniqueIdentifier>{93570656-4fcd-4816-b74b-d46c9fd72da6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -152,9 +155,6 @@
     </ClInclude>
     <ClInclude Include="Export\Transform.h">
       <Filter>소스 파일\Component\Transform</Filter>
-    </ClInclude>
-    <ClInclude Include="Export\Component.h">
-      <Filter>소스 파일\Component\ComponentBase</Filter>
     </ClInclude>
     <ClInclude Include="Export\Scene.h">
       <Filter>소스 파일\Manager\SceneManager</Filter>
@@ -212,6 +212,15 @@
     </ClInclude>
     <ClInclude Include="Collider.h">
       <Filter>소스 파일\Component\Collider\BoxCollider</Filter>
+    </ClInclude>
+    <ClInclude Include="Export\Terrain.h">
+      <Filter>소스 파일\Component\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="Export\ComponentBase.h">
+      <Filter>소스 파일\Component\ComponentBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Export\Component.h">
+      <Filter>소스 파일\Component\ComponentBase</Filter>
     </ClInclude>
     <ClInclude Include="Export\Rigidbody.h">
       <Filter>소스 파일\Component\Rigidbody</Filter>
@@ -301,6 +310,9 @@
     </ClCompile>
     <ClCompile Include="Rigidbody.cpp">
       <Filter>소스 파일\Component\Rigidbody</Filter>
+    </ClCompile>
+    <ClCompile Include="Terrain.cpp">
+      <Filter>소스 파일\Component\Terrain</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

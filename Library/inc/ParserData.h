@@ -20,6 +20,13 @@ typedef enum TEXTURE_TYPE : UINT
 	SHINE_TEXTURE		= 0x00001000,
 }TEXTURE_TYPE;
 
+typedef enum PARSING_MODE
+{
+	SCALING			= 0x00000001,
+	ANIMATION_ONLY	= 0x00000010,
+	ROTATE_AXIS		= 0x00000100
+}PARSING_MODE;
+
 typedef enum MODEL_TYPE
 {
 	FBX_MODEL,
@@ -127,7 +134,6 @@ namespace ParserData
 	public:
 		int	m_MaterialNumber;
 		std::string	m_MaterialName;
-
 
 		DirectX::SimpleMath::Vector4 m_Material_Ambient;
 		DirectX::SimpleMath::Vector4 m_Material_Diffuse;

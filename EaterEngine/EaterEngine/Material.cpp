@@ -1,5 +1,9 @@
 #include "Material.h"
 #include "EngineData.h"
+#include "MaterialManager.h"
+#include "LoadManager.h"
+
+MaterialManager* Material::MAT_Manager = nullptr;
 
 Material::Material()
 {
@@ -8,11 +12,24 @@ Material::Material()
 
 	// Material Data 생성..
 	MaterialBuffers->Material_Data = new MaterialData();
+
+	// Material 등록..
+	MAT_Manager->AddMaterial(this);
 }
 
 Material::~Material()
 {
 
+}
+
+void Material::SetManager(MaterialManager* mat)
+{
+	MAT_Manager = mat;
+}
+
+void Material::SetMeshData(MeshData* meshData)
+{
+	m_MeshData = meshData;
 }
 
 void Material::SetMaterialIndex(UINT index)
@@ -21,13 +38,11 @@ void Material::SetMaterialIndex(UINT index)
 	MaterialBuffers->Material_Index = index;
 }
 
-UINT Material::GetMaterialIndex()
+void Material::PushMaterialData(LoadMeshData* mesh)
 {
-	return MaterialBuffers->Material_Index;
-}
+	// Load한 Material Data가 없을경우..
+	if (mesh->Material == nullptr) return;
 
-void Material::SetMaterialData(LoadMeshData* mesh)
-{
 	// Material Data 추출..
 	MaterialData* matData = MaterialBuffers->Material_Data;
 
@@ -40,10 +55,44 @@ void Material::SetMaterialData(LoadMeshData* mesh)
 	// Texture Map 삽입..
 	MaterialBuffers->Albedo = mesh->Albedo;
 	MaterialBuffers->Normal = mesh->Normal;
+}
 
+void Material::SetTexTransform(DirectX::SimpleMath::Vector3 scale)
+{
+
+}
+
+void Material::SetTexTransform(float x, float y, float z)
+{
+
+}
+
+void Material::SetDiffuseMap(std::string diffuseName)
+{
+	MaterialBuffers->Albedo = LoadManager::GetTexture(diffuseName);
+}
+
+void Material::SetNormalMap(std::string noramlName)
+{
+	MaterialBuffers->Albedo = LoadManager::GetTexture(noramlName);
+}
+
+void Material::SetBaseColor(DirectX::SimpleMath::Vector4 color)
+{
+	MaterialBuffers->Color_Base = color;
+}
+
+void Material::SetAddColor(DirectX::SimpleMath::Vector4 color)
+{
+	MaterialBuffers->Color_Add = color;
 }
 
 MaterialBuffer* Material::GetMaterialData()
 {
 	return MaterialBuffers;
+}
+
+UINT Material::GetMaterialIndex()
+{
+	return MaterialBuffers->Material_Index;
 }

@@ -10,7 +10,6 @@
 #include "KeyInput.h"
 #include "Camera.h"
 #include "Light.h"
-#include "Rigidbody.h"
 
 void intro::Awake()
 {
@@ -18,11 +17,20 @@ void intro::Awake()
 	LoadMeshPath("../Resources/Mesh/");
 	LoadTexturePath("../Resources/Texture/");
 
-	LoadMesh("box");
-	LoadMesh("Terrain2");
-	LoadMesh("Sphere");
+	LoadMesh("Table");
+	LoadMesh("Field");
+	LoadMesh("CHARACTER_idle", SCALING);
+	LoadMesh("Player_Run");
+	LoadMesh("Player_Roll", ANIMATION_ONLY);
+	LoadMesh("Player_Idle", ANIMATION_ONLY);
+	LoadMesh("Pistol", SCALING);
+	LoadMesh("Weapon", SCALING);
 
+	LoadTerrainMesh("Terrain", "Terrain_RGB.png", SCALING);
+
+	LoadTexture("Player.dds");
 	LoadTexture("Dump.png");
+
 
 	///카메라
 	testobj = Instance("Cam");
@@ -34,44 +42,37 @@ void intro::Awake()
 	testobj = Instance("DirectionLight");
 	testobj->AddComponent<DirectionLight>();
 
-	///터레인
-	testobj = Instance("obj");
-	Mf = testobj->AddComponent<MeshFilter>();
-	Tr = testobj->GetComponent<Transform>();
-	Rig = testobj->AddComponent<Rigidbody>();
-	
-	Rig->CreateTriangleCollider("Terrain2");
-	Mf->SetMeshName("Terrain2");
-	Tr->Position = { 0,10,0 };
-	Tr->Rotation = { 0,0,0 };
+	///캐릭터
+	testobj = Instance("CHARACTER");
+	testobj->AddComponent<AnimationController>();
+	testobj->AddComponent<MeshFilter>();
+	testobj->GetComponent<MeshFilter>()->SetMeshName("CHARACTER");
+	testobj->GetComponent<MeshFilter>()->SetAnimationName("CHARACTER");
+	testobj->GetComponent<AnimationController>()->Choice("idle");
+	testobj->GetTransform()->Scale = { 0.2f, 0.2f, 0.2f };
+	testobj->GetTransform()->Position = { 100.0f, 0.0f, 0.0f };
 
-	for (int i = 0; i < 9; i++)
-	{
-		///공
-		testobj = Instance("obj");
-		Mf	= testobj->AddComponent<MeshFilter>();
-		Rig = testobj->AddComponent<Rigidbody>();
-		Tr	= testobj->GetComponent<Transform>();
-	
-		Mf->SetMeshName("Sphere");
-		Rig->CreateSphereCollider(0.5f);
-		Tr->Position = { (float)i,30,(float)i};
-		Tr->Scale = { 0.5f,0.5f,0.5f };
-	}
+	///캐릭터
+	testobj = Instance("Player");
+	testobj->AddComponent<AnimationController>();
+	testobj->AddComponent<MeshFilter>();
+	testobj->AddComponent<Player>();
 
-	//testobj = Instance("obj");
-	//Mf = testobj->AddComponent<MeshFilter>();
-	//Rig = testobj->AddComponent<Rigidbody>();
-	//Tr = testobj->GetComponent<Transform>();
-	//testobj->GetComponent<Player>();
-	//
-	//Mf->SetMeshName("Sphere");
-	//Rig->CreateSphereCollider(0.5f);
-	//Tr->Position = { (float)0,30,(float)0 };
-	//Tr->Scale = { 0.5f,0.5f,0.5f };
+	/// 바닥
+	testobj = Instance("Field");
+	testobj->AddComponent<MeshFilter>()->SetMeshName("Field");
+	testobj->GetComponent<Transform>()->Scale = { 0.5f, 0.5f, 0.5f };
+
+	//testobj = Instance("Field1");
+	//testobj->AddComponent<MeshFilter>()->SetMeshName("Field");
+	//testobj->GetComponent<Transform>()->Rotation = { 90.0f, 0.0f, 0.0f };
+	//testobj->GetComponent<Transform>()->Scale = { 0.5f, 0.5f, 0.5f };
+	//testobj->GetComponent<Transform>()->Position = { 0.0f, 2.5f, 2.5f };
 	
-	
-	
+	//testobj = Instance("Table");
+	//testobj->AddComponent<MeshFilter>()->SetMeshName("Table");
+	//testobj->GetComponent<Transform>()->Scale = { 0.1f, 0.1f, 0.1f };
+	//testobj->GetTransform()->Position = { -5.0f, 0.0f, -5.0f };
 }
 
 void intro::Start()

@@ -9,11 +9,10 @@
 #include "Animator.h"
 #include "ObjectManager.h"
 #include "Material.h"
-#include "MaterialManager.h"
+#include "Terrain.h"
 
 
 ObjectManager* MeshFilter::OBJ_Manager = nullptr;
-MaterialManager* MeshFilter::MAT_Manager = nullptr;
 
 MeshFilter::MeshFilter()
 {
@@ -34,9 +33,6 @@ MeshFilter::~MeshFilter()
 
 void MeshFilter::Start()
 {
-	// Material Data 추가..
-	//gameobject->OneMeshData->Material_List.push_back(Materials->GetMaterialData());
-
 	//클라이언트쪽에서 텍스쳐의 이름을 넣고 애니메이션을 넣고 모두 끝난상태
 	if (isLoad_Texture == true) 
 	{
@@ -49,10 +45,9 @@ void MeshFilter::Start()
 	}
 }
 
-void MeshFilter::SetManager(ObjectManager* obj, MaterialManager* mat)
+void MeshFilter::SetManager(ObjectManager* obj)
 {
 	OBJ_Manager = obj;
-	MAT_Manager = mat;
 }
 
 void MeshFilter::SetMeshName(std::string mMeshName)
@@ -79,6 +74,12 @@ void MeshFilter::SetAnimationName(std::string mAnimeName)
 	isLoad_Animation = true;
 	AnimationName = mAnimeName;
 	CheckAnimation();
+}
+
+void MeshFilter::SetObjectData()
+{
+	// 오브젝트 설정 후 추가 작업
+	Materials->SetMeshData(gameobject->OneMeshData);
 }
 
 void MeshFilter::PushModelData(LoadMeshData* mModel)
@@ -155,11 +156,20 @@ void MeshFilter::CreateChild_Mesh(LoadMeshData* data, Transform* parent, ModelDa
 	DebugManager::Line("(Mesh)");
 
 	///게임 오브젝트 생성
-	GameObject* OBJ = new GameObject();
+	GameObject* OBJ = gameobject;
+
+	/// Model이 한개 이상일경우 빈 오브젝트로 그룹화
+	if (data->Child.size() > 0 || data->MeshType == SKIN_MESH)
+	{
+		OBJ = new GameObject();
+		OBJ_Manager->PushCreateObject(OBJ);
+		MeshList.push_back(OBJ);
+	}
 
 	///컨퍼넌트 생성후 초기화
 	Transform* Tr		= OBJ->AddComponent<Transform>();
 	MeshFilter* Filter	= OBJ->AddComponent<MeshFilter>();
+	Material* Mat		= Filter->Materials;
 
 	///스키닝 오브젝트 여부
 	switch (data->MeshType)
@@ -170,12 +180,14 @@ void MeshFilter::CreateChild_Mesh(LoadMeshData* data, Transform* parent, ModelDa
 		SF->PushBoneList(&BoneList);
 		SF->PushBone_OffsetList(&BoneOffsetList);
 		OBJ->OneMeshData->ObjType = OBJECT_TYPE::SKINNING;
-		Tr->Rotation = { 180,0,0 };
+		Tr->Rotation = { 90,0,0 };
 	}
 	break;
 	case MESH_TYPE::TERRAIN_MESH:
 	{
-
+		// Terrain Component 추가..
+		OBJ->AddComponent<Terrain>();
+		OBJ->OneMeshData->ObjType = OBJECT_TYPE::TERRAIN;
 	}
 	break;
 	default:
@@ -186,25 +198,17 @@ void MeshFilter::CreateChild_Mesh(LoadMeshData* data, Transform* parent, ModelDa
 	break;
 	}
 
-	///메테리얼 정보 여부
-	if (data->Material)
-	{
-		// 해당 Material 삽입..
-		Materials->SetMaterialData(data);
-
-		// Material 등록..
-		MAT_Manager->AddMaterial(Materials);
-	}
-	
-	
-	///기본 데이터 초기화
+	///기본 데이터 설정
 	OBJ->Name = data->Name;
 	OBJ->transform = Tr;
-	Filter->PushModelData(data);
+
 	Tr->Load_Local = *data->LocalTM;
 	Tr->Load_World = *data->WorldTM;
-	OBJ_Manager->PushCreateObject(OBJ);
-	MeshList.push_back(OBJ);
+
+	///모델 데이터 설정
+	Mat->PushMaterialData(data);
+	Filter->PushModelData(data);
+
 
 	///재귀 함수
 	int ChildCount = (int)data->Child.size();
@@ -264,8 +268,7 @@ void MeshFilter::CreateMesh()
 	if (data == nullptr) { return; }
 	
 	///본 오브젝트 생성
-	int index = 0;
-	index = (int)data->TopBoneList.size();
+	int index = (int)data->TopBoneList.size();
 	if (data->BoneList != nullptr)
 	{
 		BoneList.resize((int)data->BoneList->size());
@@ -287,7 +290,3 @@ void MeshFilter::CreateMesh()
 	///오브젝트 생성완료
 	isLoad_Mesh = true;
 }
-
-
-
-

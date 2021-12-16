@@ -125,6 +125,7 @@ void ShadowPass::Update(MeshData* mesh, GlobalData* global)
 	switch (mesh->ObjType)
 	{
 	case OBJECT_TYPE::BASE:
+	case OBJECT_TYPE::TERRAIN:
 	{
 		CB_ShadowMeshObject shadowBuf;
 		shadowBuf.gWorldViewProj = world * view * proj;
