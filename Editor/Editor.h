@@ -1,0 +1,40 @@
+﻿
+// Editor.h: Editor 애플리케이션의 기본 헤더 파일
+//
+#pragma once
+
+
+
+#include "resource.h"       // 주 기호입니다.
+
+class DockableBase;
+class DockableView;
+// CEditorApp:
+// 이 클래스의 구현에 대해서는 Editor.cpp을(를) 참조하세요.
+//
+
+class CEditorApp : public CWinApp
+{
+public:
+	CEditorApp() noexcept;
+
+
+// 재정의입니다.
+public:
+	virtual BOOL InitInstance();
+	virtual int ExitInstance();
+
+// 구현입니다.
+public:
+	HMENU  m_hMDIMenu;
+	HACCEL m_hMDIAccel;
+	HICON  m_hIcon;
+
+public:
+	afx_msg void OnAppAbout();
+	afx_msg void OnFileNew();
+	DECLARE_MESSAGE_MAP()
+	virtual BOOL OnIdle(LONG lCount);
+};
+
+extern CEditorApp theApp;

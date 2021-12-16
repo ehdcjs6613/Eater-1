@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="헤더 파일">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Colliders">
+      <UniqueIdentifier>{1165a189-96a2-434e-a334-b6c8b82aad83}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Colliders\Collider">
+      <UniqueIdentifier>{6b3f9e0b-08b9-400c-b5ec-bb3ee2b330e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Colliders\BoxCollider">
+      <UniqueIdentifier>{a5893af5-d66f-49d3-be8a-329b66ebde3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Vertex">
+      <UniqueIdentifier>{6b5c04b3-a1cd-4052-803f-4b1160943e4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ColliderManager">
+      <UniqueIdentifier>{e003af83-c7f4-4eb9-a741-83d4a9e9b876}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GeometryGenerator">
+      <UniqueIdentifier>{6658f3f1-520f-466e-996e-bde1203b509b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Colliders\SphereCollider">
+      <UniqueIdentifier>{d3699332-527a-4107-b8bc-97ef156fc5fd}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Collider.cpp">
+      <Filter>Colliders\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="BoxCollider.cpp">
+      <Filter>Colliders\BoxCollider</Filter>
+    </ClCompile>
+    <ClCompile Include="VertexPositionColor.cpp">
+      <Filter>Vertex</Filter>
+    </ClCompile>
+    <ClCompile Include="ColliderManager.cpp">
+      <Filter>ColliderManager</Filter>
+    </ClCompile>
+    <ClCompile Include="GeometryGenerator.cpp">
+      <Filter>GeometryGenerator</Filter>
+    </ClCompile>
+    <ClCompile Include="SphereCollider.cpp">
+      <Filter>Colliders\SphereCollider</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="DllDefine.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Collider.h">
+      <Filter>Colliders\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="BoxCollider.h">
+      <Filter>Colliders\BoxCollider</Filter>
+    </ClInclude>
+    <ClInclude Include="DxDefine.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="ColliderManager.h">
+      <Filter>ColliderManager</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexPositionColor.h">
+      <Filter>Vertex</Filter>
+    </ClInclude>
+    <ClInclude Include="d3dx11effect.h">
+      <Filter>Vertex</Filter>
+    </ClInclude>
+    <ClInclude Include="GeometryGenerator.h">
+      <Filter>GeometryGenerator</Filter>
+    </ClInclude>
+    <ClInclude Include="SphereCollider.h">
+      <Filter>Colliders\SphereCollider</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
+  </ItemGroup>
+</Project>

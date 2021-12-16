@@ -22,21 +22,18 @@ public:
 	void ChoiceMainCam();
 	// Camera Position
 	DirectX::XMFLOAT3* GetPos();
-	// Camera View To TexSpace
-	DirectX::XMMATRIX* GetViewTex();
 	//현재 카메라의 뷰행렬
-	DirectX::XMMATRIX* GetView();
+	EATER_ENGINEDLL DirectX::XMMATRIX* GetView();
+	//메인으로 지정한 카메라의 뷰행렬
+	static DirectX::XMMATRIX* GetMainView();
 	//프로젝션 행렬을 가져온다
-	DirectX::XMMATRIX* GetProj();
-
-	//카메라의 로컬 좌표를 가져온다
-	//static DirectX::XMFLOAT3  GetLocalPos_Up();
-	//static DirectX::XMFLOAT3  GetLocalPos_Right();
-	//static DirectX::XMFLOAT3  GetLocalPos_Look();
+	EATER_ENGINEDLL static DirectX::XMMATRIX* GetProj();
+	// Main Camera Position
+	static DirectX::XMFLOAT3* GetMainPos();
 
 	//OnResize 에서 실행될 함수
-	void SetSize(int Change_Width, int Change_Height);
-	void CreateProj(int winsizeX,int WinSizeY, bool ViewPoint = false);
+	static void SetSize(int Change_Width, int Change_Height);
+	static void CreateProj(int winsizeX,int WinSizeY, bool ViewPoint = false);
 private:
 	Transform* tranform;
 
@@ -45,14 +42,12 @@ private:
 
 	//프로젝션
 	DirectX::XMFLOAT4X4 mProj;
-	DirectX::XMMATRIX mProj_M;
+	static DirectX::XMMATRIX mProj_M;
 
 	//뷰
 	DirectX::XMFLOAT4X4 mView;
 	DirectX::XMMATRIX mView_M;
 
-	//View To TexSpace
-	DirectX::XMMATRIX mViewTex_M;
 
 	//카메라 리스트에서 나의 인덱스
 	int MyIndex;
@@ -60,8 +55,6 @@ private:
 	void PushCamList();
 	//카메라 리스트
 	static std::vector<Camera*> CamList;
-
-public:
 	//메인카메라
-	static Camera* g_MainCam;
+	static Camera* MainCam;
 };

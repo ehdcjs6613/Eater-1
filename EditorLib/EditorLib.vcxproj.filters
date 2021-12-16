@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="DockableView.cpp" />
+    <ClCompile Include="EDDockableBase.cpp" />
+    <ClCompile Include="EditorLib.cpp" />
+    <ClCompile Include="EditorSystem.cpp" />
+    <ClCompile Include="EWGameView.cpp" />
+    <ClCompile Include="TKeyInput.cpp" />
+    <ClCompile Include="TScene.cpp" />
+    <ClCompile Include="EFile.cpp">
+      <Filter>ALL</Filter>
+    </ClCompile>
+    <ClCompile Include="Exporter.cpp">
+      <Filter>ALL</Filter>
+    </ClCompile>
+    <ClCompile Include="ColliderExporter.cpp">
+      <Filter>ALL</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="DllExport.h" />
+    <ClInclude Include="DockableView.h" />
+    <ClInclude Include="EDDockableBase.h" />
+    <ClInclude Include="EditorLib.h" />
+    <ClInclude Include="EditorSystem.h" />
+    <ClInclude Include="EWGameView.h" />
+    <ClInclude Include="LibDefine.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="TKeyInput.h" />
+    <ClInclude Include="TScene.h" />
+    <ClInclude Include="EFile.h">
+      <Filter>ALL</Filter>
+    </ClInclude>
+    <ClInclude Include="Exporter.h">
+      <Filter>ALL</Filter>
+    </ClInclude>
+    <ClInclude Include="ColliderExporter.h">
+      <Filter>ALL</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="EditorLib.def" />
+    <None Include="res\EditorLib.rc2" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header">
+      <UniqueIdentifier>{0dca1195-0067-4109-9c85-92cd0d08535c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource">
+      <UniqueIdentifier>{b1c564fe-ff6e-4074-af71-4c0e2d6b9e6b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ALL">
+      <UniqueIdentifier>{25cf142b-923d-4aff-99a9-1162465ee5b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source">
+      <UniqueIdentifier>{2fc8d08e-cc4e-4c32-940b-e8d1fc1404f8}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="EditorLib.rc" />
+  </ItemGroup>
+</Project>

@@ -18,6 +18,8 @@ void AnimationController::SetBoneList(std::vector<GameObject*>* m_ObjList)
 {
 	//게임오브젝트리스트를 애니메이터 리스트로 변경시켜줌
 	int AnimatorCount = (int)m_ObjList->size();
+	if (AnimatorCount == 0) { return; }
+
 	AnimatorList.resize(AnimatorCount);
 	for (int i = 0; i < AnimatorCount; i++)
 	{
@@ -35,6 +37,7 @@ void AnimationController::SetBoneList(std::vector<GameObject*>* m_ObjList)
 
 void AnimationController::SetAnimeList(ModelAnimationData* data)
 {
+	if (nullptr == data) { return; }
 	AnimationList = data;
 }
 
