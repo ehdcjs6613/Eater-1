@@ -76,6 +76,12 @@ void MeshFilter::SetAnimationName(std::string mAnimeName)
 	CheckAnimation();
 }
 
+void MeshFilter::SetObjectData()
+{
+	// 오브젝트 설정 후 추가 작업
+	Materials->SetMeshData(gameobject->OneMeshData);
+}
+
 void MeshFilter::PushModelData(LoadMeshData* mModel)
 {
 	MeshData* data = gameobject->OneMeshData;
@@ -153,7 +159,7 @@ void MeshFilter::CreateChild_Mesh(LoadMeshData* data, Transform* parent, ModelDa
 	GameObject* OBJ = gameobject;
 
 	/// Model이 한개 이상일경우 빈 오브젝트로 그룹화
-	if (data->Child.size() > 0)
+	if (data->Child.size() > 0 || data->MeshType == SKIN_MESH)
 	{
 		OBJ = new GameObject();
 		OBJ_Manager->PushCreateObject(OBJ);

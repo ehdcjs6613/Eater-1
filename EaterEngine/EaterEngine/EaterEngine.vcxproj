@@ -221,6 +221,7 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\lib"
     <ClInclude Include="Export\Animator.h" />
     <ClInclude Include="Export\Camera.h" />
     <ClInclude Include="Export\Component.h" />
+    <ClInclude Include="Export\ComponentBase.h" />
     <ClInclude Include="Export\EaterEngineDLL.h" />
     <ClInclude Include="Export\GameObject.h" />
     <ClInclude Include="Export\Light.h" />

@@ -2,6 +2,7 @@
 #include "Component.h"
 #include "EaterEngineDLL.h"
 
+class MeshData;
 class MaterialBuffer;
 class LoadMeshData;
 class TextureBuffer;
@@ -20,12 +21,16 @@ public:
 	static void SetManager(MaterialManager* mat);
 
 public:
+	void SetMeshData(MeshData* meshData);
 	void SetMaterialIndex(UINT index);
 
 	void PushMaterialData(LoadMeshData* mesh);
 
-	void SetDiffuseMap(TextureBuffer* diffuse);
-	void SetNormalMap(TextureBuffer* noraml);
+	void SetTexTransform(DirectX::SimpleMath::Vector3 scale);
+	void SetTexTransform(float x, float y, float z);
+
+	void SetDiffuseMap(std::string diffuseName);
+	void SetNormalMap(std::string noramlName);
 
 	void SetBaseColor(DirectX::SimpleMath::Vector4 color);
 	void SetAddColor(DirectX::SimpleMath::Vector4 color);
@@ -36,6 +41,8 @@ public:
 
 private:
 	static MaterialManager* MAT_Manager;
+
+	MeshData* m_MeshData;
 
 	MaterialBuffer* MaterialBuffers;
 };

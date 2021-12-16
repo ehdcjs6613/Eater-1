@@ -98,6 +98,7 @@ public:
 
 	XMMATRIX mWorld = XMMatrixIdentity();			//매쉬의 월드 행렬
 	XMMATRIX mLocal = XMMatrixIdentity();			//매쉬의 로컬행렬
+	XMMATRIX mTexTM = XMMatrixIdentity();
 };
 
 

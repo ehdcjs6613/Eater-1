@@ -46,6 +46,8 @@ public:
 	EATER_ENGINEDLL void SetAnimationName(std::string mTextureName);
 
 public:
+	void SetObjectData() override;
+
 	static void SetManager(ObjectManager* obj);
 
 private:

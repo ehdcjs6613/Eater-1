@@ -1,6 +1,7 @@
 #include "Material.h"
 #include "EngineData.h"
 #include "MaterialManager.h"
+#include "LoadManager.h"
 
 MaterialManager* Material::MAT_Manager = nullptr;
 
@@ -24,6 +25,11 @@ Material::~Material()
 void Material::SetManager(MaterialManager* mat)
 {
 	MAT_Manager = mat;
+}
+
+void Material::SetMeshData(MeshData* meshData)
+{
+	m_MeshData = meshData;
 }
 
 void Material::SetMaterialIndex(UINT index)
@@ -51,14 +57,24 @@ void Material::PushMaterialData(LoadMeshData* mesh)
 	MaterialBuffers->Normal = mesh->Normal;
 }
 
-void Material::SetDiffuseMap(TextureBuffer* diffuse)
+void Material::SetTexTransform(DirectX::SimpleMath::Vector3 scale)
 {
-	MaterialBuffers->Albedo = diffuse;
+
 }
 
-void Material::SetNormalMap(TextureBuffer* noraml)
+void Material::SetTexTransform(float x, float y, float z)
 {
-	MaterialBuffers->Albedo = noraml;
+
+}
+
+void Material::SetDiffuseMap(std::string diffuseName)
+{
+	MaterialBuffers->Albedo = LoadManager::GetTexture(diffuseName);
+}
+
+void Material::SetNormalMap(std::string noramlName)
+{
+	MaterialBuffers->Albedo = LoadManager::GetTexture(noramlName);
 }
 
 void Material::SetBaseColor(DirectX::SimpleMath::Vector4 color)

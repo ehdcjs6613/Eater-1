@@ -63,11 +63,11 @@ void intro::Awake()
 	testobj->AddComponent<MeshFilter>()->SetMeshName("Field");
 	testobj->GetComponent<Transform>()->Scale = { 0.5f, 0.5f, 0.5f };
 
-	testobj = Instance("Field1");
-	testobj->AddComponent<MeshFilter>()->SetMeshName("Field");
-	testobj->GetComponent<Transform>()->Rotation = { 90.0f, 0.0f, 0.0f };
-	testobj->GetComponent<Transform>()->Scale = { 0.5f, 0.5f, 0.5f };
-	testobj->GetComponent<Transform>()->Position = { 0.0f, 2.5f, 2.5f };
+	//testobj = Instance("Field1");
+	//testobj->AddComponent<MeshFilter>()->SetMeshName("Field");
+	//testobj->GetComponent<Transform>()->Rotation = { 90.0f, 0.0f, 0.0f };
+	//testobj->GetComponent<Transform>()->Scale = { 0.5f, 0.5f, 0.5f };
+	//testobj->GetComponent<Transform>()->Position = { 0.0f, 2.5f, 2.5f };
 	
 	//testobj = Instance("Table");
 	//testobj->AddComponent<MeshFilter>()->SetMeshName("Table");
