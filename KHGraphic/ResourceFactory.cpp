@@ -548,8 +548,8 @@ Vertexbuffer* GraphicResourceFactory::CreateTerrainVB(ParserData::Mesh* mesh, st
 
 		if (i != 0)
 		{
-			vertices[i].Tex.x = vertices[i].Pos.x / 31.0f;
-			vertices[i].Tex.y = vertices[i].Pos.z / 31.0f;
+			vertices[i].Tex.x = vertices[i].Pos.x;
+			vertices[i].Tex.y = vertices[i].Pos.z;
 		}
 
 		vertices[i].Normal	= mesh->m_VertexList[i]->m_Normal;

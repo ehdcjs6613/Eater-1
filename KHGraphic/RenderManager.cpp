@@ -184,7 +184,7 @@ void RenderManager::SSAORender(GlobalData* global)
 	if (m_RenderOption & RENDER_SSAO)
 	{
 		m_SSAO->BeginRender();
-
+	
 		m_SSAO->Render(global);
 		m_SSAO->BlurRender(4);
 	}

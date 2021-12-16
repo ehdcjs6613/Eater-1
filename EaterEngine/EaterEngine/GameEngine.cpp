@@ -76,6 +76,7 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 	MeshFilter::SetManager(mObjectManager);
 	Material::SetManager(mMaterialManager);
 	Light::SetManager(mLightManager);
+	Component::SetManager(mTimeManager, mKeyManager);
 
 	//매니저들 초기화
 	BaseManager::Initialize();
@@ -89,7 +90,6 @@ void GameEngine::Initialize(HWND Hwnd, bool mConsoleDebug)
 	mMaterialManager->Initialize();
 	mPhysManager->Initialize();
 
-	Component::SetManager(mTimeManager, mKeyManager);
 
 	mGraphicManager->Initialize(Hwnd, WinSizeWidth, WinSizeHeight, mObjectManager);
 }
@@ -105,7 +105,6 @@ void GameEngine::Update()
 	mObjectManager->PlayUpdate();
 	mPhysManager->Update(mTimeManager->DeltaTime());
 	
-	//mKeyManager->GetKeyToggle()
 	//컨퍼넌트 업데이트 끝
 	//그래픽엔진으로 넘겨줄 랜더큐도 생성완료
 

@@ -34,9 +34,6 @@
     <Filter Include="소스 파일\Manager\ObjectManager">
       <UniqueIdentifier>{1a5ca334-8b08-4aa7-b87b-eb69d8964169}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Delegate">
-      <UniqueIdentifier>{2acc9f63-4775-495f-ac9b-67423609cfca}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\Component\MeshFilter">
       <UniqueIdentifier>{e1a8f83a-9fbe-41b2-bcaf-4aaa827116a1}</UniqueIdentifier>
     </Filter>
@@ -114,6 +111,9 @@
     </Filter>
     <Filter Include="소스 파일\Component\Terrain">
       <UniqueIdentifier>{93570656-4fcd-4816-b74b-d46c9fd72da6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Delegate">
+      <UniqueIdentifier>{2acc9f63-4775-495f-ac9b-67423609cfca}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
