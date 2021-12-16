@@ -190,6 +190,10 @@ namespace ParserData
 		std::vector<DirectX::SimpleMath::Matrix> m_BoneTMList;		// Bone Offset TM List
 		std::vector<Mesh*> m_BoneMeshList;							// Bone Mesh List
 
+		/// Original Data
+		std::vector<DirectX::SimpleMath::Vector3> m_OriginVertexList;
+		std::vector<UINT> m_OriginIndexList;
+
 		/// Final Data
 		std::vector<Vertex*>		m_VertexList;		/// Vertex List
 		std::vector<IndexList*>		m_IndexList;		/// Index List

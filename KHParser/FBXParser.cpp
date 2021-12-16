@@ -362,7 +362,7 @@ void FBXParser::ProcessMesh(fbxsdk::FbxNode* node)
 	{
 		m_OneMesh->m_MeshType = SKIN_MESH;
 	}
-	
+
 
 	// 새로운 버텍스 생성..
 	CreateVertex(pMesh, boneWeights, vertexTotalCount);
@@ -589,7 +589,7 @@ void FBXParser::ProcessAnimation(fbxsdk::FbxNode* node)
 		{
 			m_OneMesh->m_Animation = m_OneAnimation;
 		}
-		
+
 	}
 }
 
@@ -608,6 +608,9 @@ void FBXParser::OptimizeData()
 void FBXParser::OptimizeVertex(ParserData::Mesh* pMesh)
 {
 	if (pMesh->m_VertexList.empty()) return;
+
+	// 충돌 체크용 원본 버텍스 리스트
+	CopyOriginalVertex(pMesh);
 
 	bool new_VertexSet = false;
 	size_t resize_VertexIndex = pMesh->m_VertexList.size();
@@ -761,6 +764,25 @@ void FBXParser::OptimizeVertex(ParserData::Mesh* pMesh)
 	}
 
 	pMesh->m_MeshFace.clear();
+}
+
+void FBXParser::CopyOriginalVertex(ParserData::Mesh* pMesh)
+{
+	int vCount = pMesh->m_VertexList.size();
+	int fCount = pMesh->m_MeshFace.size();
+
+	for (int i = 0; i < vCount; i++)
+	{
+		pMesh->m_OriginVertexList.push_back(pMesh->m_VertexList[i]->m_Pos);
+	}
+
+	for (int i = 0; i < fCount; i++)
+	{
+		for (int j = 0; j < 3; j++)
+		{
+			pMesh->m_OriginIndexList.push_back(pMesh->m_MeshFace[i]->m_VertexIndex[j]);
+		}
+	}
 }
 
 void FBXParser::RecombinationTM(ParserData::Mesh* pMesh)
