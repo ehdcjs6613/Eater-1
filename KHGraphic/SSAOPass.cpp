@@ -258,6 +258,11 @@ void SSAOPass::SetOffsetVectors()
 		XMStoreFloat4(&option.gOffsetVectors[i], v);
 	}
 	
+	option.gOcclusionRadius = 0.1f;
+	option.gOcclusionFadeStart = 0.01f;
+	option.gOcclusionFadeEnd = 1.0f;
+	option.gSurfaceEpsilon = 0.1f;
+
 	// SSAO Option Constant Buffer Update..
 	m_SsaoPS->SetConstantBuffer(option);
 }

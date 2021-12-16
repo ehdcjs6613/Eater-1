@@ -28,6 +28,7 @@ void InGame::Awake()
 	LoadMesh("Weapon", SCALING);
 
 	LoadTerrainMesh("Terrain", "Terrain_RGB.png", SCALING);
+	//LoadTerrainMesh("Terrain3", "Terrain_RGB.png", SCALING);
 
 	LoadTexture("Player.dds");
 	LoadTexture("Dump.png");
@@ -59,6 +60,7 @@ void InGame::Awake()
 	testobj->GetComponent<MeshFilter>()->SetMeshName("Terrain");
 	testobj->GetComponent<Terrain>()->AddLayer("ground01_Albedo", "ground01_Normal");
 	testobj->GetComponent<Terrain>()->AddLayer("ground02_Albedo", "ground02_Normal");
+	testobj->GetComponent<Terrain>()->SetTextureTiling(1.0f / 31.0f, 1.0f / 31.0f);
 	testobj->GetTransform()->Rotation = { 0, 0, 0 };
 
 

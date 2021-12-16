@@ -223,7 +223,7 @@ void DeferredPass::Update(MeshData* mesh, GlobalData* global)
 		objectBuf.gWorldView = world * view;
 		objectBuf.gWorldViewProj = world * view * proj;
 		objectBuf.gShadowTransform = world * shadowTrans;
-
+		objectBuf.gTexTransform = mesh->mTexTM;
 		m_TerrainVS->SetConstantBuffer(objectBuf);
 
 		// Vertex Shader Update..

@@ -4,21 +4,17 @@
 #include <vector>
 #include <string>
 
-struct TerrainLayer
-{
-
-};
-
 class Terrain : public Component
 {
 public:
 	EATER_ENGINEDLL Terrain();
-	EATER_ENGINEDLL ~Terrain();
+	~Terrain();
 
 public:
 	EATER_ENGINEDLL void AddLayer(std::string diffuseName, std::string normalName);
+	EATER_ENGINEDLL void SetTextureTiling(float scale);
+	EATER_ENGINEDLL void SetTextureTiling(float scale_x, float scale_y);
 
 private:
 	std::vector<Material*> m_MaterialLayer;
 };
-

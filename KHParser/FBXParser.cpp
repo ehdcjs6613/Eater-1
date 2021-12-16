@@ -768,8 +768,8 @@ void FBXParser::OptimizeVertex(ParserData::Mesh* pMesh)
 
 void FBXParser::CopyOriginalVertex(ParserData::Mesh* pMesh)
 {
-	int vCount = pMesh->m_VertexList.size();
-	int fCount = pMesh->m_MeshFace.size();
+	int vCount = (int)pMesh->m_VertexList.size();
+	int fCount = (int)pMesh->m_MeshFace.size();
 
 	for (int i = 0; i < vCount; i++)
 	{
@@ -780,7 +780,20 @@ void FBXParser::CopyOriginalVertex(ParserData::Mesh* pMesh)
 	{
 		for (int j = 0; j < 3; j++)
 		{
-			pMesh->m_OriginIndexList.push_back(pMesh->m_MeshFace[i]->m_VertexIndex[j]);
+			switch (j)
+			{
+			case 0:
+				pMesh->m_OriginIndexList.push_back(pMesh->m_MeshFace[i]->m_VertexIndex[0]);
+				break;
+			case 1:
+				pMesh->m_OriginIndexList.push_back(pMesh->m_MeshFace[i]->m_VertexIndex[2]);
+				break;
+			case 2:
+				pMesh->m_OriginIndexList.push_back(pMesh->m_MeshFace[i]->m_VertexIndex[1]);
+				break;
+			default:
+				break;
+			}
 		}
 	}
 }
