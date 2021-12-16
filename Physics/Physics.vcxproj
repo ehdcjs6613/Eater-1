@@ -181,6 +181,9 @@ copy /Y "$(TargetDir)*.lib" "$(SolutionDir)Library\lib"</Command>
     <ClInclude Include="SphereCollider.h" />
     <ClInclude Include="VertexPositionColor.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

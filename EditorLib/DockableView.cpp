@@ -1,5 +1,4 @@
 #include "LibDefine.h"
-#include "DockableView.h"
 
 #include "EWGameView.h" 
 #include "DockableView.h"

@@ -12,6 +12,9 @@
 
 struct GeometryGenerator
 {
+public:
+	DirectX::XMFLOAT4 m_Color;
+
 	ID3D11Buffer*				 m_pVertexBuffer;	// 버텍스버퍼
 	ID3D11Buffer*				 m_pIndexBuffer;	// 인덱스버퍼
 	ID3DX11Effect*			     m_pEffectFX;				// 이펙트
@@ -35,6 +38,7 @@ public:
 	/// 라인으로만 그릴 함수
 	bool CreateLineMesh(ID3D11Device* ,MeshType );
 	void Position(float _x, float _y, float _z);
+	void SetColor(const DirectX::XMVECTORF32 _Color);
 protected:
 	template<class Arcive>
 	bool CreateVertexBuffer(ID3D11Device*, Arcive* ,int ,typename std::enable_if<std::is_class<Arcive>::value, bool>::type );

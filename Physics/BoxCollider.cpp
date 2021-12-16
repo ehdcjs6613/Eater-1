@@ -51,22 +51,19 @@ void BoxCollider::Update()
 void BoxCollider::EndUpdate()
 {
 }
-void BoxCollider::Translasion(DirectX::XMMATRIX* _World)
+void BoxCollider::Translastion(DirectX::XMMATRIX _World)
 {
 	if (!this)
 	{
 		return;
 	}
-	 DirectX::XMStoreFloat4x4(&this->mWorld ,*_World);
+	 DirectX::XMStoreFloat4x4(&this->mWorld ,_World);
 	
 	
 }
 
 void BoxCollider::Draw(const DirectX::XMFLOAT4X4 _View, const DirectX::XMFLOAT4X4 _Proj)
 {
-	
-
-	this->gameobject;
 	//요기수정
 	mView = (_View);
 	mProj = (_Proj);
@@ -84,64 +81,50 @@ void BoxCollider::Draw(const DirectX::XMFLOAT4X4 _View, const DirectX::XMFLOAT4X
 
 	/// WVP TM등을 셋팅
 
-	if (GetAsyncKeyState(VK_UP) & 8001)
-	{
-		Center[0] += 0.1f;
-	}
-	if (GetAsyncKeyState(VK_DOWN) & 8001)
-	{
-		Center[1] += 0.1f;
-	}
-	if (GetAsyncKeyState(VK_LEFT) & 8001)
-	{
-		Center[2] += 0.1f;
-	}
+	//if (GetAsyncKeyState(VK_UP) & 8001)
+	//{
+	//	Center[0] += 0.1f;
+	//}
+	//if (GetAsyncKeyState(VK_DOWN) & 8001)
+	//{
+	//	Center[1] += 0.1f;
+	//}
+	//if (GetAsyncKeyState(VK_LEFT) & 8001)
+	//{
+	//	Center[2] += 0.1f;
+	//}
+	//
+	//if (GetAsyncKeyState('1') & 8001)
+	//{
+	//	Size[0] -= 0.1f;
+	//}
+	//if (GetAsyncKeyState('2') & 8001)
+	//{
+	//	Size[1] -= 0.1f;
+	//}
+	//if (GetAsyncKeyState('3') & 8001)
+	//{
+	//	Size[2] -= 0.1f;
+	//}
 
-	if (GetAsyncKeyState('1') & 8001)
-	{
-		Size[0] -= 0.1f;
-	}
-	if (GetAsyncKeyState('2') & 8001)
-	{
-		Size[1] -= 0.1f;
-	}
-	if (GetAsyncKeyState('3') & 8001)
-	{
-		Size[2] -= 0.1f;
-	}
-
-
+	
 
 	DirectX::XMMATRIX view = DirectX::XMLoadFloat4x4(&mView);
 	DirectX::XMMATRIX proj = DirectX::XMLoadFloat4x4(&mProj);
 	DirectX::XMMATRIX world = DirectX::XMLoadFloat4x4(&mWorld);
 
-	Center[0] = 0;
-	Center[1] = 1;
-	Center[2] = 0;
 
-	world =
-	{
-		Size[0]		,0		,0		,0,
-		0,		Size[1]		,0		,0,
-		0,			 0,		Size[2]	,0,
-		Center[0],Center[1],Center[2],1,
-	};
+	//world =
+	//{
+	//	Size[0]		,0		,0		,0,
+	//	0,		Size[1]		,0		,0,
+	//	0,			 0,		Size[2]	,0,
+	//	Center[0],Center[1],Center[2],1,
+	//};
 
 	DirectX::XMMATRIX worldViewProj = world * view * proj;
 	m_Gemetry.m_pFxWorldViewProj->SetMatrix(reinterpret_cast<float*>(&worldViewProj));
 
-
-	//mWorld =
-	//{
-	//	1,0,0,0,
-	//	0,1,0,0,
-	//	0,0,1,0,
-	//	0,0,0,1,
-	//};
-
-	// 렌더스테이트
-	//md3dImmediateContext->RSSetState(m_pRenderstate);
 
 	// 테크닉은...
 	D3DX11_TECHNIQUE_DESC techDesc;

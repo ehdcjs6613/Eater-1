@@ -1,5 +1,16 @@
 #pragma once
 
+#include <d3d11.h>
+#include <d3dcommon.h>
+#include <DirectXMath.h>
+
+
+
+#include "WJDefine.h"
+#include "GraphicsEngine.h"
+#include "XShader.h"
+
+
 
 
 //    DirectX관련 클래스
@@ -28,20 +39,14 @@ class SphereCollider;
 class ColliderExporter;
 //그리기를 위한 포인터의  클래스
 
+//mfc class 
+class CMDIChildWndEx;
+class DockableBase;
+class CPaneContainer;
 
 
 
 
-#include <d3d11.h>
-#include <d3dcommon.h>
-#include <DirectXMath.h>
-
-#include <queue>
-#include <string>
-
-#include "WJDefine.h"
-#include "GraphicsEngine.h"
-#include "XShader.h"
 
 
 
@@ -51,6 +56,7 @@ class ColliderExporter;
 class X3Engine : public  GraphicEngine
 {
 public:
+	DirectX::XMFLOAT4X4 tWorld0;
 	//기본엔진 생성자
 	X3Engine_DLL X3Engine();
 	//이 엔진에 아래는 없다
@@ -145,11 +151,11 @@ public:
 
 private:
 	////정점셰이더를 저장하기 위한 변수를 추가
-	XVertexShader m_XVertexShader;
-	XPixelShader  m_XPexelShader;
+	//XVertexShader m_XVertexShader;
+	//XPixelShader  m_XPexelShader;
 public:
 	//test
-	ID3D11Buffer* m_pVertexBuffer;
+	//ID3D11Buffer* m_pVertexBuffer;
 
 private:
 	HRESULT BeginRender();
@@ -160,31 +166,10 @@ private:
 private:
 	CBox* m_CBox;
 
-	BoxCollider* m_BoxCollider;
+	BoxCollider* m_BoxCollider0;
+	BoxCollider* m_BoxCollider1;
+	BoxCollider* m_BoxCollider2;
+	std::vector<BoxCollider*> m_BoxColliders;
 	ColliderExporter* m_ColliderExporter;
-	//SphereCollider* m_SphereCollider;
-
-
-	//ID3DX11Effect* m_FX;
-	//ID3DX11EffectTechnique* mTech;
-	//ID3DX11EffectMatrixVariable* mfxWorldViewProj;
-	//
-	//ID3D11InputLayout* mInputLayout;
-	//// 폰트때문에 뎁스스탠실 스테이트가 강제가 됐다.
-	//ID3D11DepthStencilState* NormalDSS;
-	//
-	//DirectX::SimpleMath::Matrix mWorld;	// Transform Matrix
-	//DirectX::SimpleMath::Matrix mView;
-	//DirectX::SimpleMath::Matrix mProj;
-	//
-	//ID3D11Buffer* Render_VB = nullptr;
-	//ID3D11Buffer* Render_IB = nullptr;
-	//// Buffer 관련
-	//UINT Vertex_Buffer_Stride = 0;
-	//UINT Vertex_Buffer_Offset = 0;
-	//// WVP 관련
-	//DirectX::SimpleMath::Matrix Mul_WVP;		// W * V * P
-	//DirectX::SimpleMath::Matrix World_Inverse;	// 월드 역행렬
-	//DirectX::SimpleMath::Matrix World_Inverse_Transpose;
 };
 

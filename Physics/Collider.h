@@ -7,8 +7,9 @@
 
 class Collider : public Component
 {
-protected:
+public:
 	GeometryGenerator m_Gemetry;
+protected:
 	unsigned int m_Num;							//콜라이더의 넘버
 
 	DirectX::XMFLOAT4X4 mWorld;	// 월드 변환 행렬 (로컬->월드)
@@ -48,6 +49,11 @@ public:
 
 	PhysicsExport float* GetCenter();
 	PhysicsExport float* GetSize();
+	PhysicsExport DirectX::XMFLOAT4X4 GetWorld();
+
+
+	PhysicsExport virtual bool OnPick();
+	PhysicsExport virtual bool OffPick();
 
 protected:
 	virtual void Initialize();

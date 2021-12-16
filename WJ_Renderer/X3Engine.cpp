@@ -1,4 +1,7 @@
 //#include <wrl/client.h>
+
+#include <afxdlgs.h>
+
 #include "OneCompile.h"
 #include "EngineData.h"
 #include "Effects.h"
@@ -13,15 +16,22 @@
 #include "DirectXAdapter.h"
 #include "DirectXRenderTargeter.h"
 #include "DirectXSamplerState.h"
-#include "../DirectX2DSupporter/Grahpics2D.h"
+//#include "../DirectX2DSupporter/Grahpics2D.h"
 #include "ParserData.h"
 #include "ResourcesData.h"
 #include "CBox.h"
 #include "../Physics/Collider.h"
 #include "../Physics/BoxCollider.h"
 #include "../Physics/SphereCollider.h"
+#include "../EditorLib/LibDefine.h"
+//#include "../EditorLib/DockableView.h"
+#include "../EditorLib/EDDockableBase.h"
 #include "../EditorLib/ColliderExporter.h"
+#include "../Editor/MainFrm.h"
+#include "../Editor/Editor.h"
+
 #include "X3Engine.h"
+
 
 //스마트포인터 인클르드
 
@@ -33,18 +43,10 @@ X3Engine::X3Engine() :
 	m_pDevice(nullptr), 
 	m_pDeviceContext(nullptr) , 
 	m_ArrColor{ 0.5f, 0.5f, 0.35f, 1.0f },
-	m_XVertexShader{},
-	m_XPexelShader{},
-	m_pVertexBuffer(nullptr),
+	//m_XVertexShader{},
+	//m_XPexelShader{},
+	//m_pVertexBuffer(nullptr),
 	m_CBox(nullptr)
-	//mWorld{},
-	//mView{},
-	//mProj{},
-	//m_FX(nullptr),
-	//mTech(nullptr),
-	//mfxWorldViewProj(nullptr),
-	//mInputLayout(nullptr),
-	//NormalDSS(nullptr)
 {
 
 	//생성 부분
@@ -58,13 +60,56 @@ X3Engine::X3Engine() :
 	m_pAdapter = new DirectXAdapter();
 	m_pRenderTargeter = new DirectXRenderTargeter();
 	m_CBox = new CBox();
-	m_BoxCollider = new BoxCollider();
+	m_BoxCollider0 = new BoxCollider();
+	m_BoxCollider1 = new BoxCollider();
+	m_BoxCollider2 = new BoxCollider();
 	//m_SphereCollider = new SphereCollider();
 	m_ColliderExporter = new ColliderExporter();
 
 	this->m_pDirectXSwapChain = new DirectXSwapChain(m_pDevice->GetDevice());
+	
+	
+	DirectX::XMFLOAT4X4 tWorld0;
+	
+	tWorld0 =
+	{
+		1,0,0,0,
+		0,1,0,0,
+		0,0,1,0,
+		-10,0,0,1,
+	};
+	DirectX::XMMATRIX r = DirectX::XMLoadFloat4x4(&tWorld0);
+	//DirectX::XMStoreFloat4x4(&tWorld0, r);
+	m_BoxCollider0->Translastion(r);
+	//--------------------------------------------
+	DirectX::XMFLOAT4X4 tWorld1;
+	tWorld1 =
+	{
+		1,0,0,0,
+		0,1,0,0,
+		0,0,1,0,
+		-5,0,0,1,
+	};
+	DirectX::XMMATRIX r2 = DirectX::XMLoadFloat4x4(&tWorld1);
+	//DirectX::XMStoreFloat4x4(&tWorld1, r2);
+	m_BoxCollider1->Translastion(r2);
 
-	m_ColliderExporter->PushInfo(m_BoxCollider);
+	DirectX::XMFLOAT4X4 tWorld2;
+	tWorld2 =
+	{
+		1,0,0,0,
+		0,1,0,0,
+		0,0,1,0,
+		5,0,0,1,
+	};
+	DirectX::XMMATRIX r3 = DirectX::XMLoadFloat4x4(&tWorld2);
+	//DirectX::XMStoreFloat4x4(&tWorld1, r2);
+	m_BoxCollider1->Translastion(r3);
+
+	m_BoxColliders.push_back(m_BoxCollider0);
+	m_BoxColliders.push_back(m_BoxCollider1);
+	m_BoxColliders.push_back(m_BoxCollider2);
+
 }
 
 X3Engine::~X3Engine()
@@ -247,11 +292,101 @@ void X3Engine::Delete()
 
 void X3Engine::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 {
+	CMainFrame* frm = (CMainFrame*)AfxGetMainWnd();
+	DockableBase* dockB = frm->GetDockableBase();
+	if (nullptr != frm->GetDockableBase())
+	{
+		frm->GetDockableBase()->Update();
+	}
+	//
+	//if (frm->GetDockableBase() != nullptr)
+	//{
+	//	frm->GetDockableBase()->Update();
+	//}
+
+	static int num = -1;
+	//0x09 HT: HORIZONTAB
+	static int size = m_BoxColliders.size();
+	if (GetAsyncKeyState(VK_RIGHT) & 8001)
+	{
+		
+		if (num < size-1)
+		{
+			if (num  < 0)
+			{
+				num++;
+				m_BoxColliders[num]->OnPick();
+				m_BoxColliders[num]->Initialize();
+			}
+			else
+			{
+				m_BoxColliders[num]->OffPick();
+				m_BoxColliders[num]->Initialize();
+				num++;
+			}
+			
+		
+		}
+		else if (num >= size)
+		{
+			return;
+		}
+		m_BoxColliders[num]->OnPick();
+		m_BoxColliders[num]->Initialize();
+
+
+	}
+	else if (GetAsyncKeyState(VK_LEFT) & 8001)
+	{
+		
+		if (num > 0)
+		{
+			m_BoxColliders[num]->OffPick();
+			m_BoxColliders[num]->Initialize();
+			--num;
+		}
+		else
+		{
+			return;
+		}
+		m_BoxColliders[num]->OnPick();
+		m_BoxColliders[num]->Initialize();
+
+	}
+
+	
+	if (nullptr != frm->GetDockableBase() && num!= -1)
+	{
+		
+
+		m_BoxColliders[num]->GetWorld();
+		tWorld0 =
+		{
+			frm->GetDockableBase()->xs, 0 , 0, 0,
+			0, frm->GetDockableBase()->ys , 0, 0,
+			0, 0 , frm->GetDockableBase()->zs, 0,
+			frm->GetDockableBase()->xf, frm->GetDockableBase()->yf , frm->GetDockableBase()->zf, 1,
+		};
+		DirectX::XMMATRIX r = DirectX::XMLoadFloat4x4(&tWorld0);
+		m_BoxColliders[num]->Translastion(r);
+	}
+
 	if (GetAsyncKeyState(VK_RETURN) & 8001)
 	{
 		//
-		m_ColliderExporter->Export();
+		m_ColliderExporter->Start();
+
+		int size = m_BoxColliders.size();
+		for (auto k : m_BoxColliders)
+		{
+			
+			m_ColliderExporter->PushInfo((k));
+			m_ColliderExporter->Export((const wchar_t*)L"BoxCollider");
+		}
+		m_ColliderExporter->End();
+
 	}
+	
 	//렌더링시작의 순서.
 	//나중에 렌더 큐? 같은걸로 해보자,
 	m_pDeviceContext->GetDeviceContext()->RSSetViewports(1, &this->m_ViewPort);
@@ -266,10 +401,22 @@ void X3Engine::Render(std::queue<MeshData*>* meshList, GlobalData* global)
 
 	//m_BoxCollider->Update();
 	////const DirectX::XMFLOAT4X4 _WorldTM = {  };
-	DirectX::XMMATRIX r = XMMatrixIdentity();
-	m_BoxCollider->Translasion(&r);
-	m_BoxCollider->Draw(mView, mProj);
-	m_BoxCollider->Rnder();
+
+	//DirectX::XMMATRIX r = XMMatrixIdentity();
+	//DirectX::XMFLOAT4X4 tWorld0;
+	//DirectX::XMStoreFloat4x4(&tWorld0, r);
+
+	for (auto k : m_BoxColliders)
+	{
+		//auto dc = (*k);
+		(k)->Draw(mView, mProj);
+		(k)->Rnder();
+	}
+
+	
+
+
+
 	//
 	////m_SphereCollider->Translasion(&r);
 	//m_SphereCollider->Draw(mView, mProj);
@@ -303,7 +450,9 @@ void X3Engine::SetDevice(void* Devie, void* DevieContext)
 	InputLayouts::InitAll(m_pDevice->GetDevice());
 
 	m_CBox->Initialize(m_pDevice->GetDevice(), m_pDeviceContext->GetDeviceContext());
-	m_BoxCollider->Initialize(m_pDevice->GetDevice(), m_pDeviceContext->GetDeviceContext());
+	m_BoxCollider0->Initialize(m_pDevice->GetDevice(), m_pDeviceContext->GetDeviceContext());
+	m_BoxCollider1->Initialize(m_pDevice->GetDevice(), m_pDeviceContext->GetDeviceContext());
+	m_BoxCollider2->Initialize(m_pDevice->GetDevice(), m_pDeviceContext->GetDeviceContext());
 	//m_SphereCollider->Initialize(m_pDevice->GetDevice(), m_pDeviceContext->GetDeviceContext());
 
 }
@@ -376,14 +525,14 @@ void X3Engine::InitializeShaders()
 	//UINT numElements = ARRAYSIZE(layout, numElements);
 	UINT numElements = ARRAYSIZE(layout);
 
-	if (0 != m_XVertexShader.Initialize(m_pDevice->GetDevice(), shaderFoler + L"vertexShaders.cso", layout, numElements))
-	{
-		return;
-	}
-	if (0 != m_XPexelShader.Initialize(m_pDevice->GetDevice(), shaderFoler + L"pixelShaders.cso", layout, numElements))
-	{
-		return;
-	}
+	//if (0 != m_XVertexShader.Initialize(m_pDevice->GetDevice(), shaderFoler + L"vertexShaders.cso", layout, numElements))
+	//{
+	//	return;
+	//}
+	//if (0 != m_XPexelShader.Initialize(m_pDevice->GetDevice(), shaderFoler + L"pixelShaders.cso", layout, numElements))
+	//{
+	//	return;
+	//}
 }
 
 

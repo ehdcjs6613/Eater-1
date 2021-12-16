@@ -1,6 +1,9 @@
 #pragma once
 
 
+
+
+
 //  이전 라이브러리를 제거해야 할 필요성이 생겼다.
 // 이 처리를 해 주지 않으면 DX11용책의 예제들을 빌드 할 수 없다.
 #if defined(DEBUG) || defined(_DEBUG)
@@ -22,15 +25,21 @@
 #ifdef _DEBUG
 #pragma comment( lib, "DirectXTK_x64d.lib" )
 #pragma comment( lib, "Effects11d.lib" )
+#pragma comment( lib, "Editor.lib" )
+#pragma comment( lib, "EditorLib.lib" )
 #else
 #pragma comment( lib, "DirectXTK_x64r.lib" )
 #pragma comment( lib, "Effects11.lib" )
+#pragma comment( lib, "Editor.lib" )
+#pragma comment( lib, "EditorLib.lib" )
 #endif
 //
 //
 
 
-
+//#include <afxwin.h>
+//#include <afxmdiclientareawnd.h>
+//#include <afxbasetabctrl.h>
 /// DX11 인클루드.
 #include <d3d11.h>
 #include <d3dcompiler.h>
@@ -42,6 +51,7 @@
 #include <DirectXMath.h>
 #include <DirectXPackedVector.h>
 //스마트포인터 인클르드
+#include <Windows.h>
 #include <windef.h>
 #include <wrl.h>
 #include <wrl/client.h>
@@ -56,7 +66,6 @@
 #include <queue>
 
 
-#include <Windows.h>
 #include <vector>
 #include <map>
 #include <atlstr.h>

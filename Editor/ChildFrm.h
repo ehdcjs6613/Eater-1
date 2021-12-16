@@ -3,6 +3,7 @@
 //
 
 #pragma once
+#include <afxmdichildwndex.h>
 #include "ChildView.h"
 
 class CChildFrame : public CMDIChildWnd

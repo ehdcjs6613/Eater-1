@@ -1,9 +1,9 @@
 #pragma once
 
+#include <afxdockablepane.h>
 #include "DllExport.h"
 
 class EWGameView;
-
 
 class VS_MFC_EXPORT DockableView : public CDockablePane
 {

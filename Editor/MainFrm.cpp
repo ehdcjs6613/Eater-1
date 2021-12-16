@@ -5,9 +5,10 @@
 
 #include "framework.h"
 #include "resource.h"
-#include "Editor.h"
 
 #include "../../GameClient/GameManager.h"
+#include "LibDefine.h"
+#include "Editor.h"
 #include "EWGameView.h"
 #include "EDDockableBase.h"
 #include "DockableView.h"

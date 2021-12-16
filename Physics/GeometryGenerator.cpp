@@ -4,6 +4,7 @@
 #define ENDLINE ;
 bool GeometryGenerator::CreateLineMesh(ID3D11Device* _pDevice,MeshType _mesh)
 {
+	//SetColor(DirectX::Colors::Green);
 	switch (_mesh)
 	{
 	case GeometryGenerator::MeshType::Sphere:
@@ -14,14 +15,14 @@ bool GeometryGenerator::CreateLineMesh(ID3D11Device* _pDevice,MeshType _mesh)
 		int cnt = _countof(vertices);
 		ZeroMemory(&vertices, sizeof(VertexPositionColor) * cnt);
 
-		vertices[0x00] = { DirectX::XMFLOAT3(+1, -1.0f, -1.0f),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green) };
-		vertices[0x01] = { DirectX::XMFLOAT3(+1, +1.0f, -1.0f),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green) };
-
-		vertices[0x02] = { DirectX::XMFLOAT3(-1, -1.0f, -1.0f),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green) };
-		vertices[0x03] = { DirectX::XMFLOAT3(+1, +1.0f, -1.0f),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green) };
-
-		vertices[0x04] = { DirectX::XMFLOAT3(+5, -1.0f, +1.0f),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green) };
-		vertices[0x05] = { DirectX::XMFLOAT3(+5, +1.0f, +1.0f),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green) };
+		vertices[0x00] = { DirectX::XMFLOAT3(+1, -1.0f, -1.0f),  DirectX::XMFLOAT4((const float*)&m_Color) };
+		vertices[0x01] = { DirectX::XMFLOAT3(+1, +1.0f, -1.0f),  DirectX::XMFLOAT4((const float*)&m_Color) };
+																								  
+		vertices[0x02] = { DirectX::XMFLOAT3(-1, -1.0f, -1.0f),  DirectX::XMFLOAT4((const float*)&m_Color) };
+		vertices[0x03] = { DirectX::XMFLOAT3(+1, +1.0f, -1.0f),  DirectX::XMFLOAT4((const float*)&m_Color) };
+																								  
+		vertices[0x04] = { DirectX::XMFLOAT3(+5, -1.0f, +1.0f),  DirectX::XMFLOAT4((const float*)&m_Color) };
+		vertices[0x05] = { DirectX::XMFLOAT3(+5, +1.0f, +1.0f),  DirectX::XMFLOAT4((const float*)&m_Color) };
 
 		UINT indices[6];
 
@@ -40,23 +41,23 @@ bool GeometryGenerator::CreateLineMesh(ID3D11Device* _pDevice,MeshType _mesh)
 		ZeroMemory(&vertices, sizeof(VertexPositionColor) * cnt);
 
 
-		vertices[0x00] = { DirectX::XMFLOAT3(-x, -y, -z),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green) };
-		vertices[0x01] = { DirectX::XMFLOAT3(-x, +y, -z),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green) };
+		vertices[0x00] = { DirectX::XMFLOAT3(-x, -y, -z), m_Color };
+		vertices[0x01] = { DirectX::XMFLOAT3(-x, +y, -z),  m_Color };
 
-		vertices[0x02] = { DirectX::XMFLOAT3(+x, +y, -z),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green) };
-		vertices[0x03] = { DirectX::XMFLOAT3(+x, -y, -z),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green) };
+		vertices[0x02] = { DirectX::XMFLOAT3(+x, +y, -z), m_Color };
+		vertices[0x03] = { DirectX::XMFLOAT3(+x, -y, -z), m_Color };
 
-		vertices[0x04] = { DirectX::XMFLOAT3(-x, -y, +z),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green) };
-		vertices[0x05] = { DirectX::XMFLOAT3(-x, +y, +z),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green) };
+		vertices[0x04] = { DirectX::XMFLOAT3(-x, -y, +z),  m_Color};
+		vertices[0x05] = { DirectX::XMFLOAT3(-x, +y, +z),  m_Color};
 
-		vertices[0x06] = { DirectX::XMFLOAT3(+x, +y, +z),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green) };
-		vertices[0x07] = { DirectX::XMFLOAT3(+x, -y, +z),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green) };
+		vertices[0x06] = { DirectX::XMFLOAT3(+x, +y, +z),  m_Color};
+		vertices[0x07] = { DirectX::XMFLOAT3(+x, -y, +z),  m_Color};
 
-		vertices[0x08] = { DirectX::XMFLOAT3(+x, -y, -z),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green) };
-		vertices[0x09] = { DirectX::XMFLOAT3(+x, +y, -z),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green) };
+		vertices[0x08] = { DirectX::XMFLOAT3(+x, -y, -z), m_Color};
+		vertices[0x09] = { DirectX::XMFLOAT3(+x, +y, -z), m_Color};
 
-		vertices[0x0a] = { DirectX::XMFLOAT3(+x, +y, +z),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green) };
-		vertices[0x0b] = { DirectX::XMFLOAT3(+x, -y, +z),  DirectX::XMFLOAT4((const float*)&DirectX::Colors::Green) };
+		vertices[0x0a] = { DirectX::XMFLOAT3(+x, +y, +z),  m_Color};
+		vertices[0x0b] = { DirectX::XMFLOAT3(+x, -y, +z),  m_Color};
 
 
 		UINT indices[48];
@@ -103,6 +104,11 @@ void GeometryGenerator::Position(float _x, float _y, float _z)
 	x = _x;
 	y = _y;
 	z = _z;
+}
+
+void GeometryGenerator::SetColor(const DirectX::XMVECTORF32 _Color)
+{
+	m_Color = DirectX::XMFLOAT4((const float*)_Color);
 }
 
 

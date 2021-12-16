@@ -12,7 +12,12 @@ class GameDlg;
 class GameManager;
 
 class SaveData;
+#include "framework.h"
 
+#include <afx.h>
+#include <afxstr.h>
+#include <afxmdiframewndex.h>
+#include <afxstatusbar.h>
 
 class CMainFrame : public CMDIFrameWndEx
 {
@@ -61,8 +66,8 @@ protected:
 public:
 	afx_msg void OnDockTable();
 public:
-	DockableView* GetDockableView();
-	DockableBase* GetDockableBase();
+	VS_MFC_EXPORT DockableView* GetDockableView();
+	VS_MFC_EXPORT DockableBase* GetDockableBase();
 };
 
 

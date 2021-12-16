@@ -2,15 +2,18 @@
 //
 #include "../Editor/resource.h"
 #include "LibDefine.h"
+#include "EWGameView.h"
+#include "DockableView.h"
+#include "MainFrm.h"
 #include "EDDockableBase.h"
-
 
 // CDockalbePannel
 
 IMPLEMENT_DYNAMIC(DockableBase, CDockablePane)
 
-DockableBase::DockableBase() 
+DockableBase::DockableBase() : x("0"), y("0"), z("0"), sx("1"), sy("1"), sz("1")
 {
+	
 }
 
 DockableBase::~DockableBase()
@@ -74,6 +77,21 @@ int DockableBase::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_pCEdit[2]->Create(ES_MULTILINE | WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER,
 		CRect(210, 100, 300, 120), this, XNUM_2);
 
+	//=====================================================================================
+	m_pCEditScale[0] = new CEdit();
+	m_pCEditScale[0]->Create(ES_MULTILINE | WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER,
+		CRect(000, 50, 100, 70), this, XNUM_3);
+
+	m_pCEditScale[1] = new CEdit();
+	m_pCEditScale[1]->Create(ES_MULTILINE | WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER,
+		CRect(110, 50, 200, 70), this, XNUM_4);
+
+	m_pCEditScale[2] = new CEdit();
+	m_pCEditScale[2]->Create(ES_MULTILINE | WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER,
+		CRect(210, 50, 300, 70), this, XNUM_5);
+	//======================================================================================
+
+
 	m_pCEdit[0]->ShowWindow(SW_SHOW);
 	m_pCEdit[0]->UpdateWindow();
 	// TODO:  여기에 특수화된 작성 코드를 추가합니다.
@@ -119,18 +137,18 @@ BOOL DockableBase::PreCreateWindow(CREATESTRUCT& cs)
 
 void DockableBase::CreateDlg()
 {
-	BOOL bRet = m_pDialog.Create(this, MAKEINTRESOURCE(IDD_GAME_VIEW_0),
-		WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_FLOAT_MULTI,
-		ID_WINDOW_GAME
-	);
+	//BOOL bRet = m_pDialog.Create(this, MAKEINTRESOURCE(IDD_GAME_VIEW_0),
+	//	WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_FLOAT_MULTI,
+	//	ID_WINDOW_GAME
+	//);
 
-	m_pDialog.ShowWindow(SW_SHOW);
-	m_pDialog.EnableDocking(CBRS_ALIGN_ANY);
-
-
-	m_pDialog.SetAutoHideMode(false, CBRS_ALIGN_ANY);
-
-	m_pDialog.ShowPane(true, false, true);
+	//m_pDialog.ShowWindow(SW_SHOW);
+	//m_pDialog.EnableDocking(CBRS_ALIGN_ANY);
+	//
+	//
+	//m_pDialog.SetAutoHideMode(false, CBRS_ALIGN_ANY);
+	//
+	//m_pDialog.ShowPane(true, false, true);
 }
 
 
@@ -154,8 +172,7 @@ void DockableBase::OnEnterIdle(UINT nWhy, CWnd* pWho)
 
 void DockableBase::Update()
 {
-	CString x(""), y(""), z("");
-	CString sx(""),sy(""),sz("");
+
 
 	if(m_pCEdit !=nullptr)
 		m_pCEdit[0]->GetWindowTextW(x);
@@ -163,10 +180,26 @@ void DockableBase::Update()
 		m_pCEdit[1]->GetWindowTextW(y);
 	if (m_pCEdit != nullptr)
 		m_pCEdit[2]->GetWindowTextW(z);
+
+	xf = _ttof(x);
+	yf = _ttof(y);
+	zf = _ttof(z);
+
 	
-	float xf = _ttof(x);
-	float yf = _ttof(y);
-	float zf = _ttof(z);
+	if (m_pCEditScale != nullptr)
+		m_pCEditScale[0]->GetWindowTextW(sx);
+	if (m_pCEditScale != nullptr)
+		m_pCEditScale[1]->GetWindowTextW(sy);
+	if (m_pCEditScale != nullptr)
+		m_pCEditScale[2]->GetWindowTextW(sz);
+	xs = _ttof(sx);
+	ys = _ttof(sy);
+	zs = _ttof(sz);
+
+
+	//CMainFrame* frm = (CMainFrame*)AfxGetMainWnd();
+	//frm->GetDockableView()->m_pXGameView->Render();
+
 }
 
 DockableBase* DockableBase::GetDockableBase()

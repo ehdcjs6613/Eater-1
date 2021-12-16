@@ -59,3 +59,5 @@
 
 
 
+#undef AFX_DATA
+#define AFX_DATA AFX_EXT_CLASS

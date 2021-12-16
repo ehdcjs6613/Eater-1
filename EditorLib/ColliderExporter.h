@@ -13,12 +13,14 @@ class BoxCollider;
 class ColliderExporter : public Exporter
 {
 private:
-	std::vector<Collider*> m_CQueue;
+	std::deque<Collider*> m_CQueue;
 public:
 	VS_MFC_EXPORT ColliderExporter();
 	VS_MFC_EXPORT virtual ~ColliderExporter() final;
 public:
-	VS_MFC_EXPORT bool Export();
+	VS_MFC_EXPORT bool Export(const wchar_t*);
+	VS_MFC_EXPORT bool Start();
+	VS_MFC_EXPORT bool End();
 	VS_MFC_EXPORT bool PushInfo(Collider*);
 
 };

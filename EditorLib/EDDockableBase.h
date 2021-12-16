@@ -4,28 +4,45 @@
 #define XNUM_1 2001
 #define XNUM_2 2002
 
+#define XNUM_3 2000
+#define XNUM_4 2001
+#define XNUM_5 2002
+
 // CDockalbePannel
+#include <afxdockablepane.h>
 #include "DllExport.h"
 
 class GameDlg;
 class SaveData;
+class CMainFrame;
+class EWGameView;
+class DockableView;
 
 class HsGraphic;
 
-class VS_MFC_EXPORT DockableBase : public CDockablePane
+class DockableBase : public CDockablePane
 {
 private:
 	DECLARE_DYNAMIC(DockableBase)
-	CPaneDialog	   m_pDialog;
+	//CPaneDialog	   m_pDialog;
 	CEdit*		   m_pCEdit[3];
+	CEdit*		   m_pCEditScale[3];
 	CStatic*	   m_pCStatic[3];
 	//GameDlg*	   m_pDialog;
 public:
-	DockableBase();
-	virtual ~DockableBase();
+	VS_MFC_EXPORT DockableBase();
+	VS_MFC_EXPORT virtual ~DockableBase();
 
+	CString x, y, z;
+	CString sx, sy, sz;
 	
-	
+	float xf;
+	float yf;
+	float zf;
+
+	float xs;
+	float ys;
+	float zs;
 protected:
 
 	DECLARE_MESSAGE_MAP()
@@ -37,12 +54,12 @@ public:
 	virtual void PostNcDestroy();
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
 public:
-	void CreateDlg();
+	VS_MFC_EXPORT void CreateDlg();
 	afx_msg void OnMove(int x, int y);
 	afx_msg void OnEnterIdle(UINT nWhy, CWnd* pWho);
 public:
-	void Update();
-	DockableBase* GetDockableBase();
+	VS_MFC_EXPORT   void Update();
+	VS_MFC_EXPORT  DockableBase* GetDockableBase();
 	
 };
 

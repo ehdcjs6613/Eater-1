@@ -68,6 +68,23 @@ float* Collider::GetSize()
 	return  this->Size;
 }
 
+DirectX::XMFLOAT4X4 Collider::GetWorld()
+{
+	return this->mWorld;
+}
+
+bool Collider::OnPick()
+{
+	m_Gemetry.SetColor(DirectX::Colors::Green);
+	return  true;
+}
+
+bool Collider::OffPick()
+{
+	m_Gemetry.SetColor(DirectX::Colors::Black);
+	return false;
+}
+
 void Collider::Initialize()
 {
 }

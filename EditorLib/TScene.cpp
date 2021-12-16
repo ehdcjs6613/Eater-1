@@ -67,8 +67,9 @@ void TScene::Awake()
 	///Ä³¸¯ÅÍ
 	testobj = Instance("Player");
 	testobj->GetTransform()->Scale = { 1.f, 1.0f, 1.0f };
-	testobj->GetTransform()->Position = { +10,0,0 };
-	testobj->GetTransform()->Rotation = { 0,0,0 };
+	testobj->GetTransform()->Position = { 0,0,0 };
+	testobj->GetTransform()->Rotation = { 30,0,0 };
+
 	MeshFilter* Mf = testobj->AddComponent<MeshFilter>();
 	BoxCollider* Bc = testobj->AddComponent<BoxCollider>();
 	//Camera* cam = testobj->AddComponent<Camera>();

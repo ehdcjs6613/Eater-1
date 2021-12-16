@@ -201,10 +201,14 @@ BOOL CEditorApp::OnIdle(LONG lCount)
 
 	CMainFrame* frm = (CMainFrame*)AfxGetMainWnd();
 
+	//if (frm->GetDockableBase() != nullptr)
+	//{
+	//	frm->GetDockableBase()->Update();
+	//}
+
 	if (nullptr != frm->GetDockableView())
 	{
-		if(frm->GetDockableBase()!=nullptr)
-			frm->GetDockableBase()->Update();
+		
 		frm->GetDockableView()->m_pXGameView->Render();
 	}
 

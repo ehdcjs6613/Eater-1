@@ -46,7 +46,7 @@ public:
 	PhysicsExport void Rnder();
 
 
-	PhysicsExport void Translasion(DirectX::XMMATRIX* _World);
+	PhysicsExport void Translastion(DirectX::XMMATRIX _World);
 
 
 public:

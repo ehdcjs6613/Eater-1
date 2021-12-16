@@ -16,12 +16,12 @@ protected:
 	std::ifstream readFile;
 	std::ofstream writeFile;
 
-	bool FormatFile(wchar_t* _pFileName);
+	bool FormatFile(const wchar_t* _pFileName);
 	bool OpenFile(wchar_t* _pFileName);
 	bool WirteFile(std::wstring _pMsg);
 	bool ReadFile(wchar_t* _pFileName);
 	bool CloseFile();
 
-	bool ExportName(wchar_t* _pExportName);
+	bool ExportName(const wchar_t* _pExportName);
 };
 

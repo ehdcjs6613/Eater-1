@@ -10,17 +10,19 @@ EFile::~EFile()
 {
 }
 
-bool EFile::FormatFile(wchar_t* _pFileName)
+bool EFile::FormatFile(const wchar_t* _pFileName)
 {
     return false;
 }
-bool EFile::ExportName(wchar_t* _pExportName)
+bool EFile::ExportName(const wchar_t* _pExportName)
 {
     m_wExportName = _pExportName;
 
 	std::string ExportStream;
 	ExportStream.assign(m_wExportName.begin(), m_wExportName.end());
 
+	writeFile << "---------------------------------";
+    writeFile << std::endl;
 	writeFile << '#';
 	writeFile << ExportStream;
     writeFile << std::endl;
@@ -117,7 +119,7 @@ bool EFile::ReadFile(wchar_t* _pFileName)
 bool EFile::CloseFile()
 {
 	writeFile << '}';
-
+ //   writeFile << "---------------------------------";
     writeFile.close();
     return false;
 }
